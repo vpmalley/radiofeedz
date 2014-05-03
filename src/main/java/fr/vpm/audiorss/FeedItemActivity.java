@@ -173,8 +173,8 @@ public class FeedItemActivity extends Activity {
         long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
         int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
-        String mediaUri = "";
-        String localUri = "";
+        String mediaUri = "empty";
+        String localUri = "empty";
         if (DownloadManager.STATUS_SUCCESSFUL == status) {
           mediaUri = c.getString(c
               .getColumnIndex(DownloadManager.COLUMN_MEDIAPROVIDER_URI));

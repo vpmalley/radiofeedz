@@ -28,7 +28,7 @@ public class FeedSearch {
 
   static final String P_KEY = "key=";
 
-  static final String SEARCH_KEY = "AIzaSyCjqq6hmvOybV5uV1IHbkjzqfZATSNDxhU";
+  static final String SEARCH_KEY = "";
 
   /**
    * 
