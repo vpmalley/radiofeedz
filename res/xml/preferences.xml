@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:key="pref_feed_ordering"
+        android:title="@string/pref_feed_ordering"
+        android:dialogTitle="@string/pref_feed_ordering"
+        android:entries="@array/pref_feed_ordering_entries"
+        android:entryValues="@array/pref_feed_ordering_values"
+        android:defaultValue="@string/pref_feed_ordering_default" />
+    
+        <EditTextPreference
+                android:key="pref_download_folder"
+                android:title="@string/pref_download_folder"
+                android:summary="@string/summary_pref_download_folder"
+                android:dialogTitle="@string/dialog_pref_download_folder" />
+    
+</PreferenceScreen>

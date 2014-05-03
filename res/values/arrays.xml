@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="pref_feed_ordering_entries">
+        <item>Latest first</item>
+        <item>Oldest first</item>
+        <item>Alphabetical order</item>
+        <item>Reversed alphabetical order</item>
+    </array>
+
+    <array name="pref_feed_ordering_values">
+        <item>reverse_time</item>
+        <item>time</item>
+        <item>alpha</item>
+        <item>reverse_alpha</item>
+    </array>
+</resources>
