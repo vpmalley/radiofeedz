@@ -122,6 +122,7 @@ public class FeedItemActivity extends Activity {
     if (isMediaDownloaded()) {
       Log.d("playLocal", item.getMediaUri().toString());
       mediaIntent.setData(item.getMediaUri());
+      startActivity(Intent.createChooser(mediaIntent, null));
     } else {
       Toast.makeText(this, "Please download the podcast first.",
           Toast.LENGTH_SHORT);
@@ -130,7 +131,6 @@ public class FeedItemActivity extends Activity {
      * else { Log.d("playOnline", item.getMediaUrl()); File podcast = new
      * File(item.getMediaUrl()); mediaIntent.setData(Uri.fromFile(podcast)); }
      */
-    startActivity(Intent.createChooser(mediaIntent, null));
 
   }
 
@@ -178,6 +178,18 @@ public class FeedItemActivity extends Activity {
     // (Seems to be available since Honeycomb only)
     r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 
+    int networkFlags = 0;
+    if (sharedPref.getBoolean("pref_wifi_network_enabled", true)) {
+      networkFlags += DownloadManager.Request.NETWORK_WIFI;
+    };
+    if (sharedPref.getBoolean("pref_mobile_network_enabled", true)) {
+      networkFlags += DownloadManager.Request.NETWORK_MOBILE;
+    };
+    r.setAllowedNetworkTypes(networkFlags);
+    
+    r.setTitle(item.getChannelTitle());
+    r.setDescription(item.getTitle());
+    
     // Start download
     long fileId = downloadFile(r);
     item.setMediaId(fileId);

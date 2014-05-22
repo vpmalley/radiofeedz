@@ -8,6 +8,16 @@
         android:entryValues="@array/pref_feed_ordering_values"
         android:defaultValue="@string/pref_feed_ordering_default" />
     
+        <CheckBoxPreference
+            android:key="pref_wifi_network_enabled"
+            android:title="@string/pref_wifi_network_enabled"
+            android:defaultValue="true" />
+    
+        <CheckBoxPreference
+            android:key="pref_mobile_network_enabled"
+            android:title="@string/pref_mobile_network_enabled"
+            android:defaultValue="true" />
+        
         <EditTextPreference
                 android:key="pref_download_folder"
                 android:title="@string/pref_download_folder"
