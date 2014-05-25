@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 import fr.vpm.audiorss.FeedsActivity;
@@ -25,9 +26,16 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 	FeedsActivity activity;
 
 	Exception mE = null;
+	
+	ProgressDialog mDialog;
 
 	public AsyncFeedRefresh(FeedsActivity activity) {
 		this.activity = activity;
+		mDialog = new ProgressDialog(activity, ProgressDialog.STYLE_SPINNER);
+		mDialog.setIndeterminate(true);
+		mDialog.setTitle("Refreshing feeds");
+    mDialog.setMessage("Please wait a few seconds ...");
+		mDialog.show();
 	}
 
 	public HttpEntity refresh(String rssUrl) throws ClientProtocolException,
@@ -49,6 +57,12 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 		return entity;
 	}
 
+	@Override
+	protected void onPreExecute() {
+	  activity.startRefreshProgress();
+	  super.onPreExecute();
+	}
+	
 	@Override
 	protected RSSChannel doInBackground(String... params) {
 		boolean hasError = false;
@@ -80,9 +94,16 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 		}
 		return newChannel;
 	}
+	
+	@Override
+	protected void onProgressUpdate(Integer... values) {
+	  activity.updateProgress(values[0]);
+	}
 
 	@Override
 	protected void onPostExecute(RSSChannel newChannel) {
+	  mDialog.dismiss();
+	  activity.stopRefreshProgress();
 		if (mE != null) {
 			handleException(mE);
 		} else {

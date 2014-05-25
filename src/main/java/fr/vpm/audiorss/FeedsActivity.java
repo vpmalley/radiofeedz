@@ -32,6 +32,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
@@ -59,6 +60,8 @@ public class FeedsActivity extends Activity {
   ImageButton mAddButton;
 
   ImageButton mTestButton;
+  
+  ProgressBar mRefreshProgress;
 
   RSSItem[] items;
 
@@ -67,6 +70,8 @@ public class FeedsActivity extends Activity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
 
+    mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
+    
     refreshView();
   }
 
@@ -149,6 +154,20 @@ public class FeedsActivity extends Activity {
 
   }
 
+  public void startRefreshProgress(){
+    //mRefreshProgress.setIndeterminate(true);
+    mRefreshProgress.setVisibility(View.VISIBLE);
+  }
+  
+  public void updateProgress(int progress){
+    mRefreshProgress.setProgress(progress);
+  }
+  
+  public void stopRefreshProgress(){
+    //mRefreshProgress.setIndeterminate(false);
+    mRefreshProgress.setVisibility(View.GONE);
+  }
+  
   private List<RSSChannel> loadAllFromDB() {
     // return RSSChannel.allChannels;
     List<RSSChannel> channels = new ArrayList<RSSChannel>();
