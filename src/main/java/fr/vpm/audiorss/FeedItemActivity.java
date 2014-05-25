@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -80,7 +79,7 @@ public class FeedItemActivity extends Activity {
     MenuItem item = menu.findItem(R.id.action_play);
     if (!isMediaDownloaded()) {
       item.setVisible(false);
-     // this.invalidateOptionsMenu();
+      // this.invalidateOptionsMenu();
     }
     getMenuInflater().inflate(R.menu.feeditem, menu);
     return super.onCreateOptionsMenu(menu);
@@ -181,18 +180,28 @@ public class FeedItemActivity extends Activity {
     int networkFlags = 0;
     if (sharedPref.getBoolean("pref_wifi_network_enabled", true)) {
       networkFlags += DownloadManager.Request.NETWORK_WIFI;
-    };
+    }
+    ;
     if (sharedPref.getBoolean("pref_mobile_network_enabled", true)) {
       networkFlags += DownloadManager.Request.NETWORK_MOBILE;
-    };
+    }
+    ;
     r.setAllowedNetworkTypes(networkFlags);
-    
+
     r.setTitle(item.getChannelTitle());
     r.setDescription(item.getTitle());
-    
+
     // Start download
-    long fileId = downloadFile(r);
-    item.setMediaId(fileId);
+    if (0 == networkFlags) {
+      Toast
+          .makeText(
+              this,
+              "Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.",
+              Toast.LENGTH_LONG).show();
+    } else {
+      long fileId = downloadFile(r);
+      item.setMediaId(fileId);
+    }
 
     BroadcastReceiver downloadFinished = new BroadcastReceiver() {
 
