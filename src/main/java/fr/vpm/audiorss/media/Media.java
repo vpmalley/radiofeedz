@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
+import junit.framework.*;
 
 public class Media {
 
@@ -31,6 +32,12 @@ public class Media {
   String deviceUri;
 
   long downloadId;
+  
+  public Media(String name, String title, String url){
+      this.name = name;
+      this.notificationTitle = title;
+      this.inetUrl = url;
+  }
 
   public void download(final Activity activity) {
 
@@ -88,20 +95,23 @@ public class Media {
     if (sharedPref.getBoolean("pref_wifi_network_enabled", true)) {
       networkFlags += DownloadManager.Request.NETWORK_WIFI;
     }
-    ;
+    
     if (sharedPref.getBoolean("pref_mobile_network_enabled", true)) {
       networkFlags += DownloadManager.Request.NETWORK_MOBILE;
     }
-    ;
+    
     return networkFlags;
   }
 
   private class MediaBroadcastReceiver extends BroadcastReceiver {
 
+     
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("BReceiver", "A download is complete");
       long fileId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+      Assert.assertEquals(downloadId, fileId);
+      
       // query the status of the file
       DownloadManager.Query query = new DownloadManager.Query();
       query.setFilterById(fileId);
@@ -109,12 +119,15 @@ public class Media {
           .getSystemService(Activity.DOWNLOAD_SERVICE);
       Cursor c = dm.query(query);
       c.moveToFirst();
+			
       long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
+      Assert.assertEquals(downloadId, id);
       int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
       if (DownloadManager.STATUS_SUCCESSFUL == status) {
         deviceUri = c.getString(c
             .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+        
       }
       Log.d("BReceiver", "The status for " + id + " is " + status
           + ". It is located at " + deviceUri);
