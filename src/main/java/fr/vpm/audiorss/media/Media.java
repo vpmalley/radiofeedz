@@ -33,6 +33,8 @@ public class Media {
 
   long downloadId;
   
+  boolean isDownloaded = false;
+  
   public Media(String name, String title, String url){
       this.name = name;
       this.notificationTitle = title;
@@ -102,6 +104,13 @@ public class Media {
     
     return networkFlags;
   }
+  
+  /**
+   * Whether the media is downloaded
+   */
+  public boolean isDownloaded() {
+	  return isDownloaded;
+  }
 
   private class MediaBroadcastReceiver extends BroadcastReceiver {
 
@@ -127,6 +136,7 @@ public class Media {
       if (DownloadManager.STATUS_SUCCESSFUL == status) {
         deviceUri = c.getString(c
             .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+        isDownloaded = true;
         
       }
       Log.d("BReceiver", "The status for " + id + " is " + status

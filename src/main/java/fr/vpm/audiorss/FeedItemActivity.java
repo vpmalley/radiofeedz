@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -150,6 +151,9 @@ public class FeedItemActivity extends Activity {
   private void downloadMedia() {
     Log.d("Download", item.getMediaUrl());
 
+    Media downloadableMedia = new Media(item.getChannelTitle(), item.getTitle(), item.getMediaUrl());
+    downloadableMedia.download(this);
+    
     String fileExtension = item.getMediaUrl().substring(
         item.getMediaUrl().lastIndexOf('.'));
 
