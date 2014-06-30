@@ -8,13 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.DownloadManager;
 import android.content.Context;
-import android.net.Uri;
-import android.os.Environment;
 import android.util.Log;
 import fr.vpm.audiorss.db.DbRSSChannel;
-import fr.vpm.audiorss.process.ItemParser;
+import fr.vpm.audiorss.media.Media;
 
 public class RSSChannel {
 
@@ -23,8 +20,8 @@ public class RSSChannel {
 	public static final String DESC_TAG = "description";
 	public static final String DATE_TAG = "lastBuildDate";
 	public static final String CAT_TAG = "category";
-  public static final String IMAGE_TAG = "image";
-  public static final String LOCAL_IMAGE_TAG = "localImage";
+	public static final String IMAGE_TAG = "image";
+	public static final String LOCAL_IMAGE_TAG = "localImage";
 
 	public static final String URL_KEY = "url";
 	public static final String TAGS_KEY = "tags";
@@ -51,12 +48,8 @@ public class RSSChannel {
 	String lastBuildDate = "";
 
 	String category = "";
-	
-	String imageUrl = "";
 
-  long localImageId;
-  
-	Uri localImageUri = null;
+	Media image = null;
 
 	List<String> tags;
 
@@ -71,15 +64,16 @@ public class RSSChannel {
 		this.link = link;
 		this.description = description;
 		this.category = category;
-		this.imageUrl = imageUrl;
+		this.image = new Media(title, "miniature", imageUrl);
 	}
 
 	public void update(String lastBuildDate, Map<String, RSSItem> items) {
-			this.lastBuildDate = lastBuildDate;
-			int beforeSize = latestItems.size();
-			latestItems.putAll(items);
-			Log.d("RSSChannel", "update channel " + getUrl() + " at " + lastBuildDate + "from "
-					+ beforeSize + " items to " + latestItems.size());
+		this.lastBuildDate = lastBuildDate;
+		int beforeSize = latestItems.size();
+		latestItems.putAll(items);
+		Log.d("RSSChannel", "update channel " + getUrl() + " at "
+				+ lastBuildDate + "from " + beforeSize + " items to "
+				+ latestItems.size());
 	}
 
 	public void addTag(String tag) {
@@ -167,21 +161,22 @@ public class RSSChannel {
 	public void saveToDb(Context context) throws ParseException {
 		DbRSSChannel dbUpdater = new DbRSSChannel(context);
 		RSSChannel existingChannel = dbUpdater.readByUrl(getUrl());
-		if (existingChannel != null){
-		  dbUpdater.update(existingChannel, this);
-		  existingChannel.getImageURI(context);
+		if (existingChannel != null) {
+			dbUpdater.update(existingChannel, this);
 		} else {
-		  downloadImage(context);
-	    dbUpdater.add(this);
+			downloadImage(context);
+			dbUpdater.add(this);
 		}
 		dbUpdater.closeDb();
 	}
+
 	
-	public void downloadImage(Context context){
-	  DownloadManager.Request r = new DownloadManager.Request(Uri.parse(getImageUrl()));
-	  r.setDestinationInExternalFilesDir(context, Environment.DIRECTORY_PODCASTS, "RadioRSS");
-    DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-    localImageId = dm.enqueue(r);
+	public Media getImage() {
+		return image;
+	}
+
+	public void downloadImage(Context context) {
+		image.download(context);
 	}
 
 	public Collection<RSSItem> getItems() {
@@ -191,45 +186,4 @@ public class RSSChannel {
 	public Map<String, RSSItem> getMappedItems() {
 		return Collections.unmodifiableMap(latestItems);
 	}
-
-	/**
-	 * The distant image url
-	 * 
-	 * @return
-	 */
-  public String getImageUrl() {
-    return imageUrl;
-  }
-
-  /**
-   * The local image uri (to be read as an Android media)
-   * 
-   * @param localImageUri
-   */
-  public void setLocalImageUri(Uri localImageUri) {
-    this.localImageUri = localImageUri;
-  }
-
-  /**
-   * The local image uri (to be read as an Android media)
-   * @return
-   */
-  public Uri getLocalImageUri() {
-    return localImageUri;
-  }
-  
-  public Uri getImageURI(Context context) {
-    Uri imageUri = null;
-    if (localImageUri == null){
-      localImageUri = ItemParser.retrieveUri(localImageId, context);
-      for (RSSItem item : latestItems.values()){
-        item.setChannelImage(localImageUri.toString());
-      }
-    }
-    imageUri = localImageUri;
-    if (localImageUri == null){
-      imageUri = Uri.parse(imageUrl);
-    }
-    return imageUri;
-  }
 }

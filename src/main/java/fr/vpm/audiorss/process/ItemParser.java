@@ -214,9 +214,9 @@ public class ItemParser {
    * @param context
    * @return
    */
-  public static Uri retrieveUri(long fileId, Context context){
+/*  public static Uri retrieveUri(long fileId, Context context){
     DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     return dm.getUriForDownloadedFile(fileId);
   }
-  
+*/  
 }

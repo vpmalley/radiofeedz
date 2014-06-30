@@ -130,14 +130,16 @@ public class DbRSSChannel {
     channelValues.put(RSSChannel.DATE_TAG, channel.getLastBuildDate());
 
     channelValues.put(RSSChannel.DESC_TAG, channel.getDescription());
-    channelValues.put(RSSChannel.IMAGE_TAG, channel.getImageUrl());
+    //channelValues.put(RSSChannel.IMAGE_TAG, channel.getImageUrl());
     channelValues.put(RSSChannel.LINK_TAG, channel.getLink());
+    /*
     if (channel.getLocalImageUri() != null) {
       channelValues.put(RSSChannel.LOCAL_IMAGE_TAG, channel.getLocalImageUri()
           .toString());
     } else {
       channelValues.put(RSSChannel.LOCAL_IMAGE_TAG, "");
     }
+    */
     channelValues.put(RSSChannel.TAGS_KEY,
         TextUtils.join(COMMA, channel.getTags()));
     channelValues.put(RSSChannel.TITLE_TAG, channel.getTitle());
@@ -155,11 +157,13 @@ public class DbRSSChannel {
     itemValues.put(RSSItem.DESC_TAG, item.getDescription());
     itemValues.put(RSSItem.GUID_TAG, item.getGuid());
     itemValues.put(RSSItem.LINK_TAG, item.getLink());
+    /*
     if (item.getMediaUri() != null) {
       itemValues.put(RSSItem.LOCAL_MEDIA_KEY, item.getMediaUri().toString());
     } else {
       itemValues.put(RSSItem.LOCAL_MEDIA_KEY, "");
     }
+    */
     itemValues.put(RSSItem.MEDIA_KEY, item.getMediaUrl());
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
     itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
@@ -189,8 +193,8 @@ public class DbRSSChannel {
     String description = c.getString(c.getColumnIndex(RSSChannel.DESC_TAG));
     String imageUrl = c.getString(c.getColumnIndex(RSSChannel.IMAGE_TAG));
     String link = c.getString(c.getColumnIndex(RSSChannel.LINK_TAG));
-    Uri localImageUri = Uri.parse(c.getString(c
-        .getColumnIndex(RSSChannel.LOCAL_IMAGE_TAG)));
+    //Uri localImageUri = Uri.parse(c.getString(c
+      //  .getColumnIndex(RSSChannel.LOCAL_IMAGE_TAG)));
     String tags = c.getString(c.getColumnIndex(RSSChannel.TAGS_KEY));
     String title = c.getString(c.getColumnIndex(RSSChannel.TITLE_TAG));
     String url = c.getString(c.getColumnIndex(RSSChannel.URL_KEY));
@@ -202,7 +206,7 @@ public class DbRSSChannel {
     }
     channel.setId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     channel.update(lastBuildDate, new HashMap<String, RSSItem>());
-    channel.setLocalImageUri(localImageUri);
+    //channel.setLocalImageUri(localImageUri);
     return channel;
   }
 
@@ -238,7 +242,7 @@ public class DbRSSChannel {
     RSSItem item = new RSSItem(channelTitle, title, link, description,
         authorAddress, category, comments, mediaUrl, guid, pubDate);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
-    item.setMediaUri(localMediaUri);
+    //item.setMediaUri(localMediaUri);
     return item;
   }
 

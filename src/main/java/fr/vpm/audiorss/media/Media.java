@@ -41,11 +41,11 @@ public class Media {
       this.inetUrl = url;
   }
 
-  public void download(final Activity activity) {
+  public void download(final Context context) {
 
     // retrieve download folder from the preferences
     SharedPreferences sharedPref = PreferenceManager
-        .getDefaultSharedPreferences(activity);
+        .getDefaultSharedPreferences(context);
     String downloadFolder = sharedPref.getString("pref_download_folder",
         Environment.DIRECTORY_PODCASTS);
 
@@ -65,27 +65,27 @@ public class Media {
     int networkFlags = retrieveNetworkFlags(sharedPref);
     r.setAllowedNetworkTypes(networkFlags);
 
-    if (checkNetwork(networkFlags, activity)) {
+    if (checkNetwork(networkFlags, context)) {
       r.setTitle(notificationTitle);
       r.setDescription(name);
 
-      DownloadManager dm = (DownloadManager) activity
+      DownloadManager dm = (DownloadManager) context
           .getSystemService(Activity.DOWNLOAD_SERVICE);
 
       downloadId = dm.enqueue(r);
     }
 
     BroadcastReceiver downloadFinished = new MediaBroadcastReceiver();
-    activity.registerReceiver(downloadFinished, new IntentFilter(
+    context.registerReceiver(downloadFinished, new IntentFilter(
         DownloadManager.ACTION_DOWNLOAD_COMPLETE));
   }
 
-  private boolean checkNetwork(int networkFlags, Activity activity) {
+  private boolean checkNetwork(int networkFlags, Context context) {
     // Start download
     if (0 == networkFlags) {
       Toast
           .makeText(
-              activity,
+              context,
               "Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.",
               Toast.LENGTH_LONG).show();
     }
@@ -111,8 +111,34 @@ public class Media {
   public boolean isDownloaded() {
 	  return isDownloaded;
   }
+  
+  
+  
 
-  private class MediaBroadcastReceiver extends BroadcastReceiver {
+  public String getName() {
+	return name;
+}
+
+public String getNotificationTitle() {
+	return notificationTitle;
+}
+
+public String getInetUrl() {
+	return inetUrl;
+}
+
+public String getDeviceUri() {
+	return deviceUri;
+}
+
+public long getDownloadId() {
+	return downloadId;
+}
+
+
+
+
+private class MediaBroadcastReceiver extends BroadcastReceiver {
 
      
     @Override
