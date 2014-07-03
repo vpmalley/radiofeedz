@@ -37,16 +37,14 @@ public class FeedSearch {
    * @throws IOException
    * @throws ClientProtocolException
    */
-  public List<SearchResult> query(String query) throws ClientProtocolException,
-      IOException {
+  public List<SearchResult> query(String query) throws ClientProtocolException, IOException {
 
     HttpUriRequest req = buildRequest(query);
     HttpResponse resp = new DefaultHttpClient().execute(req);
     List<SearchResult> array = null;
     if (HttpStatus.SC_OK == resp.getStatusLine().getStatusCode()) {
       HttpEntity entity = resp.getEntity();
-      JsonReader reader = new JsonReader(new InputStreamReader(
-          entity.getContent()));
+      JsonReader reader = new JsonReader(new InputStreamReader(entity.getContent()));
       try {
         reader.beginObject();
         while ((reader.hasNext()) && (!reader.nextName().equals("items"))) {
@@ -58,8 +56,8 @@ public class FeedSearch {
       }
     } else {
       // build an error message
-      throw new IOException("Connection problem : "
-          + resp.getStatusLine().toString() + " for " + req.getURI().toString());
+      throw new IOException("Connection problem : " + resp.getStatusLine().toString() + " for "
+          + req.getURI().toString());
     }
 
     return array;
@@ -110,8 +108,8 @@ public class FeedSearch {
       }
     }
     reader.endObject();
-    SearchResult result = new SearchResult(kind, title, htmlTitle, link,
-        displayLink, snippet, formattedUrl, htmlFormattedUrl);
+    SearchResult result = new SearchResult(kind, title, htmlTitle, link, displayLink, snippet,
+        formattedUrl, htmlFormattedUrl);
     return result;
   }
 

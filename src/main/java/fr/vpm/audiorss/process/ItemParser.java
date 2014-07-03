@@ -10,9 +10,6 @@ import org.apache.http.HttpEntity;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.net.Uri;
 import android.util.Log;
 import android.util.Xml;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -24,8 +21,8 @@ public class ItemParser {
   private static final String RSS_TAG = "rss";
   private static final String ITEM_TAG = "item";
 
-  public RSSChannel parseChannel(HttpEntity entity, String rssUrl)
-      throws XmlPullParserException, IOException, ParseException {
+  public RSSChannel parseChannel(HttpEntity entity, String rssUrl) throws XmlPullParserException,
+      IOException, ParseException {
     InputStream in = null;
     try {
       Log.d("ItemParser", "started reading channel");
@@ -40,8 +37,8 @@ public class ItemParser {
     }
   }
 
-  private RSSChannel readFeed(XmlPullParser parser, String rssUrl)
-      throws XmlPullParserException, IOException, ParseException {
+  private RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
+      IOException, ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String title = "";
     String link = "";
@@ -85,16 +82,14 @@ public class ItemParser {
       }
 
     }
-    RSSChannel channel = new RSSChannel(rssUrl, title, link, description,
-        category, imageUrl);
+    RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, imageUrl);
     channel.update(lastBuildDate, items);
 
     return channel;
 
   }
 
-  private String readImage(XmlPullParser parser) throws XmlPullParserException,
-      IOException {
+  private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
     String imageUrl = "";
     while (parser.next() != XmlPullParser.END_TAG) {
       if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -110,8 +105,8 @@ public class ItemParser {
     return imageUrl;
   }
 
-  private RSSItem readEntry(XmlPullParser parser, String feedTitle)
-      throws IOException, XmlPullParserException {
+  private RSSItem readEntry(XmlPullParser parser, String feedTitle) throws IOException,
+      XmlPullParserException {
     String title = "";
     String link = "";
     String description = "";
@@ -156,13 +151,13 @@ public class ItemParser {
         skip(parser);
       }
     }
-    RSSItem item = new RSSItem(feedTitle, title, link, description, author,
-        category, comments, mediaUrl, guid, pubDate);
+    RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
+        mediaUrl, guid, pubDate);
     return item;
   }
 
-  private String readTagAttribute(XmlPullParser parser, String tagName,
-      String attName) throws XmlPullParserException, IOException {
+  private String readTagAttribute(XmlPullParser parser, String tagName, String attName)
+      throws XmlPullParserException, IOException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     String content = null;
     String att = parser.getAttributeValue(null, attName);
@@ -175,8 +170,8 @@ public class ItemParser {
     return att;
   }
 
-  private String readTagContent(XmlPullParser parser, String tagName)
-      throws IOException, XmlPullParserException {
+  private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
+      XmlPullParserException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     String content = null;
     if (parser.next() == XmlPullParser.TEXT) {
@@ -188,8 +183,7 @@ public class ItemParser {
     return content;
   }
 
-  private void skip(XmlPullParser parser) throws XmlPullParserException,
-      IOException {
+  private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
     if (parser.getEventType() != XmlPullParser.START_TAG) {
       throw new IllegalStateException();
     }
@@ -205,18 +199,19 @@ public class ItemParser {
       }
     }
   }
-  
+
   /**
-   * Returns the Uri of a file if it is downloaded.
-   * Returns null if not downloaded yet.
+   * Returns the Uri of a file if it is downloaded. Returns null if not
+   * downloaded yet.
    * 
    * @param fileId
    * @param context
    * @return
    */
-/*  public static Uri retrieveUri(long fileId, Context context){
-    DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-    return dm.getUriForDownloadedFile(fileId);
-  }
-*/  
+  /*
+   * public static Uri retrieveUri(long fileId, Context context){
+   * DownloadManager dm = (DownloadManager)
+   * context.getSystemService(Context.DOWNLOAD_SERVICE); return
+   * dm.getUriForDownloadedFile(fileId); }
+   */
 }
