@@ -126,6 +126,7 @@ public class DbRSSChannel {
     channelValues.put(RSSChannel.DESC_TAG, channel.getDescription());
     // channelValues.put(RSSChannel.IMAGE_TAG, channel.getImageUrl());
     channelValues.put(RSSChannel.LINK_TAG, channel.getLink());
+    channelValues.put(RSSChannel.IMAGE_ID_TAG, channel.getImage().getId());
     /*
      * if (channel.getLocalImageUri() != null) {
      * channelValues.put(RSSChannel.LOCAL_IMAGE_TAG, channel.getLocalImageUri()
@@ -154,6 +155,7 @@ public class DbRSSChannel {
      * itemValues.put(RSSItem.LOCAL_MEDIA_KEY, ""); }
      */
     itemValues.put(RSSItem.MEDIA_KEY, item.getMediaUrl());
+    itemValues.put(RSSItem.MEDIA_ID_KEY, item.getMedia().getId());
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
     itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
 
@@ -180,6 +182,7 @@ public class DbRSSChannel {
     String description = c.getString(c.getColumnIndex(RSSChannel.DESC_TAG));
     String imageUrl = c.getString(c.getColumnIndex(RSSChannel.IMAGE_TAG));
     String link = c.getString(c.getColumnIndex(RSSChannel.LINK_TAG));
+    long imageId = c.getLong(c.getColumnIndex(RSSChannel.IMAGE_ID_TAG));
     // Uri localImageUri = Uri.parse(c.getString(c
     // .getColumnIndex(RSSChannel.LOCAL_IMAGE_TAG)));
     String tags = c.getString(c.getColumnIndex(RSSChannel.TAGS_KEY));
@@ -192,6 +195,8 @@ public class DbRSSChannel {
     }
     channel.setId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     channel.update(lastBuildDate, new HashMap<String, RSSItem>());
+    DbMedia dbMedia = new DbMedia(mDb);
+    channel.setImage(dbMedia.readById(imageId));
     // channel.setLocalImageUri(localImageUri);
     return channel;
   }
@@ -220,12 +225,15 @@ public class DbRSSChannel {
     String description = c.getString(c.getColumnIndex(RSSItem.DESC_TAG));
     String guid = c.getString(c.getColumnIndex(RSSItem.GUID_TAG));
     String link = c.getString(c.getColumnIndex(RSSItem.LINK_TAG));
-    String localMediaUri = c.getString(c.getColumnIndex(RSSItem.LOCAL_MEDIA_KEY));
+    // String localMediaUri = c.getString(c.getColumnIndex(RSSItem.LOCAL_MEDIA_KEY));
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
+    long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));
     RSSItem item = new RSSItem(channelTitle, title, link, description, authorAddress, category,
         comments, mediaUrl, guid, pubDate);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
+    DbMedia dbMedia = new DbMedia(mDb);
+    item.setMedia(dbMedia.readById(mediaId));
     // item.setMediaUri(localMediaUri);
     return item;
   }

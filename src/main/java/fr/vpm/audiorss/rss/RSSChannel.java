@@ -22,6 +22,7 @@ public class RSSChannel {
 	public static final String CAT_TAG = "category";
 	public static final String IMAGE_TAG = "image";
 	public static final String LOCAL_IMAGE_TAG = "localImage";
+  public static final String IMAGE_ID_TAG = "imageId";
 
 	public static final String URL_KEY = "url";
 	public static final String TAGS_KEY = "tags";
@@ -170,6 +171,9 @@ public class RSSChannel {
 		dbUpdater.closeDb();
 	}
 
+	public void setImage(Media image){
+	  this.image = image;
+	}
 	
 	public Media getImage() {
 		return image;

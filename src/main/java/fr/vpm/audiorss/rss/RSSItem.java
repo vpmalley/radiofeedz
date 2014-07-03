@@ -25,7 +25,8 @@ public class RSSItem implements Serializable {
 	public static final String MEDIA_KEY = "media";
 	public static final String LOCAL_MEDIA_KEY = "localMedia";
 	public static final String CHANNELTITLE_KEY = "channelTitle";
-
+	public static final String MEDIA_ID_KEY = "mediaId";
+  
 	long dbId = -1;
 
 	String channelTitle = "";
@@ -169,6 +170,10 @@ public class RSSItem implements Serializable {
 
 	public Media getMedia() {
 		return media;
+	}
+	
+	public void setMedia(Media media){
+	  this.media = media;
 	}
 
 	@Override
