@@ -60,6 +60,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
   public void onCreate(SQLiteDatabase db) {
     db.execSQL(DbRSSChannel.T_CREATE_RSS_CHANNEL);
     db.execSQL(T_CREATE_RSS_ITEM);
+    db.execSQL(DbMedia.T_CREATE_MEDIA);
   }
 
   @Override
