@@ -7,178 +7,178 @@ import fr.vpm.audiorss.media.Media;
 
 public class RSSItem implements Serializable {
 
-	/**
+  /**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 1L;
 
-	public static final String TITLE_TAG = "title";
-	public static final String LINK_TAG = "link";
-	public static final String DESC_TAG = "description";
-	public static final String AUTHOR_TAG = "author";
-	public static final String CAT_TAG = "category";
-	public static final String COMMENTS_TAG = "comments";
-	public static final String ENC_TAG = "enclosure";
-	public static final String GUID_TAG = "guid";
-	public static final String DATE_TAG = "pubDate";
+  public static final String TITLE_TAG = "title";
+  public static final String LINK_TAG = "link";
+  public static final String DESC_TAG = "description";
+  public static final String AUTHOR_TAG = "author";
+  public static final String CAT_TAG = "category";
+  public static final String COMMENTS_TAG = "comments";
+  public static final String ENC_TAG = "enclosure";
+  public static final String GUID_TAG = "guid";
+  public static final String DATE_TAG = "pubDate";
 
-	public static final String MEDIA_KEY = "media";
-	public static final String LOCAL_MEDIA_KEY = "localMedia";
-	public static final String CHANNELTITLE_KEY = "channelTitle";
-	public static final String MEDIA_ID_KEY = "mediaId";
-  
-	long dbId = -1;
+  public static final String MEDIA_KEY = "media";
+  public static final String LOCAL_MEDIA_KEY = "localMedia";
+  public static final String CHANNELTITLE_KEY = "channelTitle";
+  public static final String MEDIA_ID_KEY = "mediaId";
 
-	String channelTitle = "";
+  long dbId = -1;
 
-	String title = "";
+  String channelTitle = "";
 
-	String link = "";
+  String title = "";
 
-	String description = "";
+  String link = "";
 
-	String authorAddress = "";
+  String description = "";
 
-	String category = "";
+  String authorAddress = "";
 
-	String comments = "";
+  String category = "";
 
-	String mediaUrl = "";
+  String comments = "";
 
-	String guid = "";
+  String mediaUrl = "";
 
-	String pubDate = "";
-	
-	Media media = null;
+  String guid = "";
 
-	public String getId() {
-		return guid;
-	}
+  String pubDate = "";
 
-	public RSSItem(String feedTitle, String title, String link,
-			String description, String authorAddress, String category,
-			String comments, String mediaUrl, String guid, String pubDate) {
-		super();
-		this.channelTitle = feedTitle;
-		this.title = title;
-		this.link = link;
-		this.description = description;
-		this.authorAddress = authorAddress;
-		this.category = category;
-		this.comments = comments;
-		this.mediaUrl = mediaUrl;
-		this.guid = guid;
-		this.pubDate = pubDate;
-		this.media = new Media(channelTitle, title, mediaUrl);
-	}
+  Media media = null;
 
-	public String getDate() {
-		return pubDate;
-	}
+  public String getId() {
+    return guid;
+  }
 
-	public String getTitle() {
-		return title;
-	}
+  public RSSItem(String feedTitle, String title, String link, String description,
+      String authorAddress, String category, String comments, String mediaUrl, String guid,
+      String pubDate) {
+    super();
+    this.channelTitle = feedTitle;
+    this.title = title;
+    this.link = link;
+    this.description = description;
+    this.authorAddress = authorAddress;
+    this.category = category;
+    this.comments = comments;
+    this.mediaUrl = mediaUrl;
+    this.guid = guid;
+    this.pubDate = pubDate;
+    this.media = new Media(channelTitle, title, mediaUrl);
+  }
 
-	public String getDescription() {
-		return description;
-	}
+  public String getDate() {
+    return pubDate;
+  }
 
-	public String getMediaUrl() {
-		return mediaUrl;
-	}
+  public String getTitle() {
+    return title;
+  }
 
-	public String getLink() {
-		return link;
-	}
+  public String getDescription() {
+    return description;
+  }
 
-	public long getDbId() {
-		return dbId;
-	}
+  public String getMediaUrl() {
+    return mediaUrl;
+  }
 
-	public void setDbId(long dbId) {
-		this.dbId = dbId;
-	}
+  public String getLink() {
+    return link;
+  }
 
-	public String getChannelTitle() {
-		return channelTitle;
-	}
+  public long getDbId() {
+    return dbId;
+  }
 
-	public void setChannelTitle(String channelTitle) {
-		this.channelTitle = channelTitle;
-	}
+  public void setDbId(long dbId) {
+    this.dbId = dbId;
+  }
 
-	public String getAuthorAddress() {
-		return authorAddress;
-	}
+  public String getChannelTitle() {
+    return channelTitle;
+  }
 
-	public void setAuthorAddress(String authorAddress) {
-		this.authorAddress = authorAddress;
-	}
+  public void setChannelTitle(String channelTitle) {
+    this.channelTitle = channelTitle;
+  }
 
-	public String getCategory() {
-		return category;
-	}
+  public String getAuthorAddress() {
+    return authorAddress;
+  }
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
+  public void setAuthorAddress(String authorAddress) {
+    this.authorAddress = authorAddress;
+  }
 
-	public String getComments() {
-		return comments;
-	}
+  public String getCategory() {
+    return category;
+  }
 
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-	public String getGuid() {
-		return guid;
-	}
+  public String getComments() {
+    return comments;
+  }
 
-	public void setGuid(String guid) {
-		this.guid = guid;
-	}
+  public void setComments(String comments) {
+    this.comments = comments;
+  }
 
-	public String getPubDate() {
-		return pubDate;
-	}
+  public String getGuid() {
+    return guid;
+  }
 
-	public void setPubDate(String pubDate) {
-		this.pubDate = pubDate;
-	}
+  public void setGuid(String guid) {
+    this.guid = guid;
+  }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  public String getPubDate() {
+    return pubDate;
+  }
 
-	public void setLink(String link) {
-		this.link = link;
-	}
+  public void setPubDate(String pubDate) {
+    this.pubDate = pubDate;
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-	public void setMediaUrl(String mediaUrl) {
-		this.mediaUrl = mediaUrl;
-	}
+  public void setLink(String link) {
+    this.link = link;
+  }
 
-	public void downloadMedia(Context context) {
-		media.download(context);
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public Media getMedia() {
-		return media;
-	}
-	
-	public void setMedia(Media media){
-	  this.media = media;
-	}
+  public void setMediaUrl(String mediaUrl) {
+    this.mediaUrl = mediaUrl;
+  }
 
-	@Override
-	public String toString() {
-		return this.channelTitle + " : " + this.title;
-	}
+  public void downloadMedia(Context context) {
+    media.download(context);
+  }
+
+  public Media getMedia() {
+    return media;
+  }
+
+  public void setMedia(Media media) {
+    this.media = media;
+  }
+
+  @Override
+  public String toString() {
+    return this.channelTitle + " : " + this.title;
+  }
 
 }

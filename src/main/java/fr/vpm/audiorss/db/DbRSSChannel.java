@@ -225,7 +225,8 @@ public class DbRSSChannel {
     String description = c.getString(c.getColumnIndex(RSSItem.DESC_TAG));
     String guid = c.getString(c.getColumnIndex(RSSItem.GUID_TAG));
     String link = c.getString(c.getColumnIndex(RSSItem.LINK_TAG));
-    // String localMediaUri = c.getString(c.getColumnIndex(RSSItem.LOCAL_MEDIA_KEY));
+    // String localMediaUri =
+    // c.getString(c.getColumnIndex(RSSItem.LOCAL_MEDIA_KEY));
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));

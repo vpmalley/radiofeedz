@@ -141,9 +141,9 @@ public class FeedsActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int position,
             long arg3) {
-          //items[position].setChannelImage();
           Intent i = new Intent(FeedsActivity.this, FeedItemActivity.class);
           i.putExtra(FeedItemActivity.ITEM, items[position]);
+          //i.putExtra(FeedItemActivity.CHANNEL, null); // TODO switch to a channel ASAP
           startActivity(i);
 
         }
