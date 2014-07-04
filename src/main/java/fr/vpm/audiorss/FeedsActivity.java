@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -60,7 +62,7 @@ public class FeedsActivity extends Activity {
   ImageButton mAddButton;
 
   ImageButton mTestButton;
-  
+
   ProgressBar mRefreshProgress;
 
   RSSItem[] items;
@@ -71,67 +73,67 @@ public class FeedsActivity extends Activity {
     setContentView(R.layout.activity_feeds);
 
     mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
-    
+
     refreshView();
   }
 
   public void refreshView() {
     Log.d("FeedsActivity", "refreshing view");
     channels = loadAllFromDB();
-    SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(
-        new Comparator<RSSItem>() {
-          @Override
-          public int compare(RSSItem lhs, RSSItem rhs) {
+    SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new Comparator<RSSItem>() {
+      @Override
+      public int compare(RSSItem lhs, RSSItem rhs) {
 
-            SharedPreferences sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(FeedsActivity.this);
-            String ordering = sharedPref.getString(PREF_FEED_ORDERING,
-                "reverse_time");
+        SharedPreferences sharedPref = PreferenceManager
+            .getDefaultSharedPreferences(FeedsActivity.this);
+        String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
 
-            int comparison = 0;
-            Date lhsDate = null;
-            Date rhsDate = null;
-            try {
-              lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs
-                  .getDate());
-              rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs
-                  .getDate());
-            } catch (ParseException e) {
-              Log.e("Exception", e.toString());
-            }
+        int comparison = 0;
+        Date lhsDate = null;
+        Date rhsDate = null;
+        try {
+          lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
+          rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
+        } catch (ParseException e) {
+          Log.e("Exception", e.toString());
+        }
 
-            // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
-            int comparisonByDate = 0;
-            if ((lhsDate != null) && (rhsDate != null)) {
-              comparisonByDate = lhsDate.compareTo(rhsDate);
-            }
-            int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
+        // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
+        int comparisonByDate = 0;
+        if ((lhsDate != null) && (rhsDate != null)) {
+          comparisonByDate = lhsDate.compareTo(rhsDate);
+        }
+        int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
 
-            if (ordering.contains("alpha")) {
-              comparison = comparisonByName;
-            } else {
-              comparison = comparisonByDate;
-            }
+        if (ordering.contains("alpha")) {
+          comparison = comparisonByName;
+        } else {
+          comparison = comparisonByDate;
+        }
 
-            int factor = 1;
-            if (ordering.contains("reverse")) {
-              factor = -1;
-            }
+        int factor = 1;
+        if (ordering.contains("reverse")) {
+          factor = -1;
+        }
 
-            if (comparison == 0) {
-              comparison = comparisonByName + comparisonByDate;
-            }
+        if (comparison == 0) {
+          comparison = comparisonByName + comparisonByDate;
+        }
 
-            return factor * comparison;
-          }
-        });
+        return factor * comparison;
+      }
+    });
+    final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
       allItems.addAll(channel.getItems());
+      for (RSSItem item : channel.getItems()){
+        channelsByItem.put(item, channel);
+      }
     }
 
     items = allItems.toArray(new RSSItem[allItems.size()]);
-    ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this,
-        R.layout.activity_item, items);
+    ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
+        items);
     // fill ListView with all the items
     if (mFeeds == null) {
       mFeeds = (ListView) findViewById(R.id.list);
@@ -139,11 +141,10 @@ public class FeedsActivity extends Activity {
       mFeeds.setOnItemClickListener(new OnItemClickListener() {
 
         @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-            long arg3) {
+        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
           Intent i = new Intent(FeedsActivity.this, FeedItemActivity.class);
           i.putExtra(FeedItemActivity.ITEM, items[position]);
-          //i.putExtra(FeedItemActivity.CHANNEL, null); // TODO switch to a channel ASAP
+          i.putExtra(FeedItemActivity.CHANNEL, channelsByItem.get(items[position]));
           startActivity(i);
 
         }
@@ -154,20 +155,20 @@ public class FeedsActivity extends Activity {
 
   }
 
-  public void startRefreshProgress(){
-    //mRefreshProgress.setIndeterminate(true);
+  public void startRefreshProgress() {
+    // mRefreshProgress.setIndeterminate(true);
     mRefreshProgress.setVisibility(View.VISIBLE);
   }
-  
-  public void updateProgress(int progress){
+
+  public void updateProgress(int progress) {
     mRefreshProgress.setProgress(progress);
   }
-  
-  public void stopRefreshProgress(){
-    //mRefreshProgress.setIndeterminate(false);
+
+  public void stopRefreshProgress() {
+    // mRefreshProgress.setIndeterminate(false);
     mRefreshProgress.setVisibility(View.GONE);
   }
-  
+
   private List<RSSChannel> loadAllFromDB() {
     // return RSSChannel.allChannels;
     List<RSSChannel> channels = new ArrayList<RSSChannel>();
@@ -244,8 +245,7 @@ public class FeedsActivity extends Activity {
 
   private String retrieveFeedFromClipboard() {
     String resultUrl = null;
-    ClipData data = ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE))
-        .getPrimaryClip();
+    ClipData data = ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).getPrimaryClip();
     if (data != null) {
       ClipData.Item cbItem = data.getItemAt(0);
       if (cbItem != null) {
@@ -261,17 +261,15 @@ public class FeedsActivity extends Activity {
   private void askForFeedValidation(final String url) {
     AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(this);
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-    confirmationBuilder.setMessage("Do you want to add the feed located at "
-        + url + " ?");
-    confirmationBuilder.setPositiveButton("Yes",
-        new DialogInterface.OnClickListener() {
+    confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
+    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-            addFeed(url);
-          }
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        addFeed(url);
+      }
 
-        });
+    });
     confirmationBuilder.setNegativeButton("No", new OnClickListener() {
 
       @Override
@@ -287,14 +285,13 @@ public class FeedsActivity extends Activity {
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
     confirmationBuilder
         .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
-    confirmationBuilder.setPositiveButton("Yes",
-        new DialogInterface.OnClickListener() {
+    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-          @Override
-          public void onClick(DialogInterface dialog, int which) {
-          }
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
 
-        });
+    });
     confirmationBuilder.show();
   }
 

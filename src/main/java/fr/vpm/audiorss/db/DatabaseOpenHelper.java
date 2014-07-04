@@ -43,7 +43,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
       + ITEM_ID_KEY + TEXT_COLUMN + ")";
 
   final private static String DB_NAME = "rss_db";
-  final private static Integer DB_VERSION = 4;
+  final private static Integer DB_VERSION = 5;
   final private Context mContext;
 
   public DatabaseOpenHelper(Context context) {
