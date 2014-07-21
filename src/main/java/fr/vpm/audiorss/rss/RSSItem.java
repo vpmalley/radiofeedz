@@ -1,11 +1,10 @@
 package fr.vpm.audiorss.rss;
 
-import java.io.Serializable;
 
-import android.content.Context;
+import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.media.Media;
 
-public class RSSItem implements Serializable, Comparable {
+public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   /**
 	 * 
