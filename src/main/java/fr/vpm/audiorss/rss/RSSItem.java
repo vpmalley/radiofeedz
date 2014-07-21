@@ -5,7 +5,7 @@ import java.io.Serializable;
 import android.content.Context;
 import fr.vpm.audiorss.media.Media;
 
-public class RSSItem implements Serializable {
+public class RSSItem implements Serializable, Comparable {
 
   /**
 	 * 
@@ -174,6 +174,53 @@ public class RSSItem implements Serializable {
 
   public void setMedia(Media media) {
     this.media = media;
+  }
+
+  @Override
+  public boolean compareTo(Object other){
+    if (!other instanceof RSSItem) {
+      return false;
+    }
+    RSSItem lhs = this;
+    RSSItem rhs = (RSSItem) other;
+    SharedPreferences sharedPref = PreferenceManager
+            .getDefaultSharedPreferences(FeedsActivity.this);
+        String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
+
+        int comparison = 0;
+        Date lhsDate = null;
+        Date rhsDate = null;
+        try {
+          lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
+          rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
+        } catch (ParseException e) {
+          Log.e("Exception", e.toString());
+        }
+
+        // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
+        int comparisonByDate = 0;
+        if ((lhsDate != null) && (rhsDate != null)) {
+          comparisonByDate = lhsDate.compareTo(rhsDate);
+        }
+        int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
+
+        if (ordering.contains("alpha")) {
+          comparison = comparisonByName;
+        } else {
+          comparison = comparisonByDate;
+        }
+
+        int factor = 1;
+        if (ordering.contains("reverse")) {
+          factor = -1;
+        }
+
+        if (comparison == 0) {
+          comparison = comparisonByName + comparisonByDate;
+        }
+
+        return factor * comparison;
+
   }
 
   @Override
