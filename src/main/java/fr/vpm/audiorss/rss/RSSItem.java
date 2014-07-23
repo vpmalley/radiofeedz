@@ -1,14 +1,25 @@
 package fr.vpm.audiorss.rss;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.media.Media;
 
 public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   /**
-	 * 
-	 */
+   *
+   */
   private static final long serialVersionUID = 1L;
 
   public static final String TITLE_TAG = "title";
@@ -50,13 +61,15 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   Media media = null;
 
+  private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
+
   public String getId() {
     return guid;
   }
 
   public RSSItem(String feedTitle, String title, String link, String description,
-      String authorAddress, String category, String comments, String mediaUrl, String guid,
-      String pubDate) {
+                 String authorAddress, String category, String comments, String mediaUrl, String guid,
+                 String pubDate) {
     super();
     this.channelTitle = feedTitle;
     this.title = title;
@@ -176,49 +189,47 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
   }
 
   @Override
-  public boolean compareTo(Object other){
-    if (!other instanceof RSSItem) {
-      return false;
-    }
+  public int compareTo(RSSItem other) {
     RSSItem lhs = this;
     RSSItem rhs = (RSSItem) other;
-    SharedPreferences sharedPref = PreferenceManager
-            .getDefaultSharedPreferences(FeedsActivity.this);
-        String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
+    //SharedPreferences sharedPref = PreferenceManager
+      //      .getDefaultSharedPreferences(FeedsActivity.this);
+    //String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
+    String ordering = "reverse_time";
 
-        int comparison = 0;
-        Date lhsDate = null;
-        Date rhsDate = null;
-        try {
-          lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
-          rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
-        } catch (ParseException e) {
-          Log.e("Exception", e.toString());
-        }
+    int comparison = 0;
+    Date lhsDate = null;
+    Date rhsDate = null;
+    try {
+      lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
+      rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
+    } catch (ParseException e) {
+      Log.e("Exception", e.toString());
+    }
 
-        // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
-        int comparisonByDate = 0;
-        if ((lhsDate != null) && (rhsDate != null)) {
-          comparisonByDate = lhsDate.compareTo(rhsDate);
-        }
-        int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
+    // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
+    int comparisonByDate = 0;
+    if ((lhsDate != null) && (rhsDate != null)) {
+      comparisonByDate = lhsDate.compareTo(rhsDate);
+    }
+    int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
 
-        if (ordering.contains("alpha")) {
-          comparison = comparisonByName;
-        } else {
-          comparison = comparisonByDate;
-        }
+    if (ordering.contains("alpha")) {
+      comparison = comparisonByName;
+    } else {
+      comparison = comparisonByDate;
+    }
 
-        int factor = 1;
-        if (ordering.contains("reverse")) {
-          factor = -1;
-        }
+    int factor = 1;
+    if (ordering.contains("reverse")) {
+      factor = -1;
+    }
 
-        if (comparison == 0) {
-          comparison = comparisonByName + comparisonByDate;
-        }
+    if (comparison == 0) {
+      comparison = comparisonByName + comparisonByDate;
+    }
 
-        return factor * comparison;
+    return factor * comparison;
 
   }
 
