@@ -15,7 +15,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-public class Media {
+public class Media implements Downloadable {
 
   // db id
   long id;
@@ -54,6 +54,7 @@ public class Media {
     this.isDownloaded = isDownloaded;
   }
 
+  @Override
   public void download(final Context context) {
 
     // retrieve download folder from the preferences
@@ -127,6 +128,7 @@ public class Media {
   /**
    * Whether the media is downloaded
    */
+  @Override
   public boolean isDownloaded() {
     return isDownloaded;
   }
@@ -139,6 +141,11 @@ public class Media {
     return notificationTitle;
   }
 
+  @Override
+  public String getDistantUrl() {
+    return inetUrl;
+  }
+
   public String getInetUrl() {
     return inetUrl;
   }
@@ -147,6 +154,7 @@ public class Media {
     return deviceUri;
   }
 
+  @Override
   public long getDownloadId() {
     return downloadId;
   }
