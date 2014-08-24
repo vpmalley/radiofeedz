@@ -19,10 +19,14 @@
     
     <string name="pref_mobile_network_enabled">Download on mobile network</string>
     <string name="pref_wifi_network_enabled">Download on Wifi network</string>
-    
+
     <string name="pref_download_folder">Downloads folder</string>
     <string name="summary_pref_download_folder">Media will be dowloaded there</string>
     <string name="dialog_pref_download_folder">Set the folder to which media will be downloaded</string>
+
+    <string name="pref_disp_max_items">Maximum RSS items to display</string>
+    <string name="summary_pref_disp_max_items">Display only this number of items</string>
+    <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
     
     
 </resources>

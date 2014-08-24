@@ -23,5 +23,11 @@
                 android:title="@string/pref_download_folder"
                 android:summary="@string/summary_pref_download_folder"
                 android:dialogTitle="@string/dialog_pref_download_folder" />
+
+    <EditTextPreference
+        android:key="pref_disp_max_items"
+        android:title="@string/pref_disp_max_items"
+        android:summary="@string/summary_pref_disp_max_items"
+        android:dialogTitle="@string/dialog_pref_disp_max_items" />
     
 </PreferenceScreen>

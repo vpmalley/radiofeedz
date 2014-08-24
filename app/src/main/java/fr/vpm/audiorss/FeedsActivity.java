@@ -45,6 +45,8 @@ public class FeedsActivity extends Activity {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
+  private static final String PREF_DISP_MAX_ITEMS = "pref_disp_max_items";
+
   public static final String E_RETRIEVING_FEEDS = "Issue retrieving the feeds. Please retry.";
 
   public static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
@@ -67,7 +69,7 @@ public class FeedsActivity extends Activity {
 
   ProgressBar mRefreshProgress;
 
-  RSSItem[] items;
+  List<RSSItem> items;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -133,8 +135,13 @@ public class FeedsActivity extends Activity {
       }
     }
 
-    int itemNumbers = Math.min(allItems.size(), MAX_ITEMS);
-    items = allItems.toArray(new RSSItem[itemNumbers]);
+    // preparing the number of items to display
+    SharedPreferences sharedPref = PreferenceManager
+            .getDefaultSharedPreferences(FeedsActivity.this);
+    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(MAX_ITEMS)));
+    int itemNumbers = Math.min(allItems.size(), maxItems);
+    items = new ArrayList<RSSItem>(allItems).subList(0, maxItems);
+
     ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
         items);
     // fill ListView with all the items
@@ -146,8 +153,8 @@ public class FeedsActivity extends Activity {
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
           Intent i = new Intent(FeedsActivity.this, FeedItemActivity.class);
-          i.putExtra(FeedItemActivity.ITEM, items[position]);
-          i.putExtra(FeedItemActivity.CHANNEL, channelsByItem.get(items[position]));
+          i.putExtra(FeedItemActivity.ITEM, items.get(position));
+          i.putExtra(FeedItemActivity.CHANNEL, channelsByItem.get(items.get(position)));
           startActivity(i);
 
         }
