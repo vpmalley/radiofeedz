@@ -135,12 +135,8 @@ public class FeedsActivity extends Activity {
       }
     }
 
-    // preparing the number of items to display
-    SharedPreferences sharedPref = PreferenceManager
-            .getDefaultSharedPreferences(FeedsActivity.this);
-    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(MAX_ITEMS)));
-    int itemNumbers = Math.min(allItems.size(), maxItems);
-    items = new ArrayList<RSSItem>(allItems).subList(0, maxItems);
+    int itemNumbers = getNbDisplayedItems(allItems);
+    items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
 
     ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
         items);
@@ -163,6 +159,19 @@ public class FeedsActivity extends Activity {
     }
     mFeeds.setAdapter(itemAdapter);
 
+  }
+
+  /**
+   * Using the number of items in the set and the maximum of items displayed in the preferences, determines the maximum of items to display.
+   * @param allItems the set of available items
+   * @return the number of items to display
+   */
+  private int getNbDisplayedItems(SortedSet<RSSItem> allItems) {
+    // preparing the number of items to display
+    SharedPreferences sharedPref = PreferenceManager
+            .getDefaultSharedPreferences(FeedsActivity.this);
+    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(MAX_ITEMS)));
+    return Math.min(allItems.size(), maxItems);
   }
 
   public void startRefreshProgress() {
