@@ -36,9 +36,11 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
     mDialog.setTitle("Refreshing feeds");
     mDialog.setMessage("Please wait a few seconds ...");
     mDialog.show();
+    Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
 
   public HttpEntity refresh(String rssUrl) throws ClientProtocolException, IOException {
+    Log.d("measures", "refresh start " + rssUrl + String.valueOf(System.currentTimeMillis()));
     HttpEntity entity = null;
     HttpUriRequest req = new HttpGet(rssUrl);
     Log.d("refresh", "sending a request for " + rssUrl);
@@ -51,7 +53,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
       // build an error message
       throw new IOException("Connection problem : " + resp.getStatusLine().toString());
     }
-
+    Log.d("measures", "refresh -end- " + rssUrl + String.valueOf(System.currentTimeMillis()));
     return entity;
   }
 
@@ -100,6 +102,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   @Override
   protected void onPostExecute(RSSChannel newChannel) {
+    Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     mDialog.dismiss();
     activity.stopRefreshProgress();
     if (mE != null) {
@@ -112,6 +115,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
       }
       activity.refreshView();
     }
+    Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     super.onPostExecute(newChannel);
   }
 
