@@ -1,0 +1,21 @@
+10-19 13:35:41.431  17962-17962/fr.vpm.audiorss D/measures﹕ openDialog 1413740141437
+10-19 13:35:41.431  17962-17986/fr.vpm.audiorss D/measures﹕ refresh start http://radiofrance-podcast.net/podcast09/rss_13950.xml 1413740 141 438
+10-19 13:35:41.636  17962-17962/fr.vpm.audiorss D/measures﹕ openDialog 1413740141643
+10-19 13:35:41.661  17962-17962/fr.vpm.audiorss D/measures﹕ openDialog 1413740141668
+10-19 13:35:41.681  17962-17962/fr.vpm.audiorss D/measures﹕ openDialog 1413740141685
+10-19 13:35:41.821  17962-17986/fr.vpm.audiorss D/measures﹕ refresh -end- http://radiofrance-podcast.net/podcast09/rss_13950.xml 1413740 141 825
+10-19 13:35:41.941  17962-17992/fr.vpm.audiorss D/measures﹕ refresh start http://radiofrance-podcast.net/podcast09/rss_13940.xml 1413740 141 945
+10-19 13:35:42.031  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh s http://radiofrance-podcast.net/podcast09/rss_13950.xml 1413740 142 037
+10-19 13:35:42.211  17962-17992/fr.vpm.audiorss D/measures﹕ refresh -end- http://radiofrance-podcast.net/podcast09/rss_13940.xml 1413740 142 217
+10-19 13:35:42.491  17962-17999/fr.vpm.audiorss D/measures﹕ refresh start http://radiofrance-podcast.net/podcast09/rss_11538.xml 1413740 142 495
+10-19 13:35:42.736  17962-17999/fr.vpm.audiorss D/measures﹕ refresh -end- http://radiofrance-podcast.net/podcast09/rss_11538.xml 1413740 142 741
+10-19 13:35:42.751  17962-18000/fr.vpm.audiorss D/measures﹕ refresh start http://radiofrance-podcast.net/podcast09/rss_14726.xml 1413740 142 757
+10-19 13:35:42.996  17962-18000/fr.vpm.audiorss D/measures﹕ refresh -end- http://radiofrance-podcast.net/podcast09/rss_14726.xml 1413740 143 002
+10-19 13:35:43.606  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh e http://radiofrance-podcast.net/podcast09/rss_13950.xml 1413740 143 610
+10-19 13:35:43.681  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh s http://radiofrance-podcast.net/podcast09/rss_13940.xml 1413740 143 686
+10-19 13:35:45.936  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh e http://radiofrance-podcast.net/podcast09/rss_13940.xml 1413740 145 940
+10-19 13:35:45.936  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh s http://radiofrance-podcast.net/podcast09/rss_11538.xml 1413740 145 940
+10-19 13:35:47.076  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh e http://radiofrance-podcast.net/podcast09/rss_11538.xml 1413740 147 082
+10-19 13:35:47.076  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh s http://radiofrance-podcast.net/podcast09/rss_14726.xml 1413740 147 083
+10-19 13:35:50.116  17962-17962/fr.vpm.audiorss D/measures﹕ postRefresh e http://radiofrance-podcast.net/podcast09/rss_14726.xml 1413740 150 119
+
