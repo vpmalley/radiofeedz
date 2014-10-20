@@ -27,15 +27,8 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   Exception mE = null;
 
-  ProgressDialog mDialog;
-
   public AsyncFeedRefresh(FeedsActivity activity) {
     this.activity = activity;
-    mDialog = new ProgressDialog(activity, ProgressDialog.STYLE_SPINNER);
-    mDialog.setIndeterminate(true);
-    mDialog.setTitle("Refreshing feeds");
-    mDialog.setMessage("Please wait a few seconds ...");
-    mDialog.show();
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
 
@@ -104,7 +97,6 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   protected void onPostExecute(RSSChannel newChannel) {
     Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     activity.stopRefreshProgress();
-    mDialog.dismiss();
     if (mE != null) {
       handleException(mE);
     } else {

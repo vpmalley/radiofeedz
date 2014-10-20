@@ -41,7 +41,7 @@ import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedsActivity extends Activity {
+public class FeedsActivity extends Activity implements ProgressListener {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -182,7 +182,6 @@ public class FeedsActivity extends Activity {
   }
 
   public void startRefreshProgress() {
-    // mRefreshProgress.setIndeterminate(true);
     mRefreshProgress.setVisibility(View.VISIBLE);
   }
 
@@ -191,7 +190,6 @@ public class FeedsActivity extends Activity {
   }
 
   public void stopRefreshProgress() {
-    // mRefreshProgress.setIndeterminate(false);
     mRefreshProgress.setVisibility(View.GONE);
   }
 
