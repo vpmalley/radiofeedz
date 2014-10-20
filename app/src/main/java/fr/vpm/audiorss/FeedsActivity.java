@@ -36,6 +36,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -57,7 +59,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   private static final int MAX_ITEMS = 80;
 
-  List<RSSChannel> channels = new ArrayList<RSSChannel>();
+  private List<RSSChannel> channels = new ArrayList<RSSChannel>();
 
   ListView mFeeds;
 
@@ -80,17 +82,26 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
     mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
 
-    refreshView();
+    loadChannelsAndRefreshView();
   }
 
-  public void refreshView() {
+  public void loadChannelsAndRefreshView(){
+    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this);
+    // read all RSSChannel items from DB and refresh views
+    asyncDbReader.execute(new String[0]);
+  }
+
+    public void setChannels(List<RSSChannel> channels) {
+        this.channels = channels;
+    }
+
+    public void refreshView() {
     Log.d("measures", "counter" + refreshCounter);
     if (refreshCounter > 0){
         refreshCounter--;
         return;
     }
     Log.d("FeedsActivity", "refreshing view");
-    channels = loadAllFromDB();
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new Comparator<RSSItem>() {
       @Override
       public int compare(RSSItem lhs, RSSItem rhs) {
@@ -191,20 +202,6 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   public void stopRefreshProgress() {
     mRefreshProgress.setVisibility(View.GONE);
-  }
-
-  private List<RSSChannel> loadAllFromDB() {
-    // return RSSChannel.allChannels;
-    List<RSSChannel> channels = new ArrayList<RSSChannel>();
-    try {
-      DbRSSChannel dbReader = new DbRSSChannel(this);
-      channels = dbReader.readAll();
-      dbReader.closeDb();
-    } catch (ParseException e) {
-      displayError(E_RETRIEVING_FEEDS);
-    }
-    Log.d("retrieving feeds", channels.size() + " channels");
-    return channels;
   }
 
   /**

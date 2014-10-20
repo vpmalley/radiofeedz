@@ -1,7 +1,5 @@
 package fr.vpm.audiorss.db;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -59,7 +57,7 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
     protected void onPostExecute(RSSChannel rssChannel) {
         activity.stopRefreshProgress();
         Log.d("measures", "refreshActi s " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-        activity.refreshView();
+        activity.loadChannelsAndRefreshView();
         Log.d("measures", "refreshActi e " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     }
 }
