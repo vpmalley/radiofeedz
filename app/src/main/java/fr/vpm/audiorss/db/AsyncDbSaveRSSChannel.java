@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.db;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -18,9 +19,16 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
 
     private final DbRSSChannel dbUpdater;
 
+    private final ProgressDialog mDialog;
+
     public AsyncDbSaveRSSChannel(FeedsActivity feedsActivity) {
         this.activity = feedsActivity;
         this.dbUpdater = new DbRSSChannel(feedsActivity);
+        mDialog = new ProgressDialog(activity, ProgressDialog.STYLE_SPINNER);
+        mDialog.setIndeterminate(true);
+        mDialog.setTitle("Saving feeds");
+        mDialog.setMessage("Please wait a few seconds ...");
+        mDialog.show();
     }
 
     @Override
@@ -50,6 +58,9 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
 
     @Override
     protected void onPostExecute(RSSChannel rssChannel) {
+        mDialog.dismiss();
+        Log.d("measures", "refreshActi s " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
         activity.refreshView();
+        Log.d("measures", "refreshActi e " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     }
 }

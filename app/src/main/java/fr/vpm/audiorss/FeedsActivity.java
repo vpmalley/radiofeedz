@@ -71,6 +71,8 @@ public class FeedsActivity extends Activity {
 
   List<RSSItem> items;
 
+  int refreshCounter = 0;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -82,6 +84,11 @@ public class FeedsActivity extends Activity {
   }
 
   public void refreshView() {
+    Log.d("measures", "counter" + refreshCounter);
+    if (refreshCounter > 0){
+        refreshCounter--;
+        return;
+    }
     Log.d("FeedsActivity", "refreshing view");
     channels = loadAllFromDB();
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new Comparator<RSSItem>() {
@@ -214,6 +221,9 @@ public class FeedsActivity extends Activity {
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
+    if (checkNetwork()) {
+        refreshCounter = channels.size() - 1;
+    }
     for (RSSChannel channel : channels) {
       if (checkNetwork()) {
         new AsyncFeedRefresh(FeedsActivity.this).execute(channel.getUrl());
