@@ -15,7 +15,7 @@ import android.util.Log;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class DbRSSChannel {
+public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private static final String COMMA = ",";
   final static String T_RSS_CHANNEL = "rsschannel";
@@ -44,6 +44,7 @@ public class DbRSSChannel {
     mDb = mDbHelper.getWritableDatabase();
   }
 
+  @Override
   public RSSChannel readById(long id) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?",

@@ -103,8 +103,8 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   @Override
   protected void onPostExecute(RSSChannel newChannel) {
     Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    mDialog.dismiss();
     activity.stopRefreshProgress();
+    mDialog.dismiss();
     if (mE != null) {
       handleException(mE);
     } else {
@@ -113,7 +113,6 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
       } catch (ParseException e) {
         handleException(e);
       }
-      activity.refreshView();
     }
     Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     super.onPostExecute(newChannel);

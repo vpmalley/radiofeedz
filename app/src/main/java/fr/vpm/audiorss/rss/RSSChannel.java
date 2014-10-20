@@ -9,10 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.util.Log;
-import fr.vpm.audiorss.db.DbRSSChannel;
+
+import fr.vpm.audiorss.FeedsActivity;
+import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.media.Media;
 
 public class RSSChannel implements Serializable {
@@ -165,7 +168,8 @@ public class RSSChannel implements Serializable {
     this.lastBuildDate = lastBuildDate;
   }
 
-  public void saveToDb(Context context) throws ParseException {
+  public void saveToDb(FeedsActivity activity) throws ParseException {
+      /*
     DbRSSChannel dbUpdater = new DbRSSChannel(context);
     RSSChannel existingChannel = dbUpdater.readByUrl(getUrl());
     if (existingChannel != null) {
@@ -175,6 +179,9 @@ public class RSSChannel implements Serializable {
       dbUpdater.add(this);
     }
     dbUpdater.closeDb();
+      */
+      AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(activity);
+      asyncDbUpdater.execute(this);
   }
 
   public void setImage(Media image) {
