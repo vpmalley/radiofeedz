@@ -12,6 +12,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import fr.vpm.audiorss.FeedsActivity;
@@ -169,19 +170,8 @@ public class RSSChannel implements Serializable {
   }
 
   public void saveToDb(FeedsActivity activity) throws ParseException {
-      /*
-    DbRSSChannel dbUpdater = new DbRSSChannel(context);
-    RSSChannel existingChannel = dbUpdater.readByUrl(getUrl());
-    if (existingChannel != null) {
-      dbUpdater.update(existingChannel, this);
-    } else {
-      downloadImage(context);
-      dbUpdater.add(this);
-    }
-    dbUpdater.closeDb();
-      */
       AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(activity);
-      asyncDbUpdater.execute(this);
+      asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
 
   public void setImage(Media image) {

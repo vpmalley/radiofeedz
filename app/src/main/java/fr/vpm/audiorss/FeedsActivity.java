@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -88,7 +89,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
   public void loadChannelsAndRefreshView(){
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.execute(new String[0]);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
   }
 
     public void setChannels(List<RSSChannel> channels) {
@@ -221,7 +222,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     }
     for (RSSChannel channel : channels) {
       if (checkNetwork()) {
-        new AsyncFeedRefresh(FeedsActivity.this).execute(channel.getUrl());
+        new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
       }
     }
   }
@@ -329,7 +330,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     if (exists) {
       displayError(E_DUPLICATE_FEED);
     } else if (checkNetwork()) {
-      new AsyncFeedRefresh(FeedsActivity.this).execute(url);
+      new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
   }
 
