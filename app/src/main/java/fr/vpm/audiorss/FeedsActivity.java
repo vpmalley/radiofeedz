@@ -41,6 +41,9 @@ import android.widget.Toast;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
+import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -56,30 +59,36 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   public static final String E_DUPLICATE_FEED = "This feed already exists in your list.";
 
-  public static final String E_NOT_CONNECTED = "This device does not appear connected to the Internet.";
-
   private static final int MAX_ITEMS = 80;
 
   private List<RSSChannel> channels = new ArrayList<RSSChannel>();
 
   ListView mFeeds;
 
-  ImageButton mRefreshButton;
-
-  ImageButton mAddButton;
-
-  ImageButton mTestButton;
-
+  /**
+   * Progress bar to indicate feeds update is in progress.
+   */
   ProgressBar mRefreshProgress;
 
+  /**
+   * the items of feeds that are displayed
+   */
   List<RSSItem> items;
 
+  /**
+   * The counter is used to join all threads for the refresh of multiple feeds.
+   * The refresh of the view is done only once, when all feeds are up-to-date.
+   */
   int refreshCounter = 0;
+
+  NetworkChecker networkChecker;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
+
+    networkChecker = new DefaultNetworkChecker();
 
     mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
 
@@ -103,49 +112,11 @@ public class FeedsActivity extends Activity implements ProgressListener {
         return;
     }
     Log.d("FeedsActivity", "refreshing view");
-    SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new Comparator<RSSItem>() {
-      @Override
-      public int compare(RSSItem lhs, RSSItem rhs) {
+    SharedPreferences sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(FeedsActivity.this);
+    String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
+    SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
-        SharedPreferences sharedPref = PreferenceManager
-            .getDefaultSharedPreferences(FeedsActivity.this);
-        String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
-
-        int comparison = 0;
-        Date lhsDate = null;
-        Date rhsDate = null;
-        try {
-          lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
-          rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
-        } catch (ParseException e) {
-          Log.e("Exception", e.toString());
-        }
-
-        // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
-        int comparisonByDate = 0;
-        if ((lhsDate != null) && (rhsDate != null)) {
-          comparisonByDate = lhsDate.compareTo(rhsDate);
-        }
-        int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
-
-        if (ordering.contains("alpha")) {
-          comparison = comparisonByName;
-        } else {
-          comparison = comparisonByDate;
-        }
-
-        int factor = 1;
-        if (ordering.contains("reverse")) {
-          factor = -1;
-        }
-
-        if (comparison == 0) {
-          comparison = comparisonByName + comparisonByDate;
-        }
-
-        return factor * comparison;
-      }
-    });
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
       allItems.addAll(channel.getItems());
@@ -217,11 +188,11 @@ public class FeedsActivity extends Activity implements ProgressListener {
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
-    if (checkNetwork()) {
+    if (networkChecker.checkNetwork(this)) {
         refreshCounter = channels.size() - 1;
     }
     for (RSSChannel channel : channels) {
-      if (checkNetwork()) {
+      if (networkChecker.checkNetwork(this)) {
         new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
       }
     }
@@ -236,7 +207,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    Intent i = null;
+    Intent i;
     boolean result = false;
     switch (item.getItemId()) {
     case R.id.action_search:
@@ -329,20 +300,8 @@ public class FeedsActivity extends Activity implements ProgressListener {
     }
     if (exists) {
       displayError(E_DUPLICATE_FEED);
-    } else if (checkNetwork()) {
+    } else if (networkChecker.checkNetwork(this)) {
       new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
-  }
-
-  private boolean checkNetwork() {
-    boolean isConnected = false;
-    ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-    if (networkInfo != null && networkInfo.isConnected()) {
-      isConnected = true;
-    } else {
-      displayError(E_NOT_CONNECTED);
-    }
-    return isConnected;
   }
 }
