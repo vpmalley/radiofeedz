@@ -43,6 +43,7 @@ import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -125,7 +126,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
       }
     }
 
-    int itemNumbers = getNbDisplayedItems(allItems);
+    int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
     items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
 
     ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
@@ -156,10 +157,8 @@ public class FeedsActivity extends Activity implements ProgressListener {
    * @param allItems the set of available items
    * @return the number of items to display
    */
-  private int getNbDisplayedItems(SortedSet<RSSItem> allItems) {
+  private int getNbDisplayedItems(SharedPreferences sharedPref, SortedSet<RSSItem> allItems) {
     // preparing the number of items to display
-    SharedPreferences sharedPref = PreferenceManager
-            .getDefaultSharedPreferences(FeedsActivity.this);
     int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(MAX_ITEMS)));
     return Math.min(allItems.size(), maxItems);
   }
@@ -188,13 +187,9 @@ public class FeedsActivity extends Activity implements ProgressListener {
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
-    if (networkChecker.checkNetwork(this)) {
-        refreshCounter = channels.size() - 1;
-    }
+    refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
-      if (networkChecker.checkNetwork(this)) {
         new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
-      }
     }
   }
 
@@ -216,16 +211,19 @@ public class FeedsActivity extends Activity implements ProgressListener {
       result = true;
       break;
     case R.id.action_add:
-      String feedUrl = retrieveFeedFromClipboard();
+      FeedAdder feedAdder = new FeedAdder(this, networkChecker);
+      String feedUrl = feedAdder.retrieveFeedFromClipboard();
       if (feedUrl != null) {
-        askForFeedValidation(feedUrl);
+        feedAdder.askForFeedValidation(channels, feedUrl);
       } else {
-        tellToCopy();
+        feedAdder.tellToCopy();
       }
       result = true;
       break;
     case R.id.action_refresh:
-      launchFeedRefresh();
+      if (networkChecker.checkNetwork(this)) {
+        launchFeedRefresh();
+      }
       result = true;
       break;
     case R.id.action_settings:
@@ -239,69 +237,4 @@ public class FeedsActivity extends Activity implements ProgressListener {
     return result;
   }
 
-  private String retrieveFeedFromClipboard() {
-    String resultUrl = null;
-    ClipData data = ((ClipboardManager) getSystemService(CLIPBOARD_SERVICE)).getPrimaryClip();
-    if (data != null) {
-      ClipData.Item cbItem = data.getItemAt(0);
-      if (cbItem != null) {
-        String url = cbItem.getText().toString();
-        if ((url != null) && (url.startsWith("http"))) {
-          resultUrl = url;
-        }
-      }
-    }
-    return resultUrl;
-  }
-
-  private void askForFeedValidation(final String url) {
-    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(this);
-    confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-    confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
-    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-        addFeed(url);
-      }
-
-    });
-    confirmationBuilder.setNegativeButton("No", new OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-
-      }
-    });
-    confirmationBuilder.show();
-  }
-
-  private void tellToCopy() {
-    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(this);
-    confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-    confirmationBuilder
-        .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
-    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-      @Override
-      public void onClick(DialogInterface dialog, int which) {
-      }
-
-    });
-    confirmationBuilder.show();
-  }
-
-  private void addFeed(final String url) {
-    boolean exists = false;
-    for (RSSChannel channel : channels) {
-      if (channel.getUrl().equals(url)) {
-        exists = true;
-      }
-    }
-    if (exists) {
-      displayError(E_DUPLICATE_FEED);
-    } else if (networkChecker.checkNetwork(this)) {
-      new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-    }
-  }
 }
