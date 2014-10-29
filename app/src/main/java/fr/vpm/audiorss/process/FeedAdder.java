@@ -21,81 +21,81 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class FeedAdder {
 
-    public static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
+  private static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
 
-    private final FeedsActivity activity;
+  private final FeedsActivity activity;
 
-    private final NetworkChecker networkChecker;
+  private final NetworkChecker networkChecker;
 
-    public FeedAdder(FeedsActivity activity, NetworkChecker networkChecker) {
-        this.activity = activity;
-        this.networkChecker = networkChecker;
-    }
+  public FeedAdder(FeedsActivity activity, NetworkChecker networkChecker) {
+    this.activity = activity;
+    this.networkChecker = networkChecker;
+  }
 
 
-    public String retrieveFeedFromClipboard() {
-        String resultUrl = null;
-        ClipData data = ((ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE)).getPrimaryClip();
-        if (data != null) {
-            ClipData.Item cbItem = data.getItemAt(0);
-            if (cbItem != null) {
-                String url = cbItem.getText().toString();
-                if ((url != null) && (url.startsWith("http"))) {
-                    resultUrl = url;
-                }
-            }
+  public String retrieveFeedFromClipboard() {
+    String resultUrl = null;
+    ClipData data = ((ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE)).getPrimaryClip();
+    if (data != null) {
+      ClipData.Item cbItem = data.getItemAt(0);
+      if (cbItem != null) {
+        String url = cbItem.getText().toString();
+        if ((url != null) && (url.startsWith("http"))) {
+          resultUrl = url;
         }
-        return resultUrl;
+      }
     }
+    return resultUrl;
+  }
 
-    public void askForFeedValidation(final List<RSSChannel> channels, final String url) {
-        AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
-        confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-        confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
-        confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+  public void askForFeedValidation(final List<RSSChannel> channels, final String url) {
+    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
+    confirmationBuilder.setTitle(R.string.add_feed_clipboard);
+    confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
+    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                addFeed(channels, url);
-            }
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+        addFeed(channels, url);
+      }
 
-        });
-        confirmationBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+    });
+    confirmationBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
 
-            }
-        });
-        confirmationBuilder.show();
+      }
+    });
+    confirmationBuilder.show();
+  }
+
+  public void tellToCopy() {
+    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
+    confirmationBuilder.setTitle(R.string.add_feed_clipboard);
+    confirmationBuilder
+        .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
+    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+      @Override
+      public void onClick(DialogInterface dialog, int which) {
+      }
+
+    });
+    confirmationBuilder.show();
+  }
+
+  private void addFeed(List<RSSChannel> channels, final String url) {
+    boolean exists = false;
+    for (RSSChannel channel : channels) {
+      if (channel.getUrl().equals(url)) {
+        exists = true;
+      }
     }
-
-    public void tellToCopy() {
-        AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
-        confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-        confirmationBuilder
-                .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
-        confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-
-        });
-        confirmationBuilder.show();
+    if (exists) {
+      Toast.makeText(activity, E_ADDING_FEED, Toast.LENGTH_SHORT).show();
+    } else if (networkChecker.checkNetwork(activity)) {
+      new AsyncFeedRefresh(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
-
-    private void addFeed(List<RSSChannel> channels, final String url) {
-        boolean exists = false;
-        for (RSSChannel channel : channels) {
-            if (channel.getUrl().equals(url)) {
-                exists = true;
-            }
-        }
-        if (exists) {
-            Toast.makeText(activity, E_ADDING_FEED, Toast.LENGTH_SHORT).show();
-        } else if (networkChecker.checkNetwork(activity)) {
-            new AsyncFeedRefresh(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
-        }
-    }
+  }
 }

@@ -12,6 +12,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.util.Log;
 import android.util.Xml;
+
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -190,12 +191,12 @@ public class ItemParser {
     int depth = 1;
     while (depth != 0) {
       switch (parser.next()) {
-      case XmlPullParser.END_TAG:
-        depth--;
-        break;
-      case XmlPullParser.START_TAG:
-        depth++;
-        break;
+        case XmlPullParser.END_TAG:
+          depth--;
+          break;
+        case XmlPullParser.START_TAG:
+          depth++;
+          break;
       }
     }
   }
@@ -203,7 +204,7 @@ public class ItemParser {
   /**
    * Returns the Uri of a file if it is downloaded. Returns null if not
    * downloaded yet.
-   * 
+   *
    * @param fileId
    * @param context
    * @return

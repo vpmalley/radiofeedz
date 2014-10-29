@@ -28,7 +28,7 @@ public class FeedItemActivity extends Activity {
   RSSItem item = null;
 
   RSSChannel channel = null;
-  
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -42,7 +42,7 @@ public class FeedItemActivity extends Activity {
     if (i.hasExtra(CHANNEL)) {
       channel = (RSSChannel) i.getExtras().get(CHANNEL);
     }
-    
+
 
     TextView title = (TextView) findViewById(R.id.title);
 
@@ -68,7 +68,7 @@ public class FeedItemActivity extends Activity {
       }
       description.setText(item.getDescription());
     }
-    if (channel != null){
+    if (channel != null) {
       String imageUri = channel.getImage().getDeviceUri();
       if (imageUri != null) {
         channelPic.setImageURI(Uri.parse(imageUri));
@@ -91,20 +91,20 @@ public class FeedItemActivity extends Activity {
   public boolean onOptionsItemSelected(MenuItem item) {
     boolean result = false;
     switch (item.getItemId()) {
-    case R.id.action_download:
-      downloadMedia();
-      result = true;
-      break;
-    case R.id.action_web:
-      openWebsite();
-      result = true;
-      break;
-    case R.id.action_play:
-      playMedia();
-      result = true;
-      break;
-    default:
-      result = super.onOptionsItemSelected(item);
+      case R.id.action_download:
+        downloadMedia();
+        result = true;
+        break;
+      case R.id.action_web:
+        openWebsite();
+        result = true;
+        break;
+      case R.id.action_play:
+        playMedia();
+        result = true;
+        break;
+      default:
+        result = super.onOptionsItemSelected(item);
     }
     return result;
   }

@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+
 import fr.vpm.audiorss.http.AsyncFeedSearch;
 import fr.vpm.audiorss.http.SearchResult;
 

@@ -22,7 +22,7 @@ import fr.vpm.audiorss.media.Media;
 public class RSSChannel implements Serializable {
 
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 1L;
 
@@ -66,7 +66,7 @@ public class RSSChannel implements Serializable {
   List<String> tags;
 
   public RSSChannel(String rssUrl, String title, String link, String description, String category,
-      String imageUrl) {
+                    String imageUrl) {
     super();
     Log.d("RSSChannel", "creating " + rssUrl);
     latestItems = new HashMap<String, RSSItem>();
@@ -170,8 +170,8 @@ public class RSSChannel implements Serializable {
   }
 
   public void saveToDb(FeedsActivity activity) throws ParseException {
-      AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(activity);
-      asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(activity);
+    asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
 
   public void setImage(Media image) {

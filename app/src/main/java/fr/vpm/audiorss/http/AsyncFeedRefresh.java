@@ -15,6 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 
 import android.os.AsyncTask;
+
 import fr.vpm.audiorss.SearchFeedActivity;
 
 public class AsyncFeedSearch extends AsyncTask<String, Integer, List<SearchResult>> {

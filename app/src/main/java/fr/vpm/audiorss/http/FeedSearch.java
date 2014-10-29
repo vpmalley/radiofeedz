@@ -31,7 +31,6 @@ public class FeedSearch {
   static final String SEARCH_KEY = "";
 
   /**
-   * 
    * @param query
    * @return possible urls of the feed
    * @throws IOException

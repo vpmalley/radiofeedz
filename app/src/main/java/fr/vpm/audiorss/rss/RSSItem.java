@@ -175,7 +175,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
   }
 
   public void downloadMedia(Context context) {
-    if (media == null){
+    if (media == null) {
       media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl);
     }
     media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
@@ -194,7 +194,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
     RSSItem lhs = this;
     RSSItem rhs = (RSSItem) other;
     //SharedPreferences sharedPref = PreferenceManager
-      //      .getDefaultSharedPreferences(FeedsActivity.this);
+    //      .getDefaultSharedPreferences(FeedsActivity.this);
     //String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
     String ordering = "reverse_time";
 

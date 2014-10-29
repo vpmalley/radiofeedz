@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
 import fr.vpm.audiorss.media.Media;
 
 public class DbMedia {
@@ -24,8 +25,8 @@ public class DbMedia {
 
   private final static String IS_DL_KEY = "is_downloaded";
 
-  private final static String[] COLS_MEDIA = { DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
-      INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY };
+  private final static String[] COLS_MEDIA = {DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
+      INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY};
 
   final static String T_MEDIA = "media";
 
@@ -47,7 +48,7 @@ public class DbMedia {
       throw new IllegalArgumentException("Database is not open to read a media");
     }
     Cursor c = mDb.query(T_MEDIA, COLS_MEDIA, DatabaseOpenHelper._ID + "=?",
-        new String[] { String.valueOf(id) }, null, null, null);
+        new String[]{String.valueOf(id)}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       media = mediaFromCursorEntry(c);
@@ -70,12 +71,12 @@ public class DbMedia {
     ContentValues mediaValues = createContentValues(media);
     mediaValues.put(DatabaseOpenHelper._ID, media.getId());
     mDb.update(T_MEDIA, mediaValues, DatabaseOpenHelper._ID + "=?",
-        new String[] { String.valueOf(media.getId()) });
+        new String[]{String.valueOf(media.getId())});
     return media;
   }
 
   public void deleteById(long id) {
-    mDb.delete(T_MEDIA, DatabaseOpenHelper._ID + "=?", new String[] { String.valueOf(id) });
+    mDb.delete(T_MEDIA, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
   }
 
   ContentValues createContentValues(Media media) {

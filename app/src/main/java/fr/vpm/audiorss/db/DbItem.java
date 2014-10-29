@@ -8,15 +8,15 @@ import java.util.List;
  */
 public interface DbItem<T> {
 
-    T readById(long id) throws ParseException;
+  T readById(long id) throws ParseException;
 
-    List<T> readAll() throws ParseException;
+  List<T> readAll() throws ParseException;
 
-    T add(T item) throws ParseException;
+  T add(T item) throws ParseException;
 
-    T update(T existingItem, T newItem) throws ParseException;
+  T update(T existingItem, T newItem) throws ParseException;
 
-    void deleteById(long id);
+  void deleteById(long id);
 
 
 }

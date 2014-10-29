@@ -1,28 +1,8 @@
 package fr.vpm.audiorss;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -33,13 +13,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
-import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
@@ -96,32 +81,32 @@ public class FeedsActivity extends Activity implements ProgressListener {
     loadChannelsAndRefreshView();
   }
 
-  public void loadChannelsAndRefreshView(){
+  public void loadChannelsAndRefreshView() {
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
   }
 
-    public void setChannels(List<RSSChannel> channels) {
-        this.channels = channels;
-    }
+  public void setChannels(List<RSSChannel> channels) {
+    this.channels = channels;
+  }
 
-    public void refreshView() {
+  public void refreshView() {
     Log.d("measures", "counter" + refreshCounter);
-    if (refreshCounter > 0){
-        refreshCounter--;
-        return;
+    if (refreshCounter > 0) {
+      refreshCounter--;
+      return;
     }
     Log.d("FeedsActivity", "refreshing view");
     SharedPreferences sharedPref = PreferenceManager
-                .getDefaultSharedPreferences(FeedsActivity.this);
+        .getDefaultSharedPreferences(FeedsActivity.this);
     String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
       allItems.addAll(channel.getItems());
-      for (RSSItem item : channel.getItems()){
+      for (RSSItem item : channel.getItems()) {
         channelsByItem.put(item, channel);
       }
     }
@@ -154,6 +139,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   /**
    * Using the number of items in the set and the maximum of items displayed in the preferences, determines the maximum of items to display.
+   *
    * @param allItems the set of available items
    * @return the number of items to display
    */
@@ -177,7 +163,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
   /**
    * Displays error, as a Toast
-   * 
+   *
    * @param error
    */
   public void displayError(String error) {
@@ -189,7 +175,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     Log.d("FeedsActivity", "launching feed refresh");
     refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
-        new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
+      new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
     }
   }
 
@@ -205,34 +191,34 @@ public class FeedsActivity extends Activity implements ProgressListener {
     Intent i;
     boolean result = false;
     switch (item.getItemId()) {
-    case R.id.action_search:
-      i = new Intent(FeedsActivity.this, SearchFeedActivity.class);
-      startActivity(i);
-      result = true;
-      break;
-    case R.id.action_add:
-      FeedAdder feedAdder = new FeedAdder(this, networkChecker);
-      String feedUrl = feedAdder.retrieveFeedFromClipboard();
-      if (feedUrl != null) {
-        feedAdder.askForFeedValidation(channels, feedUrl);
-      } else {
-        feedAdder.tellToCopy();
-      }
-      result = true;
-      break;
-    case R.id.action_refresh:
-      if (networkChecker.checkNetwork(this)) {
-        launchFeedRefresh();
-      }
-      result = true;
-      break;
-    case R.id.action_settings:
-      i = new Intent(FeedsActivity.this, PreferencesActivity.class);
-      startActivity(i);
-      result = true;
-      break;
-    default:
-      result = super.onOptionsItemSelected(item);
+      case R.id.action_search:
+        i = new Intent(FeedsActivity.this, SearchFeedActivity.class);
+        startActivity(i);
+        result = true;
+        break;
+      case R.id.action_add:
+        FeedAdder feedAdder = new FeedAdder(this, networkChecker);
+        String feedUrl = feedAdder.retrieveFeedFromClipboard();
+        if (feedUrl != null) {
+          feedAdder.askForFeedValidation(channels, feedUrl);
+        } else {
+          feedAdder.tellToCopy();
+        }
+        result = true;
+        break;
+      case R.id.action_refresh:
+        if (networkChecker.checkNetwork(this)) {
+          launchFeedRefresh();
+        }
+        result = true;
+        break;
+      case R.id.action_settings:
+        i = new Intent(FeedsActivity.this, PreferencesActivity.class);
+        startActivity(i);
+        result = true;
+        break;
+      default:
+        result = super.onOptionsItemSelected(item);
     }
     return result;
   }

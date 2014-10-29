@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.media;
 
 import junit.framework.Assert;
+
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -48,7 +49,7 @@ public class Media implements Downloadable, Serializable {
   }
 
   public Media(long id, String name, String title, String url, String deviceUri, long downloadId,
-      boolean isDownloaded) {
+               boolean isDownloaded) {
     this(name, title, url);
     this.id = id;
     this.deviceUri = deviceUri;

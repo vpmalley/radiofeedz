@@ -33,7 +33,7 @@ public class SearchResult {
   public static List<SearchResult> lastSearch;
 
   public SearchResult(String kind, String title, String htmlTitle, String link, String displayLink,
-      String snippet, String formattedUrl, String htmlFormattedUrl) {
+                      String snippet, String formattedUrl, String htmlFormattedUrl) {
     super();
     this.kind = kind;
     this.title = title;

@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
+
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -19,9 +20,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private static final String COMMA = ",";
   final static String T_RSS_CHANNEL = "rsschannel";
-  final static String[] COLS_RSS_CHANNEL = { DatabaseOpenHelper._ID, RSSChannel.CAT_TAG,
+  final static String[] COLS_RSS_CHANNEL = {DatabaseOpenHelper._ID, RSSChannel.CAT_TAG,
       RSSChannel.DATE_TAG, RSSChannel.DESC_TAG, RSSChannel.IMAGE_TAG, RSSChannel.LINK_TAG, RSSChannel.IMAGE_ID_TAG,
-      RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY };
+      RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY};
 
   final static String T_CREATE_RSS_CHANNEL = "CREATE TABLE " + T_RSS_CHANNEL + " ("
       + DatabaseOpenHelper._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + RSSChannel.CAT_TAG
@@ -48,7 +49,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   public RSSChannel readById(long id) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?",
-        new String[] { String.valueOf(id) }, null, null, null);
+        new String[]{String.valueOf(id)}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
@@ -62,7 +63,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   public RSSChannel readByUrl(String url) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, RSSChannel.URL_KEY + "=?",
-        new String[] { url }, null, null, null);
+        new String[]{url}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
@@ -112,7 +113,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     ContentValues channelValues = createContentValues(existingChannel);
     channelValues.put(DatabaseOpenHelper._ID, existingChannel.getId());
     mDb.update(T_RSS_CHANNEL, channelValues, DatabaseOpenHelper._ID + "=?",
-        new String[] { String.valueOf(existingChannel.getId()) });
+        new String[]{String.valueOf(existingChannel.getId())});
 
     for (RSSItem item : existingChannel.getItems()) {
       addOrUpdate(item, existingChannel.getId());
@@ -128,10 +129,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     channelValues.put(RSSChannel.DESC_TAG, channel.getDescription());
     channelValues.put(RSSChannel.LINK_TAG, channel.getLink());
 
-     if (channel.getImage() != null){
-       channelValues.put(RSSChannel.IMAGE_ID_TAG, channel.getImage().getId());
-       new DbMedia(mDb).add(channel.getImage());
-     }
+    if (channel.getImage() != null) {
+      channelValues.put(RSSChannel.IMAGE_ID_TAG, channel.getImage().getId());
+      new DbMedia(mDb).add(channel.getImage());
+    }
 
     channelValues.put(RSSChannel.TAGS_KEY, TextUtils.join(COMMA, channel.getTags()));
     channelValues.put(RSSChannel.TITLE_TAG, channel.getTitle());
@@ -163,7 +164,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     if (item.getDbId() != -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());
       mDb.update(DatabaseOpenHelper.T_RSS_ITEM, itemValues, DatabaseOpenHelper._ID + "=?",
-          new String[] { String.valueOf(item.getDbId()) });
+          new String[]{String.valueOf(item.getDbId())});
     } else {
       long id = mDb.insert(DatabaseOpenHelper.T_RSS_ITEM, null, itemValues);
       item.setDbId(id);
@@ -172,9 +173,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   public void deleteById(long id) {
-    mDb.delete(T_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?", new String[] { String.valueOf(id) });
+    mDb.delete(T_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
     mDb.delete(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.CHANNEL_ID_KEY + "=?",
-        new String[] { String.valueOf(id) });
+        new String[]{String.valueOf(id)});
   }
 
   RSSChannel channelFromCursorEntry(Cursor c) throws ParseException {
@@ -205,7 +206,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   Map<String, RSSItem> readItemsByChannelId(long id) throws ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
-        DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[] { String.valueOf(id) }, null, null,
+        DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[]{String.valueOf(id)}, null, null,
         null);
     itemsC.moveToFirst();
     for (int i = 0; i < itemsC.getCount(); i++) {
