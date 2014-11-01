@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name="fr.vpm.audiorss.FeedsActivity"
+            android:name=".AllFeedItemsActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,7 +30,7 @@
         <activity
             android:name="fr.vpm.audiorss.SearchFeedActivity"
             android:label="@string/app_name"
-            android:parentActivityName="fr.vpm.audiorss.FeedsActivity" >
+            android:parentActivityName=".AllFeedItemsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.vpm.audiorss.FeedsActivity" />
@@ -38,7 +38,7 @@
         <activity
             android:name="fr.vpm.audiorss.PreferencesActivity"
             android:label="@string/app_name"
-            android:parentActivityName="fr.vpm.audiorss.FeedsActivity" >
+            android:parentActivityName=".AllFeedItemsActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="fr.vpm.audiorss.FeedsActivity" />
@@ -46,7 +46,7 @@
         <activity
             android:name="fr.vpm.audiorss.FeedItemActivity"
             android:label="@string/app_name"
-            android:parentActivityName="fr.vpm.audiorss.FeedsActivity" >
+            android:parentActivityName=".AllFeedItemsActivity" >
 
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data

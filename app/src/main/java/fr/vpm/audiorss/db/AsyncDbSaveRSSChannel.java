@@ -5,7 +5,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 
-import fr.vpm.audiorss.FeedsActivity;
+import fr.vpm.audiorss.AllFeedItemsActivity;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -13,11 +13,11 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSChannel> {
 
-  private final FeedsActivity activity;
+  private final AllFeedItemsActivity activity;
 
   private final DbRSSChannel dbUpdater;
 
-  public AsyncDbSaveRSSChannel(FeedsActivity feedsActivity) {
+  public AsyncDbSaveRSSChannel(AllFeedItemsActivity feedsActivity) {
     this.activity = feedsActivity;
     this.dbUpdater = new DbRSSChannel(feedsActivity);
     activity.startRefreshProgress();

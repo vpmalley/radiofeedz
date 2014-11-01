@@ -33,7 +33,7 @@ import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedsActivity extends Activity implements ProgressListener {
+public class AllFeedItemsActivity extends Activity implements ProgressListener {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -99,7 +99,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     }
     Log.d("FeedsActivity", "refreshing view");
     SharedPreferences sharedPref = PreferenceManager
-        .getDefaultSharedPreferences(FeedsActivity.this);
+        .getDefaultSharedPreferences(AllFeedItemsActivity.this);
     String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
@@ -124,7 +124,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
 
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-          Intent i = new Intent(FeedsActivity.this, FeedItemActivity.class);
+          Intent i = new Intent(AllFeedItemsActivity.this, FeedItemActivity.class);
           i.putExtra(FeedItemActivity.ITEM, items.get(position));
           i.putExtra(FeedItemActivity.CHANNEL, channelsByItem.get(items.get(position)));
           startActivity(i);
@@ -175,7 +175,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     Log.d("FeedsActivity", "launching feed refresh");
     refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
-      new AsyncFeedRefresh(FeedsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
+      new AsyncFeedRefresh(AllFeedItemsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
     }
   }
 
@@ -192,7 +192,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
     boolean result = false;
     switch (item.getItemId()) {
       case R.id.action_search:
-        i = new Intent(FeedsActivity.this, SearchFeedActivity.class);
+        i = new Intent(AllFeedItemsActivity.this, SearchFeedActivity.class);
         startActivity(i);
         result = true;
         break;
@@ -213,7 +213,7 @@ public class FeedsActivity extends Activity implements ProgressListener {
         result = true;
         break;
       case R.id.action_settings:
-        i = new Intent(FeedsActivity.this, PreferencesActivity.class);
+        i = new Intent(AllFeedItemsActivity.this, PreferencesActivity.class);
         startActivity(i);
         result = true;
         break;

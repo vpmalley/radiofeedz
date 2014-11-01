@@ -12,11 +12,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import fr.vpm.audiorss.FeedsActivity;
+import fr.vpm.audiorss.AllFeedItemsActivity;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -24,11 +23,11 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   String url;
 
-  FeedsActivity activity;
+  AllFeedItemsActivity activity;
 
   Exception mE = null;
 
-  public AsyncFeedRefresh(FeedsActivity activity) {
+  public AsyncFeedRefresh(AllFeedItemsActivity activity) {
     this.activity = activity;
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }

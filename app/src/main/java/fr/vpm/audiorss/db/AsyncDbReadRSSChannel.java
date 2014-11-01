@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.audiorss.FeedsActivity;
+import fr.vpm.audiorss.AllFeedItemsActivity;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -17,11 +17,11 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSChannel>> {
 
-  private final FeedsActivity activity;
+  private final AllFeedItemsActivity activity;
 
   private final DbRSSChannel dbReader;
 
-  public AsyncDbReadRSSChannel(FeedsActivity feedsActivity) {
+  public AsyncDbReadRSSChannel(AllFeedItemsActivity feedsActivity) {
     this.activity = feedsActivity;
     this.dbReader = new DbRSSChannel(feedsActivity);
     activity.startRefreshProgress();
