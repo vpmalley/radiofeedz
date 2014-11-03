@@ -3,7 +3,6 @@ package fr.vpm.audiorss;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,19 +19,22 @@ import fr.vpm.audiorss.rss.RSSChannel;
 /**
  * Created by vince on 03/11/14.
  */
-public class FeedsManager extends Activity implements FeedsActivity<List<RSSChannel>>, ProgressListener {
+public class FeedsManager extends Activity implements FeedsActivity<List<RSSChannel>> {
 
   private ListView mFeeds;
 
-  private ProgressBar mRefreshProgress;
-
   private List<RSSChannel> feeds;
+
+  /**
+   * Progress bar manager to indicate feeds update is in progress.
+   */
+  private ProgressBarListener progressBarListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
-    mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
+    progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     mFeeds = (ListView) findViewById(R.id.list);
     mFeeds.setTextFilterEnabled(true);
 
@@ -41,7 +43,7 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(this, this);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
@@ -64,20 +66,8 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
    */
   private void setContextualListeners() {
     mFeeds.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-    LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(this, this);
+    LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(progressBarListener, this);
     final AbsListView.MultiChoiceModeListener actionModeCallback = new FeedChoiceModeListener(feeds, callback, this);
     mFeeds.setMultiChoiceModeListener(actionModeCallback);
-  }
-
-  public void startRefreshProgress() {
-    mRefreshProgress.setVisibility(View.VISIBLE);
-  }
-
-  public void updateProgress(int progress) {
-    mRefreshProgress.setProgress(progress);
-  }
-
-  public void stopRefreshProgress() {
-    mRefreshProgress.setVisibility(View.GONE);
   }
 }

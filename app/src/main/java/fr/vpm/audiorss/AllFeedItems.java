@@ -25,18 +25,16 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
-import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChannel>>, ProgressListener {
+public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChannel>> {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -55,9 +53,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   private ListView mFeedItems;
 
   /**
-   * Progress bar to indicate feeds update is in progress.
+   * Progress bar manager to indicate feeds update is in progress.
    */
-  private ProgressBar mRefreshProgress;
+  private ProgressBarListener progressBarListener;
 
   /**
    * the items of feeds that are displayed
@@ -79,14 +77,14 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     networkChecker = new DefaultNetworkChecker();
 
-    mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
+    progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
     loadDataAndRefreshView();
   }
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(this, this);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
@@ -153,18 +151,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     // preparing the number of items to display
     int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(DEFAULT_MAX_ITEMS)));
     return Math.min(allItems.size(), maxItems);
-  }
-
-  public void startRefreshProgress() {
-    mRefreshProgress.setVisibility(View.VISIBLE);
-  }
-
-  public void updateProgress(int progress) {
-    mRefreshProgress.setProgress(progress);
-  }
-
-  public void stopRefreshProgress() {
-    mRefreshProgress.setVisibility(View.GONE);
   }
 
   /**
