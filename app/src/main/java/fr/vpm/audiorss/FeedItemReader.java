@@ -19,7 +19,7 @@ import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedItemActivity extends Activity {
+public class FeedItemReader extends Activity {
 
   public static final String ITEM = "item";
 

@@ -40,7 +40,7 @@ public class SearchFeedActivity extends Activity {
   public void refreshView() {
 
     ArrayAdapter<SearchResult> searchAdapter = new ArrayAdapter<SearchResult>(this,
-        R.layout.activity_item, SearchResult.lastSearch);
+        R.layout.list_item, SearchResult.lastSearch);
     // fill ListView with all the items
     ListView results = (ListView) findViewById(R.id.search_results);
     results.setAdapter(searchAdapter);

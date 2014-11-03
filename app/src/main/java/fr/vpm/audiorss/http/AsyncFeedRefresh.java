@@ -15,7 +15,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import fr.vpm.audiorss.AllFeedItemsActivity;
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -23,11 +23,11 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   String url;
 
-  AllFeedItemsActivity activity;
+  AllFeedItems activity;
 
   Exception mE = null;
 
-  public AsyncFeedRefresh(AllFeedItemsActivity activity) {
+  public AsyncFeedRefresh(AllFeedItems activity) {
     this.activity = activity;
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }

@@ -34,7 +34,7 @@ import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItemsActivity extends Activity implements ProgressListener, AsyncCallbackListener<List<RSSChannel>> {
+public class AllFeedItems extends Activity implements ProgressListener, AsyncCallbackListener<List<RSSChannel>> {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -100,7 +100,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
     }
     Log.d("FeedsActivity", "refreshing view");
     SharedPreferences sharedPref = PreferenceManager
-        .getDefaultSharedPreferences(AllFeedItemsActivity.this);
+        .getDefaultSharedPreferences(AllFeedItems.this);
     String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
@@ -115,7 +115,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
     int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
     items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
 
-    ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
+    ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.list_item,
         items);
     // fill ListView with all the items
     if (mFeedItems == null) {
@@ -125,9 +125,9 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
 
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-          Intent i = new Intent(AllFeedItemsActivity.this, FeedItemActivity.class);
-          i.putExtra(FeedItemActivity.ITEM, items.get(position));
-          i.putExtra(FeedItemActivity.CHANNEL, channelsByItem.get(items.get(position)));
+          Intent i = new Intent(AllFeedItems.this, FeedItemReader.class);
+          i.putExtra(FeedItemReader.ITEM, items.get(position));
+          i.putExtra(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
           startActivity(i);
 
         }
@@ -176,14 +176,14 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
     Log.d("FeedsActivity", "launching feed refresh");
     refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
-      new AsyncFeedRefresh(AllFeedItemsActivity.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
+      new AsyncFeedRefresh(AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
     }
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
-    getMenuInflater().inflate(R.menu.welcome, menu);
+    getMenuInflater().inflate(R.menu.allfeedsitem, menu);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -193,7 +193,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
     boolean result = false;
     switch (item.getItemId()) {
       case R.id.action_search:
-        i = new Intent(AllFeedItemsActivity.this, SearchFeedActivity.class);
+        i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
         startActivity(i);
         result = true;
         break;
@@ -214,12 +214,12 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
         result = true;
         break;
       case R.id.action_settings:
-        i = new Intent(AllFeedItemsActivity.this, PreferencesActivity.class);
+        i = new Intent(AllFeedItems.this, PreferencesActivity.class);
         startActivity(i);
         result = true;
         break;
       case R.id.action_manage:
-        i = new Intent(AllFeedItemsActivity.this, FeedsManager.class);
+        i = new Intent(AllFeedItems.this, FeedsManager.class);
         startActivity(i);
         result = true;
         break;

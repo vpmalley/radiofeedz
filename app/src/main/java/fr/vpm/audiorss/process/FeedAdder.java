@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import fr.vpm.audiorss.AllFeedItemsActivity;
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.NetworkChecker;
@@ -23,11 +23,11 @@ public class FeedAdder {
 
   private static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
 
-  private final AllFeedItemsActivity activity;
+  private final AllFeedItems activity;
 
   private final NetworkChecker networkChecker;
 
-  public FeedAdder(AllFeedItemsActivity activity, NetworkChecker networkChecker) {
+  public FeedAdder(AllFeedItems activity, NetworkChecker networkChecker) {
     this.activity = activity;
     this.networkChecker = networkChecker;
   }

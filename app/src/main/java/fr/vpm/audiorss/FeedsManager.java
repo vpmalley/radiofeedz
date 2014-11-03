@@ -53,7 +53,7 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
   }
 
   public void refreshView() {
-    ArrayAdapter<RSSChannel> itemAdapter = new ArrayAdapter<RSSChannel>(this, R.layout.activity_item,
+    ArrayAdapter<RSSChannel> itemAdapter = new ArrayAdapter<RSSChannel>(this, R.layout.list_item,
         feeds);
     // fill ListView with all the feeds
     mFeeds.setAdapter(itemAdapter);

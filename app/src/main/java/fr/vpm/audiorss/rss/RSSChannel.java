@@ -14,7 +14,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import fr.vpm.audiorss.AllFeedItemsActivity;
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.media.Media;
 
@@ -168,7 +168,7 @@ public class RSSChannel implements Serializable {
     this.lastBuildDate = lastBuildDate;
   }
 
-  public void saveToDb(AllFeedItemsActivity activity) throws ParseException {
+  public void saveToDb(AllFeedItems activity) throws ParseException {
     AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(activity);
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
