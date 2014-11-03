@@ -46,29 +46,29 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
 
   public static final String E_DUPLICATE_FEED = "This feed already exists in your list.";
 
-  private static final int MAX_ITEMS = 80;
+  private static final int DEFAULT_MAX_ITEMS = 80;
 
   private List<RSSChannel> channels = new ArrayList<RSSChannel>();
 
-  ListView mFeedItems;
+  private ListView mFeedItems;
 
   /**
    * Progress bar to indicate feeds update is in progress.
    */
-  ProgressBar mRefreshProgress;
+  private ProgressBar mRefreshProgress;
 
   /**
    * the items of feeds that are displayed
    */
-  List<RSSItem> items;
+  private List<RSSItem> items;
 
   /**
    * The counter is used to join all threads for the refresh of multiple feeds.
    * The refresh of the view is done only once, when all feeds are up-to-date.
    */
-  int refreshCounter = 0;
+  private int refreshCounter = 0;
 
-  NetworkChecker networkChecker;
+  private NetworkChecker networkChecker;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
    */
   private int getNbDisplayedItems(SharedPreferences sharedPref, SortedSet<RSSItem> allItems) {
     // preparing the number of items to display
-    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(MAX_ITEMS)));
+    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(DEFAULT_MAX_ITEMS)));
     return Math.min(allItems.size(), maxItems);
   }
 
