@@ -218,6 +218,11 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener, 
         startActivity(i);
         result = true;
         break;
+      case R.id.action_manage:
+        i = new Intent(AllFeedItemsActivity.this, FeedsManager.class);
+        startActivity(i);
+        result = true;
+        break;
       default:
         result = super.onOptionsItemSelected(item);
     }
