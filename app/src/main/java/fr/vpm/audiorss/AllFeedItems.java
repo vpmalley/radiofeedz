@@ -25,6 +25,8 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
+import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
+import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
@@ -34,7 +36,7 @@ import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends Activity implements ProgressListener, AsyncCallbackListener<List<RSSChannel>> {
+public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChannel>>, ProgressListener {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -79,16 +81,19 @@ public class AllFeedItems extends Activity implements ProgressListener, AsyncCal
 
     mRefreshProgress = (ProgressBar) findViewById(R.id.refreshprogress);
 
-    loadChannelsAndRefreshView();
+    loadDataAndRefreshView();
   }
 
-  public void loadChannelsAndRefreshView() {
-    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this, this);
+  @Override
+  public void loadDataAndRefreshView() {
+    RefreshViewCallback callback = new RefreshViewCallback(this, this);
+    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
   }
 
-  public void setChannels(List<RSSChannel> channels) {
+  @Override
+  public void setData(List<RSSChannel> channels) {
     this.channels = channels;
   }
 
@@ -227,23 +232,5 @@ public class AllFeedItems extends Activity implements ProgressListener, AsyncCal
         result = super.onOptionsItemSelected(item);
     }
     return result;
-  }
-
-  /**
-   * Called before the RSSChannels are retrieved by an instance of AsyncDbReadRSSChannel
-   */
-  @Override
-  public void onPreExecute() {
-    startRefreshProgress();
-  }
-
-  /**
-   * Called after the RSSChannels are retrieved by an instance of AsyncDbReadRSSChannel
-   */
-  @Override
-  public void onPostExecute(List<RSSChannel> rssChannels) {
-    setChannels(rssChannels);
-    refreshView();
-    stopRefreshProgress();
   }
 }

@@ -1,11 +1,15 @@
 package fr.vpm.audiorss.db;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -13,14 +17,17 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSChannel> {
 
-  private final AllFeedItems activity;
+  private final Context context;
+
+  private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
 
   private final DbRSSChannel dbUpdater;
 
-  public AsyncDbSaveRSSChannel(AllFeedItems feedsActivity) {
-    this.activity = feedsActivity;
-    this.dbUpdater = new DbRSSChannel(feedsActivity);
-    activity.startRefreshProgress();
+  public AsyncDbSaveRSSChannel(AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener, Context context) {
+    this.context = context;
+    this.dbUpdater = new DbRSSChannel(context);
+    this.asyncCallbackListener = asyncCallbackListener;
+    asyncCallbackListener.onPreExecute();
   }
 
   @Override
@@ -36,7 +43,7 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
       if (existingChannel != null) {
         persistedChannel = dbUpdater.update(existingChannel, newChannel);
       } else { // new channel
-        newChannel.downloadImage(activity);
+        newChannel.downloadImage(context);
         persistedChannel = dbUpdater.add(newChannel);
       }
     } catch (ParseException e) {
@@ -49,15 +56,9 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
   }
 
   @Override
-  protected void onProgressUpdate(Integer... values) {
-    activity.updateProgress(values[0]);
-  }
-
-  @Override
   protected void onPostExecute(RSSChannel rssChannel) {
-    activity.stopRefreshProgress();
-    Log.d("measures", "refreshActi s " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    activity.loadChannelsAndRefreshView();
-    Log.d("measures", "refreshActi e " + rssChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    List<RSSChannel> channels = new ArrayList<RSSChannel>();
+    channels.add(rssChannel);
+    asyncCallbackListener.onPostExecute(channels);
   }
 }
