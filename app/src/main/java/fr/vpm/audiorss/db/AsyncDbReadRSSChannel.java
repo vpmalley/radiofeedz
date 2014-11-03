@@ -1,5 +1,6 @@
 package fr.vpm.audiorss.db;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,7 +8,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.audiorss.AllFeedItemsActivity;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -17,14 +18,14 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSChannel>> {
 
-  private final AllFeedItemsActivity activity;
+  private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
 
   private final DbRSSChannel dbReader;
 
-  public AsyncDbReadRSSChannel(AllFeedItemsActivity feedsActivity) {
-    this.activity = feedsActivity;
-    this.dbReader = new DbRSSChannel(feedsActivity);
-    activity.startRefreshProgress();
+  public AsyncDbReadRSSChannel(AsyncCallbackListener<List<RSSChannel>> callbackListener, Context context) {
+    this.asyncCallbackListener = callbackListener;
+    this.dbReader = new DbRSSChannel(context);
+    asyncCallbackListener.onPreExecute();
   }
 
   @Override
@@ -48,8 +49,6 @@ public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSCh
 
   @Override
   protected void onPostExecute(List<RSSChannel> rssChannels) {
-    activity.setChannels(rssChannels);
-    activity.refreshView();
-    activity.stopRefreshProgress();
+    asyncCallbackListener.onPostExecute(rssChannels);
   }
 }

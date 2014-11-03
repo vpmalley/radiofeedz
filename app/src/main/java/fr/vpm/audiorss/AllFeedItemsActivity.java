@@ -28,12 +28,13 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItemsActivity extends Activity implements ProgressListener {
+public class AllFeedItemsActivity extends Activity implements ProgressListener, AsyncCallbackListener<List<RSSChannel>> {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -49,7 +50,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener {
 
   private List<RSSChannel> channels = new ArrayList<RSSChannel>();
 
-  ListView mFeeds;
+  ListView mFeedItems;
 
   /**
    * Progress bar to indicate feeds update is in progress.
@@ -82,7 +83,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener {
   }
 
   public void loadChannelsAndRefreshView() {
-    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this);
+    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(this, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
   }
@@ -117,10 +118,10 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener {
     ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.activity_item,
         items);
     // fill ListView with all the items
-    if (mFeeds == null) {
-      mFeeds = (ListView) findViewById(R.id.list);
-      mFeeds.setTextFilterEnabled(true);
-      mFeeds.setOnItemClickListener(new OnItemClickListener() {
+    if (mFeedItems == null) {
+      mFeedItems = (ListView) findViewById(R.id.list);
+      mFeedItems.setTextFilterEnabled(true);
+      mFeedItems.setOnItemClickListener(new OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -133,7 +134,7 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener {
 
       });
     }
-    mFeeds.setAdapter(itemAdapter);
+    mFeedItems.setAdapter(itemAdapter);
 
   }
 
@@ -223,4 +224,21 @@ public class AllFeedItemsActivity extends Activity implements ProgressListener {
     return result;
   }
 
+  /**
+   * Called before the RSSChannels are retrieved by an instance of AsyncDbReadRSSChannel
+   */
+  @Override
+  public void onPreExecute() {
+    startRefreshProgress();
+  }
+
+  /**
+   * Called after the RSSChannels are retrieved by an instance of AsyncDbReadRSSChannel
+   */
+  @Override
+  public void onPostExecute(List<RSSChannel> rssChannels) {
+    setChannels(rssChannels);
+    refreshView();
+    stopRefreshProgress();
+  }
 }
