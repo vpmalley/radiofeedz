@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
+import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.NetworkChecker;
@@ -25,9 +26,12 @@ public class FeedAdder {
 
   private final AllFeedItems activity;
 
+  private final ProgressListener progressListener;
+
   private final NetworkChecker networkChecker;
 
-  public FeedAdder(AllFeedItems activity, NetworkChecker networkChecker) {
+  public FeedAdder(AllFeedItems activity, NetworkChecker networkChecker, ProgressListener progressListener) {
+    this.progressListener = progressListener;
     this.activity = activity;
     this.networkChecker = networkChecker;
   }
@@ -95,7 +99,7 @@ public class FeedAdder {
     if (exists) {
       Toast.makeText(activity, E_ADDING_FEED, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetwork(activity)) {
-      new AsyncFeedRefresh(activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+      new AsyncFeedRefresh(progressListener, activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
   }
 }

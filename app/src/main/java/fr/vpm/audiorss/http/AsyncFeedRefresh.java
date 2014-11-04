@@ -2,6 +2,7 @@ package fr.vpm.audiorss.http;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,21 +15,27 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import fr.vpm.audiorss.AllFeedItems;
+import fr.vpm.audiorss.FeedsActivity;
+import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
-  String url;
+  private String url;
 
-  AllFeedItems activity;
+  private final ProgressListener progressListener;
 
-  Exception mE = null;
+  private final FeedsActivity<List<RSSChannel>> feedsActivity;
 
-  public AsyncFeedRefresh(AllFeedItems activity) {
-    this.activity = activity;
+  private Exception mE = null;
+
+  public AsyncFeedRefresh(ProgressListener progressListener, FeedsActivity<List<RSSChannel>> feedsActivity) {
+    this.progressListener = progressListener;
+    this.feedsActivity = feedsActivity;
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
 
@@ -52,7 +59,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   @Override
   protected void onPreExecute() {
-    activity.startRefreshProgress();
+    progressListener.startRefreshProgress();
     super.onPreExecute();
   }
 
@@ -89,19 +96,14 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   }
 
   @Override
-  protected void onProgressUpdate(Integer... values) {
-    activity.updateProgress(values[0]);
-  }
-
-  @Override
   protected void onPostExecute(RSSChannel newChannel) {
     Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    activity.stopRefreshProgress();
+    progressListener.stopRefreshProgress();
     if (mE != null) {
       handleException(mE);
     } else {
       try {
-        newChannel.saveToDb(activity);
+        newChannel.saveToDb(progressListener, feedsActivity);
       } catch (ParseException e) {
         handleException(e);
       }
@@ -111,7 +113,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   }
 
   private void handleException(Exception e) {
-    activity.displayError(e.getLocalizedMessage());
+    Toast.makeText(feedsActivity.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     Log.e("Exception", e.toString());
   }
 }

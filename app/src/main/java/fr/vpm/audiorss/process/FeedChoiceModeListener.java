@@ -18,7 +18,7 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
-  private final List<RSSChannel> feeds;
+  private List<RSSChannel> feeds;
 
   private final List<RSSChannel> selectedFeeds;
 
@@ -28,6 +28,10 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
     this.feeds = feeds;
     this.feedSaver = new AsyncDbDeleteRSSChannel(asyncCallbackListener, context);
     this.selectedFeeds = new ArrayList<RSSChannel>();
+  }
+
+  public void setFeeds(List<RSSChannel> feeds){
+    this.feeds = feeds;
   }
 
   @Override
@@ -53,7 +57,7 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     if (R.id.action_delete == menuItem.getItemId()) {
-      feedSaver.execute((RSSChannel[]) selectedFeeds.toArray());
+      feedSaver.execute((RSSChannel[]) selectedFeeds.toArray(new RSSChannel[selectedFeeds.size()]));
       actionMode.finish();
       return true;
     }

@@ -10,7 +10,6 @@
     android:layout_height="wrap_content"
     android:textAppearance="?android:attr/textAppearanceLarge"
     android:padding="10dp" />
-
 <ImageView
     android:id="@+id/channelPic"
     android:layout_width="match_parent"
@@ -31,12 +30,15 @@
     android:textAppearance="?android:attr/textAppearanceSmall"
     android:padding="10dp" />
 
-<TextView
-    android:id="@+id/description"
+<ScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/description"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:textAppearance="?android:attr/textAppearanceMedium"
     android:padding="10dp" />
-
+</ScrollView>
     
 </LinearLayout>

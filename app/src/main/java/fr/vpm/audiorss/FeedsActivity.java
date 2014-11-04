@@ -24,4 +24,10 @@ public interface FeedsActivity<T> {
    * Refreshes the view based on activityś data
    */
   void refreshView();
+
+  /**
+   * Retrieves the Context bound with this Activity
+   * @return the Android Context
+   */
+  Context getContext();
 }

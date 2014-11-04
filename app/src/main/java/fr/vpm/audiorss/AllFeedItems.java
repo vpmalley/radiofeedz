@@ -1,6 +1,7 @@
 package fr.vpm.audiorss;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -104,7 +105,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     Log.d("FeedsActivity", "refreshing view");
     SharedPreferences sharedPref = PreferenceManager
         .getDefaultSharedPreferences(AllFeedItems.this);
-    String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
+    String ordering = sharedPref.getString(PREF_FEED_ORDERING, "REVERSE_TIME");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
@@ -141,6 +142,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
   }
 
+  @Override
+  public Context getContext() {
+    return this;
+  }
+
   /**
    * Using the number of items in the set and the maximum of items displayed in the preferences, determines the maximum of items to display.
    *
@@ -167,7 +173,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     Log.d("FeedsActivity", "launching feed refresh");
     refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
-      new AsyncFeedRefresh(AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channel.getUrl());
+      new AsyncFeedRefresh(progressBarListener, AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+          channel.getUrl());
     }
   }
 
@@ -189,7 +196,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
         result = true;
         break;
       case R.id.action_add:
-        FeedAdder feedAdder = new FeedAdder(this, networkChecker);
+        FeedAdder feedAdder = new FeedAdder(this, networkChecker, progressBarListener);
         String feedUrl = feedAdder.retrieveFeedFromClipboard();
         if (feedUrl != null) {
           feedAdder.askForFeedValidation(channels, feedUrl);

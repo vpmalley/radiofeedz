@@ -1,13 +1,14 @@
 package fr.vpm.audiorss;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
@@ -30,6 +31,7 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
    */
   private ProgressBarListener progressBarListener;
 
+  private FeedChoiceModeListener actionModeCallback;
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -37,6 +39,8 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
     progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     mFeeds = (ListView) findViewById(R.id.list);
     mFeeds.setTextFilterEnabled(true);
+    feeds = new ArrayList<RSSChannel>();
+    setContextualListeners();
 
     loadDataAndRefreshView();
   }
@@ -52,6 +56,7 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
   @Override
   public void setData(List<RSSChannel> feeds) {
     this.feeds = feeds;
+    actionModeCallback.setFeeds(this.feeds);
   }
 
   public void refreshView() {
@@ -61,13 +66,18 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
     mFeeds.setAdapter(itemAdapter);
   }
 
+  @Override
+  public Context getContext() {
+    return this;
+  }
+
   /**
    * Defines the listener when long clicking on one or multiple items of the list
    */
   private void setContextualListeners() {
     mFeeds.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
     LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(progressBarListener, this);
-    final AbsListView.MultiChoiceModeListener actionModeCallback = new FeedChoiceModeListener(feeds, callback, this);
+    actionModeCallback = new FeedChoiceModeListener(feeds, callback, this);
     mFeeds.setMultiChoiceModeListener(actionModeCallback);
   }
 }

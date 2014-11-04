@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -66,7 +67,7 @@ public class FeedItemReader extends Activity {
         Log.d("date", "Could not parse date " + item.getDate());
         date.setText(item.getDate());
       }
-      description.setText(item.getDescription());
+      description.setText(Html.fromHtml(item.getDescription()));
     }
     if (channel != null) {
       String imageUri = channel.getImage().getDeviceUri();
