@@ -35,6 +35,8 @@ import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.media.AsyncPictureLoader;
+import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -115,6 +117,10 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
+      if (channel.getImage().getInetUrl() != null) {
+        new AsyncPictureLoader(channel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+            channel.getImage().getInetUrl());
+      }
       allItems.addAll(channel.getItems());
       for (RSSItem item : channel.getItems()) {
         channelsByItem.put(item, channel);

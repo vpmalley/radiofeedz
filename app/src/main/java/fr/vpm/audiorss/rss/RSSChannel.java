@@ -21,11 +21,12 @@ import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.PictureLoadedListener;
 
 /**
  * The representation of a RSS feed
  */
-public class RSSChannel implements Serializable {
+public class RSSChannel implements Serializable, PictureLoadedListener {
 
   private static final long serialVersionUID = 1L;
 
@@ -209,5 +210,10 @@ public class RSSChannel implements Serializable {
   @Override
   public String toString() {
     return getTitle();
+  }
+
+  @Override
+  public void onPictureLoaded(Bitmap pictureBitmap) {
+    this.feedPic = pictureBitmap;
   }
 }
