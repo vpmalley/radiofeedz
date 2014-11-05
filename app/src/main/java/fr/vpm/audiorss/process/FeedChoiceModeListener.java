@@ -22,11 +22,14 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
 
   private final List<RSSChannel> selectedFeeds;
 
-  private final AsyncDbDeleteRSSChannel feedSaver;
+  private final Context context;
+
+  private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
 
   public FeedChoiceModeListener(List<RSSChannel> feeds, AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener, Context context) {
     this.feeds = feeds;
-    this.feedSaver = new AsyncDbDeleteRSSChannel(asyncCallbackListener, context);
+    this.context = context;
+    this.asyncCallbackListener = asyncCallbackListener;
     this.selectedFeeds = new ArrayList<RSSChannel>();
   }
 
@@ -57,7 +60,8 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     if (R.id.action_delete == menuItem.getItemId()) {
-      feedSaver.execute((RSSChannel[]) selectedFeeds.toArray(new RSSChannel[selectedFeeds.size()]));
+      AsyncDbDeleteRSSChannel feedDeletion = new AsyncDbDeleteRSSChannel(asyncCallbackListener, context);
+      feedDeletion.execute((RSSChannel[]) selectedFeeds.toArray(new RSSChannel[selectedFeeds.size()]));
       actionMode.finish();
       return true;
     }

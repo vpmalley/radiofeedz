@@ -168,7 +168,10 @@ public class Media implements Downloadable, Serializable {
     public void onReceive(Context context, Intent intent) {
       Log.d("BReceiver", "A download is complete");
       long fileId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-      Assert.assertEquals(downloadId, fileId);
+      //Assert.assertEquals(downloadId, fileId);
+      if (downloadId != fileId){
+        return;
+      }
 
       // query the status of the file
       DownloadManager.Query query = new DownloadManager.Query();
