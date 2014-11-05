@@ -3,7 +3,10 @@ package fr.vpm.audiorss.process;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
@@ -141,13 +144,14 @@ public class ItemParser {
       } else if (tagName.equals(RSSItem.GUID_TAG)) {
         guid = readTagContent(parser, RSSItem.GUID_TAG);
       } else if (tagName.equals(RSSItem.DATE_TAG)) {
-        /*
-         * try { // pubDate = new
-         * SimpleDateFormat(RSSChannel.DATE_PATTERN).parse( } catch
-         * (ParseException e) { Log.e("Exception", e.toString()); }
-         */
         // Wed, 29 Jan 2014 15:05:00 +0100
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
+        try {
+          Date date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN, Locale.US).parse(pubDate);
+          pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
+        } catch (ParseException e) {
+          Log.w("date", "tried parsing date but failed: " + pubDate);
+        }
       } else {
         skip(parser);
       }

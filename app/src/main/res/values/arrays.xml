@@ -9,9 +9,9 @@
     </array>
 
     <array name="pref_feed_ordering_values">
-        <item>REVERSE_TIME</item>
-        <item>TIME</item>
-        <item>ALPHA</item>
-        <item>REVERSE_ALPHA</item>
+        <item>pubDate DESC</item>
+        <item>pubDate ASC</item>
+        <item>title ASC</item>
+        <item>title DESC</item>
     </array>
 </resources>

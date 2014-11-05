@@ -13,20 +13,41 @@ import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 27/10/14.
+ *
+ * Compares multiple RSSItem instances based on the ordering set in the preferences.
  */
 public class ItemComparator implements Comparator<RSSItem> {
 
   public enum ItemComparison {
-    TIME,
-    REVERSE_TIME,
-    ALPHA,
-    REVERSE_ALPHA
+    TIME("pubDate ASC"),
+    REVERSE_TIME("pubDate DESC"),
+    ALPHA("title ASC"),
+    REVERSE_ALPHA("title DESC");
+
+    private String key;
+    private ItemComparison(String key){
+      this.key = key;
+    }
+
+    public static ItemComparison fromKey(String key) {
+      ItemComparison comparison = REVERSE_TIME;
+      if (TIME.key.equals(key)){
+        comparison = TIME;
+      } else if (REVERSE_TIME.key.equals(key)){
+        comparison = REVERSE_TIME;
+      } else if (ALPHA.key.equals(key)){
+        comparison = ALPHA;
+      } else if (REVERSE_ALPHA.key.equals(key)){
+        comparison = REVERSE_ALPHA;
+      }
+      return comparison;
+    }
   }
 
   private final ItemComparison itemComparison;
 
   public ItemComparator(String itemComparison) {
-    this.itemComparison = ItemComparison.valueOf(itemComparison);
+    this.itemComparison = ItemComparison.fromKey(itemComparison);
   }
 
   @Override
@@ -35,8 +56,8 @@ public class ItemComparator implements Comparator<RSSItem> {
     Date lhsDate = null;
     Date rhsDate = null;
     try {
-      lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rssItem.getDate());
-      rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(otherRssItem.getDate());
+      lhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(rssItem.getDate());
+      rhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(otherRssItem.getDate());
     } catch (ParseException e) {
       Log.e("Exception", e.toString());
     }
@@ -61,7 +82,6 @@ public class ItemComparator implements Comparator<RSSItem> {
     if (comparison == 0) {
       comparison = comparisonByName + comparisonByDate;
     }
-
     return factor * comparison;
   }
 

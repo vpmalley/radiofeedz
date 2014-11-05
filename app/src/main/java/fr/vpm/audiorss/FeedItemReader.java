@@ -59,8 +59,8 @@ public class FeedItemReader extends Activity {
       setTitle(item.getTitle());
       title.setText(item.getTitle());
 
-      SimpleDateFormat datePrinter = new SimpleDateFormat("EEEE, dd MMMM yyyy - HH:mm");
-      SimpleDateFormat dateParser = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US);
+      SimpleDateFormat datePrinter = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN);
+      SimpleDateFormat dateParser = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US);
       try {
         date.setText(datePrinter.format(dateParser.parse(item.getDate())));
       } catch (ParseException e) {

@@ -202,8 +202,8 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
     Date lhsDate = null;
     Date rhsDate = null;
     try {
-      lhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(lhs.getDate());
-      rhsDate = new SimpleDateFormat(RSSChannel.DATE_PATTERN, Locale.US).parse(rhs.getDate());
+      lhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(lhs.getDate());
+      rhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(rhs.getDate());
     } catch (ParseException e) {
       Log.e("Exception", e.toString());
     }

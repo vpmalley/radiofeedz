@@ -21,11 +21,11 @@ import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
 
+/**
+ * The representation of a RSS feed
+ */
 public class RSSChannel implements Serializable {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
 
   public static final String TITLE_TAG = "title";
@@ -40,7 +40,9 @@ public class RSSChannel implements Serializable {
   public static final String URL_KEY = "url";
   public static final String TAGS_KEY = "tags";
 
-  public static final String DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss ZZZZZ";
+  public static final String RSS_DATE_PATTERN = "EEE, dd MMM yyyy HH:mm:ss ZZZZZ";
+  public static final String DISPLAY_PATTERN = "EEEE, dd MMMM yyyy - HH:mm";
+  public static final String DB_DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZZZ"; // should allow sorting date
 
   public static List<RSSChannel> allChannels = new ArrayList<RSSChannel>();
 

@@ -8,8 +8,10 @@ import java.util.Map;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -40,9 +42,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private SQLiteDatabase mDb = null;
 
+  private final SharedPreferences sharedPrefs;
+
   public DbRSSChannel(Context context) {
     mDbHelper = new DatabaseOpenHelper(context);
     mDb = mDbHelper.getWritableDatabase();
+    sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
   @Override
@@ -85,8 +90,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       Map<String, RSSItem> items = readItemsByChannelId(id);
       channel.update(channel.getLastBuildDate(), items);
       channels.add(channel);
-      // Log.d("dbExtract", "channel " + id + " has items: " +
-      // channel.getItems().size());
       c.moveToNext();
     }
     c.close();
@@ -205,9 +208,11 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   Map<String, RSSItem> readItemsByChannelId(long id) throws ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
+    String limit = sharedPrefs.getString("pref_disp_max_items", "80");
+    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
         DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[]{String.valueOf(id)}, null, null,
-        null);
+        ordering, limit);
     itemsC.moveToFirst();
     for (int i = 0; i < itemsC.getCount(); i++) {
       RSSItem item = itemFromCursor(itemsC);

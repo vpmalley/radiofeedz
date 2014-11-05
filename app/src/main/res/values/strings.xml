@@ -14,7 +14,7 @@
     
     <string name="pref_feed_ordering">Feeds order</string>
     <string name="pref_feed_ordering_summary">Choose how to order your feeds</string>
-    <string name="pref_feed_ordering_default">reverse_time</string>
+    <string name="pref_feed_ordering_default">pubDate DESC</string>
     
     
     <string name="pref_mobile_network_enabled">Download on mobile network</string>
