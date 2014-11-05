@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
+import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
@@ -24,13 +25,13 @@ public class FeedAdder {
 
   private static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
 
-  private final AllFeedItems activity;
+  private final FeedsActivity<List<RSSChannel>> activity;
 
   private final ProgressListener progressListener;
 
   private final NetworkChecker networkChecker;
 
-  public FeedAdder(AllFeedItems activity, NetworkChecker networkChecker, ProgressListener progressListener) {
+  public FeedAdder(FeedsActivity<List<RSSChannel>> activity, NetworkChecker networkChecker, ProgressListener progressListener) {
     this.progressListener = progressListener;
     this.activity = activity;
     this.networkChecker = networkChecker;
@@ -39,7 +40,7 @@ public class FeedAdder {
 
   public String retrieveFeedFromClipboard() {
     String resultUrl = null;
-    ClipData data = ((ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE)).getPrimaryClip();
+    ClipData data = ((ClipboardManager) activity.getContext().getSystemService(Context.CLIPBOARD_SERVICE)).getPrimaryClip();
     if (data != null) {
       ClipData.Item cbItem = data.getItemAt(0);
       if (cbItem != null) {
@@ -53,7 +54,7 @@ public class FeedAdder {
   }
 
   public void askForFeedValidation(final List<RSSChannel> channels, final String url) {
-    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
+    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity.getContext());
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
     confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
     confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -75,7 +76,7 @@ public class FeedAdder {
   }
 
   public void tellToCopy() {
-    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity);
+    AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(activity.getContext());
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
     confirmationBuilder
         .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
@@ -97,8 +98,8 @@ public class FeedAdder {
       }
     }
     if (exists) {
-      Toast.makeText(activity, E_ADDING_FEED, Toast.LENGTH_SHORT).show();
-    } else if (networkChecker.checkNetwork(activity)) {
+      Toast.makeText(activity.getContext(), E_ADDING_FEED, Toast.LENGTH_SHORT).show();
+    } else if (networkChecker.checkNetwork(activity.getContext())) {
       new AsyncFeedRefresh(progressListener, activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
   }
