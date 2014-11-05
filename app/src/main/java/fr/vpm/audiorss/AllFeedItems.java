@@ -4,18 +4,23 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -118,9 +123,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
     items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
-
-    ArrayAdapter<RSSItem> itemAdapter = new ArrayAdapter<RSSItem>(this, R.layout.list_item,
-        items);
     // fill ListView with all the items
     if (mFeedItems == null) {
       mFeedItems = (ListView) findViewById(R.id.list);
@@ -138,7 +140,35 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
       });
     }
-    mFeedItems.setAdapter(itemAdapter);
+
+    ArrayAdapter<RSSItem> rssItemAdapter = new ArrayAdapter<RSSItem>(this,
+        R.layout.list_rss_item, items) {
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder itemHolder;
+        if (convertView == null) {
+          LayoutInflater vi = AllFeedItems.this.getLayoutInflater();
+          convertView = vi.inflate(R.layout.list_rss_item, parent, false);
+
+          ImageView picImage = (ImageView) convertView.findViewById(R.id.feed_pic);
+          TextView picTitle = (TextView) convertView.findViewById(R.id.item_title);
+
+          itemHolder = new ViewHolder(picTitle, picImage);
+          convertView.setTag(itemHolder);
+        } else {
+          itemHolder = (ViewHolder) convertView.getTag();
+        }
+        itemHolder.titleView.setText(items.get(position).getTitle());
+        Bitmap feedPic = channelsByItem.get(items.get(position)).getBitmap();
+        if (feedPic != null) {
+          itemHolder.pictureView.setImageBitmap(feedPic);
+        } else {
+          itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
+        }
+        return convertView;
+      }
+    };
+    mFeedItems.setAdapter(rssItemAdapter);
 
   }
 
@@ -225,5 +255,22 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
         result = super.onOptionsItemSelected(item);
     }
     return result;
+  }
+
+
+  /**
+   * Keeps a reference to the views associated with a item. Only views should be stored there,
+   * i.e. NO DATA should be linked to that object.
+   */
+  public class ViewHolder {
+
+    private final TextView titleView;
+
+    private final ImageView pictureView;
+
+    public ViewHolder(TextView titleView, ImageView pictureView) {
+      this.titleView = titleView;
+      this.pictureView = pictureView;
+    }
   }
 }

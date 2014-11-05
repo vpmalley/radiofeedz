@@ -11,6 +11,7 @@ import java.util.Map;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -68,6 +69,8 @@ public class RSSChannel implements Serializable {
   Media image = null;
 
   List<String> tags;
+
+  Bitmap feedPic;
 
   public RSSChannel(String rssUrl, String title, String link, String description, String category,
                     String imageUrl) {
@@ -197,6 +200,10 @@ public class RSSChannel implements Serializable {
 
   public Map<String, RSSItem> getMappedItems() {
     return Collections.unmodifiableMap(latestItems);
+  }
+
+  public Bitmap getBitmap(){
+    return feedPic;
   }
 
   @Override
