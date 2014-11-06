@@ -178,6 +178,10 @@ public class RSSChannel implements Parcelable, PictureLoadedListener {
     return Collections.unmodifiableMap(latestItems);
   }
 
+  public void setBitmap(Bitmap bitmap) {
+    this.feedPic = bitmap;
+  }
+
   public Bitmap getBitmap(){
     return feedPic;
   }
@@ -236,5 +240,4 @@ public class RSSChannel implements Parcelable, PictureLoadedListener {
       return new RSSChannel[size];
     }
   };
-
 }

@@ -8,6 +8,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by vincent on 22/10/14.
@@ -16,14 +17,14 @@ import java.net.URL;
  */
 public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
 
-  private final PictureLoadedListener pictureLoadedListener;
+  private final List<PictureLoadedListener> pictureLoadedListeners;
 
   private final int reqWidth;
 
   private final int reqHeight;
 
-  public AsyncPictureLoader(PictureLoadedListener pictureLoadedListener, int reqWidth, int reqHeight) {
-    this.pictureLoadedListener = pictureLoadedListener;
+  public AsyncPictureLoader(List<PictureLoadedListener> pictureLoadedListeners, int reqWidth, int reqHeight) {
+    this.pictureLoadedListeners = pictureLoadedListeners;
     this.reqWidth = reqWidth;
     this.reqHeight = reqHeight;
   }
@@ -69,6 +70,8 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap pictureBitmap) {
-    pictureLoadedListener.onPictureLoaded(pictureBitmap);
+    for (PictureLoadedListener pictureLoadedListener : pictureLoadedListeners) {
+      pictureLoadedListener.onPictureLoaded(pictureBitmap);
+    }
   }
 }

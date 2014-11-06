@@ -9,19 +9,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -36,14 +31,14 @@ import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.media.AsyncPictureLoader;
+import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChannel>> {
+public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChannel>>,PictureLoadedListener {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -93,7 +88,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this, networkChecker);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
@@ -118,7 +113,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
-      retrieveFeedPicture(channel);
       allItems.addAll(channel.getItems());
       for (RSSItem item : channel.getItems()) {
         channelsByItem.put(item, channel);
@@ -151,15 +145,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
   }
 
-  private void retrieveFeedPicture(RSSChannel channel) {
-    if ((channel.getBitmap() == null) && (channel.getImage() != null) && (channel.getImage().getInetUrl() != null) &&
-        (networkChecker.checkNetwork(this))) {
-      int px = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,
-          getResources().getDisplayMetrics()));
-      // shortcut: we expect 50 dp for the picture for the feed
-      new AsyncPictureLoader(channel, px, px).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-          channel.getImage().getInetUrl());
-    }
+  @Override
+  public void onPictureLoaded(Bitmap pictureBitmap) {
+    refreshView();
   }
 
   @Override
@@ -246,5 +234,4 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     }
     return result;
   }
-
 }

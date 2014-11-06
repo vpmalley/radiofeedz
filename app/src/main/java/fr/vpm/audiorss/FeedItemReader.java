@@ -2,33 +2,43 @@ package fr.vpm.audiorss;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedItemReader extends Activity {
+public class FeedItemReader extends Activity implements PictureLoadedListener {
 
   public static final String ITEM = "item";
 
   public static final String CHANNEL = "channel";
 
-  RSSItem item = null;
+  private RSSItem item = null;
 
-  RSSChannel channel = null;
+  private RSSChannel channel = null;
+
+  private ImageView channelPic;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +57,7 @@ public class FeedItemReader extends Activity {
 
     TextView title = (TextView) findViewById(R.id.title);
 
-    ImageView channelPic = (ImageView) findViewById(R.id.channelPic);
+    channelPic = (ImageView) findViewById(R.id.channelPic);
 
     TextView channelTitle = (TextView) findViewById(R.id.channelTitle);
 
@@ -69,12 +79,21 @@ public class FeedItemReader extends Activity {
       }
       description.setText(Html.fromHtml(item.getDescription()));
     }
-    if ((channel != null) && (channel.getImage() != null)) {
-      String imageUri = channel.getImage().getDeviceUri();
-      if (imageUri != null) {
-        channelPic.setImageURI(Uri.parse(imageUri));
-      }
+    if (channel != null) {
       channelTitle.setText(channel.getTitle());
+      if (channel.getBitmap() != null){
+        channelPic.setImageBitmap(channel.getBitmap());
+      } else if ((channel.getImage() != null) && (channel.getImage().getInetUrl() != null) && (new
+          DefaultNetworkChecker().checkNetwork(this))) {
+        List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+        listeners.add(this);
+        listeners.add(channel);
+        int px = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
+            getResources().getDisplayMetrics()));
+        // shortcut: we expect 150 dp for the picture for the feed
+        new AsyncPictureLoader(listeners, 2 * px, px).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+            channel.getImage().getInetUrl());
+      }
     }
   }
 
@@ -151,5 +170,10 @@ public class FeedItemReader extends Activity {
   private void downloadMedia() {
     Log.d("Download", item.getMediaUrl());
     item.downloadMedia(this);
+  }
+
+  @Override
+  public void onPictureLoaded(Bitmap pictureBitmap) {
+    channelPic.setImageBitmap(pictureBitmap);
   }
 }

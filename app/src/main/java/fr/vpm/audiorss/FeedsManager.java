@@ -32,6 +32,8 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
 
   private List<RSSChannel> feeds;
 
+  private NetworkChecker networkChecker;
+
   /**
    * Progress bar manager to indicate feeds update is in progress.
    */
@@ -47,13 +49,14 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
     mFeeds.setTextFilterEnabled(true);
     feeds = new ArrayList<RSSChannel>();
     setContextualListeners();
+    networkChecker = new DefaultNetworkChecker();
 
     loadDataAndRefreshView();
   }
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this, networkChecker);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
