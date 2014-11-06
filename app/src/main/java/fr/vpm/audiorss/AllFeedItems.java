@@ -66,12 +66,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
    */
   private List<RSSItem> items;
 
-  /**
-   * The counter is used to join all threads for the refresh of multiple feeds.
-   * The refresh of the view is done only once, when all feeds are up-to-date.
-   */
-  private int refreshCounter = 0;
-
   private NetworkChecker networkChecker;
 
   @Override
@@ -99,12 +93,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     this.channels = channels;
   }
 
-  public void refreshView() {
-    Log.d("measures", "counter" + refreshCounter);
-    if (refreshCounter > 0) {
-      refreshCounter--;
-      return;
-    }
+  public synchronized void refreshView() {
     Log.d("FeedsActivity", "refreshing view");
     SharedPreferences sharedPref = PreferenceManager
         .getDefaultSharedPreferences(AllFeedItems.this);
@@ -179,7 +168,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
-    refreshCounter = channels.size() - 1;
     for (RSSChannel channel : channels) {
       new AsyncFeedRefresh(progressBarListener, AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           channel.getUrl());
