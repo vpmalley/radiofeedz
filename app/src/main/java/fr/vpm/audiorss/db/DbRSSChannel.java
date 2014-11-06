@@ -98,8 +98,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   public RSSChannel add(RSSChannel channel) throws ParseException {
-    Log.d("dbInsert", "channel " + channel.getUrl());
-
     ContentValues channelValues = createContentValues(channel);
     long id = mDb.insert(T_RSS_CHANNEL, null, channelValues);
     channel.setId(id);
@@ -111,8 +109,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   public RSSChannel update(RSSChannel existingChannel, RSSChannel channel) throws ParseException {
-    Log.d("dbUpdate", "channel " + channel.getUrl());
-
     existingChannel.update(channel.getLastBuildDate(), channel.getMappedItems());
     ContentValues channelValues = createContentValues(existingChannel);
     channelValues.put(DatabaseOpenHelper._ID, existingChannel.getId());

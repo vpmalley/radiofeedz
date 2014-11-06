@@ -41,7 +41,7 @@ public class FeedItemReader extends Activity {
       item = (RSSItem) i.getExtras().get(ITEM);
     }
     if (i.hasExtra(CHANNEL)) {
-      channel = (RSSChannel) i.getExtras().get(CHANNEL);
+      channel = i.getExtras().getParcelable(CHANNEL);
     }
 
 
@@ -69,7 +69,7 @@ public class FeedItemReader extends Activity {
       }
       description.setText(Html.fromHtml(item.getDescription()));
     }
-    if (channel != null) {
+    if ((channel != null) && (channel.getImage() != null)) {
       String imageUri = channel.getImage().getDeviceUri();
       if (imageUri != null) {
         channelPic.setImageURI(Uri.parse(imageUri));

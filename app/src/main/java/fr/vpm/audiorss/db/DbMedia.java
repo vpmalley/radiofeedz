@@ -1,11 +1,10 @@
 package fr.vpm.audiorss.db;
 
-import java.text.ParseException;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
+
+import java.text.ParseException;
 
 import fr.vpm.audiorss.media.Media;
 
@@ -13,22 +12,22 @@ public class DbMedia {
 
   private static final String COMMA = ",";
 
-  private final static String NAME_KEY = "name";
+  public final static String NAME_KEY = "name";
 
-  private final static String TITLE_KEY = "title";
+  public final static String TITLE_KEY = "title";
 
-  private final static String INET_URL_KEY = "inet_url";
+  public final static String INET_URL_KEY = "inet_url";
 
-  private final static String DEVICE_URI_KEY = "device_uri";
+  public final static String DEVICE_URI_KEY = "device_uri";
 
-  private final static String DL_ID_KEY = "download_id";
+  public final static String DL_ID_KEY = "download_id";
 
-  private final static String IS_DL_KEY = "is_downloaded";
+  public final static String IS_DL_KEY = "is_downloaded";
 
-  private final static String[] COLS_MEDIA = {DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
+  public final static String[] COLS_MEDIA = {DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
       INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY};
 
-  final static String T_MEDIA = "media";
+  public final static String T_MEDIA = "media";
 
   final static String T_CREATE_MEDIA = "CREATE TABLE " + T_MEDIA + " (" + DatabaseOpenHelper._ID
       + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME_KEY + DatabaseOpenHelper.TEXT_COLUMN + COMMA
@@ -59,8 +58,6 @@ public class DbMedia {
   }
 
   public Media add(Media media) {
-    Log.d("dbInsert", "media " + media.getInetUrl());
-
     ContentValues mediaValues = createContentValues(media);
     long id = mDb.insert(T_MEDIA, null, mediaValues);
     media.setId(id);

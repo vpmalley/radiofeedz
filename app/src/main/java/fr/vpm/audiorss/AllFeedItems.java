@@ -152,7 +152,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   }
 
   private void retrieveFeedPicture(RSSChannel channel) {
-    if ((channel.getBitmap() == null) && (channel.getImage() != null) && (channel.getImage().getInetUrl() != null)) {
+    if ((channel.getBitmap() == null) && (channel.getImage() != null) && (channel.getImage().getInetUrl() != null) &&
+        (networkChecker.checkNetwork(this))) {
       int px = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,
           getResources().getDisplayMetrics()));
       // shortcut: we expect 50 dp for the picture for the feed

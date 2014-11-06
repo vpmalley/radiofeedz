@@ -1,6 +1,14 @@
 package fr.vpm.audiorss.rss;
 
-import java.io.Serializable;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.Log;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,13 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.DownloadManager;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
@@ -26,9 +27,7 @@ import fr.vpm.audiorss.media.PictureLoadedListener;
 /**
  * The representation of a RSS feed
  */
-public class RSSChannel implements Serializable, PictureLoadedListener {
-
-  private static final long serialVersionUID = 1L;
+public class RSSChannel implements Parcelable, PictureLoadedListener {
 
   public static final String TITLE_TAG = "title";
   public static final String LINK_TAG = "link";
@@ -51,34 +50,34 @@ public class RSSChannel implements Serializable, PictureLoadedListener {
   /**
    * a Map with item id to item
    */
-  Map<String, RSSItem> latestItems;
+  private final Map<String, RSSItem> latestItems;
 
-  long id = -1;
+  private long id = -1;
 
-  String url = "";
+  private String url = "";
 
-  String title = "";
+  private String title = "";
 
-  String link = "";
+  private String link = "";
 
-  String description = "";
+  private String description = "";
 
-  String lastBuildDate = "";
+  private String lastBuildDate = "";
 
-  String category = "";
+  private String category = "";
 
-  Media image = null;
+  private Media image = null;
 
-  List<String> tags;
+  private ArrayList<String> tags;
 
-  Bitmap feedPic;
+  private Bitmap feedPic;
 
   public RSSChannel(String rssUrl, String title, String link, String description, String category,
                     String imageUrl) {
     super();
     Log.d("RSSChannel", "creating " + rssUrl);
-    latestItems = new HashMap<String, RSSItem>();
-    tags = new ArrayList<String>();
+    this.latestItems = new HashMap<String, RSSItem>();
+    this.tags = new ArrayList<String>();
     this.url = rssUrl;
     this.title = title;
     this.link = link;
@@ -137,44 +136,20 @@ public class RSSChannel implements Serializable, PictureLoadedListener {
     return link;
   }
 
-  public void setLink(String link) {
-    this.link = link;
-  }
-
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   public String getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
-    this.category = category;
-  }
-
   public List<String> getTags() {
     return tags;
   }
 
-  public void setTags(List<String> tags) {
-    this.tags = tags;
-  }
-
-  public void setUrl(String url) {
-    this.url = url;
-  }
-
   public void setTitle(String title) {
     this.title = title;
-  }
-
-  public void setLastBuildDate(String lastBuildDate) {
-    this.lastBuildDate = lastBuildDate;
   }
 
   public void saveToDb(ProgressListener progressListener, FeedsActivity<List<RSSChannel>> activity) throws ParseException {
@@ -216,4 +191,50 @@ public class RSSChannel implements Serializable, PictureLoadedListener {
   public void onPictureLoaded(Bitmap pictureBitmap) {
     this.feedPic = pictureBitmap;
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putString(URL_KEY, url);
+    b.putString(TITLE_TAG, title);
+    b.putString(LINK_TAG, link);
+    b.putString(DESC_TAG, description);
+    b.putString(DATE_TAG, lastBuildDate);
+    b.putString(CAT_TAG, category);
+    b.putParcelable(IMAGE_TAG, image);
+    b.putStringArrayList(TAGS_KEY, tags);
+    parcel.writeBundle(b);
+  }
+
+  private RSSChannel(Parcel in) {
+    Bundle b = in.readBundle(RSSChannel.class.getClassLoader());
+      // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+      // unmarshalling Media class
+    latestItems = new HashMap<String, RSSItem>();
+    url = b.getString(URL_KEY);
+    title = b.getString(TITLE_TAG);
+    link = b.getString(LINK_TAG);
+    description = b.getString(DESC_TAG);
+    lastBuildDate = b.getString(DATE_TAG);
+    category = b.getString(CAT_TAG);
+    image = b.getParcelable(IMAGE_TAG);
+    tags = b.getStringArrayList(TAGS_KEY);
+  }
+
+  public static final Parcelable.Creator<RSSChannel> CREATOR
+      = new Parcelable.Creator<RSSChannel>() {
+    public RSSChannel createFromParcel(Parcel in) {
+      return new RSSChannel(in);
+    }
+
+    public RSSChannel[] newArray(int size) {
+      return new RSSChannel[size];
+    }
+  };
+
 }

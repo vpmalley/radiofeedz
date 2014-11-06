@@ -1,7 +1,5 @@
 package fr.vpm.audiorss.media;
 
-import junit.framework.Assert;
-
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
@@ -11,35 +9,40 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.io.Serializable;
+import junit.framework.Assert;
 
-public class Media implements Downloadable, Serializable {
+import fr.vpm.audiorss.db.DbMedia;
+
+public class Media implements Downloadable, Parcelable {
 
   // db id
-  long id;
+  private long id;
 
   // media info
 
-  String name;
+  private final String name;
 
-  String notificationTitle;
+  private final String notificationTitle;
 
   // online info
 
-  String inetUrl;
+  private final String inetUrl;
 
   // device info
 
-  String deviceUri;
+  private String deviceUri;
 
-  long downloadId;
+  private long downloadId;
 
-  boolean isDownloaded = false;
+  private boolean isDownloaded = false;
 
   public Media(String name, String title, String url) {
     this.id = -1;
@@ -161,6 +164,49 @@ public class Media implements Downloadable, Serializable {
   public long getDownloadId() {
     return downloadId;
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putLong("id", id);
+    b.putString(DbMedia.NAME_KEY, name);
+    b.putString(DbMedia.TITLE_KEY, notificationTitle);
+    b.putString(DbMedia.INET_URL_KEY, inetUrl);
+    b.putString(DbMedia.DEVICE_URI_KEY, deviceUri);
+    b.putLong(DbMedia.DL_ID_KEY, downloadId);
+    b.putBoolean(DbMedia.IS_DL_KEY, isDownloaded);
+    parcel.writeBundle(b);
+  }
+
+  private Media(Parcel in) {
+    Bundle b = in.readBundle();
+    id = b.getLong("id");
+    name = b.getString(DbMedia.NAME_KEY);
+    notificationTitle = b.getString(DbMedia.TITLE_KEY);
+    inetUrl = b.getString(DbMedia.INET_URL_KEY);
+    deviceUri = b.getString(DbMedia.DEVICE_URI_KEY);
+    downloadId = b.getLong(DbMedia.DL_ID_KEY);
+    isDownloaded = b.getBoolean(DbMedia.IS_DL_KEY);
+  }
+
+  public static final Parcelable.Creator<Media> CREATOR
+      = new Parcelable.Creator<Media>() {
+    public Media createFromParcel(Parcel in) {
+      return new Media(in);
+    }
+
+    public Media[] newArray(int size) {
+      return new Media[size];
+    }
+  };
+
+
+
 
   private class MediaBroadcastReceiver extends BroadcastReceiver {
 
