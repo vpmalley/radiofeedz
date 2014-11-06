@@ -16,6 +16,7 @@ import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -100,7 +101,9 @@ public class FeedAdder {
     if (exists) {
       Toast.makeText(activity.getContext(), E_ADDING_FEED, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetwork(activity.getContext())) {
-      new AsyncFeedRefresh(progressListener, activity).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+      SaveFeedCallback.updateFeedsCounter(1);
+      SaveFeedCallback callback = new SaveFeedCallback(progressListener, activity);
+      new AsyncFeedRefresh(activity, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
   }
 }

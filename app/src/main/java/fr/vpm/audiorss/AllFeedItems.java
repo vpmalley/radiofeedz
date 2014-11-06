@@ -31,6 +31,7 @@ import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
@@ -168,8 +169,10 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
+    SaveFeedCallback.updateFeedsCounter(5);
     for (RSSChannel channel : channels) {
-      new AsyncFeedRefresh(progressBarListener, AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+      SaveFeedCallback callback = new SaveFeedCallback(progressBarListener, AllFeedItems.this);
+      new AsyncFeedRefresh(AllFeedItems.this, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           channel.getUrl());
     }
   }

@@ -20,6 +20,7 @@ import android.widget.Toast;
 import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -27,19 +28,20 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   private String url;
 
-  private final ProgressListener progressListener;
-
   private final FeedsActivity<List<RSSChannel>> feedsActivity;
+
+  private final AsyncCallbackListener<RSSChannel> asyncCallbackListener;
 
   private Exception mE = null;
 
-  public AsyncFeedRefresh(ProgressListener progressListener, FeedsActivity<List<RSSChannel>> feedsActivity) {
-    this.progressListener = progressListener;
+  public AsyncFeedRefresh(FeedsActivity<List<RSSChannel>> feedsActivity,
+                          AsyncCallbackListener<RSSChannel> asyncCallbackListener) {
     this.feedsActivity = feedsActivity;
+    this.asyncCallbackListener = asyncCallbackListener;
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
 
-  public HttpEntity refresh(String rssUrl) throws ClientProtocolException, IOException {
+  public HttpEntity refresh(String rssUrl) throws IOException {
     Log.d("measures", "refresh start " + rssUrl + String.valueOf(System.currentTimeMillis()));
     HttpEntity entity = null;
     HttpUriRequest req = new HttpGet(rssUrl);
@@ -59,7 +61,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   @Override
   protected void onPreExecute() {
-    progressListener.startRefreshProgress();
+    asyncCallbackListener.onPreExecute();
     super.onPreExecute();
   }
 
@@ -98,22 +100,14 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   @Override
   protected void onPostExecute(RSSChannel newChannel) {
     Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    progressListener.stopRefreshProgress();
+
     if (mE != null) {
-      handleException(mE);
-    } else {
-      try {
-        newChannel.saveToDb(progressListener, feedsActivity);
-      } catch (ParseException e) {
-        handleException(e);
-      }
+      Toast.makeText(feedsActivity.getContext(), "Could not refresh a feed", Toast.LENGTH_SHORT).show();
+      Log.e("Exception", mE.toString());
     }
+    asyncCallbackListener.onPostExecute(newChannel);
     Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
     super.onPostExecute(newChannel);
   }
 
-  private void handleException(Exception e) {
-    Toast.makeText(feedsActivity.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-    Log.e("Exception", e.toString());
-  }
 }
