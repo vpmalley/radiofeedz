@@ -18,8 +18,14 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
 
   private final PictureLoadedListener pictureLoadedListener;
 
-  public AsyncPictureLoader(PictureLoadedListener pictureLoadedListener) {
+  private final int reqWidth;
+
+  private final int reqHeight;
+
+  public AsyncPictureLoader(PictureLoadedListener pictureLoadedListener, int reqWidth, int reqHeight) {
     this.pictureLoadedListener = pictureLoadedListener;
+    this.reqWidth = reqWidth;
+    this.reqHeight = reqHeight;
   }
 
   @Override
@@ -30,9 +36,23 @@ public class AsyncPictureLoader extends AsyncTask<String, Integer, Bitmap> {
     String pictureUrl = urls[0];
     InputStream pictureStream = null;
     Bitmap pictureBitmap = null;
+
     try {
       pictureStream = new URL(pictureUrl).openStream();
-      pictureBitmap = BitmapFactory.decodeStream(pictureStream);
+
+      // first figure how large the picture is, then load only the needed size
+      // cf. https://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+      BitmapFactory.Options options = new BitmapFactory.Options();
+      options.inJustDecodeBounds = true;
+      BitmapFactory.decodeStream(pictureStream, null, options);
+      int inSampleSize = Math.max(options.outWidth / reqWidth, options.outHeight / reqHeight);
+
+      pictureStream.close();
+      pictureStream = new URL(pictureUrl).openStream();
+
+      options.inSampleSize = inSampleSize * 2;
+      options.inJustDecodeBounds = false;
+      pictureBitmap = BitmapFactory.decodeStream(pictureStream, null, options);
     } catch (IOException e) {
       throw new IllegalArgumentException("A well-formatted url was expected.");
     } finally {

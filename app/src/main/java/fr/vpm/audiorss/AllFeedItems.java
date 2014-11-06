@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +37,9 @@ import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.media.AsyncPictureLoader;
-import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
+import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -117,10 +118,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
-      if (channel.getImage().getInetUrl() != null) {
-        new AsyncPictureLoader(channel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-            channel.getImage().getInetUrl());
-      }
+      retrieveFeedPicture(channel);
       allItems.addAll(channel.getItems());
       for (RSSItem item : channel.getItems()) {
         channelsByItem.put(item, channel);
@@ -147,35 +145,20 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
       });
     }
 
-    ArrayAdapter<RSSItem> rssItemAdapter = new ArrayAdapter<RSSItem>(this,
-        R.layout.list_rss_item, items) {
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder itemHolder;
-        if (convertView == null) {
-          LayoutInflater vi = AllFeedItems.this.getLayoutInflater();
-          convertView = vi.inflate(R.layout.list_rss_item, parent, false);
-
-          ImageView picImage = (ImageView) convertView.findViewById(R.id.feed_pic);
-          TextView picTitle = (TextView) convertView.findViewById(R.id.item_title);
-
-          itemHolder = new ViewHolder(picTitle, picImage);
-          convertView.setTag(itemHolder);
-        } else {
-          itemHolder = (ViewHolder) convertView.getTag();
-        }
-        itemHolder.titleView.setText(items.get(position).getTitle());
-        Bitmap feedPic = channelsByItem.get(items.get(position)).getBitmap();
-        if (feedPic != null) {
-          itemHolder.pictureView.setImageBitmap(feedPic);
-        } else {
-          itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
-        }
-        return convertView;
-      }
-    };
+    ArrayAdapter<RSSItem> rssItemAdapter = new RSSItemArrayAdapter(this,
+        R.layout.list_rss_item, items, channelsByItem);
     mFeedItems.setAdapter(rssItemAdapter);
 
+  }
+
+  private void retrieveFeedPicture(RSSChannel channel) {
+    if ((channel.getBitmap() == null) && (channel.getImage() != null) && (channel.getImage().getInetUrl() != null)) {
+      int px = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,
+          getResources().getDisplayMetrics()));
+      // shortcut: we expect 50 dp for the picture for the feed
+      new AsyncPictureLoader(channel, px, px).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+          channel.getImage().getInetUrl());
+    }
   }
 
   @Override
@@ -263,20 +246,4 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     return result;
   }
 
-
-  /**
-   * Keeps a reference to the views associated with a item. Only views should be stored there,
-   * i.e. NO DATA should be linked to that object.
-   */
-  public class ViewHolder {
-
-    private final TextView titleView;
-
-    private final ImageView pictureView;
-
-    public ViewHolder(TextView titleView, ImageView pictureView) {
-      this.titleView = titleView;
-      this.pictureView = pictureView;
-    }
-  }
 }

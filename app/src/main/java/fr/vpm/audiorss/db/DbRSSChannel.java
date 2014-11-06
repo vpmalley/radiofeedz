@@ -15,6 +15,7 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -128,15 +129,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     ContentValues channelValues = new ContentValues();
     channelValues.put(RSSChannel.CAT_TAG, channel.getCategory());
     channelValues.put(RSSChannel.DATE_TAG, channel.getLastBuildDate());
-
     channelValues.put(RSSChannel.DESC_TAG, channel.getDescription());
     channelValues.put(RSSChannel.LINK_TAG, channel.getLink());
-
     if (channel.getImage() != null) {
-      channelValues.put(RSSChannel.IMAGE_ID_TAG, channel.getImage().getId());
-      new DbMedia(mDb).add(channel.getImage());
+      Media newImage = new DbMedia(mDb).add(channel.getImage());
+      channelValues.put(RSSChannel.IMAGE_ID_TAG, newImage.getId());
     }
-
     channelValues.put(RSSChannel.TAGS_KEY, TextUtils.join(COMMA, channel.getTags()));
     channelValues.put(RSSChannel.TITLE_TAG, channel.getTitle());
     channelValues.put(RSSChannel.URL_KEY, channel.getUrl());
@@ -185,24 +183,20 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String category = c.getString(c.getColumnIndex(RSSChannel.CAT_TAG));
     String lastBuildDate = c.getString(c.getColumnIndex(RSSChannel.DATE_TAG));
     String description = c.getString(c.getColumnIndex(RSSChannel.DESC_TAG));
-    String imageUrl = c.getString(c.getColumnIndex(RSSChannel.IMAGE_TAG));
     String link = c.getString(c.getColumnIndex(RSSChannel.LINK_TAG));
-    //long imageId = c.getLong(c.getColumnIndex(RSSChannel.IMAGE_ID_TAG));
-    // Uri localImageUri = Uri.parse(c.getString(c
-    // .getColumnIndex(RSSChannel.LOCAL_IMAGE_TAG)));
+    long imageId = c.getLong(c.getColumnIndex(RSSChannel.IMAGE_ID_TAG));
+    Media image = new DbMedia(mDb).readById(imageId);
     String tags = c.getString(c.getColumnIndex(RSSChannel.TAGS_KEY));
     String title = c.getString(c.getColumnIndex(RSSChannel.TITLE_TAG));
     String url = c.getString(c.getColumnIndex(RSSChannel.URL_KEY));
-    RSSChannel channel = new RSSChannel(url, title, link, description, category, imageUrl);
+    RSSChannel channel = new RSSChannel(url, title, link, description, category, null);
     String[] tagList = tags.split(COMMA);
     for (String tag : tagList) {
       channel.addTag(tag);
     }
     channel.setId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
+    channel.setImage(image);
     channel.update(lastBuildDate, new HashMap<String, RSSItem>());
-    DbMedia dbMedia = new DbMedia(mDb);
-    //channel.setImage(dbMedia.readById(imageId));
-    // channel.setLocalImageUri(localImageUri);
     return channel;
   }
 
@@ -232,8 +226,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String description = c.getString(c.getColumnIndex(RSSItem.DESC_TAG));
     String guid = c.getString(c.getColumnIndex(RSSItem.GUID_TAG));
     String link = c.getString(c.getColumnIndex(RSSItem.LINK_TAG));
-    // String localMediaUri =
-    // c.getString(c.getColumnIndex(RSSItem.LOCAL_MEDIA_KEY));
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));
@@ -242,7 +234,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     DbMedia dbMedia = new DbMedia(mDb);
     item.setMedia(dbMedia.readById(mediaId));
-    // item.setMediaUri(localMediaUri);
     return item;
   }
 
