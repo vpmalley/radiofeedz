@@ -12,5 +12,11 @@
           android:icon="@drawable/ic_action_web_site"
           android:title="@string/action_web"
           android:showAsAction="ifRoom" />
-    
+    <item
+        android:id="@+id/action_share"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_share"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider" />
+
 </menu>

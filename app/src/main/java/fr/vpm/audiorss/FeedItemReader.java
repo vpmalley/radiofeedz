@@ -18,6 +18,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +31,11 @@ import fr.vpm.audiorss.rss.RSSItem;
 
 public class FeedItemReader extends Activity implements PictureLoadedListener {
 
-  public static final String ITEM = "item";
+  public static final String ITEM = "rssItem";
 
   public static final String CHANNEL = "channel";
 
-  private RSSItem item = null;
+  private RSSItem rssItem = null;
 
   private RSSChannel channel = null;
 
@@ -48,7 +49,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
     Intent i = getIntent();
     if (i.hasExtra(ITEM)) {
-      item = (RSSItem) i.getExtras().get(ITEM);
+      rssItem = (RSSItem) i.getExtras().get(ITEM);
     }
     if (i.hasExtra(CHANNEL)) {
       channel = i.getExtras().getParcelable(CHANNEL);
@@ -65,19 +66,19 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
     TextView description = (TextView) findViewById(R.id.description);
 
-    if (item != null) {
-      setTitle(item.getTitle());
-      title.setText(item.getTitle());
+    if (rssItem != null) {
+      setTitle(rssItem.getTitle());
+      title.setText(rssItem.getTitle());
 
       SimpleDateFormat datePrinter = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN);
       SimpleDateFormat dateParser = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US);
       try {
-        date.setText(datePrinter.format(dateParser.parse(item.getDate())));
+        date.setText(datePrinter.format(dateParser.parse(rssItem.getDate())));
       } catch (ParseException e) {
-        Log.d("date", "Could not parse date " + item.getDate());
-        date.setText(item.getDate());
+        Log.d("date", "Could not parse date " + rssItem.getDate());
+        date.setText(rssItem.getDate());
       }
-      description.setText(Html.fromHtml(item.getDescription()));
+      description.setText(Html.fromHtml(rssItem.getDescription()));
     }
     if (channel != null) {
       channelTitle.setText(channel.getTitle());
@@ -104,6 +105,12 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     if (!isMediaDownloaded()) {
       item.setVisible(false);
     }
+    MenuItem shareItem = menu.findItem(R.id.action_share);
+    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+    shareIntent.putExtra(Intent.EXTRA_TEXT, this.rssItem.getLink());
+    shareIntent.setType("text/plain");
+    ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+    shareActionProvider.setShareIntent(shareIntent);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -130,8 +137,8 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   }
 
   private void playMedia() {
-    Log.d("playLocal", item.getMedia().getDeviceUri());
-    Log.d("playOnline", item.getMediaUrl());
+    Log.d("playLocal", rssItem.getMedia().getDeviceUri());
+    Log.d("playOnline", rssItem.getMediaUrl());
 
     Intent mediaIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
         Intent.CATEGORY_APP_MUSIC);
@@ -141,21 +148,21 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     // mediaIntent.addCategory(Intent.CATEGORY_APP_MUSIC);
     // mediaIntent.setType(AUDIO_TYPE);
     if (isMediaDownloaded()) {
-      Log.d("playLocal", item.getMedia().getDeviceUri());
-      mediaIntent.setData(Uri.parse(item.getMedia().getDeviceUri()));
+      Log.d("playLocal", rssItem.getMedia().getDeviceUri());
+      mediaIntent.setData(Uri.parse(rssItem.getMedia().getDeviceUri()));
       startActivity(Intent.createChooser(mediaIntent, null));
     } else {
       Toast.makeText(this, "Please download the podcast first.", Toast.LENGTH_SHORT);
     }
     /*
-     * else { Log.d("playOnline", item.getMediaUrl()); File podcast = new
-     * File(item.getMediaUrl()); mediaIntent.setData(Uri.fromFile(podcast)); }
+     * else { Log.d("playOnline", rssItem.getMediaUrl()); File podcast = new
+     * File(rssItem.getMediaUrl()); mediaIntent.setData(Uri.fromFile(podcast)); }
      */
 
   }
 
   private boolean isMediaDownloaded() {
-    Media media = item.getMedia();
+    Media media = rssItem.getMedia();
     if (media == null) {
       return false;
     }
@@ -163,13 +170,13 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   }
 
   private void openWebsite() {
-    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLink()));
+    Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(rssItem.getLink()));
     startActivity(i);
   }
 
   private void downloadMedia() {
-    Log.d("Download", item.getMediaUrl());
-    item.downloadMedia(this);
+    Log.d("Download", rssItem.getMediaUrl());
+    rssItem.downloadMedia(this);
   }
 
   @Override

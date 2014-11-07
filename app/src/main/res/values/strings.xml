@@ -29,6 +29,7 @@
     <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
     <string name="action_delete">Delete</string>
     <string name="action_manage">Manage Feeds</string>
+    <string name="action_share">Share</string>
 
 
 </resources>
