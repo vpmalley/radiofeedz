@@ -169,7 +169,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   // launch when click on refresh button
   private void launchFeedRefresh() {
     Log.d("FeedsActivity", "launching feed refresh");
-    SaveFeedCallback.updateFeedsCounter(5);
+    SaveFeedCallback.updateFeedsCounter(channels.size());
     for (RSSChannel channel : channels) {
       SaveFeedCallback callback = new SaveFeedCallback(progressBarListener, AllFeedItems.this);
       new AsyncFeedRefresh(AllFeedItems.this, callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
