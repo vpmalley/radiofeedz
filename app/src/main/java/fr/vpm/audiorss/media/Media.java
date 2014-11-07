@@ -65,14 +65,12 @@ public class Media implements Downloadable, Parcelable {
 
     // retrieve download folder from the preferences
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    String downloadFolder = sharedPref.getString("pref_download_folder",
-        Environment.DIRECTORY_PODCASTS);
+    String downloadFolder = getDownloadFolder(sharedPref);
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
     // transforming the name for saving the file.
-    String typeExtension = inetUrl.substring(inetUrl.lastIndexOf('.'));
-    String downloadName = name.replace(' ', '_') + typeExtension;
+    String downloadName = getFileName();
     r.setDestinationInExternalPublicDir(downloadFolder, downloadName);
 
     // When downloading music and videos they will be listed in the player
@@ -96,6 +94,16 @@ public class Media implements Downloadable, Parcelable {
     BroadcastReceiver downloadFinished = new MediaBroadcastReceiver();
     context.registerReceiver(downloadFinished, new IntentFilter(
         DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+  }
+
+  public String getDownloadFolder(SharedPreferences sharedPref) {
+    return sharedPref.getString("pref_download_folder",
+          Environment.DIRECTORY_PODCASTS);
+  }
+
+  public String getFileName() {
+    String typeExtension = inetUrl.substring(inetUrl.lastIndexOf('.'));
+    return name.replace(' ', '_') + typeExtension;
   }
 
   private boolean checkNetwork(int networkFlags, Context context) {

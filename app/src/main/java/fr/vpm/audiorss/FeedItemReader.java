@@ -1,17 +1,12 @@
 package fr.vpm.audiorss;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -20,7 +15,13 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.media.AsyncPictureLoader;
@@ -102,7 +103,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.feeditem, menu);
     MenuItem item = menu.findItem(R.id.action_play);
-    if (!isMediaDownloaded()) {
+    if (rssItem.getMedia() == null) {
       item.setVisible(false);
     }
     MenuItem shareItem = menu.findItem(R.id.action_share);
@@ -137,28 +138,15 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   }
 
   private void playMedia() {
-    Log.d("playLocal", rssItem.getMedia().getDeviceUri());
-    Log.d("playOnline", rssItem.getMediaUrl());
-
-    Intent mediaIntent = Intent.makeMainSelectorActivity(Intent.ACTION_MAIN,
-        Intent.CATEGORY_APP_MUSIC);
-    mediaIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    // Intent mediaIntent = new Intent(Intent.ACTION_VIEW);
-    // Intent mediaIntent = new Intent(Intent.ACTION_MAIN);
-    // mediaIntent.addCategory(Intent.CATEGORY_APP_MUSIC);
-    // mediaIntent.setType(AUDIO_TYPE);
-    if (isMediaDownloaded()) {
-      Log.d("playLocal", rssItem.getMedia().getDeviceUri());
-      mediaIntent.setData(Uri.parse(rssItem.getMedia().getDeviceUri()));
-      startActivity(Intent.createChooser(mediaIntent, null));
-    } else {
-      Toast.makeText(this, "Please download the podcast first.", Toast.LENGTH_SHORT);
+    Intent playIntent = new Intent(Intent.ACTION_VIEW);
+    Media m = this.rssItem.getMedia();
+    if (m != null) {
+      //String file = "/sdcard/Podcasts/emission_Journal_de_19h-Inter_Soir_19h00_06.11.2014.mp3";
+      File mediaFile = new File("/sdcard/" + m.getDownloadFolder(PreferenceManager.getDefaultSharedPreferences(this)) + "/" + m.getFileName());
+      Log.d("media", mediaFile.getAbsolutePath());
+      playIntent.setDataAndType(Uri.fromFile(mediaFile), "audio/*");
+      startActivity(playIntent);
     }
-    /*
-     * else { Log.d("playOnline", rssItem.getMediaUrl()); File podcast = new
-     * File(rssItem.getMediaUrl()); mediaIntent.setData(Uri.fromFile(podcast)); }
-     */
-
   }
 
   private boolean isMediaDownloaded() {
