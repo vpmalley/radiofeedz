@@ -21,6 +21,7 @@ import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
+import fr.vpm.audiorss.process.RSSChannelArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -56,10 +57,10 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this, networkChecker);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override
@@ -69,7 +70,7 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
   }
 
   public void refreshView() {
-    ArrayAdapter<RSSChannel> itemAdapter = new ArrayAdapter<RSSChannel>(this, R.layout.list_item,
+    ArrayAdapter<RSSChannel> itemAdapter = new RSSChannelArrayAdapter(this, R.layout.list_item,
         feeds);
     // fill ListView with all the feeds
     mFeeds.setAdapter(itemAdapter);
