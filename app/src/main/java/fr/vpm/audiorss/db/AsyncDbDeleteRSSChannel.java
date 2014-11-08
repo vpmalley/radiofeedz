@@ -2,9 +2,7 @@ package fr.vpm.audiorss.db;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -6,7 +6,6 @@ import java.util.List;
 
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
-import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -20,12 +19,9 @@ public class RefreshViewCallback implements AsyncCallbackListener<List<RSSChanne
 
   private final FeedsActivity<List<RSSChannel>> activity;
 
-  private final NetworkChecker networkChecker;
-
-  public RefreshViewCallback(ProgressListener progressListener, FeedsActivity activity, NetworkChecker networkChecker) {
+  public RefreshViewCallback(ProgressListener progressListener, FeedsActivity activity) {
     this.progressListener = progressListener;
     this.activity = activity;
-    this.networkChecker = networkChecker;
   }
 
   @Override

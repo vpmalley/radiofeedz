@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -129,8 +130,10 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = this.rssItem.getMedia();
     if (m != null) {
-      //String file = "/sdcard/Podcasts/emission_Journal_de_19h-Inter_Soir_19h00_06.11.2014.mp3";
-      File mediaFile = new File("/sdcard/" + m.getDownloadFolder(PreferenceManager.getDefaultSharedPreferences(this)) + "/" + m.getFileName());
+      File mediaFile = new File(Environment.getExternalStorageDirectory().getPath() + m.getDownloadFolder(PreferenceManager
+          .getDefaultSharedPreferences
+          (this)) + "/" +
+          m.getFileName());
       Log.d("media", mediaFile.getAbsolutePath());
       playIntent.setDataAndType(Uri.fromFile(mediaFile), "audio/*");
       startActivity(playIntent);

@@ -83,10 +83,10 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
   @Override
   public void loadDataAndRefreshView() {
-    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this, networkChecker);
+    RefreshViewCallback callback = new RefreshViewCallback(progressBarListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, this);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new String[0]);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override

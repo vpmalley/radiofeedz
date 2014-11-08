@@ -1,7 +1,5 @@
 package fr.vpm.audiorss.db;
 
-import android.util.Log;
-
 import java.util.List;
 
 import fr.vpm.audiorss.FeedsActivity;

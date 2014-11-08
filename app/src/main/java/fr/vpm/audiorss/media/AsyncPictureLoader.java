@@ -95,7 +95,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
         try {
           pictureStream.close();
         } catch (IOException e) {
-          Log.e("flickr", e.getMessage());
+          Log.e("picture", e.getMessage());
         }
       }
     }

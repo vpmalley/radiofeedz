@@ -73,8 +73,6 @@ public class RSSChannel implements Parcelable {
 
   private ArrayList<String> tags;
 
-  private Bitmap feedPic;
-
   public RSSChannel(String rssUrl, String title, String link, String description, String category,
                     String imageUrl) {
     super();
@@ -103,10 +101,10 @@ public class RSSChannel implements Parcelable {
 
   @Override
   public boolean equals(Object o) {
-    boolean result = false;
+    boolean result = true;
     if (o instanceof RSSChannel) {
       RSSChannel channel = (RSSChannel) o;
-      result &= this.title.equals(channel.title);
+      result = this.title.equals(channel.title);
       result &= this.link.equals(channel.link);
       result &= this.description.equals(channel.description);
     } else {

@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;

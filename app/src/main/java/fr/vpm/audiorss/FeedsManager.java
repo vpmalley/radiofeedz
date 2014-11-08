@@ -18,7 +18,6 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.RSSChannelArrayAdapter;
@@ -32,8 +31,6 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
   private ListView mFeeds;
 
   private List<RSSChannel> feeds;
-
-  private NetworkChecker networkChecker;
 
   /**
    * Progress bar manager to indicate feeds update is in progress.
@@ -50,7 +47,6 @@ public class FeedsManager extends Activity implements FeedsActivity<List<RSSChan
     mFeeds.setTextFilterEnabled(true);
     feeds = new ArrayList<RSSChannel>();
     setContextualListeners();
-    networkChecker = new DefaultNetworkChecker();
 
     loadDataAndRefreshView();
   }
