@@ -9,10 +9,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -52,8 +54,12 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder = (ViewHolder) convertView.getTag();
     }
-    itemHolder.titleView.setText(items.get(position).getTitle());
-    Bitmap feedPic = channelsByItem.get(items.get(position)).getBitmap();
+    RSSItem rssItem = items.get(position);
+    RSSChannel rssChannel = channelsByItem.get(rssItem);
+
+    itemHolder.titleView.setText(rssItem.getTitle());
+    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+    Bitmap feedPic = rssChannel.getBitmap(activity, listeners);
     if (feedPic != null) {
       itemHolder.pictureView.setImageBitmap(feedPic);
     } else {

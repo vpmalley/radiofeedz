@@ -21,13 +21,16 @@ import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
+import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
+import fr.vpm.audiorss.persistence.FilePictureSaver;
 
 /**
  * The representation of a RSS feed
  */
-public class RSSChannel implements Parcelable, PictureLoadedListener {
+public class RSSChannel implements Parcelable {
 
   public static final String TITLE_TAG = "title";
   public static final String LINK_TAG = "link";
@@ -178,22 +181,23 @@ public class RSSChannel implements Parcelable, PictureLoadedListener {
     return Collections.unmodifiableMap(latestItems);
   }
 
-  public void setBitmap(Bitmap bitmap) {
-    this.feedPic = bitmap;
-  }
-
-  public Bitmap getBitmap(){
-    return feedPic;
+  public Bitmap getBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners){
+    Bitmap b = null;
+    FilePictureSaver pictureRetriever = new FilePictureSaver(context);
+    if (getImage() != null){
+      if (pictureRetriever.exists(getImage().getName())){
+        b = pictureRetriever.retrieve(getImage().getName());
+      } else if (new DefaultNetworkChecker().checkNetwork(context)) {
+        AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context);
+        pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getImage());
+      }
+    }
+    return b;
   }
 
   @Override
   public String toString() {
     return getTitle();
-  }
-
-  @Override
-  public void onPictureLoaded(Bitmap pictureBitmap) {
-    this.feedPic = pictureBitmap;
   }
 
   @Override

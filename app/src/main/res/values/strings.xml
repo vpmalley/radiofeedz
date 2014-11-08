@@ -30,6 +30,9 @@
     <string name="action_delete">Delete</string>
     <string name="action_manage">Manage Feeds</string>
     <string name="action_share">Share</string>
+    <string name="cannotsavepicture">Cannot save the picture for this feed</string>
+    <string name="mightnotsavepicture">Picture for this feed might not have been saved</string>
+    <string name="cannotgetpicture">Cannot retrieve the picture for this feed</string>
 
 
 </resources>

@@ -4,12 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -23,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -83,18 +79,10 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     }
     if (channel != null) {
       channelTitle.setText(channel.getTitle());
-      if (channel.getBitmap() != null){
-        channelPic.setImageBitmap(channel.getBitmap());
-      } else if ((channel.getImage() != null) && (channel.getImage().getInetUrl() != null) && (new
-          DefaultNetworkChecker().checkNetwork(this))) {
-        List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-        listeners.add(this);
-        listeners.add(channel);
-        int px = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 150,
-            getResources().getDisplayMetrics()));
-        // shortcut: we expect 150 dp for the picture for the feed
-        new AsyncPictureLoader(listeners, 2 * px, px).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-            channel.getImage().getInetUrl());
+      List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+      listeners.add(this);
+      if (channel.getBitmap(this, listeners) != null){
+        channelPic.setImageBitmap(channel.getBitmap(this, null));
       }
     }
   }
