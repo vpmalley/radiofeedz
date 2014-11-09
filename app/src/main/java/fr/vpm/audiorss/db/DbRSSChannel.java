@@ -152,7 +152,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     itemValues.put(RSSItem.GUID_TAG, item.getGuid());
     itemValues.put(RSSItem.LINK_TAG, item.getLink());
     itemValues.put(RSSItem.LOCAL_MEDIA_KEY, "");
-
+    itemValues.put(RSSItem.READ_KEY, item.isRead());
     itemValues.put(RSSItem.MEDIA_KEY, item.getMediaUrl());
     if (item.getMedia() != null) {
       Media newMedia;
@@ -230,12 +230,13 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String description = c.getString(c.getColumnIndex(RSSItem.DESC_TAG));
     String guid = c.getString(c.getColumnIndex(RSSItem.GUID_TAG));
     String link = c.getString(c.getColumnIndex(RSSItem.LINK_TAG));
+    boolean isRead = c.getInt(c.getColumnIndex(RSSItem.READ_KEY)) > 0;
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));
     Media media = new DbMedia(mDb).readById(mediaId);
     RSSItem item = new RSSItem(channelTitle, title, link, description, authorAddress, category,
-        comments, media, guid, pubDate);
+        comments, media, guid, pubDate, isRead);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     return item;
   }

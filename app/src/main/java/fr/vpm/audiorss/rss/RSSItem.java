@@ -34,30 +34,33 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
   public static final String LOCAL_MEDIA_KEY = "localMedia";
   public static final String CHANNELTITLE_KEY = "channelTitle";
   public static final String MEDIA_ID_KEY = "mediaId";
+  public static final String READ_KEY = "isRead";
 
-  long dbId = -1;
+  private long dbId = -1;
 
-  String channelTitle = "";
+  private String channelTitle = "";
 
-  String title = "";
+  private String title = "";
 
-  String link = "";
+  private String link = "";
 
-  String description = "";
+  private String description = "";
 
-  String authorAddress = "";
+  private String authorAddress = "";
 
-  String category = "";
+  private String category = "";
 
-  String comments = "";
+  private String comments = "";
 
-  String mediaUrl = "";
+  private String mediaUrl = "";
 
-  String guid = "";
+  private String guid = "";
 
-  String pubDate = "";
+  private String pubDate = "";
 
-  Media media = null;
+  private boolean isRead = false;
+
+  private Media media = null;
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -67,7 +70,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   public RSSItem(String feedTitle, String title, String link, String description,
                  String authorAddress, String category, String comments, Media media, String guid,
-                 String pubDate) {
+                 String pubDate, boolean isRead) {
     super();
     this.channelTitle = feedTitle;
     this.title = title;
@@ -79,6 +82,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
     this.guid = guid;
     this.pubDate = pubDate;
     this.media = media;
+    this.isRead = isRead;
   }
 
   public String getDate() {
@@ -171,6 +175,14 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   public void setMediaUrl(String mediaUrl) {
     this.mediaUrl = mediaUrl;
+  }
+
+  public boolean isRead(){
+    return isRead;
+  }
+
+  public void setRead(boolean isRead){
+    this.isRead = isRead;
   }
 
   public void downloadMedia(Context context) {
