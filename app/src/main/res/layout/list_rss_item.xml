@@ -26,5 +26,6 @@
         android:layout_marginStart="8dp"
         android:id="@+id/item_title"
         android:gravity="center_vertical|start"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textStyle="bold"/>
 </LinearLayout>

@@ -102,7 +102,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     channel.setId(id);
 
     for (RSSItem item : channel.getItems()) {
-      addOrUpdate(item, channel.getId());
+      addOrUpdate(item);
     }
     return channel;
   }
@@ -115,7 +115,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
         new String[]{String.valueOf(existingChannel.getId())});
 
     for (RSSItem item : existingChannel.getItems()) {
-      addOrUpdate(item, existingChannel.getId());
+      addOrUpdate(item);
     }
     return existingChannel;
   }
@@ -141,7 +141,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channelValues;
   }
 
-  public RSSItem addOrUpdate(RSSItem item, long channelId) {
+  public RSSItem addOrUpdate(RSSItem item) {
     ContentValues itemValues = new ContentValues();
     itemValues.put(RSSItem.AUTHOR_TAG, item.getAuthorAddress());
     itemValues.put(RSSItem.CAT_TAG, item.getCategory());
@@ -165,7 +165,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
 
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
-    itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
+    //itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
 
     if (item.getDbId() != -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());

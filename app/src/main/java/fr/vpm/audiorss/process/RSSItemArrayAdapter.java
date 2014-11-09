@@ -2,6 +2,7 @@ package fr.vpm.audiorss.process;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,11 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     RSSChannel rssChannel = channelsByItem.get(rssItem);
 
     itemHolder.titleView.setText(rssItem.getTitle());
+    if (!rssItem.isRead()) {
+      itemHolder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
+    } else {
+      itemHolder.titleView.setTypeface(Typeface.DEFAULT);
+    }
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
     Bitmap feedPic = rssChannel.getBitmap(activity, listeners);
     if (feedPic != null) {

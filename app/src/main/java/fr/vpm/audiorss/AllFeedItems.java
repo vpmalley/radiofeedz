@@ -27,12 +27,14 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
+import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.media.PictureLoadedListener;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
@@ -54,6 +56,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
   private static final int DEFAULT_MAX_ITEMS = 80;
 
   private List<RSSChannel> channels = new ArrayList<RSSChannel>();
+
+  private Map<RSSItem, RSSChannel> channelsByItem;
 
   private ListView mFeedItems;
 
@@ -101,7 +105,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     String ordering = sharedPref.getString(PREF_FEED_ORDERING, "REVERSE_TIME");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
-    final Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
+    channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
       allItems.addAll(channel.getItems());
       for (RSSItem item : channel.getItems()) {
@@ -115,20 +119,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     if (mFeedItems == null) {
       mFeedItems = (ListView) findViewById(R.id.list);
       mFeedItems.setTextFilterEnabled(true);
-      mFeedItems.setOnItemClickListener(new OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-          Intent i = new Intent(AllFeedItems.this, FeedItemReader.class);
-          i.putExtra(FeedItemReader.ITEM, items.get(position));
-          i.putExtra(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
-          startActivity(i);
-
-        }
-
-      });
+      mFeedItems.setOnItemClickListener(new OnRSSItemClickListener());
     }
-
     ArrayAdapter<RSSItem> rssItemAdapter = new RSSItemArrayAdapter(this,
         R.layout.list_rss_item, items, channelsByItem);
     mFeedItems.setAdapter(rssItemAdapter);
@@ -225,4 +217,30 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     }
     return result;
   }
+
+  class OnRSSItemClickListener implements OnItemClickListener {
+
+      @Override
+      public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+      Intent i = new Intent(AllFeedItems.this, FeedItemReader.class);
+      items.get(position).setRead(true);
+      new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
+        @Override
+        public void onPreExecute() {
+          // do nothing
+        }
+
+        @Override
+        public void onPostExecute(List<RSSItem> result) {
+          // do nothing
+        }
+      }, AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+          items.get(position));
+      i.putExtra(FeedItemReader.ITEM, items.get(position));
+      i.putExtra(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
+      startActivity(i);
+
+    }
+
+    }
 }
