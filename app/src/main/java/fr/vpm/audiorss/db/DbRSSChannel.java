@@ -102,7 +102,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     channel.setId(id);
 
     for (RSSItem item : channel.getItems()) {
-      addOrUpdate(item);
+      addOrUpdate(item, channel.getId());
     }
     return channel;
   }
@@ -115,7 +115,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
         new String[]{String.valueOf(existingChannel.getId())});
 
     for (RSSItem item : existingChannel.getItems()) {
-      addOrUpdate(item);
+      addOrUpdate(item, existingChannel.getId());
     }
     return existingChannel;
   }
@@ -141,7 +141,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channelValues;
   }
 
-  public RSSItem addOrUpdate(RSSItem item) {
+  public RSSItem addOrUpdate(RSSItem item, long channelId) {
     ContentValues itemValues = new ContentValues();
     itemValues.put(RSSItem.AUTHOR_TAG, item.getAuthorAddress());
     itemValues.put(RSSItem.CAT_TAG, item.getCategory());
@@ -165,8 +165,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
 
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
-    //itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
-
+    if (channelId > -1) {
+      itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
+    }
     if (item.getDbId() != -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());
       mDb.update(DatabaseOpenHelper.T_RSS_ITEM, itemValues, DatabaseOpenHelper._ID + "=?",
@@ -205,11 +206,15 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   Map<String, RSSItem> readItemsByChannelId(long id) throws ParseException {
+    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[]{String.valueOf(id)});
+  }
+
+  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues) throws ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String limit = sharedPrefs.getString("pref_disp_max_items", "80");
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
-        DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[]{String.valueOf(id)}, null, null,
+        selectionQuery, selectionValues, null, null,
         ordering, limit);
     itemsC.moveToFirst();
     for (int i = 0; i < itemsC.getCount(); i++) {

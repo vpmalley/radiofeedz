@@ -29,14 +29,11 @@ public class AsyncDbSaveRSSItem extends AsyncTask<RSSItem, Integer, List<RSSItem
 
   @Override
   protected List<RSSItem> doInBackground(RSSItem... rssItems) {
-    if (0 == rssItems.length) {
-      return new ArrayList<RSSItem>();
-    }
     List<RSSItem> persistedRssItems = new ArrayList<RSSItem>();
 
     try {
       for (RSSItem rssItem : rssItems){
-        RSSItem persistedRSSItem = dbUpdater.addOrUpdate(rssItem);
+        RSSItem persistedRSSItem = dbUpdater.addOrUpdate(rssItem, -1);
         persistedRssItems.add(persistedRSSItem);
       }
     } finally {
