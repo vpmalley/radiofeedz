@@ -78,10 +78,15 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
 
-    networkChecker = new DefaultNetworkChecker();
+    // views
+    mFeedItems = (ListView) findViewById(R.id.list);
+    mFeedItems.setTextFilterEnabled(true);
+    mFeedItems.setOnItemClickListener(new OnRSSItemClickListener());
 
     progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
+    // services
+    networkChecker = new DefaultNetworkChecker();
     loadDataAndRefreshView();
   }
 
@@ -105,6 +110,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
     String ordering = sharedPref.getString(PREF_FEED_ORDERING, "REVERSE_TIME");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
 
+    Log.d("measures", "build model start " + System.currentTimeMillis());
     channelsByItem = new HashMap<RSSItem, RSSChannel>();
     for (RSSChannel channel : channels) {
       allItems.addAll(channel.getItems());
@@ -115,14 +121,10 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
     int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
     items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
-    // fill ListView with all the items
-    if (mFeedItems == null) {
-      mFeedItems = (ListView) findViewById(R.id.list);
-      mFeedItems.setTextFilterEnabled(true);
-      mFeedItems.setOnItemClickListener(new OnRSSItemClickListener());
-    }
     ArrayAdapter<RSSItem> rssItemAdapter = new RSSItemArrayAdapter(this,
         R.layout.list_rss_item, items, channelsByItem);
+    Log.d("measures", "build model -end- " + System.currentTimeMillis());
+
     mFeedItems.setAdapter(rssItemAdapter);
 
   }
