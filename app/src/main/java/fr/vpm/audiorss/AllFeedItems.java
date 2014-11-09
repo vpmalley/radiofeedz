@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.TreeSet;
 
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
+import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -222,10 +224,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
 
   class OnRSSItemClickListener implements OnItemClickListener {
 
-      @Override
-      public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(AllFeedItems.this, FeedItemReader.class);
-      items.get(position).setRead(true);
+      RSSItem rssItem = items.get(position);
+      rssItem.setRead(true);
       new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
         @Override
         public void onPreExecute() {
@@ -237,12 +240,14 @@ public class AllFeedItems extends Activity implements FeedsActivity<List<RSSChan
           // do nothing
         }
       }, AllFeedItems.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-          items.get(position));
-      i.putExtra(FeedItemReader.ITEM, items.get(position));
-      i.putExtra(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
+          rssItem);
+      //RSSChannel channel = RSSChannel.fromDbById(rssItem.getChannelId(), AllFeedItems.this);
+      RSSChannel channel = channelsByItem.get(rssItem);
+          i.putExtra(FeedItemReader.ITEM, rssItem);
+      i.putExtra(FeedItemReader.CHANNEL, channel);
       startActivity(i);
 
     }
 
-    }
+  }
 }

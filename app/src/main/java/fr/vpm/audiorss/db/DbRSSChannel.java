@@ -1,11 +1,5 @@
 package fr.vpm.audiorss.db;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,6 +7,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -239,9 +239,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));
+    long channelId = c.getLong(c.getColumnIndex(DatabaseOpenHelper.CHANNEL_ID_KEY));
     Media media = new DbMedia(mDb).readById(mediaId);
     RSSItem item = new RSSItem(channelTitle, title, link, description, authorAddress, category,
-        comments, media, guid, pubDate, isRead);
+        comments, media, guid, pubDate, isRead, channelId);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     return item;
   }

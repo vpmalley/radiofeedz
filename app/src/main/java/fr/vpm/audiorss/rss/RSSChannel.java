@@ -20,6 +20,7 @@ import java.util.Map;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
+import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.media.AsyncPictureLoader;
@@ -84,6 +85,19 @@ public class RSSChannel implements Parcelable {
     this.description = description;
     this.category = category;
     this.image = image;
+  }
+
+  public static RSSChannel fromDbById(long id, Context context){
+    RSSChannel channel = null;
+    DbRSSChannel dbRSSChannel = new DbRSSChannel(context);
+    try {
+      channel = dbRSSChannel.readById(id);
+    } catch (ParseException e) {
+      Log.e("dbIssue", e.getMessage());
+    } finally {
+      dbRSSChannel.closeDb();
+    }
+    return channel;
   }
 
   public void update(String lastBuildDate, Map<String, RSSItem> items) {

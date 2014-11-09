@@ -29,7 +29,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private final Activity activity;
 
   private final List<RSSItem> items;
-
   private final Map<RSSItem, RSSChannel> channelsByItem;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
@@ -56,6 +55,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       itemHolder = (ViewHolder) convertView.getTag();
     }
     RSSItem rssItem = items.get(position);
+    //RSSChannel rssChannel = RSSChannel.fromDbById(rssItem.getChannelId(), getContext());
     RSSChannel rssChannel = channelsByItem.get(rssItem);
 
     itemHolder.titleView.setText(rssItem.getTitle());

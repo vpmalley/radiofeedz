@@ -61,6 +61,8 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   private Media media = null;
 
+  private long channelId = -1;
+
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
   public String getId() {
@@ -69,7 +71,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   public RSSItem(String feedTitle, String title, String link, String description,
                  String authorAddress, String category, String comments, Media media, String guid,
-                 String pubDate, boolean isRead) {
+                 String pubDate, boolean isRead, long channelId) {
     super();
     this.channelTitle = feedTitle;
     this.title = title;
@@ -82,6 +84,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     this.pubDate = pubDate;
     this.media = media;
     this.isRead = isRead;
+    this.channelId = channelId;
   }
 
   public String getDate() {
@@ -182,6 +185,10 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   public void setRead(boolean isRead){
     this.isRead = isRead;
+  }
+
+  public long getChannelId() {
+    return channelId;
   }
 
   public void downloadMedia(Context context) {
