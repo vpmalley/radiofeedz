@@ -205,6 +205,7 @@ public class RSSChannel implements Parcelable {
   @Override
   public void writeToParcel(Parcel parcel, int i) {
     Bundle b = new Bundle();
+    b.putLong("_ID", id);
     b.putString(URL_KEY, url);
     b.putString(TITLE_TAG, title);
     b.putString(LINK_TAG, link);
@@ -221,6 +222,7 @@ public class RSSChannel implements Parcelable {
       // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
       // unmarshalling Media class
     latestItems = new HashMap<String, RSSItem>();
+    id = b.getLong("_ID");
     url = b.getString(URL_KEY);
     title = b.getString(TITLE_TAG);
     link = b.getString(LINK_TAG);

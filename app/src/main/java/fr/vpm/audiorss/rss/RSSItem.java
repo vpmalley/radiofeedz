@@ -3,22 +3,21 @@ package fr.vpm.audiorss.rss;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 import fr.vpm.audiorss.media.Media;
 
-public class RSSItem implements Serializable, Comparable<RSSItem> {
-
-  /**
-   *
-   */
-  private static final long serialVersionUID = 1L;
+public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   public static final String TITLE_TAG = "title";
   public static final String LINK_TAG = "link";
@@ -251,4 +250,55 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
     return this.channelTitle + " : " + this.title;
   }
 
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel parcel, int i) {
+    Bundle b = new Bundle();
+    b.putLong("_ID", dbId);
+    b.putString(CHANNELTITLE_KEY, channelTitle);
+    b.putString(TITLE_TAG, title);
+    b.putString(LINK_TAG, link);
+    b.putString(DESC_TAG, description);
+    b.putString(AUTHOR_TAG, authorAddress);
+    b.putString(CAT_TAG, category);
+    b.putString(COMMENTS_TAG, comments);
+    b.putString(GUID_TAG, guid);
+    b.putString(DATE_TAG, pubDate);
+    b.putBoolean(READ_KEY, isRead);
+    b.putParcelable(MEDIA_KEY, media);
+    parcel.writeBundle(b);
+  }
+
+  private RSSItem(Parcel in) {
+    Bundle b = in.readBundle(RSSChannel.class.getClassLoader());
+    // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+    // unmarshalling Media class
+    dbId = b.getLong("_ID");
+    channelTitle = b.getString(CHANNELTITLE_KEY);
+    title = b.getString(TITLE_TAG);
+    link = b.getString(LINK_TAG);
+    description = b.getString(DESC_TAG);
+    authorAddress = b.getString(AUTHOR_TAG);
+    category = b.getString(CAT_TAG);
+    comments = b.getString(COMMENTS_TAG);
+    guid = b.getString(GUID_TAG);
+    pubDate = b.getString(DATE_TAG);
+    isRead = b.getBoolean(READ_KEY);
+    media = b.getParcelable(MEDIA_KEY);
+  }
+
+  public static final Parcelable.Creator<RSSItem> CREATOR
+      = new Parcelable.Creator<RSSItem>() {
+    public RSSItem createFromParcel(Parcel in) {
+      return new RSSItem(in);
+    }
+
+    public RSSItem[] newArray(int size) {
+      return new RSSItem[size];
+    }
+  };
 }
