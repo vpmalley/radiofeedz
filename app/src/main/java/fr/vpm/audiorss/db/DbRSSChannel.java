@@ -13,7 +13,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -195,13 +194,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String tags = c.getString(c.getColumnIndex(RSSChannel.TAGS_KEY));
     String title = c.getString(c.getColumnIndex(RSSChannel.TITLE_TAG));
     String url = c.getString(c.getColumnIndex(RSSChannel.URL_KEY));
-    RSSChannel channel = new RSSChannel(url, title, link, description, category, null);
+    RSSChannel channel = new RSSChannel(url, title, link, description, category, image);
     String[] tagList = tags.split(COMMA);
     for (String tag : tagList) {
       channel.addTag(tag);
     }
     channel.setId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
-    channel.setImage(image);
     channel.update(lastBuildDate, new HashMap<String, RSSItem>());
     return channel;
   }
@@ -235,11 +233,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));
+    Media media = new DbMedia(mDb).readById(mediaId);
     RSSItem item = new RSSItem(channelTitle, title, link, description, authorAddress, category,
-        comments, mediaUrl, guid, pubDate);
+        comments, media, guid, pubDate);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
-    DbMedia dbMedia = new DbMedia(mDb);
-    item.setMedia(dbMedia.readById(mediaId));
     return item;
   }
 

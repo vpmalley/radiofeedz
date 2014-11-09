@@ -16,6 +16,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.util.Log;
 import android.util.Xml;
 
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -84,9 +85,15 @@ public class ItemParser {
       } else {
         skip(parser);
       }
-      String imageType = "image/" + imageUrl.substring(imageUrl.lastIndexOf('.')+1);
     }
-    RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, imageUrl);
+    String imageType = "image/";
+    if (!"".equals(imageUrl)){
+      imageType += imageUrl.substring(imageUrl.lastIndexOf('.')+1);
+    } else {
+      imageType += "*";
+    }
+    Media image = new Media(title, "media-miniature", imageUrl, imageType);
+    RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, image);
     channel.update(lastBuildDate, items);
 
     return channel;
@@ -159,8 +166,9 @@ public class ItemParser {
         skip(parser);
       }
     }
+    Media media = new Media(title, feedTitle, mediaUrl, mediaType);
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
-        mediaUrl, guid, pubDate);
+        media, guid, pubDate);
     return item;
   }
 

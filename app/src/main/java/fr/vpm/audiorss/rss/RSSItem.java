@@ -66,7 +66,7 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
   }
 
   public RSSItem(String feedTitle, String title, String link, String description,
-                 String authorAddress, String category, String comments, String mediaUrl, String guid,
+                 String authorAddress, String category, String comments, Media media, String guid,
                  String pubDate) {
     super();
     this.channelTitle = feedTitle;
@@ -76,10 +76,9 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
     this.authorAddress = authorAddress;
     this.category = category;
     this.comments = comments;
-    this.mediaUrl = mediaUrl;
     this.guid = guid;
     this.pubDate = pubDate;
-    this.media = new Media(title, channelTitle, mediaUrl);
+    this.media = media;
   }
 
   public String getDate() {
@@ -176,7 +175,8 @@ public class RSSItem implements Serializable, Comparable<RSSItem> {
 
   public void downloadMedia(Context context) {
     if (media == null) {
-      media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl);
+      Log.w("media", "media is not expected to be null here");
+      media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl, "");
     }
     media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
   }

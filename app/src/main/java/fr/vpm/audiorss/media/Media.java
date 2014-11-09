@@ -36,6 +36,8 @@ public class Media implements Downloadable, Parcelable {
 
   private final String inetUrl;
 
+  private final String mimeType;
+
   // device info
 
   private String deviceUri;
@@ -44,16 +46,17 @@ public class Media implements Downloadable, Parcelable {
 
   private boolean isDownloaded = false;
 
-  public Media(String name, String title, String url) {
+  public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
     this.name = name;
     this.notificationTitle = title;
     this.inetUrl = url;
+    this.mimeType = mimeType;
   }
 
   public Media(long id, String name, String title, String url, String deviceUri, long downloadId,
-               boolean isDownloaded) {
-    this(name, title, url);
+               boolean isDownloaded, String mimeType) {
+    this(name, title, url, mimeType);
     this.id = id;
     this.deviceUri = deviceUri;
     this.downloadId = downloadId;
@@ -173,6 +176,10 @@ public class Media implements Downloadable, Parcelable {
     return downloadId;
   }
 
+  public String getMimeType() {
+    return mimeType;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -188,6 +195,7 @@ public class Media implements Downloadable, Parcelable {
     b.putString(DbMedia.DEVICE_URI_KEY, deviceUri);
     b.putLong(DbMedia.DL_ID_KEY, downloadId);
     b.putBoolean(DbMedia.IS_DL_KEY, isDownloaded);
+    b.putString(DbMedia.MIME_KEY, mimeType);
     parcel.writeBundle(b);
   }
 
@@ -200,6 +208,7 @@ public class Media implements Downloadable, Parcelable {
     deviceUri = b.getString(DbMedia.DEVICE_URI_KEY);
     downloadId = b.getLong(DbMedia.DL_ID_KEY);
     isDownloaded = b.getBoolean(DbMedia.IS_DL_KEY);
+    mimeType = b.getString(DbMedia.MIME_KEY);
   }
 
   public static final Parcelable.Creator<Media> CREATOR
@@ -212,8 +221,6 @@ public class Media implements Downloadable, Parcelable {
       return new Media[size];
     }
   };
-
-
 
 
   private class MediaBroadcastReceiver extends BroadcastReceiver {

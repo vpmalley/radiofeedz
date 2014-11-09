@@ -20,7 +20,7 @@ public class RSSChannelTest extends InstrumentationTestCase {
 	@Test
 	public void testBuildChannel() {
 		RSSChannel channel = new RSSChannel(SAMPLE_URL, SAMPLE_TITLE,
-				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, "");
+				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, null);
 		channel.addTag(SAMPLE_TAG);
 		Assert.assertEquals(SAMPLE_TITLE, channel.title);
 		Assert.assertEquals(SAMPLE_LINK, channel.link);
@@ -32,7 +32,7 @@ public class RSSChannelTest extends InstrumentationTestCase {
 	@Test
 	public void testSaveChannel() {
 		RSSChannel channel = new RSSChannel(SAMPLE_URL, SAMPLE_TITLE,
-				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, "");
+				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, null);
 		channel.addTag(SAMPLE_TAG);
 
 		RSSChannel retrievedChannel = RSSChannel.allChannels.get(0);
@@ -47,7 +47,7 @@ public class RSSChannelTest extends InstrumentationTestCase {
 	public void testBuildContentValuesFromChannel() {
 
 		RSSChannel channel = new RSSChannel(SAMPLE_URL, SAMPLE_TITLE,
-				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, "");
+				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, null);
 		channel.addTag(SAMPLE_TAG);
 
 		ContentValues channelValues = new DbRSSChannel(null).createContentValues(channel);

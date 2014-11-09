@@ -73,8 +73,7 @@ public class RSSChannel implements Parcelable {
 
   private ArrayList<String> tags;
 
-  public RSSChannel(String rssUrl, String title, String link, String description, String category,
-                    String imageUrl) {
+  public RSSChannel(String rssUrl, String title, String link, String description, String category, Media image) {
     super();
     Log.d("RSSChannel", "creating " + rssUrl);
     this.latestItems = new HashMap<String, RSSItem>();
@@ -84,7 +83,7 @@ public class RSSChannel implements Parcelable {
     this.link = link;
     this.description = description;
     this.category = category;
-    this.image = new Media(title, "media-miniature", imageUrl);
+    this.image = image;
   }
 
   public void update(String lastBuildDate, Map<String, RSSItem> items) {

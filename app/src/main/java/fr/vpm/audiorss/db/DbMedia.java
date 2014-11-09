@@ -24,8 +24,10 @@ public class DbMedia {
 
   public final static String IS_DL_KEY = "is_downloaded";
 
+  public final static String MIME_KEY = "mime_type";
+
   public final static String[] COLS_MEDIA = {DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
-      INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY};
+      INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY, MIME_KEY};
 
   public final static String T_MEDIA = "media";
 
@@ -33,7 +35,7 @@ public class DbMedia {
       + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME_KEY + DatabaseOpenHelper.TEXT_COLUMN + COMMA
       + TITLE_KEY + " TEXT" + COMMA + INET_URL_KEY + " TEXT" + COMMA
       + DEVICE_URI_KEY + " TEXT" + COMMA + DL_ID_KEY + " INTEGER" + COMMA
-      + IS_DL_KEY + " INTEGER" + ")";
+      + IS_DL_KEY + " INTEGER" + COMMA + MIME_KEY + " TEXT" + ")";
 
   private SQLiteDatabase mDb = null;
 
@@ -84,6 +86,7 @@ public class DbMedia {
     channelValues.put(DEVICE_URI_KEY, media.getDeviceUri());
     channelValues.put(DL_ID_KEY, media.getDownloadId());
     channelValues.put(IS_DL_KEY, media.isDownloaded());
+    channelValues.put(MIME_KEY, media.getMimeType());
     return channelValues;
   }
 
@@ -95,6 +98,7 @@ public class DbMedia {
     String deviceUri = c.getString(c.getColumnIndex(DEVICE_URI_KEY));
     long downloadId = c.getLong(c.getColumnIndex(DL_ID_KEY));
     boolean isDownloaded = c.getInt(c.getColumnIndex(IS_DL_KEY)) > 0;
-    return new Media(id, name, notificationTitle, inetUrl, deviceUri, downloadId, isDownloaded);
+    String mimeType = c.getString(c.getColumnIndex(MIME_KEY));
+    return new Media(id, name, notificationTitle, inetUrl, deviceUri, downloadId, isDownloaded, mimeType);
   }
 }
