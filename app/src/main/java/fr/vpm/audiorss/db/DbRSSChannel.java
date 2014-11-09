@@ -128,7 +128,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     channelValues.put(RSSChannel.DESC_TAG, channel.getDescription());
     channelValues.put(RSSChannel.LINK_TAG, channel.getLink());
     if (channel.getImage() != null) {
-      Media newImage = new DbMedia(mDb).add(channel.getImage());
+      Media newImage;
+      if (channel.getImage().getId() > -1){
+        newImage = new DbMedia(mDb).update(channel.getImage());
+      } else {
+        newImage = new DbMedia(mDb).add(channel.getImage());
+      }
       channelValues.put(RSSChannel.IMAGE_ID_TAG, newImage.getId());
     }
     channelValues.put(RSSChannel.TAGS_KEY, TextUtils.join(COMMA, channel.getTags()));
@@ -151,8 +156,13 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
     itemValues.put(RSSItem.MEDIA_KEY, item.getMediaUrl());
     if (item.getMedia() != null) {
-      itemValues.put(RSSItem.MEDIA_ID_KEY, item.getMedia().getId());
-      new DbMedia(mDb).add(item.getMedia());
+      Media newMedia;
+      if (item.getMedia().getId() > -1){
+        newMedia = new DbMedia(mDb).update(item.getMedia());
+      } else {
+        newMedia = new DbMedia(mDb).add(item.getMedia());
+      }
+      itemValues.put(RSSItem.MEDIA_ID_KEY, newMedia.getId());
     }
 
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
