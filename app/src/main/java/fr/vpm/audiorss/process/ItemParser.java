@@ -84,7 +84,7 @@ public class ItemParser {
       } else {
         skip(parser);
       }
-
+      String imageType = "image/" + imageUrl.substring(imageUrl.lastIndexOf('.')+1);
     }
     RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, imageUrl);
     channel.update(lastBuildDate, items);
@@ -118,6 +118,7 @@ public class ItemParser {
     String category = "";
     String comments = "";
     String mediaUrl = "";
+    String mediaType = "";
     String guid = "";
     // Date pubDate = new Date();
     String pubDate = "";
@@ -140,7 +141,9 @@ public class ItemParser {
       } else if (tagName.equals(RSSItem.COMMENTS_TAG)) {
         comments = readTagContent(parser, RSSItem.COMMENTS_TAG);
       } else if (tagName.equals(RSSItem.ENC_TAG)) {
-        mediaUrl = readTagAttribute(parser, RSSItem.ENC_TAG, "url");
+        Map<String, String> enclosureAtts = readTagAttribute(parser, RSSItem.ENC_TAG, "url", "type");
+        mediaUrl = enclosureAtts.get("url");
+        mediaType = enclosureAtts.get("type");
       } else if (tagName.equals(RSSItem.GUID_TAG)) {
         guid = readTagContent(parser, RSSItem.GUID_TAG);
       } else if (tagName.equals(RSSItem.DATE_TAG)) {
@@ -161,18 +164,20 @@ public class ItemParser {
     return item;
   }
 
-  private String readTagAttribute(XmlPullParser parser, String tagName, String attName)
+  private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
       throws XmlPullParserException, IOException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
-    String content = null;
-    String att = parser.getAttributeValue(null, attName);
+    Map<String, String> attributes = new HashMap<String, String>();
+    for (String attName : attNames) {
+      String attValue = parser.getAttributeValue(null, attName);
+      attributes.put(attName, attValue);
+    }
     if (parser.next() == XmlPullParser.TEXT) {
-      content = parser.getText();
+      String content = parser.getText();
       parser.nextTag();
     }
-    // Log.d(attName, att);
     parser.require(XmlPullParser.END_TAG, null, tagName);
-    return att;
+    return attributes;
   }
 
   private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
