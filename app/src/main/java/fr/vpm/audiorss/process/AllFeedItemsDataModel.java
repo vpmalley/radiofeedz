@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -145,6 +146,13 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
   @Override
   public void deleteData(Collection<Integer> selection) {
     // do nothing, we do not delete feeds in this view
+  }
+
+  @Override
+  public void markDataRead(Set<Integer> selection, boolean isRead) {
+    for (int position : selection){
+      items.get(position).setRead(isRead);
+    }
   }
 
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {

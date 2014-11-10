@@ -13,6 +13,7 @@ import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -39,7 +40,17 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
 
+    setContextualListeners();
     dataModel.loadData();
+  }
+
+  /**
+   * Defines the listener when long clicking on one or multiple items of the list
+   */
+  private void setContextualListeners() {
+    mFeedItems.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+    FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel, R.menu.items_context);
+    mFeedItems.setMultiChoiceModeListener(actionModeCallback);
   }
 
   @Override

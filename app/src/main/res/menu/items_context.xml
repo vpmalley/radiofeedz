@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_read"
+          android:title="@string/action_read"
+          android:orderInCategory="80"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/ic_action_read"/>
+    <item android:id="@+id/action_unread"
+          android:title="@string/action_unread"
+          android:orderInCategory="90"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/ic_action_unread"/>
+</menu>

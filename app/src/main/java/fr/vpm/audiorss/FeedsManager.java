@@ -52,7 +52,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
    */
   private void setContextualListeners() {
     mFeeds.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel);
+    FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel, R.menu.feeds_context);
     mFeeds.setMultiChoiceModeListener(actionModeCallback);
   }
 

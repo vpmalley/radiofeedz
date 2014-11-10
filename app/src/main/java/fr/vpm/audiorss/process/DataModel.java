@@ -5,6 +5,7 @@ import android.widget.AdapterView;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by vince on 09/11/14.
@@ -40,4 +41,6 @@ public interface DataModel<T> {
   AdapterView.OnItemClickListener getOnItemClickListener();
 
   void deleteData(Collection<Integer> selection);
+
+  void markDataRead(Set<Integer> selection, boolean isRead);
 }

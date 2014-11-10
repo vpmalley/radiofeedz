@@ -33,6 +33,8 @@
     <string name="cannotsavepicture">Cannot save the picture for this feed</string>
     <string name="mightnotsavepicture">Picture for this feed might not have been saved</string>
     <string name="cannotgetpicture">Cannot retrieve the picture for this feed</string>
+    <string name="action_read">Mark as Read</string>
+    <string name="action_unread">Mark as unread</string>
 
 
 </resources>

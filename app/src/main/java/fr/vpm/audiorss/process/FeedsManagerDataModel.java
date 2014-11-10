@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
@@ -97,6 +98,11 @@ public class FeedsManagerDataModel implements DataModel<RSSChannel> {
       feedsToDelete[i++] = feeds.get(position);
     }
     feedDeletion.execute(feedsToDelete);
+  }
+
+  @Override
+  public void markDataRead(Set<Integer> selection, boolean isRead) {
+    // do nothing
   }
 
   @Override
