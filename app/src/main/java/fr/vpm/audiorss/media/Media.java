@@ -19,6 +19,8 @@ import android.widget.Toast;
 
 import junit.framework.Assert;
 
+import java.io.File;
+
 import fr.vpm.audiorss.db.DbMedia;
 
 public class Media implements Downloadable, Parcelable {
@@ -107,6 +109,16 @@ public class Media implements Downloadable, Parcelable {
   public String getFileName() {
     String typeExtension = inetUrl.substring(inetUrl.lastIndexOf('.'));
     return name.replace(' ', '_') + typeExtension;
+  }
+
+  public File getMediaFile(Context context) {
+    StringBuilder mediaFilePathBuilder = new StringBuilder();
+    mediaFilePathBuilder.append(Environment.getExternalStorageDirectory().getPath());
+    mediaFilePathBuilder.append('/');
+    mediaFilePathBuilder.append(getDownloadFolder(PreferenceManager.getDefaultSharedPreferences(context)));
+    mediaFilePathBuilder.append('/');
+    mediaFilePathBuilder.append(getFileName());
+    return new File(mediaFilePathBuilder.toString());
   }
 
   private boolean checkNetwork(int networkFlags, Context context) {

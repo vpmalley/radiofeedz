@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -92,7 +90,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.feeditem, menu);
     MenuItem item = menu.findItem(R.id.action_play);
-    if (rssItem.getMedia() == null) {
+    if ((rssItem.getMedia() == null) || (!rssItem.getMedia().getMediaFile(this).exists())) {
       item.setVisible(false);
     }
     MenuItem shareItem = menu.findItem(R.id.action_share);
@@ -130,12 +128,12 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = this.rssItem.getMedia();
     if (m != null) {
-      File mediaFile = new File(Environment.getExternalStorageDirectory().getPath() + m.getDownloadFolder(PreferenceManager
-          .getDefaultSharedPreferences
-          (this)) + "/" +
-          m.getFileName());
-      Log.d("media", mediaFile.getAbsolutePath());
-      playIntent.setDataAndType(Uri.fromFile(mediaFile), "audio/*");
+      File mediaFile = m.getMediaFile(this);
+      if (mediaFile.exists()){
+        playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
+      } else {
+        playIntent.setDataAndType(new Uri.Builder().path(m.getInetUrl()).build(), m.getMimeType());
+      }
       startActivity(playIntent);
     }
   }
