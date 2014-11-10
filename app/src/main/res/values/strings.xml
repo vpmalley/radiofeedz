@@ -35,6 +35,7 @@
     <string name="cannotgetpicture">Cannot retrieve the picture for this feed</string>
     <string name="action_read">Mark as Read</string>
     <string name="action_unread">Mark as unread</string>
+    <string name="action_display">Display</string>
 
 
 </resources>

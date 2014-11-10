@@ -89,9 +89,16 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.feeditem, menu);
-    MenuItem item = menu.findItem(R.id.action_play);
-    if ((rssItem.getMedia() == null) || (!rssItem.getMedia().getMediaFile(this).exists())) {
-      item.setVisible(false);
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this).exists())) {
+      if (rssItem.getMedia().getMimeType().contains("image")) {
+        MenuItem displayItem = menu.findItem(R.id.action_display);
+        displayItem.setVisible(true);
+      } else {
+        MenuItem playItem = menu.findItem(R.id.action_play);
+        playItem.setVisible(true);
+      }
+      MenuItem downloadItem = menu.findItem(R.id.action_download);
+      downloadItem.setVisible(false);
     }
     MenuItem shareItem = menu.findItem(R.id.action_share);
     Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -114,6 +121,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         openWebsite();
         result = true;
         break;
+      case R.id.action_display:
       case R.id.action_play:
         playMedia();
         result = true;
