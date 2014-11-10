@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.Collection;
 import java.util.List;
 
 import fr.vpm.audiorss.FeedsActivity;
@@ -87,7 +88,7 @@ public class FeedsManagerDataModel implements DataModel<RSSChannel> {
   }
 
   @Override
-  public void deleteData(List<Integer> selection) {
+  public void deleteData(Collection<Integer> selection) {
     LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(progressListener, this);
     AsyncDbDeleteRSSChannel feedDeletion = new AsyncDbDeleteRSSChannel(callback, getContext());
     RSSChannel[] feedsToDelete = new RSSChannel[selection.size()];

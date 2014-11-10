@@ -5,8 +5,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -18,7 +18,7 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
 
   private final DataModel<RSSChannel> dataModel;
 
-  private final List<Integer> selection = new ArrayList<Integer>();
+  private final Set<Integer> selection = new HashSet<Integer>();
 
   public FeedChoiceModeListener(DataModel<RSSChannel> dataModel) {
     this.dataModel = dataModel;

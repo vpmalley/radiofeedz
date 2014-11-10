@@ -29,16 +29,16 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
 
-    // views
-    mFeedItems = (ListView) findViewById(R.id.list);
-    mFeedItems.setTextFilterEnabled(true);
-    mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
-
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
     // services
     networkChecker = new DefaultNetworkChecker();
     dataModel = new AllFeedItemsDataModel(this, progressBarListener, this);
+
+    mFeedItems = (ListView) findViewById(R.id.list);
+    mFeedItems.setTextFilterEnabled(true);
+    mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
+
     dataModel.loadData();
   }
 

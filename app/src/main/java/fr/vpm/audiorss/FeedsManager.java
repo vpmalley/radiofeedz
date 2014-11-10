@@ -29,9 +29,10 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     mFeeds = (ListView) findViewById(R.id.list);
     mFeeds.setTextFilterEnabled(true);
-    setContextualListeners();
 
     dataModel = new FeedsManagerDataModel(this, progressBarListener, this);
+
+    setContextualListeners();
     dataModel.loadData();
   }
 

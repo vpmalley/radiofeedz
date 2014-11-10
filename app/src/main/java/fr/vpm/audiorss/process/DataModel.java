@@ -3,6 +3,7 @@ package fr.vpm.audiorss.process;
 import android.content.Context;
 import android.widget.AdapterView;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -38,5 +39,5 @@ public interface DataModel<T> {
 
   AdapterView.OnItemClickListener getOnItemClickListener();
 
-  void deleteData(List<Integer> selection);
+  void deleteData(Collection<Integer> selection);
 }

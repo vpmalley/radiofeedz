@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +143,7 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
   }
 
   @Override
-  public void deleteData(List<Integer> selection) {
+  public void deleteData(Collection<Integer> selection) {
     // do nothing, we do not delete feeds in this view
   }
 
