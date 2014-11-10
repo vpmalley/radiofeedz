@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.FeedsManagerDataModel;
 import fr.vpm.audiorss.process.RSSChannelArrayAdapter;
+import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
  * Created by vince on 03/11/14.
@@ -51,7 +52,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
    */
   private void setContextualListeners() {
     mFeeds.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener actionModeCallback = new FeedChoiceModeListener(dataModel);
+    FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel);
     mFeeds.setMultiChoiceModeListener(actionModeCallback);
   }
 

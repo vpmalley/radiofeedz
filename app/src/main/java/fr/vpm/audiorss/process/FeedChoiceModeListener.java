@@ -9,18 +9,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
  * Created by vince on 03/11/14.
  */
-public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeListener {
 
-  private final DataModel<RSSChannel> dataModel;
+  private final DataModel<T> dataModel;
 
   private final Set<Integer> selection = new HashSet<Integer>();
 
-  public FeedChoiceModeListener(DataModel<RSSChannel> dataModel) {
+  public FeedChoiceModeListener(DataModel<T> dataModel) {
     this.dataModel = dataModel;
   }
 
