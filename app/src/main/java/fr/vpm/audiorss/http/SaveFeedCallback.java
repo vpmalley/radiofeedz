@@ -4,11 +4,10 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.text.ParseException;
-import java.util.List;
 
-import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
+import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -18,7 +17,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
 
   private final ProgressListener progressListener;
 
-  private final FeedsActivity<List<RSSChannel>> activity;
+  private final DataModel<RSSChannel> dataModel;
 
   /**
    * The counter is used to join all threads for the refresh of multiple feeds.
@@ -26,9 +25,9 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
    */
   private static int feedsCounter = 0;
 
-  public SaveFeedCallback(ProgressListener progressListener, FeedsActivity<List<RSSChannel>> activity) {
+  public SaveFeedCallback(ProgressListener progressListener, DataModel<RSSChannel> dataModel) {
     this.progressListener = progressListener;
-    this.activity = activity;
+    this.dataModel = dataModel;
   }
 
   @Override
@@ -41,7 +40,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
     progressListener.stopRefreshProgress();
     if (feedsAreLoaded() && (result != null)) {
       try {
-        result.saveToDb(progressListener, activity);
+        result.saveToDb(progressListener, dataModel);
       } catch (ParseException e) {
         handleException(e);
       }
@@ -49,7 +48,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
   }
 
   private void handleException(Exception e) {
-    Toast.makeText(activity.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+    Toast.makeText(dataModel.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     Log.e("Exception", e.toString());
   }
 

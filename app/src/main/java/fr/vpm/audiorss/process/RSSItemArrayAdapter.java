@@ -29,6 +29,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private final Activity activity;
 
   private final List<RSSItem> items;
+
   private final Map<RSSItem, RSSChannel> channelsByItem;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
@@ -43,9 +44,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   public View getView(int position, View convertView, ViewGroup parent) {
     ViewHolder itemHolder;
     if (convertView == null) {
-      LayoutInflater vi = activity.getLayoutInflater();
-      convertView = vi.inflate(R.layout.list_rss_item, parent, false);
-
+      LayoutInflater layoutInflater = activity.getLayoutInflater();
+      convertView = layoutInflater.inflate(R.layout.list_rss_item, parent, false);
       ImageView picImage = (ImageView) convertView.findViewById(R.id.feed_pic);
       TextView picTitle = (TextView) convertView.findViewById(R.id.item_title);
 

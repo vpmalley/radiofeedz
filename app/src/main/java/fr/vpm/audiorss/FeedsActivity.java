@@ -10,20 +10,9 @@ import android.content.Context;
 public interface FeedsActivity<T> {
 
   /**
-   * Loads the data and refreshes the view once data is retrieved.
+   * Refreshes the view based on some data item
    */
-  void loadDataAndRefreshView();
-
-  /**
-   * Sets the loaded data
-   * @param data data loaded and used by the activity
-   */
-  void setData(T data);
-
-  /**
-   * Refreshes the view based on activityś data
-   */
-  void refreshView();
+  void refreshView(T data);
 
   /**
    * Retrieves the Context bound with this Activity

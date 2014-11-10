@@ -2,9 +2,9 @@ package fr.vpm.audiorss.db;
 
 import java.util.List;
 
-import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
+import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -14,11 +14,11 @@ public class LoadDataRefreshViewCallback implements AsyncCallbackListener<List<R
 
   private final ProgressListener progressListener;
 
-  private final FeedsActivity<List<RSSChannel>> activity;
+  private final DataModel<RSSChannel> dataModel;
 
-  public LoadDataRefreshViewCallback(ProgressListener progressListener, FeedsActivity activity) {
+  public LoadDataRefreshViewCallback(ProgressListener progressListener, DataModel<RSSChannel> dataModel) {
     this.progressListener = progressListener;
-    this.activity = activity;
+    this.dataModel = dataModel;
   }
 
   @Override
@@ -29,6 +29,6 @@ public class LoadDataRefreshViewCallback implements AsyncCallbackListener<List<R
   @Override
   public void onPostExecute(List<RSSChannel> result) {
     progressListener.stopRefreshProgress();
-    activity.loadDataAndRefreshView();
+    dataModel.loadData();
   }
 }

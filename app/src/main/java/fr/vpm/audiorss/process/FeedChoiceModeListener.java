@@ -1,6 +1,5 @@
 package fr.vpm.audiorss.process;
 
-import android.content.Context;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.db.AsyncDbDeleteRSSChannel;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -18,31 +16,20 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
-  private List<RSSChannel> feeds;
+  private final DataModel<RSSChannel> dataModel;
 
-  private final List<RSSChannel> selectedFeeds;
+  private final List<Integer> selection = new ArrayList<Integer>();
 
-  private final Context context;
-
-  private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
-
-  public FeedChoiceModeListener(List<RSSChannel> feeds, AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener, Context context) {
-    this.feeds = feeds;
-    this.context = context;
-    this.asyncCallbackListener = asyncCallbackListener;
-    this.selectedFeeds = new ArrayList<RSSChannel>();
-  }
-
-  public void setFeeds(List<RSSChannel> feeds){
-    this.feeds = feeds;
+  public FeedChoiceModeListener(DataModel<RSSChannel> dataModel) {
+    this.dataModel = dataModel;
   }
 
   @Override
   public void onItemCheckedStateChanged(ActionMode actionMode, int position, long l, boolean checked) {
     if (checked) {
-      selectedFeeds.add(feeds.get(position));
+      selection.add(position);
     } else {
-      selectedFeeds.remove(feeds.get(position));
+      selection.remove(position);
     }
   }
 
@@ -60,8 +47,7 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     if (R.id.action_delete == menuItem.getItemId()) {
-      AsyncDbDeleteRSSChannel feedDeletion = new AsyncDbDeleteRSSChannel(asyncCallbackListener, context);
-      feedDeletion.execute((RSSChannel[]) selectedFeeds.toArray(new RSSChannel[selectedFeeds.size()]));
+      dataModel.deleteData(selection);
       actionMode.finish();
       return true;
     }
@@ -70,6 +56,6 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
 
   @Override
   public void onDestroyActionMode(ActionMode actionMode) {
-    selectedFeeds.clear();
+    selection.clear();
   }
 }

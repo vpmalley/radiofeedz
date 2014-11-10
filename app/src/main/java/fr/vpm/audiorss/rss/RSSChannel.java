@@ -27,6 +27,7 @@ import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.persistence.FilePictureSaver;
+import fr.vpm.audiorss.process.DataModel;
 
 /**
  * The representation of a RSS feed
@@ -166,9 +167,9 @@ public class RSSChannel implements Parcelable {
     this.title = title;
   }
 
-  public void saveToDb(ProgressListener progressListener, FeedsActivity<List<RSSChannel>> activity) throws ParseException {
-    LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(progressListener, activity);
-    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(callback, activity.getContext());
+  public void saveToDb(ProgressListener progressListener, DataModel<RSSChannel> dataModel) throws ParseException {
+    LoadDataRefreshViewCallback callback = new LoadDataRefreshViewCallback(progressListener, dataModel);
+    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(callback, dataModel.getContext());
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
 

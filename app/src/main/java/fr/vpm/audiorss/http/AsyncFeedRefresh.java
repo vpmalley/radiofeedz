@@ -2,7 +2,6 @@ package fr.vpm.audiorss.http;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -13,30 +12,26 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import fr.vpm.audiorss.AllFeedItems;
-import fr.vpm.audiorss.FeedsActivity;
-import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
-  private String url;
-
-  private final FeedsActivity<List<RSSChannel>> feedsActivity;
+  private final Context context;
 
   private final AsyncCallbackListener<RSSChannel> asyncCallbackListener;
 
   private Exception mE = null;
 
-  public AsyncFeedRefresh(FeedsActivity<List<RSSChannel>> feedsActivity,
+  public AsyncFeedRefresh(Context context,
                           AsyncCallbackListener<RSSChannel> asyncCallbackListener) {
-    this.feedsActivity = feedsActivity;
+    this.context = context;
     this.asyncCallbackListener = asyncCallbackListener;
     Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
@@ -68,7 +63,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   @Override
   protected RSSChannel doInBackground(String... params) {
     boolean hasError = false;
-    url = params[0];
+    String url = params[0];
     HttpEntity entity = null;
     RSSChannel newChannel = null;
     try {
@@ -102,7 +97,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
     Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
 
     if (mE != null) {
-      Toast.makeText(feedsActivity.getContext(), "Could not refresh a feed", Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, "Could not refresh a feed", Toast.LENGTH_SHORT).show();
       Log.e("Exception", mE.toString());
     }
     asyncCallbackListener.onPostExecute(newChannel);
