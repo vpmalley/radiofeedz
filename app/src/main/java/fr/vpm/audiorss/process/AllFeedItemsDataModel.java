@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;

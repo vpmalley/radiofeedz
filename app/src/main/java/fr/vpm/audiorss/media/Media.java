@@ -112,12 +112,21 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public File getMediaFile(Context context) {
+    SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+    String storageMediaRoot = defaultSharedPreferences.getString("pref_storage_root",
+        Environment.getExternalStorageDirectory().getPath());
+    if (storageMediaRoot.isEmpty()){
+      storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
+    }
     StringBuilder mediaFilePathBuilder = new StringBuilder();
-    mediaFilePathBuilder.append(Environment.getExternalStorageDirectory().getPath());
     mediaFilePathBuilder.append('/');
-    mediaFilePathBuilder.append(getDownloadFolder(PreferenceManager.getDefaultSharedPreferences(context)));
+    mediaFilePathBuilder.append(storageMediaRoot);
+    mediaFilePathBuilder.append('/');
+    mediaFilePathBuilder.append(getDownloadFolder(defaultSharedPreferences));
     mediaFilePathBuilder.append('/');
     mediaFilePathBuilder.append(getFileName());
+    String path = mediaFilePathBuilder.toString();
+    path = path.replace("//", "/");
     return new File(mediaFilePathBuilder.toString());
   }
 

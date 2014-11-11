@@ -19,10 +19,16 @@
             android:defaultValue="true" />
         
         <EditTextPreference
-                android:key="pref_download_folder"
-                android:title="@string/pref_download_folder"
-                android:summary="@string/summary_pref_download_folder"
-                android:dialogTitle="@string/dialog_pref_download_folder" />
+            android:key="pref_storage_root"
+            android:title="@string/pref_storage_root"
+            android:summary="@string/summary_pref_storage_root"
+            android:dialogTitle="@string/dialog_pref_storage_root" />
+
+        <EditTextPreference
+             android:key="pref_download_folder"
+            android:title="@string/pref_download_folder"
+            android:summary="@string/summary_pref_download_folder"
+            android:dialogTitle="@string/dialog_pref_download_folder" />
 
     <EditTextPreference
         android:key="pref_disp_max_items"

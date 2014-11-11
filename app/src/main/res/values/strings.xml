@@ -36,6 +36,9 @@
     <string name="action_read">Mark as Read</string>
     <string name="action_unread">Mark as unread</string>
     <string name="action_display">Display</string>
+    <string name="pref_storage_root">Storage unit root (advanced)</string>
+    <string name="summary_pref_storage_root">The path to the root of the storage unit</string>
+    <string name="dialog_pref_storage_root">Only if you know what you are doing. Phone storage used if empty</string>
 
 
 </resources>
