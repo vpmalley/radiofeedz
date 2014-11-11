@@ -48,8 +48,9 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
     }
     String pictureUrl = media[0].getInetUrl();
     Bitmap pictureBitmap = downloadBitmap(pictureUrl);
-
-    persistBitmap(media[0], pictureBitmap);
+    if (pictureBitmap != null) {
+      persistBitmap(media[0], pictureBitmap);
+    }
     return pictureBitmap;
   }
 
@@ -70,11 +71,16 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
    * @throws java.lang.IllegalArgumentException caused by a wrongly formatted url
    */
   private Bitmap downloadBitmap(String pictureUrl) {
-    Bitmap pictureBitmap;
+    Bitmap pictureBitmap = null;
     InputStream pictureStream = null;
+    if (pictureUrl.isEmpty()){
+      return null;
+    }
+    if (!pictureUrl.contains("://")){
+      pictureUrl = "http://" + pictureUrl;
+    }
     try {
       pictureStream = new URL(pictureUrl).openStream();
-
       // first figure how large the picture is, then load only the needed size
       // cf. https://developer.android.com/training/displaying-bitmaps/load-bitmap.html
       BitmapFactory.Options options = new BitmapFactory.Options();
@@ -89,7 +95,8 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
       options.inJustDecodeBounds = false;
       pictureBitmap = BitmapFactory.decodeStream(pictureStream, null, options);
     } catch (IOException e) {
-      throw new IllegalArgumentException("A well-formatted url was expected.");
+      //throw new IllegalArgumentException("A well-formatted url was expected.");
+      Log.e("picture", e.getMessage());
     } finally {
       if (pictureStream != null) {
         try {
@@ -104,8 +111,10 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap pictureBitmap) {
-    for (PictureLoadedListener pictureLoadedListener : pictureLoadedListeners) {
-      pictureLoadedListener.onPictureLoaded(pictureBitmap);
+    if (pictureBitmap != null) {
+      for (PictureLoadedListener pictureLoadedListener : pictureLoadedListeners) {
+        pictureLoadedListener.onPictureLoaded(pictureBitmap);
+      }
     }
   }
 }

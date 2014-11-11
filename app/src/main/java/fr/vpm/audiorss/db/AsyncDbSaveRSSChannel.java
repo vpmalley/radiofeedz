@@ -42,7 +42,7 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
       if (existingChannel != null) {
         persistedChannel = dbUpdater.update(existingChannel, newChannel);
       } else { // new channel
-        newChannel.downloadImage(context);
+        //newChannel.downloadImage(context);
         persistedChannel = dbUpdater.add(newChannel);
       }
     } catch (ParseException e) {
