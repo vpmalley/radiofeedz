@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
 import org.xmlpull.v1.XmlPullParser;
@@ -155,9 +158,18 @@ public class ItemParser {
         guid = readTagContent(parser, RSSItem.GUID_TAG);
       } else if (tagName.equals(RSSItem.DATE_TAG)) {
         // Wed, 29 Jan 2014 15:05:00 +0100
+        // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
         try {
-          Date date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN, Locale.US).parse(pubDate);
+          Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
+          Date date;
+          Matcher m = expectedMinimumPattern.matcher(pubDate);
+          if (m.find()){
+            date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
+          } else {
+            Log.w("date", "Could not parse the right date, defaulting to current date");
+            date = Calendar.getInstance().getTime();
+          }
           pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
         } catch (ParseException e) {
           Log.w("date", "tried parsing date but failed: " + pubDate);
