@@ -53,19 +53,9 @@ public class ItemComparator implements Comparator<RSSItem> {
   @Override
   public int compare(RSSItem rssItem, RSSItem otherRssItem) {
     int comparison = 0;
-    Date lhsDate = null;
-    Date rhsDate = null;
-    try {
-      lhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(rssItem.getDate());
-      rhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(otherRssItem.getDate());
-    } catch (ParseException e) {
-      Log.e("Exception", e.toString());
-    }
+    
+    int comparisonByDate = rssItem.getDate().compareTo(otherRssItem.getDate());
 
-    int comparisonByDate = 0;
-    if ((lhsDate != null) && (rhsDate != null)) {
-      comparisonByDate = lhsDate.compareTo(rhsDate);
-    }
     int comparisonByName = rssItem.getTitle().compareTo(otherRssItem.getTitle());
 
     if (ItemComparison.ALPHA.equals(itemComparison) || ItemComparison.REVERSE_ALPHA.equals(itemComparison)) {
