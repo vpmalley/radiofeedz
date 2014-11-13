@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -16,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
+import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
@@ -42,14 +41,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private static final int DEFAULT_MAX_ITEMS = 80;
 
-  private Map<RSSItem, RSSChannel> channelsByItem;
+  private Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
 
   /**
    * the items of feeds that are displayed
    */
-  private List<RSSItem> items;
+  private List<RSSItem> items = new ArrayList<RSSItem>();
 
-  private List<RSSChannel> feeds;
+  private List<RSSChannel> feeds = new ArrayList<RSSChannel>();
 
   private final ProgressListener progressListener;
 
@@ -66,47 +65,67 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void loadData() {
+    loadDataFromChannels(false);
+    loadDataFromItems();
+  }
+
+  public void loadDataFromChannels(boolean readItems) {
     RefreshViewCallback callback =
         new RefreshViewCallback(progressListener, this);
-    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext());
+    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+  }
+
+  public void loadDataFromItems() {
+    AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
+      @Override
+      public void onPreExecute() {
+        progressListener.startRefreshProgress();
+      }
+
+      @Override
+      public void onPostExecute(List<RSSItem> result) {
+        progressListener.stopRefreshProgress();
+        setItemsAndBuildModel(result);
+        if (isReady()) {
+          refreshView();
+        }
+      }
+    };
+    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext());
+    // read all RSS items from DB and refresh views
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+  }
+
+  @Override
+  public boolean isReady() {
+    return !channelsByItem.isEmpty();
   }
 
   @Override
   public void setChannelsAndBuildModel(List<RSSChannel> channels) {
     this.feeds = channels;
-    SharedPreferences sharedPref = PreferenceManager
-        .getDefaultSharedPreferences(getContext());
-    String ordering = sharedPref.getString(PREF_FEED_ORDERING, "REVERSE_TIME");
-    SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
-
-    channelsByItem = new HashMap<RSSItem, RSSChannel>();
-    for (RSSChannel channel : channels) {
-      allItems.addAll(channel.getItems());
-      for (RSSItem item : channel.getItems()) {
-        channelsByItem.put(item, channel);
-      }
-    }
-
-    int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
-    items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
+    buildChannelsByItem();
   }
 
   @Override
-  public void setItemsAndBuildModel(List<RSSItem> data) {
-    items = data;
+  public void setItemsAndBuildModel(List<RSSItem> items) {
+    this.items = items;
+    buildChannelsByItem();
+  }
 
-    feeds = new ArrayList<RSSChannel>();
-    channelsByItem = new HashMap<RSSItem, RSSChannel>();
-    for (RSSItem item : items) {
-      if (!channelsByItem.containsKey(item)){
-        RSSChannel rssChannel = RSSChannel.fromDbById(item.getChannelId(), getContext());
-        channelsByItem.put(item, rssChannel);
-        feeds.add(rssChannel);
+  private void buildChannelsByItem(){
+    if ((items.size() > 0) && (feeds.size() > 0)) {
+      channelsByItem.clear();
+      for (RSSItem item : items) {
+        for (RSSChannel channel : feeds) {
+          if (channel.getId() == item.getChannelId()) {
+            channelsByItem.put(item, channel);
+          }
+        }
       }
     }
-
   }
 
   /**

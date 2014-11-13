@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
 
   private final FeedsActivity<RSSChannelArrayAdapter> feedsActivity;
 
-  private List<RSSChannel> feeds;
+  private List<RSSChannel> feeds = new ArrayList<RSSChannel>();
 
   public FeedsManagerDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSChannelArrayAdapter> feedsActivity) {
     this.activity = activity;
@@ -44,7 +45,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   @Override
   public void loadData() {
     RefreshViewCallback callback = new RefreshViewCallback(progressListener, this);
-    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, feedsActivity.getContext());
+    AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, feedsActivity.getContext(), false);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -103,6 +104,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   @Override
   public void markDataRead(Set<Integer> selection, boolean isRead) {
     // do nothing
+  }
+
+  @Override
+  public boolean isReady() {
+    return !feeds.isEmpty();
   }
 
   @Override

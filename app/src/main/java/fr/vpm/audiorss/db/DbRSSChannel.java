@@ -51,35 +51,39 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   @Override
-  public RSSChannel readById(long id) throws ParseException {
+  public RSSChannel readById(long id, boolean readItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?",
         new String[]{String.valueOf(id)}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
-      Map<String, RSSItem> items = readItemsByChannelId(id);
-      channel.update(channel.getLastBuildDate(), items);
+      if (readItems) {
+        Map<String, RSSItem> items = readItemsByChannelId(id);
+        channel.update(channel.getLastBuildDate(), items);
+      }
     }
     c.close();
     return channel;
   }
 
-  public RSSChannel readByUrl(String url) throws ParseException {
+  public RSSChannel readByUrl(String url, boolean readItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, RSSChannel.URL_KEY + "=?",
         new String[]{url}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
-      Map<String, RSSItem> items = readItemsByChannelId(channel.getId());
-      channel.update(channel.getLastBuildDate(), items);
+      if (readItems) {
+        Map<String, RSSItem> items = readItemsByChannelId(channel.getId());
+        channel.update(channel.getLastBuildDate(), items);
+      }
     }
     c.close();
     return channel;
   }
 
-  public List<RSSChannel> readAll() throws ParseException {
+  public List<RSSChannel> readAll(boolean readItems) throws ParseException {
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, null, null, null, null,
         RSSChannel.TITLE_TAG);
     List<RSSChannel> channels = new ArrayList<RSSChannel>();
@@ -87,8 +91,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     for (int i = 0; i < c.getCount(); i++) {
       long id = c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID));
       RSSChannel channel = channelFromCursorEntry(c);
-      Map<String, RSSItem> items = readItemsByChannelId(id);
-      channel.update(channel.getLastBuildDate(), items);
+      if (readItems) {
+        Map<String, RSSItem> items = readItemsByChannelId(id);
+        channel.update(channel.getLastBuildDate(), items);
+      }
       channels.add(channel);
       c.moveToNext();
     }

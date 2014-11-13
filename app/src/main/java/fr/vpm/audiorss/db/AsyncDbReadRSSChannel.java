@@ -22,9 +22,12 @@ public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSCh
 
   private final DbRSSChannel dbReader;
 
-  public AsyncDbReadRSSChannel(AsyncCallbackListener<List<RSSChannel>> callbackListener, Context context) {
+  private final boolean readItems;
+
+  public AsyncDbReadRSSChannel(AsyncCallbackListener<List<RSSChannel>> callbackListener, Context context, boolean readItems) {
     this.asyncCallbackListener = callbackListener;
     this.dbReader = new DbRSSChannel(context);
+    this.readItems = readItems;
     asyncCallbackListener.onPreExecute();
   }
 
@@ -34,9 +37,9 @@ public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSCh
     Log.d("measures", "load start " + String.valueOf(System.currentTimeMillis()));
     try {
       if (0 == url.length) { // if no argument, read all RSSChannel in DB
-        foundChannels.addAll(dbReader.readAll());
+        foundChannels.addAll(dbReader.readAll(readItems));
       } else {
-        foundChannels.add(dbReader.readByUrl(url[0]));
+        foundChannels.add(dbReader.readByUrl(url[0], true));
       }
     } catch (ParseException e) {
       Log.e("dbIssue", e.getMessage());

@@ -33,7 +33,9 @@ public class RefreshViewCallback implements AsyncCallbackListener<List<RSSChanne
   public void onPostExecute(List<RSSChannel> result) {
     progressListener.stopRefreshProgress();
     dataModel.setChannelsAndBuildModel(result);
-    dataModel.refreshView();
+    if (dataModel.isReady()) {
+      dataModel.refreshView();
+    }
   }
 
   @Override

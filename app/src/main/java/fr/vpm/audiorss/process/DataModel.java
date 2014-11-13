@@ -41,6 +41,12 @@ public interface DataModel {
 
   void markDataRead(Set<Integer> selection, boolean isRead);
 
+  /**
+   * Whether the data model is built and ready for display
+   * @return Whether the data model is built and ready for display
+   */
+  boolean isReady();
+
   interface RSSChannelInput {
 
     /**

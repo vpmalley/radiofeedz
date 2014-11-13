@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
@@ -93,7 +92,7 @@ public class RSSChannel implements Parcelable {
     RSSChannel channel = null;
     DbRSSChannel dbRSSChannel = new DbRSSChannel(context);
     try {
-      channel = dbRSSChannel.readById(id);
+      channel = dbRSSChannel.readById(id, true);
     } catch (ParseException e) {
       Log.e("dbIssue", e.getMessage());
     } finally {
