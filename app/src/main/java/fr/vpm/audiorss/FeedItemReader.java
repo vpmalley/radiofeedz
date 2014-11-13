@@ -38,7 +38,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
   private RSSChannel channel = null;
 
-  private ImageView channelPic;
+  private ImageView picView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
     TextView title = (TextView) findViewById(R.id.title);
 
-    channelPic = (ImageView) findViewById(R.id.channelPic);
+    picView = (ImageView) findViewById(R.id.channelPic);
 
     TextView channelTitle = (TextView) findViewById(R.id.channelTitle);
 
@@ -81,19 +81,34 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     }
     if (channel != null) {
       channelTitle.setText(channel.getTitle());
-      List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-      listeners.add(this);
+    }
+    setPicture();
+  }
+
+
+  private void setPicture(){
+    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+    listeners.add(this);
+
+    if ((rssItem != null) && (rssItem.getMedia().isPicture())){
+      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(this, listeners, Media.Folder.INTERNAL_ITEMS_PICS);
+      if (itemBitmap != null){
+        picView.setImageBitmap(itemBitmap);
+      }
+    } else if (channel != null){
       Bitmap channelBitmap = channel.getBitmap(this, listeners);
       if (channelBitmap != null){
-        channelPic.setImageBitmap(channelBitmap);
+        picView.setImageBitmap(channelBitmap);
       }
     }
+
+
   }
 
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.feeditem, menu);
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this, false).exists())) {
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists())) {
       if (rssItem.getMedia().getMimeType().contains("image")) {
         MenuItem displayItem = menu.findItem(R.id.action_display);
         displayItem.setVisible(true);
@@ -144,7 +159,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = this.rssItem.getMedia();
     if (m != null) {
-      File mediaFile = m.getMediaFile(this, false);
+      File mediaFile = m.getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
@@ -190,6 +205,6 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
   @Override
   public void onPictureLoaded(Bitmap pictureBitmap) {
-    channelPic.setImageBitmap(pictureBitmap);
+    picView.setImageBitmap(pictureBitmap);
   }
 }

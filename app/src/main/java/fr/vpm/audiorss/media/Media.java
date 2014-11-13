@@ -30,8 +30,15 @@ import fr.vpm.audiorss.persistence.FilePictureSaver;
 
 public class Media implements Downloadable, Parcelable {
 
+  public static final String INTERNAL_ITEMS_PIC_DIR = "items-icons";
   public static final String INTERNAL_FEEDS_PIC_DIR = "feeds-icons";
   public static final String INTERNAL_APP_DIR = "RadioFeedz";
+
+  public enum Folder {
+    INTERNAL_FEEDS_PICS,
+    INTERNAL_ITEMS_PICS,
+    EXTERNAL_DOWNLOADS_PODCASTS
+  }
 
   // db id
   private long id;
@@ -131,8 +138,14 @@ public class Media implements Downloadable, Parcelable {
     return dirFile;
   }
 
-  public File getInternalFolder(){
+  public File getInternalFeedsPicsFolder(){
     File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_FEEDS_PIC_DIR);
+    dir.mkdirs();
+    return dir;
+  }
+
+  public File getInternalItemsPicsFolder(){
+    File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_ITEMS_PIC_DIR);
     dir.mkdirs();
     return dir;
   }
@@ -146,12 +159,19 @@ public class Media implements Downloadable, Parcelable {
     return name.replace(' ', '_') + typeExtension;
   }
 
-  public File getMediaFile(Context context, boolean internal) {
+  public File getMediaFile(Context context, Folder folder) {
     File dirFile = null;
-    if (internal){
-      dirFile = getInternalFolder();
-    } else {
-      dirFile = getDownloadFolder(context);
+    switch(folder) {
+      case INTERNAL_FEEDS_PICS:
+        dirFile = getInternalFeedsPicsFolder();
+        break;
+      case INTERNAL_ITEMS_PICS:
+        dirFile = getInternalItemsPicsFolder();
+        break;
+      case EXTERNAL_DOWNLOADS_PODCASTS:
+      default:
+        dirFile = getDownloadFolder(context);
+        break;
     }
     return new File(dirFile, getFileName());
   }
@@ -181,20 +201,24 @@ public class Media implements Downloadable, Parcelable {
     return networkFlags;
   }
 
-  public Bitmap getAsBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners, boolean internal){
-    if (!getMimeType().startsWith("image")){
+  public Bitmap getAsBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners, Folder folder){
+    if (!isPicture()){
       return null;
     }
     Bitmap b = null;
     FilePictureSaver pictureRetriever = new FilePictureSaver(context);
-    File pictureFile = getMediaFile(context, internal);
+    File pictureFile = getMediaFile(context, folder);
     if (pictureFile.exists()){
       b = pictureRetriever.retrieve(pictureFile);
     } else if (new DefaultNetworkChecker().checkNetwork(context)) {
-      AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context, true);
+      AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context, folder);
       pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }
     return b;
+  }
+
+  public boolean isPicture() {
+    return getMimeType().startsWith("image");
   }
 
   public long getId() {

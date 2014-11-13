@@ -33,10 +33,10 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
   /**
    * Whether the picture should be persisted in internal storage
    */
-  private final boolean internal;
+  private final Media.Folder folder;
 
   public AsyncPictureLoader(List<PictureLoadedListener> pictureLoadedListeners, int reqWidth, int reqHeight,
-                            Context context, boolean internal) {
+                            Context context, Media.Folder folder) {
 
     this.reqHeight = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, reqHeight,
         context.getResources().getDisplayMetrics()));
@@ -44,7 +44,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
         context.getResources().getDisplayMetrics()));
     this.pictureLoadedListeners = pictureLoadedListeners;
     this.context = context;
-    this.internal = internal;
+    this.folder = folder;
   }
 
   @Override
@@ -67,7 +67,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
    */
   private void persistBitmap(Media picture, Bitmap picBitmap) {
     PictureSaver persister = new FilePictureSaver(context);
-    persister.persist(picture.getMediaFile(context, internal), picBitmap);
+    persister.persist(picture.getMediaFile(context, folder), picBitmap);
   }
 
   /**
