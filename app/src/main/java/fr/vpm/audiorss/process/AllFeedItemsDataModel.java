@@ -150,6 +150,7 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
     RSSItem[] itemsToDelete = new RSSItem[selection.size()];
     int i = 0;
     for (int position : selection){
+      items.get(position).setDeleted(true);
       itemsToDelete[i++] = items.get(position);
     }
     AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
@@ -165,7 +166,7 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
         refreshView();
       }
     };
-    new AsyncDbDeleteRSSItem(callback,
+    new AsyncDbSaveRSSItem(callback,
         getContext()).executeOnExecutor(AsyncTask
         .THREAD_POOL_EXECUTOR, itemsToDelete);
   }

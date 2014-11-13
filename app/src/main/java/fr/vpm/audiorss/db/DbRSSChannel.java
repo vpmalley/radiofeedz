@@ -207,7 +207,8 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   Map<String, RSSItem> readItemsByChannelId(long id) throws ParseException {
-    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?", new String[]{String.valueOf(id)});
+    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=? AND " + RSSItem.DELETED_KEY + "=0",
+        new String[]{String.valueOf(id)});
   }
 
   Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues) throws ParseException {
