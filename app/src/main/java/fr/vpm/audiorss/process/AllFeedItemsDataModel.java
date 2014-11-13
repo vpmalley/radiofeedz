@@ -193,7 +193,7 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
 
         @Override
         public void onPostExecute(List<RSSItem> result) {
-          // do nothing
+          loadData();
         }
       }, getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           rssItem);

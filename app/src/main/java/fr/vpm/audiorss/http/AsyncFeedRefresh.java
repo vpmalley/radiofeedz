@@ -94,14 +94,18 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   @Override
   protected void onPostExecute(RSSChannel newChannel) {
-    Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    if (newChannel != null) {
+      Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    }
 
     if (mE != null) {
       Toast.makeText(context, "Could not refresh a feed", Toast.LENGTH_SHORT).show();
       Log.e("Exception", mE.toString());
     }
     asyncCallbackListener.onPostExecute(newChannel);
-    Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    if (newChannel != null) {
+      Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    }
     super.onPostExecute(newChannel);
   }
 
