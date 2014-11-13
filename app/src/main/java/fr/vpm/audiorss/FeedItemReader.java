@@ -83,8 +83,9 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
       channelTitle.setText(channel.getTitle());
       List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
       listeners.add(this);
-      if (channel.getBitmap(this, listeners) != null){
-        channelPic.setImageBitmap(channel.getBitmap(this, null));
+      Bitmap channelBitmap = channel.getBitmap(this, listeners);
+      if (channelBitmap != null){
+        channelPic.setImageBitmap(channelBitmap);
       }
     }
   }
@@ -92,7 +93,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.feeditem, menu);
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this).exists())) {
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this, false).exists())) {
       if (rssItem.getMedia().getMimeType().contains("image")) {
         MenuItem displayItem = menu.findItem(R.id.action_display);
         displayItem.setVisible(true);
@@ -143,7 +144,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = this.rssItem.getMedia();
     if (m != null) {
-      File mediaFile = m.getMediaFile(this);
+      File mediaFile = m.getMediaFile(this, false);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {

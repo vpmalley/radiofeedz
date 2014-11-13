@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcel;
@@ -20,10 +22,16 @@ import android.widget.Toast;
 import junit.framework.Assert;
 
 import java.io.File;
+import java.util.List;
 
 import fr.vpm.audiorss.db.DbMedia;
+import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.persistence.FilePictureSaver;
 
 public class Media implements Downloadable, Parcelable {
+
+  public static final String INTERNAL_FEEDS_PIC_DIR = "feeds-icons";
+  public static final String INTERNAL_APP_DIR = "RadioFeedz";
 
   // db id
   private long id;
@@ -70,7 +78,7 @@ public class Media implements Downloadable, Parcelable {
 
     // retrieve download folder from the preferences
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    String downloadFolder = getDownloadFolder(sharedPref);
+    String downloadFolder = getDownloadFolder(context).getPath();
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
@@ -101,33 +109,51 @@ public class Media implements Downloadable, Parcelable {
         DownloadManager.ACTION_DOWNLOAD_COMPLETE));
   }
 
-  public String getDownloadFolder(SharedPreferences sharedPref) {
-    return sharedPref.getString("pref_download_folder",
-          Environment.DIRECTORY_PODCASTS);
-  }
-
-  public String getFileName() {
-    String typeExtension = inetUrl.substring(inetUrl.lastIndexOf('.'));
-    return name.replace(' ', '_') + typeExtension;
-  }
-
-  public File getMediaFile(Context context) {
-    SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-    String storageMediaRoot = defaultSharedPreferences.getString("pref_storage_root",
+  public File getDownloadFolder(Context context) {
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+    String storageMediaRoot = sharedPref.getString("pref_storage_root",
         Environment.getExternalStorageDirectory().getPath());
     if (storageMediaRoot.isEmpty()){
       storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
     }
-    StringBuilder mediaFilePathBuilder = new StringBuilder();
-    mediaFilePathBuilder.append('/');
-    mediaFilePathBuilder.append(storageMediaRoot);
-    mediaFilePathBuilder.append('/');
-    mediaFilePathBuilder.append(getDownloadFolder(defaultSharedPreferences));
-    mediaFilePathBuilder.append('/');
-    mediaFilePathBuilder.append(getFileName());
-    String path = mediaFilePathBuilder.toString();
-    path = path.replace("//", "/");
-    return new File(mediaFilePathBuilder.toString());
+    String storageMediaDir = sharedPref.getString("pref_download_folder",
+        Environment.DIRECTORY_PODCASTS);
+
+    StringBuilder dirPathBuilder = new StringBuilder();
+    dirPathBuilder.append('/');
+    dirPathBuilder.append(storageMediaRoot);
+    dirPathBuilder.append('/');
+    dirPathBuilder.append(storageMediaDir);
+    dirPathBuilder.append('/');
+    String dirPath = dirPathBuilder.toString().replace("//", "/");
+    File dirFile = new File(dirPath);
+    dirFile.mkdirs();
+    return dirFile;
+  }
+
+  public File getInternalFolder(){
+    File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_FEEDS_PIC_DIR);
+    dir.mkdirs();
+    return dir;
+  }
+
+  public String getFileName() {
+    String typeExtension = "";
+    int extensionStart = inetUrl.lastIndexOf('.');
+    if (extensionStart > -1) {
+      typeExtension = inetUrl.substring(extensionStart);
+    }
+    return name.replace(' ', '_') + typeExtension;
+  }
+
+  public File getMediaFile(Context context, boolean internal) {
+    File dirFile = null;
+    if (internal){
+      dirFile = getInternalFolder();
+    } else {
+      dirFile = getDownloadFolder(context);
+    }
+    return new File(dirFile, getFileName());
   }
 
   private boolean checkNetwork(int networkFlags, Context context) {
@@ -153,6 +179,22 @@ public class Media implements Downloadable, Parcelable {
     }
 
     return networkFlags;
+  }
+
+  public Bitmap getAsBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners, boolean internal){
+    if (!getMimeType().startsWith("image")){
+      return null;
+    }
+    Bitmap b = null;
+    FilePictureSaver pictureRetriever = new FilePictureSaver(context);
+    File pictureFile = getMediaFile(context, internal);
+    if (pictureFile.exists()){
+      b = pictureRetriever.retrieve(pictureFile);
+    } else if (new DefaultNetworkChecker().checkNetwork(context)) {
+      AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context, true);
+      pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+    }
+    return b;
   }
 
   public long getId() {

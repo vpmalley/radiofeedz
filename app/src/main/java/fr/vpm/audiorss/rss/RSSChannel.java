@@ -195,14 +195,8 @@ public class RSSChannel implements Parcelable {
 
   public Bitmap getBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners){
     Bitmap b = null;
-    FilePictureSaver pictureRetriever = new FilePictureSaver(context);
     if (getImage() != null){
-      if (pictureRetriever.exists(getImage().getName())){
-        b = pictureRetriever.retrieve(getImage().getName());
-      } else if (new DefaultNetworkChecker().checkNetwork(context)) {
-        AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context);
-        pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, getImage());
-      }
+      b = getImage().getAsBitmap(context, pictureLoadedListeners, true);
     }
     return b;
   }

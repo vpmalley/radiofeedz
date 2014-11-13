@@ -30,21 +30,14 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   @Override
-  public boolean exists(String pictureFileName) {
-    File picFile = getFileForPic(pictureFileName);
-    return picFile.exists();
-  }
-
-  @Override
-  public Bitmap retrieve(String pictureFileName) {
-    File picFile = getFileForPic(pictureFileName);
-    if (!picFile.exists()){
+  public Bitmap retrieve(File pictureFile) {
+    if (!pictureFile.exists()){
       return null;
     }
     FileInputStream pictureStream = null;
     Bitmap pictureBitmap = null;
     try {
-      pictureStream = new FileInputStream(picFile);
+      pictureStream = new FileInputStream(pictureFile);
       pictureBitmap = BitmapFactory.decodeStream(pictureStream);
     } catch (FileNotFoundException e) {
       Toast.makeText(context, context.getResources().getString(R.string.cannotgetpicture),
@@ -63,13 +56,12 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   @Override
-  public boolean persist(String pictureFileName, Bitmap picture) {
+  public boolean persist(File pictureFile, Bitmap picture) {
     boolean saved = false;
     if (isExternalStorageWritable()) {
-      File postFile = getFileForPic(pictureFileName);
-      if (!postFile.exists()) {
+      if (!pictureFile.exists()) {
         try {
-          postFile.createNewFile();
+          pictureFile.createNewFile();
         } catch (IOException e) {
           Toast.makeText(context, context.getResources().getString(R.string.cannotsavepicture),
               Toast.LENGTH_SHORT).show();
@@ -79,7 +71,7 @@ public class FilePictureSaver implements PictureSaver {
       // fill file
       FileOutputStream pictureFileOut = null;
       try {
-        pictureFileOut = new FileOutputStream(postFile);
+        pictureFileOut = new FileOutputStream(pictureFile);
         picture.compress(Bitmap.CompressFormat.PNG, 100, pictureFileOut);
         saved = true;
       } catch (IOException e) {
@@ -100,11 +92,10 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   @Override
-  public boolean delete(String pictureFileName) {
+  public boolean delete(File pictureFile) {
     boolean deleted = false;
     if (isExternalStorageWritable()) {
-      File postFile = getFileForPic(pictureFileName);
-      deleted = postFile.delete();
+      deleted = pictureFile.delete();
     }
     return deleted;
   }
