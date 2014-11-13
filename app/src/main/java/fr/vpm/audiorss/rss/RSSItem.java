@@ -34,6 +34,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
   public static final String CHANNELTITLE_KEY = "channelTitle";
   public static final String MEDIA_ID_KEY = "mediaId";
   public static final String READ_KEY = "isRead";
+  public static final String DELETED_KEY = "isDeleted";
 
   private long dbId = -1;
 
@@ -59,6 +60,8 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   private boolean isRead = false;
 
+  private boolean isDeleted = false;
+
   private Media media = null;
 
   private long channelId = -1;
@@ -71,7 +74,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   public RSSItem(String feedTitle, String title, String link, String description,
                  String authorAddress, String category, String comments, Media media, String guid,
-                 String pubDate, boolean isRead, long channelId) {
+                 String pubDate, boolean isRead, long channelId, boolean isDeleted) {
     super();
     this.channelTitle = feedTitle;
     this.title = title;
@@ -85,6 +88,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     this.media = media;
     this.isRead = isRead;
     this.channelId = channelId;
+    this.isDeleted = isDeleted;
   }
 
   public String getDate() {
@@ -183,8 +187,15 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     return isRead;
   }
 
+  public boolean isDeleted() {
+    return isDeleted;
+  }
   public void setRead(boolean isRead){
     this.isRead = isRead;
+  }
+
+  public void setDeleted(boolean isDeleted){
+    this.isDeleted = isDeleted;
   }
 
   public long getChannelId() {

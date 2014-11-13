@@ -180,7 +180,7 @@ public class ItemParser {
     }
     Media media = new Media(title, feedTitle, mediaUrl, mediaType);
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
-        media, guid, pubDate, false, -1);
+        media, guid, pubDate, false, -1, false);
     return item;
   }
 

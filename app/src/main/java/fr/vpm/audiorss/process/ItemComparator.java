@@ -53,7 +53,7 @@ public class ItemComparator implements Comparator<RSSItem> {
   @Override
   public int compare(RSSItem rssItem, RSSItem otherRssItem) {
     int comparison = 0;
-    
+
     int comparisonByDate = rssItem.getDate().compareTo(otherRssItem.getDate());
 
     int comparisonByName = rssItem.getTitle().compareTo(otherRssItem.getTitle());

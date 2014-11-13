@@ -28,7 +28,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
   final static String[] COLS_RSS_ITEM = {_ID, CHANNEL_ID_KEY, RSSItem.AUTHOR_TAG, RSSItem.CAT_TAG,
       RSSItem.CHANNELTITLE_KEY, RSSItem.COMMENTS_TAG, RSSItem.DATE_TAG, RSSItem.DESC_TAG,
       RSSItem.GUID_TAG, RSSItem.LINK_TAG, RSSItem.LOCAL_MEDIA_KEY, RSSItem.MEDIA_KEY,
-      RSSItem.TITLE_TAG, RSSItem.MEDIA_ID_KEY, RSSItem.READ_KEY};
+      RSSItem.TITLE_TAG, RSSItem.MEDIA_ID_KEY, RSSItem.READ_KEY, RSSItem.DELETED_KEY};
 
   final private static String T_CREATE_RSS_ITEM = "CREATE TABLE " + T_RSS_ITEM + " (" + _ID
       + INTEGER_PRIMARY_KEY_AUTO + CHANNEL_ID_KEY + TEXT_COLUMN + SEP_COLUMN + RSSItem.AUTHOR_TAG
@@ -38,14 +38,14 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
       + SEP_COLUMN + RSSItem.GUID_TAG + TEXT_COLUMN + SEP_COLUMN + RSSItem.LINK_TAG + TEXT_COLUMN
       + SEP_COLUMN + RSSItem.LOCAL_MEDIA_KEY + TEXT_COLUMN + SEP_COLUMN + RSSItem.MEDIA_KEY
       + TEXT_COLUMN + SEP_COLUMN + RSSItem.TITLE_TAG + TEXT_COLUMN + SEP_COLUMN + RSSItem.MEDIA_ID_KEY + " INTEGER" +
-      SEP_COLUMN + RSSItem.READ_KEY + " INTEGER )";
+      SEP_COLUMN + RSSItem.READ_KEY + " INTEGER" + SEP_COLUMN + RSSItem.DELETED_KEY + " INTEGER )";
 
   final private static String T_CREATE_RSS_CHANNEL_ITEM = "CREATE TABLE " + T_RSS_CHANNEL_ITEM
       + " (" + _ID + INTEGER_PRIMARY_KEY_AUTO + CHANNEL_ID_KEY + TEXT_COLUMN + SEP_COLUMN
       + ITEM_ID_KEY + TEXT_COLUMN + ")";
 
   final private static String DB_NAME = "rss_db";
-  final private static Integer DB_VERSION = 14;
+  final private static Integer DB_VERSION = 15;
   final private Context mContext;
 
   public DatabaseOpenHelper(Context context) {
