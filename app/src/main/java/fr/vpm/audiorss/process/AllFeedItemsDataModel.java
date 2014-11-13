@@ -23,6 +23,7 @@ import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.RefreshViewCallback;
@@ -146,7 +147,27 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
 
   @Override
   public void deleteData(Collection<Integer> selection) {
-    // do nothing, we do not delete feeds in this view
+    RSSItem[] itemsToDelete = new RSSItem[selection.size()];
+    int i = 0;
+    for (int position : selection){
+      itemsToDelete[i++] = items.get(position);
+    }
+    AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
+      @Override
+      public void onPreExecute() {
+        progressListener.startRefreshProgress();
+      }
+
+      @Override
+      public void onPostExecute(List<RSSItem> result) {
+        progressListener.stopRefreshProgress();
+        items.removeAll(result);
+        refreshView();
+      }
+    };
+    new AsyncDbDeleteRSSItem(callback,
+        getContext()).executeOnExecutor(AsyncTask
+        .THREAD_POOL_EXECUTOR, itemsToDelete);
   }
 
   @Override
