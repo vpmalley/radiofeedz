@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -20,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -126,6 +129,10 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         playMedia();
         result = true;
         break;
+      case R.id.action_delete:
+        deleteItem(rssItem);
+        result = true;
+        break;
       default:
         result = super.onOptionsItemSelected(item);
     }
@@ -144,6 +151,22 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
       }
       startActivity(playIntent);
     }
+  }
+
+  private void deleteItem(RSSItem rssItem) {
+    rssItem.setDeleted(true);
+    new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
+      @Override
+      public void onPreExecute() {
+        // do nothing
+      }
+
+      @Override
+      public void onPostExecute(List<RSSItem> result) {
+        finish();
+      }
+    }, this).executeOnExecutor(AsyncTask
+        .THREAD_POOL_EXECUTOR, rssItem);
   }
 
   private boolean isMediaDownloaded() {
