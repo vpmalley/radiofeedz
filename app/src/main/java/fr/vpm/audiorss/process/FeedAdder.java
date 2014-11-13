@@ -24,13 +24,13 @@ public class FeedAdder {
 
   private static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
 
-  private final DataModel<RSSChannel> dataModel;
+  private final DataModel dataModel;
 
   private final ProgressListener progressListener;
 
   private final NetworkChecker networkChecker;
 
-  public FeedAdder(DataModel<RSSChannel> dataModel, NetworkChecker networkChecker,
+  public FeedAdder(DataModel dataModel, NetworkChecker networkChecker,
                    ProgressListener progressListener) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;

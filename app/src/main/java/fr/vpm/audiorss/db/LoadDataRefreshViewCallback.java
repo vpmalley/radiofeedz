@@ -13,9 +13,9 @@ public class LoadDataRefreshViewCallback<T> implements AsyncCallbackListener<Lis
 
   private final ProgressListener progressListener;
 
-  private final DataModel<T> dataModel;
+  private final DataModel dataModel;
 
-  public LoadDataRefreshViewCallback(ProgressListener progressListener, DataModel<T> dataModel) {
+  public LoadDataRefreshViewCallback(ProgressListener progressListener, DataModel dataModel) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;
   }

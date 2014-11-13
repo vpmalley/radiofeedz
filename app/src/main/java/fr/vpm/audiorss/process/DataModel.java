@@ -7,21 +7,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
+
 /**
  * Created by vince on 09/11/14.
  */
-public interface DataModel<T> {
+public interface DataModel {
 
   /**
    * Loads the data and refreshes the view once data is retrieved.
    */
   void loadData();
-
-  /**
-   * Sets the loaded data
-   * @param data data loaded and used by the activity
-   */
-  void setDataAndBuildModel(List<T> data);
 
   /**
    * Refreshes the view based on activityś data
@@ -43,4 +40,26 @@ public interface DataModel<T> {
   void deleteData(Collection<Integer> selection);
 
   void markDataRead(Set<Integer> selection, boolean isRead);
+
+  interface RSSChannelInput {
+
+    /**
+     * Sets the data
+     * @param data data used to for the activity display
+     */
+    void setChannelsAndBuildModel(List<RSSChannel> data);
+  }
+
+  interface RSSItemInput {
+
+    /**
+     * Sets the data
+     * @param data data used to for the activity display
+     */
+    void setItemsAndBuildModel(List<RSSItem> data);
+  }
+
+  public interface RSSChannelDataModel extends DataModel, RSSChannelInput {}
+
+  public interface RSSItemDataModel extends DataModel, RSSItemInput {}
 }

@@ -168,7 +168,7 @@ public class RSSChannel implements Parcelable {
     this.title = title;
   }
 
-  public void saveToDb(ProgressListener progressListener, DataModel<RSSChannel> dataModel) throws ParseException {
+  public void saveToDb(ProgressListener progressListener, DataModel dataModel) throws ParseException {
     LoadDataRefreshViewCallback<RSSChannel> callback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel);
     AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(callback, dataModel.getContext());
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);

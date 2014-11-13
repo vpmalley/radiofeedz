@@ -15,13 +15,13 @@ import fr.vpm.audiorss.R;
  */
 public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeListener {
 
-  private final DataModel<T> dataModel;
+  private final DataModel dataModel;
 
   private final Set<Integer> selection = new HashSet<Integer>();
 
   private final int menuResource;
 
-  public FeedChoiceModeListener(DataModel<T> dataModel, int menuResource) {
+  public FeedChoiceModeListener(DataModel dataModel, int menuResource) {
     this.dataModel = dataModel;
     this.menuResource = menuResource;
   }

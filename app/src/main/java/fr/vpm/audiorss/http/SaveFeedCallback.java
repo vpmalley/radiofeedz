@@ -17,7 +17,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
 
   private final ProgressListener progressListener;
 
-  private final DataModel<RSSChannel> dataModel;
+  private final DataModel dataModel;
 
   /**
    * The counter is used to join all threads for the refresh of multiple feeds.
@@ -25,7 +25,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
    */
   private static int feedsCounter = 0;
 
-  public SaveFeedCallback(ProgressListener progressListener, DataModel<RSSChannel> dataModel) {
+  public SaveFeedCallback(ProgressListener progressListener, DataModel dataModel) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;
   }

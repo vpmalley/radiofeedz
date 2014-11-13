@@ -25,7 +25,7 @@ import fr.vpm.audiorss.rss.RSSChannel;
 /**
  * Created by vince on 09/11/14.
  */
-public class FeedsManagerDataModel implements DataModel<RSSChannel> {
+public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
 
   private final Activity activity;
 
@@ -43,7 +43,7 @@ public class FeedsManagerDataModel implements DataModel<RSSChannel> {
 
   @Override
   public void loadData() {
-    RefreshViewCallback<RSSChannel> callback = new RefreshViewCallback<RSSChannel>(progressListener, this);
+    RefreshViewCallback callback = new RefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, feedsActivity.getContext());
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -51,7 +51,7 @@ public class FeedsManagerDataModel implements DataModel<RSSChannel> {
   }
 
   @Override
-  public void setDataAndBuildModel(List<RSSChannel> feeds) {
+  public void setChannelsAndBuildModel(List<RSSChannel> feeds) {
     this.feeds = feeds;
   }
 

@@ -18,12 +18,10 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.RefreshViewCallback;
@@ -36,7 +34,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 09/11/14.
  */
-public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
+public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, DataModel.RSSItemDataModel {
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -68,15 +66,15 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
 
   @Override
   public void loadData() {
-    RefreshViewCallback<RSSChannel> callback =
-        new RefreshViewCallback<RSSChannel>(progressListener, this);
+    RefreshViewCallback callback =
+        new RefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext());
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override
-  public void setDataAndBuildModel(List<RSSChannel> channels) {
+  public void setChannelsAndBuildModel(List<RSSChannel> channels) {
     this.feeds = channels;
     SharedPreferences sharedPref = PreferenceManager
         .getDefaultSharedPreferences(getContext());
@@ -94,6 +92,23 @@ public class AllFeedItemsDataModel implements DataModel<RSSChannel> {
     int itemNumbers = getNbDisplayedItems(sharedPref, allItems);
     items = new ArrayList<RSSItem>(allItems).subList(0, itemNumbers);
   }
+
+  @Override
+  public void setItemsAndBuildModel(List<RSSItem> data) {
+    items = data;
+
+    feeds = new ArrayList<RSSChannel>();
+    channelsByItem = new HashMap<RSSItem, RSSChannel>();
+    for (RSSItem item : items) {
+      if (!channelsByItem.containsKey(item)){
+        RSSChannel rssChannel = RSSChannel.fromDbById(item.getChannelId(), getContext());
+        channelsByItem.put(item, rssChannel);
+        feeds.add(rssChannel);
+      }
+    }
+
+  }
+
   /**
    * Using the number of items in the set and the maximum of items displayed in the preferences, determines the maximum of items to display.
    *

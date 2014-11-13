@@ -23,7 +23,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
   private NetworkChecker networkChecker;
 
-  private DataModel<RSSChannel> dataModel;
+  private DataModel dataModel;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
