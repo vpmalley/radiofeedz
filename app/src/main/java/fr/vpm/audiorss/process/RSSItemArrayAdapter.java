@@ -28,9 +28,9 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   private final Activity activity;
 
-  private final List<RSSItem> items;
+  private List<RSSItem> items;
 
-  private final Map<RSSItem, RSSChannel> channelsByItem;
+  private Map<RSSItem, RSSChannel> channelsByItem;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
       RSSChannel> channelsByItem) {
@@ -65,13 +65,24 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT);
     }
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-    Bitmap feedPic = rssChannel.getBitmap(activity, listeners);
+    Bitmap feedPic = null;
+    if (rssChannel != null) {
+      feedPic = rssChannel.getBitmap(activity, listeners);
+    }
     if (feedPic != null) {
       itemHolder.pictureView.setImageBitmap(feedPic);
     } else {
       itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
     }
     return convertView;
+  }
+
+  public void setItems(List<RSSItem> items) {
+    this.items = items;
+  }
+
+  public void setChannelsByItem(Map<RSSItem, RSSChannel> channelsByItem) {
+    this.channelsByItem = channelsByItem;
   }
 
   /**

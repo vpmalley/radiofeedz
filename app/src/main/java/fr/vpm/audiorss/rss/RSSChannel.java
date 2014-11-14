@@ -21,11 +21,8 @@ import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
-import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
-import fr.vpm.audiorss.persistence.FilePictureSaver;
 import fr.vpm.audiorss.process.DataModel;
 
 /**
@@ -90,7 +87,7 @@ public class RSSChannel implements Parcelable {
 
   public static RSSChannel fromDbById(long id, Context context){
     RSSChannel channel = null;
-    DbRSSChannel dbRSSChannel = new DbRSSChannel(context);
+    DbRSSChannel dbRSSChannel = new DbRSSChannel(context, false);
     try {
       channel = dbRSSChannel.readById(id, true);
     } catch (ParseException e) {

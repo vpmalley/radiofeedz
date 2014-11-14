@@ -56,6 +56,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private final FeedsActivity<RSSItemArrayAdapter> feedsActivity;
 
+  private RSSItemArrayAdapter rssItemAdapter;
+
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
       feedsActivity) {
     this.progressListener = progressListener;
@@ -142,9 +144,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public synchronized void refreshView() {
-    RSSItemArrayAdapter rssItemAdapter = new RSSItemArrayAdapter(activity,
-        R.layout.list_rss_item, items, channelsByItem);
-    feedsActivity.refreshView(rssItemAdapter);
+    if (rssItemAdapter == null) {
+      rssItemAdapter = new RSSItemArrayAdapter(activity,
+          R.layout.list_rss_item, items, channelsByItem);
+      feedsActivity.refreshView(rssItemAdapter);
+    } else {
+      rssItemAdapter.setItems(items);
+      rssItemAdapter.setChannelsByItem(channelsByItem);
+      rssItemAdapter.notifyDataSetChanged();
+    }
   }
 
 

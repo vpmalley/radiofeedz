@@ -38,7 +38,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
   @Override
   public void onPostExecute(RSSChannel result) {
     progressListener.stopRefreshProgress();
-    if (feedsAreLoaded() && (result != null)) {
+    if (result != null) {
       try {
         result.saveToDb(progressListener, dataModel);
       } catch (ParseException e) {
