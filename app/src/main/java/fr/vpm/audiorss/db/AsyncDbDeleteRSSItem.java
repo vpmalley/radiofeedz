@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.process.AsyncCallbackListener;
-import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -21,7 +20,7 @@ public class AsyncDbDeleteRSSItem extends AsyncTask<RSSItem, Integer, List<RSSIt
 
   public AsyncDbDeleteRSSItem(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context) {
     this.asyncCallbackListener = asyncCallbackListener;
-    this.dbUpdater = new DbRSSChannel(context);
+    this.dbUpdater = new DbRSSChannel(context, true);
     this.asyncCallbackListener.onPreExecute();
   }
 

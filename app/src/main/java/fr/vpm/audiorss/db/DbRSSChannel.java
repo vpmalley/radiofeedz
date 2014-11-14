@@ -44,9 +44,13 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private final SharedPreferences sharedPrefs;
 
-  public DbRSSChannel(Context context) {
+  public DbRSSChannel(Context context, boolean writable) {
     mDbHelper = new DatabaseOpenHelper(context);
-    mDb = mDbHelper.getWritableDatabase();
+    if (writable){
+      mDb = mDbHelper.getWritableDatabase();
+    } else {
+      mDb = mDbHelper.getReadableDatabase();
+    }
     sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
   }
 
@@ -175,7 +179,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     if (channelId > -1) {
       itemValues.put(DatabaseOpenHelper.CHANNEL_ID_KEY, channelId);
     }
-    if (item.getDbId() != -1) {
+    if (item.getDbId() > -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());
       mDb.update(DatabaseOpenHelper.T_RSS_ITEM, itemValues, DatabaseOpenHelper._ID + "=?",
           new String[]{String.valueOf(item.getDbId())});

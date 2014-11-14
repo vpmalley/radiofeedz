@@ -20,7 +20,7 @@ public class AsyncDbDeleteRSSChannel extends AsyncTask<RSSChannel, Integer, List
 
   public AsyncDbDeleteRSSChannel(AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener, Context context) {
     this.asyncCallbackListener = asyncCallbackListener;
-    this.dbUpdater = new DbRSSChannel(context);
+    this.dbUpdater = new DbRSSChannel(context, true);
     this.asyncCallbackListener.onPreExecute();
   }
 

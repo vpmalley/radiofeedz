@@ -50,7 +50,7 @@ public class RSSChannelTest extends InstrumentationTestCase {
 				SAMPLE_LINK, SAMPLE_DESCRIPTION, SAMPLE_CATEGORY, null);
 		channel.addTag(SAMPLE_TAG);
 
-		ContentValues channelValues = new DbRSSChannel(null).createContentValues(channel);
+		ContentValues channelValues = new DbRSSChannel(null, true).createContentValues(channel);
 		Assert.assertEquals(SAMPLE_URL, channelValues.get(RSSChannel.URL_KEY));
 		
 	}

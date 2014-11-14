@@ -22,7 +22,7 @@ public class AsyncDbSaveRSSItem extends AsyncTask<RSSItem, Integer, List<RSSItem
 
   public AsyncDbSaveRSSItem(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context) {
     this.context = context;
-    this.dbUpdater = new DbRSSChannel(context);
+    this.dbUpdater = new DbRSSChannel(context, true);
     this.asyncCallbackListener = asyncCallbackListener;
     asyncCallbackListener.onPreExecute();
   }
