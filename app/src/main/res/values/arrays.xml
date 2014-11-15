@@ -2,10 +2,10 @@
 <resources>
 
     <array name="pref_feed_ordering_entries">
-        <item>Latest first</item>
-        <item>Oldest first</item>
-        <item>Alphabetical order</item>
-        <item>Reversed alphabetical order</item>
+        <item>@string/pref_feed_ordering_latest_first</item>
+        <item>@string/pref_feed_ordering_oldest_first</item>
+        <item>@string/pref_feed_ordering_alpha_first</item>
+        <item>@string/pref_feed_ordering_alpha_last</item>
     </array>
 
     <array name="pref_feed_ordering_values">

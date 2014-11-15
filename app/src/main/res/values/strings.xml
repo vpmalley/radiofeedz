@@ -1,44 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AudioRSS</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_add">Add</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_search">Search</string>
-    <string name="action_play">Play</string>
-    <string name="action_download">Download</string>
-    <string name="action_web">Open website</string>
+    <string name="app_name">RadioFeedz</string>
+
+    <string name="cannot_save_picture">Picture for this feed cannot be saved.</string>
+    <string name="might_not_save_picture">Picture for this feed might not have been saved.</string>
+    <string name="cannot_get_picture">Picture for this feed cannot be retrieved.</string>
+
+    <string name="not_connected">This device does not appear connected to the Internet. Check Settings.</string>
+    <string name="disabled_download">Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.</string>
+
+    <string name="please_clip_feed_url">You can add a feed by copying it to the clipboard. Then press this button.</string>
     <string name="add_feed_clipboard">Add feed from clipboard</string>
-    
-    <string name="pref_feed_ordering">Feeds order</string>
-    <string name="pref_feed_ordering_summary">Choose how to order your feeds</string>
-    <string name="pref_feed_ordering_default">pubDate DESC</string>
-    
-    
-    <string name="pref_mobile_network_enabled">Download on mobile network</string>
-    <string name="pref_wifi_network_enabled">Download on Wifi network</string>
-
-    <string name="pref_download_folder">Downloads folder</string>
-    <string name="summary_pref_download_folder">Media will be dowloaded there</string>
-    <string name="dialog_pref_download_folder">Set the folder to which media will be downloaded</string>
-
-    <string name="pref_disp_max_items">Maximum RSS items to display</string>
-    <string name="summary_pref_disp_max_items">Display only this number of items</string>
-    <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_manage">Manage Feeds</string>
-    <string name="action_share">Share</string>
-    <string name="cannotsavepicture">Cannot save the picture for this feed</string>
-    <string name="mightnotsavepicture">Picture for this feed might not have been saved</string>
-    <string name="cannotgetpicture">Cannot retrieve the picture for this feed</string>
-    <string name="action_read">Mark as Read</string>
-    <string name="action_unread">Mark as unread</string>
-    <string name="action_display">Display</string>
-    <string name="pref_storage_root">Storage unit root (advanced)</string>
-    <string name="summary_pref_storage_root">The path to the root of the storage unit</string>
-    <string name="dialog_pref_storage_root">Only if you know what you are doing. Phone storage used if empty</string>
-
-
+    <string name="cannot_add_feed">Issue adding the feed. Please retry.</string>
+    <string name="ask_add_feed">Do you want to add the feed located at </string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>

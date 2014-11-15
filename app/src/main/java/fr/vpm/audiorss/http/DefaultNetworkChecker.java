@@ -5,12 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import fr.vpm.audiorss.R;
+
 /**
  * Created by vince on 28/10/14.
  */
 public class DefaultNetworkChecker implements NetworkChecker {
-
-  public static final String E_NOT_CONNECTED = "This device does not appear connected to the Internet.";
 
   @Override
   public boolean checkNetwork(Context context) {
@@ -20,7 +20,7 @@ public class DefaultNetworkChecker implements NetworkChecker {
     if (networkInfo != null && networkInfo.isConnected()) {
       isConnected = true;
     } else {
-      Toast.makeText(context, E_NOT_CONNECTED, Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getResources().getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
     }
     return isConnected;
   }

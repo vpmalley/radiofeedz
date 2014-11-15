@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pref_feed_ordering">Feeds order</string>
+    <string name="pref_feed_ordering_summary">Choose how to order your feeds</string>
+    <string name="pref_feed_ordering_default">pubDate DESC</string>
+    <string name="pref_feed_ordering_latest_first">Latest first</string>
+    <string name="pref_feed_ordering_oldest_first">Oldest first</string>
+    <string name="pref_feed_ordering_alpha_first">Alphabetical order</string>
+    <string name="pref_feed_ordering_alpha_last">Reversed alphabetical order</string>
+
+    <string name="pref_mobile_network_enabled">Download on mobile network</string>
+    <string name="pref_wifi_network_enabled">Download on Wifi network</string>
+
+    <string name="pref_download_folder">Downloads folder</string>
+    <string name="summary_pref_download_folder">Media will be dowloaded there</string>
+    <string name="dialog_pref_download_folder">Set the folder to which media will be downloaded</string>
+
+    <string name="pref_disp_max_items">Maximum RSS items to display</string>
+    <string name="summary_pref_disp_max_items">Display only this number of items</string>
+    <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
+
+    <string name="pref_storage_root">Storage unit root (advanced)</string>
+    <string name="summary_pref_storage_root">The path to the root of the storage unit</string>
+    <string name="dialog_pref_storage_root">Only if you know what you are doing. Phone storage used if empty</string>
+</resources>

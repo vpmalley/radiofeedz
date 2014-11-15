@@ -229,19 +229,4 @@ public class ItemParser {
       }
     }
   }
-
-  /**
-   * Returns the Uri of a file if it is downloaded. Returns null if not
-   * downloaded yet.
-   *
-   * @param fileId
-   * @param context
-   * @return
-   */
-  /*
-   * public static Uri retrieveUri(long fileId, Context context){
-   * DownloadManager dm = (DownloadManager)
-   * context.getSystemService(Context.DOWNLOAD_SERVICE); return
-   * dm.getUriForDownloadedFile(fileId); }
-   */
 }

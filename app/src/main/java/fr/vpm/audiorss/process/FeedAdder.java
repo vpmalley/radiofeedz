@@ -22,8 +22,6 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class FeedAdder {
 
-  private static final String E_ADDING_FEED = "Issue adding the feed. Please retry.";
-
   private final DataModel dataModel;
 
   private final ProgressListener progressListener;
@@ -56,8 +54,8 @@ public class FeedAdder {
   public void askForFeedValidation(final List<RSSChannel> channels, final String url) {
     AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(dataModel.getContext());
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-    confirmationBuilder.setMessage("Do you want to add the feed located at " + url + " ?");
-    confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    confirmationBuilder.setMessage(getResourceString(R.string.ask_add_feed) + url + " ?");
+    confirmationBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -65,7 +63,7 @@ public class FeedAdder {
       }
 
     });
-    confirmationBuilder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+    confirmationBuilder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 
       @Override
       public void onClick(DialogInterface dialog, int which) {
@@ -75,11 +73,15 @@ public class FeedAdder {
     confirmationBuilder.show();
   }
 
+  private String getResourceString(int resId) {
+    return dataModel.getContext().getResources().getString(resId);
+  }
+
   public void tellToCopy() {
     AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(dataModel.getContext());
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
     confirmationBuilder
-        .setMessage("You can add a feed by copying it to the clipboard. Then press this button.");
+        .setMessage(R.string.please_clip_feed_url);
     confirmationBuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
       @Override
@@ -98,7 +100,7 @@ public class FeedAdder {
       }
     }
     if (exists) {
-      Toast.makeText(dataModel.getContext(), E_ADDING_FEED, Toast.LENGTH_SHORT).show();
+      Toast.makeText(dataModel.getContext(), R.string.cannot_add_feed, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetwork(dataModel.getContext())) {
       SaveFeedCallback.updateFeedsCounter(1);
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel);

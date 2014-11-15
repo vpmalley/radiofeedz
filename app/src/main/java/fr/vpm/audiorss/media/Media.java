@@ -24,6 +24,7 @@ import junit.framework.Assert;
 import java.io.File;
 import java.util.List;
 
+import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.persistence.FilePictureSaver;
@@ -182,7 +183,7 @@ public class Media implements Downloadable, Parcelable {
       Toast
           .makeText(
               context,
-              "Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.",
+              context.getResources().getString(R.string.disabled_download),
               Toast.LENGTH_LONG).show();
     }
     return (!(0 == networkFlags));

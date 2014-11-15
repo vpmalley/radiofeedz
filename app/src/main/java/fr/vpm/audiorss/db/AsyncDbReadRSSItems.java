@@ -54,7 +54,7 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
     }
     SharedPreferences sharedPref = PreferenceManager
         .getDefaultSharedPreferences(context);
-    String ordering = sharedPref.getString("pref_feed_ordering", "REVERSE_TIME");
+    String ordering = sharedPref.getString("pref_feed_ordering", "pubDate DESC");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
     allItems.addAll(rssItems.values());
     return new ArrayList<RSSItem>(allItems);

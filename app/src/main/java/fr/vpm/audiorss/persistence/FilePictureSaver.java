@@ -40,7 +40,7 @@ public class FilePictureSaver implements PictureSaver {
       pictureStream = new FileInputStream(pictureFile);
       pictureBitmap = BitmapFactory.decodeStream(pictureStream);
     } catch (FileNotFoundException e) {
-      Toast.makeText(context, context.getResources().getString(R.string.cannotgetpicture),
+      Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture),
           Toast.LENGTH_SHORT).show();
       Log.e("file", e.getMessage());
     } finally {
@@ -63,7 +63,7 @@ public class FilePictureSaver implements PictureSaver {
         try {
           pictureFile.createNewFile();
         } catch (IOException e) {
-          Toast.makeText(context, context.getResources().getString(R.string.cannotsavepicture),
+          Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture),
               Toast.LENGTH_SHORT).show();
           Log.e("file", e.getMessage());
         }
@@ -75,13 +75,13 @@ public class FilePictureSaver implements PictureSaver {
         picture.compress(Bitmap.CompressFormat.PNG, 100, pictureFileOut);
         saved = true;
       } catch (IOException e) {
-        Toast.makeText(context, context.getResources().getString(R.string.cannotsavepicture), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture), Toast.LENGTH_SHORT).show();
       } finally {
         if (pictureFileOut != null) {
           try {
             pictureFileOut.close();
           } catch (IOException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.mightnotsavepicture),
+            Toast.makeText(context, context.getResources().getString(R.string.might_not_save_picture),
                 Toast.LENGTH_SHORT).show();
             Log.e("file", e.getMessage());
           }
