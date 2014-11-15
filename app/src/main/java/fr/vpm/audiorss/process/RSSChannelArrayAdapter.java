@@ -27,10 +27,13 @@ public class RSSChannelArrayAdapter extends ArrayAdapter<RSSChannel> {
 
   private final List<RSSChannel> channels;
 
+  private final int resource;
+
   public RSSChannelArrayAdapter(Activity activity, int resource, List<RSSChannel> channels) {
     super(activity, resource, channels);
     this.activity = activity;
     this.channels = channels;
+    this.resource = resource;
   }
 
   @Override
@@ -38,7 +41,7 @@ public class RSSChannelArrayAdapter extends ArrayAdapter<RSSChannel> {
     ViewHolder itemHolder;
     if (convertView == null) {
       LayoutInflater vi = activity.getLayoutInflater();
-      convertView = vi.inflate(R.layout.list_rss_item, parent, false);
+      convertView = vi.inflate(resource, parent, false);
 
       ImageView picImage = (ImageView) convertView.findViewById(R.id.feed_pic);
       TextView picTitle = (TextView) convertView.findViewById(R.id.item_title);
