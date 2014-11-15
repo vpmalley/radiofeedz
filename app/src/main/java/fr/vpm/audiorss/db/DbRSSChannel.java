@@ -173,6 +173,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
         newMedia = new DbMedia(mDb).add(item.getMedia());
       }
       itemValues.put(RSSItem.MEDIA_ID_KEY, newMedia.getId());
+      item.setMedia(newMedia);
     }
 
     itemValues.put(RSSItem.TITLE_TAG, item.getTitle());
@@ -217,7 +218,11 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems) throws ParseException {
-    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=? AND " + RSSItem.DELETED_KEY + "=0",
+    String deletedCondition = "";
+    if (!readAllItems){
+      deletedCondition = " AND " + RSSItem.DELETED_KEY + "=0";
+    }
+    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?" + deletedCondition,
         new String[]{String.valueOf(id)}, readAllItems);
   }
 

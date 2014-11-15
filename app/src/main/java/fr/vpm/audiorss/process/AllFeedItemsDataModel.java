@@ -239,7 +239,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         }
       }, getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           rssItem);
-      //RSSChannel channel = RSSChannel.fromDbById(rssItem.getChannelId(), AllFeedItems.this);
       RSSChannel channel = channelsByItem.get(rssItem);
       i.putExtra(FeedItemReader.ITEM, rssItem);
       i.putExtra(FeedItemReader.CHANNEL, channel);
