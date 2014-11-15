@@ -3,16 +3,16 @@
 
     <string name="app_name">RadioFeedz</string>
 
-    <string name="cannot_save_picture">Picture for this feed cannot be saved.</string>
+    <string name="cannot_save_picture">Oops! Picture for this feed cannot be saved.</string>
     <string name="might_not_save_picture">Picture for this feed might not have been saved.</string>
-    <string name="cannot_get_picture">Picture for this feed cannot be retrieved.</string>
+    <string name="cannot_get_picture">Oops! Picture for this feed cannot be retrieved.</string>
 
-    <string name="not_connected">This device does not appear connected to the Internet. Check Settings.</string>
-    <string name="disabled_download">Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.</string>
+    <string name="not_connected">Oops! This device does not appear connected to the Internet. Check Settings.</string>
+    <string name="disabled_download">Oops! Downloads are disabled on Wifi and mobile networks, the download will not start. Check Settings.</string>
 
     <string name="please_clip_feed_url">You can add a feed by copying it to the clipboard. Then press this button.</string>
     <string name="add_feed_clipboard">Add feed from clipboard</string>
-    <string name="cannot_add_feed">Issue adding the feed. Please retry.</string>
+    <string name="cannot_add_feed">Oops! Issue adding the feed. Please retry.</string>
     <string name="ask_add_feed">Do you want to add the feed located at </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>

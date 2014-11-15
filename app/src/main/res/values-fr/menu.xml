@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Paramètres</string>
+
+    <string name="action_add">Ajouter</string>
+    <string name="action_refresh">Rafrîchir</string>
+    <string name="action_search">Rechercher</string>
+    <string name="action_manage">Gérer les flux</string>
+
+    <string name="action_read">Marquer comme lu</string>
+    <string name="action_unread">Marquer comme non-lu</string>
+
+    <string name="action_play">Jouer</string>
+    <string name="action_display">Voir</string>
+
+    <string name="action_download">Télécharger</string>
+    <string name="action_web">Ouvrir site web</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_share">Partager</string>
+</resources>
