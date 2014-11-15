@@ -101,7 +101,11 @@ public class RSSChannel implements Parcelable {
   public void update(String lastBuildDate, Map<String, RSSItem> items) {
     this.lastBuildDate = lastBuildDate;
     int beforeSize = latestItems.size();
-    latestItems.putAll(items);
+    for (Map.Entry<String, RSSItem> item : items.entrySet()) {
+      if (!latestItems.containsKey(item.getKey())){
+        latestItems.put(item.getKey(), item.getValue());
+      }
+    }
     Log.d("RSSChannel", "update channel " + getUrl() + " at " + lastBuildDate + "from "
         + beforeSize + " items to " + latestItems.size());
   }

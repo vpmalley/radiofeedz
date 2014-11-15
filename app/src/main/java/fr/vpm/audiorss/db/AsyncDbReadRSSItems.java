@@ -41,10 +41,10 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
     Map<String, RSSItem> rssItems = new HashMap<String, RSSItem>();
     try {
       if (0 == channelIds.length) {
-        rssItems.putAll(dbUpdater.readItems(RSSItem.DELETED_KEY + "=0", null));
+        rssItems.putAll(dbUpdater.readItems(RSSItem.DELETED_KEY + "=0", null, false));
       } else {
         for (long channelId : channelIds){
-          rssItems.putAll(dbUpdater.readItemsByChannelId(channelId));
+          rssItems.putAll(dbUpdater.readItemsByChannelId(channelId, false));
         }
       }
     } catch (ParseException e) {

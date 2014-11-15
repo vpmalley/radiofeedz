@@ -63,7 +63,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id);
+        Map<String, RSSItem> items = readItemsByChannelId(id, false);
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -71,7 +71,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channel;
   }
 
-  public RSSChannel readByUrl(String url, boolean readItems) throws ParseException {
+  public RSSChannel readByUrl(String url, boolean readItems, boolean readAllItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, RSSChannel.URL_KEY + "=?",
         new String[]{url}, null, null, null);
@@ -79,7 +79,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(channel.getId());
+        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems);
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -96,7 +96,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       long id = c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID));
       RSSChannel channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id);
+        Map<String, RSSItem> items = readItemsByChannelId(id, false);
         channel.update(channel.getLastBuildDate(), items);
       }
       channels.add(channel);
@@ -216,14 +216,17 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channel;
   }
 
-  Map<String, RSSItem> readItemsByChannelId(long id) throws ParseException {
+  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems) throws ParseException {
     return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=? AND " + RSSItem.DELETED_KEY + "=0",
-        new String[]{String.valueOf(id)});
+        new String[]{String.valueOf(id)}, readAllItems);
   }
 
-  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues) throws ParseException {
+  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues, boolean readAll) throws ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
-    String limit = sharedPrefs.getString("pref_disp_max_items", "80");
+    String limit = null;
+    if (!readAll) {
+      limit = sharedPrefs.getString("pref_disp_max_items", "80");
+    }
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
         selectionQuery, selectionValues, null, null,

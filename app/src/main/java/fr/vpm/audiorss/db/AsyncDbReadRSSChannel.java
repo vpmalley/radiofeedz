@@ -39,7 +39,7 @@ public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSCh
       if (0 == url.length) { // if no argument, read all RSSChannel in DB
         foundChannels.addAll(dbReader.readAll(readItems));
       } else {
-        foundChannels.add(dbReader.readByUrl(url[0], true));
+        foundChannels.add(dbReader.readByUrl(url[0], readItems, false));
       }
     } catch (ParseException e) {
       Log.e("dbIssue", e.getMessage());
