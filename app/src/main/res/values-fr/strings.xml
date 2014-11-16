@@ -3,9 +3,9 @@
 
     <string name="app_name">RadioFeedz</string>
 
-    <string name="cannot_save_picture">Oops! L'image pour ce flux n'a pu être sauvegardée.</string>
-    <string name="might_not_save_picture">L'image pour ce flux n'a peut-être pas pu être sauvegardée.</string>
-    <string name="cannot_get_picture">Oops! L'image pour ce flux n'a pu être retrouvée.</string>
+    <string name="cannot_save_picture">Oops! L\'image pour ce flux n\'a pu être sauvegardée.</string>
+    <string name="might_not_save_picture">L\'image pour ce flux n\'a peut-être pas pu être sauvegardée.</string>
+    <string name="cannot_get_picture">Oops! L\'image pour ce flux n\'a pu être retrouvée.</string>
 
     <string name="not_connected">Oops! Cet appareil ne semble pas être connecté à Internet. Vérifiez les
         paramètres.</string>
@@ -15,8 +15,8 @@
     <string name="please_clip_feed_url">Vous pouvez ajouter un flux en copiant son url vers le presse-papiers.
         Appuyez ensuite sur ce bouton.</string>
     <string name="add_feed_clipboard">Ajouter un flux depuis le presse-papiers</string>
-    <string name="cannot_add_feed">Oops! Un problème est survenu pendant l'ajout du flux. Veuillez réssayer.</string>
-    <string name="ask_add_feed">Voulez-vous ajouter le flux situé à l'adresse </string>
+    <string name="cannot_add_feed">Oops! Un problème est survenu pendant l\'ajout du flux. Veuillez réssayer.</string>
+    <string name="ask_add_feed">Voulez-vous ajouter le flux situé à l\'adresse </string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
 </resources>
