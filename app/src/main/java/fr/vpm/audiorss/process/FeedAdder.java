@@ -54,7 +54,7 @@ public class FeedAdder {
   public void askForFeedValidation(final List<RSSChannel> channels, final String url) {
     AlertDialog.Builder confirmationBuilder = new AlertDialog.Builder(dataModel.getContext());
     confirmationBuilder.setTitle(R.string.add_feed_clipboard);
-    confirmationBuilder.setMessage(getResourceString(R.string.ask_add_feed) + url + " ?");
+    confirmationBuilder.setMessage(getResourceString(R.string.ask_add_feed) + " " + url + " ?");
     confirmationBuilder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
       @Override

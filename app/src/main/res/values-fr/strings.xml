@@ -19,4 +19,5 @@
     <string name="ask_add_feed">Voulez-vous ajouter le flux situé à l\'adresse </string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
+    <string name="today">aujourd\'hui</string>
 </resources>

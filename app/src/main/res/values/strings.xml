@@ -16,4 +16,5 @@
     <string name="ask_add_feed">Do you want to add the feed located at </string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="today">Today</string>
 </resources>

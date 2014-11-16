@@ -81,7 +81,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       lastweek.add(Calendar.DAY_OF_YEAR, -7);
       String dateText = "";
       if (itemDate.after(yesterday.getTime())){
-        dateText = new SimpleDateFormat("HH:mm").format(itemDate);
+        dateText = getContext().getResources().getString(R.string.today) + ", " + new SimpleDateFormat("HH:mm").format(itemDate);
       } else if (itemDate.after(lastweek.getTime())){
         dateText = new SimpleDateFormat("EEEE, HH:mm").format(itemDate);
       } else {

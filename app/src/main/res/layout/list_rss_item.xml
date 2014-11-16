@@ -36,8 +36,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginLeft="14dp"
             android:id="@+id/item_date"
             android:gravity="top|start"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
