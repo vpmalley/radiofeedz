@@ -80,6 +80,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   public boolean onCreateOptionsMenu(Menu menu) {
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.allfeedsitem, menu);
+    MenuItem searchItem = menu.findItem(R.id.action_search);
+    searchItem.setVisible(false);
     return super.onCreateOptionsMenu(menu);
   }
 
