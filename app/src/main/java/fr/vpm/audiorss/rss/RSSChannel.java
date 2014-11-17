@@ -89,7 +89,7 @@ public class RSSChannel implements Parcelable {
     RSSChannel channel = null;
     DbRSSChannel dbRSSChannel = new DbRSSChannel(context, false);
     try {
-      channel = dbRSSChannel.readById(id, true);
+      channel = dbRSSChannel.readById(id, false, false);
     } catch (ParseException e) {
       Log.e("dbIssue", e.getMessage());
     } finally {

@@ -2,6 +2,7 @@ package fr.vpm.audiorss.process;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.AdapterView;
@@ -11,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
@@ -115,8 +117,12 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   public AdapterView.OnItemClickListener getOnItemClickListener() {
     return new AdapterView.OnItemClickListener() {
       @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        // do nothing
+      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        if (!feeds.isEmpty()) {
+          Intent i = new Intent(getContext(), AllFeedItems.class);
+          i.putExtra(AllFeedItems.CHANNEL_ID, new long[]{feeds.get(position).getId()});
+          getContext().startActivity(i);
+        }
       }
     };
   }

@@ -16,7 +16,7 @@ import fr.vpm.audiorss.rss.RSSChannel;
  * <p/>
  * Reads the DB for RSSChannel items. The expected String is a url. If none is passed, all RSSChannel items are searched.
  */
-public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSChannel>> {
+public class AsyncDbReadRSSChannel extends AsyncTask<Long, Integer, List<RSSChannel>> {
 
   private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
 
@@ -32,14 +32,16 @@ public class AsyncDbReadRSSChannel extends AsyncTask<String, Integer, List<RSSCh
   }
 
   @Override
-  protected List<RSSChannel> doInBackground(String... url) {
+  protected List<RSSChannel> doInBackground(Long... ids) {
     List<RSSChannel> foundChannels = new ArrayList<RSSChannel>();
     Log.d("measures", "load start " + String.valueOf(System.currentTimeMillis()));
     try {
-      if (0 == url.length) { // if no argument, read all RSSChannel in DB
+      if (0 == ids.length) { // if no argument, read all RSSChannel in DB
         foundChannels.addAll(dbReader.readAll(readItems));
       } else {
-        foundChannels.add(dbReader.readByUrl(url[0], readItems, false));
+        for (long id : ids){
+          foundChannels.add(dbReader.readById(id, readItems, false));
+        }
       }
     } catch (ParseException e) {
       Log.e("dbIssue", e.getMessage());

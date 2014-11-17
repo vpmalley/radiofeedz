@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface DbItem<T> {
 
-  T readById(long id, boolean readChildren) throws ParseException;
+  T readById(long id, boolean readChildren, boolean readAllItems) throws ParseException;
 
   List<T> readAll(boolean readChildren) throws ParseException;
 

@@ -19,6 +19,8 @@ import fr.vpm.audiorss.rss.RSSChannel;
 
 public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArrayAdapter> {
 
+  public static final String CHANNEL_ID = "channelId";
+
   private ListView mFeedItems;
 
   private NetworkChecker networkChecker;
@@ -32,9 +34,20 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
+    Long[] channelIds = new Long[0];
+    Intent i = getIntent();
+    if (i.hasExtra(CHANNEL_ID)) {
+      long[] chIds = i.getExtras().getLongArray(CHANNEL_ID);
+      int j = 0;
+      channelIds = new Long[chIds.length];
+      for (long chId : chIds){
+        channelIds[j++] = chId;
+      }
+    }
+
     // services
     networkChecker = new DefaultNetworkChecker();
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds);
 
     mFeedItems = (ListView) findViewById(R.id.list);
     mFeedItems.setTextFilterEnabled(true);

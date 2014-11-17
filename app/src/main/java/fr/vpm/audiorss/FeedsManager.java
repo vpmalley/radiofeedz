@@ -28,10 +28,12 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feeds);
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
-    mFeeds = (ListView) findViewById(R.id.list);
-    mFeeds.setTextFilterEnabled(true);
 
     dataModel = new FeedsManagerDataModel(this, progressBarListener, this);
+
+    mFeeds = (ListView) findViewById(R.id.list);
+    mFeeds.setTextFilterEnabled(true);
+    mFeeds.setOnItemClickListener(dataModel.getOnItemClickListener());
 
     setContextualListeners();
     dataModel.loadData();

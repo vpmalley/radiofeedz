@@ -55,7 +55,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   @Override
-  public RSSChannel readById(long id, boolean readItems) throws ParseException {
+  public RSSChannel readById(long id, boolean readItems, boolean readAllItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?",
         new String[]{String.valueOf(id)}, null, null, null);
@@ -63,7 +63,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, false);
+        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems);
         channel.update(channel.getLastBuildDate(), items);
       }
     }

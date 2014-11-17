@@ -58,11 +58,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private RSSItemArrayAdapter rssItemAdapter;
 
+  private Long[] channelIds;
+
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
-      feedsActivity) {
+          feedsActivity, Long[] channelIds) {
     this.progressListener = progressListener;
     this.feedsActivity = feedsActivity;
     this.activity = activity;
+    this.channelIds = channelIds;
   }
 
   @Override
@@ -76,7 +79,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         new RefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
   }
 
   public void loadDataFromItems() {
@@ -97,7 +100,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     };
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext());
     // read all RSS items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
   }
 
   @Override
