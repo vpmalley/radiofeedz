@@ -55,6 +55,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     setContextualListeners();
     dataModel.loadData();
+
+    if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
+      dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
+    }
+
   }
 
   /**
