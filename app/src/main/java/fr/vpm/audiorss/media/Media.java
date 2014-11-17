@@ -84,15 +84,9 @@ public class Media implements Downloadable, Parcelable {
   @Override
   public void download(final Context context, int visibility) {
 
-    // retrieve download folder from the preferences
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    String downloadFolder = getDownloadFolder(context).getPath();
-
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
-    // transforming the name for saving the file.
-    String downloadName = getFileName();
-    r.setDestinationInExternalPublicDir(downloadFolder, downloadName);
+    r.setDestinationUri(Uri.fromFile(getMediaFile(context, Folder.EXTERNAL_DOWNLOADS_PODCASTS)));
 
     // When downloading music and videos they will be listed in the player
     // (Seems to be available since Honeycomb only)
@@ -100,6 +94,7 @@ public class Media implements Downloadable, Parcelable {
 
     r.setNotificationVisibility(visibility);
 
+    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     int networkFlags = retrieveNetworkFlags(sharedPref);
     r.setAllowedNetworkTypes(networkFlags);
 
