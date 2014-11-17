@@ -101,7 +101,7 @@ public class FeedAdder {
     }
     if (exists) {
       Toast.makeText(dataModel.getContext(), R.string.cannot_add_feed, Toast.LENGTH_SHORT).show();
-    } else if (networkChecker.checkNetwork(dataModel.getContext())) {
+    } else if (networkChecker.checkNetwork(dataModel.getContext(), true)) {
       SaveFeedCallback.updateFeedsCounter(1);
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel);
       new AsyncFeedRefresh(dataModel.getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);

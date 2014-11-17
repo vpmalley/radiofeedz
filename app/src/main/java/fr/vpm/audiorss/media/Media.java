@@ -211,7 +211,7 @@ public class Media implements Downloadable, Parcelable {
     File pictureFile = getMediaFile(context, folder);
     if (pictureFile.exists()){
       b = pictureRetriever.retrieve(pictureFile);
-    } else if (new DefaultNetworkChecker().checkNetwork(context)) {
+    } else if (new DefaultNetworkChecker().checkNetwork(context, false)) {
       AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context, folder);
       pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }

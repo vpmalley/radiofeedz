@@ -13,13 +13,13 @@ import fr.vpm.audiorss.R;
 public class DefaultNetworkChecker implements NetworkChecker {
 
   @Override
-  public boolean checkNetwork(Context context) {
+  public boolean checkNetwork(Context context, boolean displayError) {
     boolean isConnected = false;
     ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
     if (networkInfo != null && networkInfo.isConnected()) {
       isConnected = true;
-    } else {
+    } else if (displayError) {
       Toast.makeText(context, context.getResources().getString(R.string.not_connected), Toast.LENGTH_SHORT).show();
     }
     return isConnected;
