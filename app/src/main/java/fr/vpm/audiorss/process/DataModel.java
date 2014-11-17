@@ -33,7 +33,7 @@ public interface DataModel {
 
   void refreshData();
 
-  void addData();
+  void addData(String feedUrl);
 
   AdapterView.OnItemClickListener getOnItemClickListener();
 

@@ -96,7 +96,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         result = true;
         break;
       case R.id.action_add:
-        dataModel.addData();
+        dataModel.addData(null);
         result = true;
         break;
       case R.id.action_refresh:

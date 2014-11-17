@@ -81,9 +81,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
-  public void addData() {
+  public void addData(String feedUrl) {
     FeedAdder feedAdder = new FeedAdder(this, new DefaultNetworkChecker(), progressListener);
-    String feedUrl = feedAdder.retrieveFeedFromClipboard();
+    if (feedUrl == null){
+      feedUrl = feedAdder.retrieveFeedFromClipboard();
+    }
     if (feedUrl != null) {
       feedAdder.askForFeedValidation(feeds, feedUrl);
     } else {

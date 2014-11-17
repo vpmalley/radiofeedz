@@ -71,7 +71,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
     boolean result = false;
     switch (item.getItemId()) {
       case R.id.action_add:
-        dataModel.addData();
+        dataModel.addData(null);
         result = true;
         break;
       case R.id.action_settings:
