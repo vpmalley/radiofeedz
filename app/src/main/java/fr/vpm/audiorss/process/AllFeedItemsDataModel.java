@@ -23,6 +23,7 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
+import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -200,29 +201,23 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       items.get(position).setDeleted(true);
       itemsToDelete[i++] = items.get(position);
     }
-    AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
-      @Override
-      public void onPreExecute() {
-        progressListener.startRefreshProgress();
-      }
-
-      @Override
-      public void onPostExecute(List<RSSItem> result) {
-        progressListener.stopRefreshProgress();
-        items.removeAll(result);
-        refreshView();
-      }
-    };
-    new AsyncDbSaveRSSItem(callback,
-        getContext()).executeOnExecutor(AsyncTask
-        .THREAD_POOL_EXECUTOR, itemsToDelete);
+    saveItems(itemsToDelete);
   }
 
   @Override
   public void markDataRead(Set<Integer> selection, boolean isRead) {
+    RSSItem[] itemsToSave = new RSSItem[selection.size()];
+    int i = 0;
     for (int position : selection){
       items.get(position).setRead(isRead);
+      itemsToSave[i++] = items.get(position);
     }
+    saveItems(itemsToSave);
+  }
+
+  private void saveItems(RSSItem[] itemsToSave) {
+    new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this),
+            getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
 
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {
@@ -232,18 +227,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       Intent i = new Intent(getContext(), FeedItemReader.class);
       RSSItem rssItem = items.get(position);
       rssItem.setRead(true);
-      new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
-        @Override
-        public void onPreExecute() {
-          // do nothing
-        }
-
-        @Override
-        public void onPostExecute(List<RSSItem> result) {
-          loadData();
-        }
-      }, getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-          rssItem);
+      saveItems(new RSSItem[]{rssItem});
       RSSChannel channel = channelsByItem.get(rssItem);
       i.putExtra(FeedItemReader.ITEM, rssItem);
       i.putExtra(FeedItemReader.CHANNEL, channel);
