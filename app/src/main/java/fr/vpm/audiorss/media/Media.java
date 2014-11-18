@@ -174,7 +174,7 @@ public class Media implements Downloadable, Parcelable {
     return new File(dirFile, getFileName());
   }
 
-  public boolean isPodcastDownloaded(Context context){
+  public boolean isPodcastDownloaded(Context context, boolean forceCheck){
     if (isPodcastDownloaded == null){
       isPodcastDownloaded = getMediaFile(context, Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists();
     }

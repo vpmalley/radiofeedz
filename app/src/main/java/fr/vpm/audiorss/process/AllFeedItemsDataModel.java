@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.process;
 
 import android.app.Activity;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -202,6 +203,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       itemsToSave[i++] = items.get(position);
     }
     saveItems(itemsToSave);
+  }
+
+  @Override
+  public void downloadMedia(Set<Integer> selection) {
+    for (int position : selection){
+      if (items.get(position).getMedia() != null){
+        items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+      };
+    }
   }
 
   private void saveItems(RSSItem[] itemsToSave) {

@@ -37,8 +37,16 @@ public interface DataModel {
 
   AdapterView.OnItemClickListener getOnItemClickListener();
 
+  /**
+   * Deletes the selected items
+   * @param selection the list of indices of the items
+   */
   void deleteData(Collection<Integer> selection);
 
+  /**
+   * Marks the selected items as read/unread
+   * @param selection the list of indices of the items
+   */
   void markDataRead(Set<Integer> selection, boolean isRead);
 
   /**
@@ -46,6 +54,12 @@ public interface DataModel {
    * @return Whether the data model is built and ready for display
    */
   boolean isReady();
+
+  /**
+   * Downloads the media associated with the selected items
+   * @param selection the list of indices of the items
+   */
+  void downloadMedia(Set<Integer> selection);
 
   interface RSSChannelInput {
 

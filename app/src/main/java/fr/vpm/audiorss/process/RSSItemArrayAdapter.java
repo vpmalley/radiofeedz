@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -110,7 +109,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder.iconView1.setVisibility(View.INVISIBLE);
     }
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPodcastDownloaded(getContext()))) {
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPodcastDownloaded(getContext(), false))) {
       itemHolder.iconView2.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);

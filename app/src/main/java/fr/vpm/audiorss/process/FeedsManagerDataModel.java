@@ -111,6 +111,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
+  public void downloadMedia(Set<Integer> selection) {
+    // do nothing
+  }
+
+  @Override
   public boolean isReady() {
     return !feeds.isEmpty();
   }

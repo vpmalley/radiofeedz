@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.util.Log;
 import android.view.Menu;
@@ -145,14 +146,30 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         playMedia();
         result = true;
         break;
+      case R.id.action_delete:
+        deleteMediaFile(rssItem);
       case R.id.action_archive:
-        deleteItem(rssItem);
+        archiveItem(rssItem);
         result = true;
         break;
       default:
         result = super.onOptionsItemSelected(item);
     }
     return result;
+  }
+
+  /**
+   * Deletes the file associated with the media
+   * @param rssItem
+   */
+  private void deleteMediaFile(RSSItem rssItem) {
+    if ((rssItem.getMedia() != null) && (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))){
+      File mediaFile = rssItem.getMedia().getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
+      if (mediaFile.exists()){
+        mediaFile.delete();
+      }
+      rssItem.getMedia().isPodcastDownloaded(this, true);
+    }
   }
 
   private void playMedia() {
@@ -169,7 +186,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     }
   }
 
-  private void deleteItem(RSSItem rssItem) {
+  private void archiveItem(RSSItem rssItem) {
     rssItem.setArchived(true);
     new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
       @Override
