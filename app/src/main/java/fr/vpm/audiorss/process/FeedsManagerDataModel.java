@@ -18,8 +18,8 @@ import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
+import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
-import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
@@ -46,7 +46,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
 
   @Override
   public void loadData() {
-    RefreshViewCallback callback = new RefreshViewCallback(progressListener, this);
+    ChannelRefreshViewCallback callback = new ChannelRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, feedsActivity.getContext(), false);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

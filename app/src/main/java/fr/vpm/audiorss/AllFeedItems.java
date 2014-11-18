@@ -125,4 +125,12 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     }
     return result;
   }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
+      dataModel.loadData();
+    }
+  }
 }

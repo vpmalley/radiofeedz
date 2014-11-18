@@ -23,8 +23,9 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
+import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
+import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
-import fr.vpm.audiorss.db.RefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
@@ -35,6 +36,8 @@ import fr.vpm.audiorss.rss.RSSItem;
  * Created by vince on 09/11/14.
  */
 public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, DataModel.RSSItemDataModel {
+
+  public static final int REQ_ITEM_READ = 1;
 
   private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
@@ -76,29 +79,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   public void loadDataFromChannels(boolean readItems) {
-    RefreshViewCallback callback =
-        new RefreshViewCallback(progressListener, this);
+    ChannelRefreshViewCallback callback =
+        new ChannelRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
   }
 
   public void loadDataFromItems() {
-    AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
-      @Override
-      public void onPreExecute() {
-        progressListener.startRefreshProgress();
-      }
-
-      @Override
-      public void onPostExecute(List<RSSItem> result) {
-        progressListener.stopRefreshProgress();
-        setItemsAndBuildModel(result);
-        if (isReady()) {
-          refreshView();
-        }
-      }
-    };
+    AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext());
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
@@ -231,7 +220,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       RSSChannel channel = channelsByItem.get(rssItem);
       i.putExtra(FeedItemReader.ITEM, rssItem);
       i.putExtra(FeedItemReader.CHANNEL, channel);
-      getContext().startActivity(i);
+      activity.startActivityForResult(i, REQ_ITEM_READ);
     }
 
   }
