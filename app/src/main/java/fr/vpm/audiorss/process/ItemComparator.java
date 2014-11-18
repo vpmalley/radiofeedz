@@ -54,14 +54,10 @@ public class ItemComparator implements Comparator<RSSItem> {
   public int compare(RSSItem rssItem, RSSItem otherRssItem) {
     int comparison = 0;
 
-    int comparisonByDate = rssItem.getDate().compareTo(otherRssItem.getDate());
-
-    int comparisonByName = rssItem.getTitle().compareTo(otherRssItem.getTitle());
-
     if (ItemComparison.ALPHA.equals(itemComparison) || ItemComparison.REVERSE_ALPHA.equals(itemComparison)) {
-      comparison = comparisonByName;
+      comparison = rssItem.getTitle().compareTo(otherRssItem.getTitle());
     } else {
-      comparison = comparisonByDate;
+      comparison = rssItem.getDate().compareTo(otherRssItem.getDate());
     }
 
     int factor = 1;
@@ -69,9 +65,6 @@ public class ItemComparator implements Comparator<RSSItem> {
       factor = -1;
     }
 
-    if (comparison == 0) {
-      comparison = comparisonByName + comparisonByDate;
-    }
     return factor * comparison;
   }
 

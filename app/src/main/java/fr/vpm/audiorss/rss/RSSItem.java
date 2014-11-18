@@ -8,16 +8,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
-import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-
 import fr.vpm.audiorss.media.Media;
 
-public class RSSItem implements Parcelable, Comparable<RSSItem> {
+public class RSSItem implements Parcelable {
 
   public static final String TITLE_TAG = "title";
   public static final String LINK_TAG = "link";
@@ -34,7 +27,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
   public static final String CHANNELTITLE_KEY = "channelTitle";
   public static final String MEDIA_ID_KEY = "mediaId";
   public static final String READ_KEY = "isRead";
-  public static final String DELETED_KEY = "isDeleted";
+  public static final String ARCHIVED_KEY = "isDeleted";
 
   private long dbId = -1;
 
@@ -60,13 +53,11 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   private boolean isRead = false;
 
-  private boolean isDeleted = false;
+  private boolean isArchived = false;
 
   private Media media = null;
 
   private long channelId = -1;
-
-  private static final String PREF_FEED_ORDERING = "pref_feed_ordering";
 
   public String getId() {
     return guid;
@@ -88,7 +79,7 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     this.media = media;
     this.isRead = isRead;
     this.channelId = channelId;
-    this.isDeleted = isDeleted;
+    this.isArchived = isDeleted;
   }
 
   public String getDate() {
@@ -123,40 +114,20 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     return channelTitle;
   }
 
-  public void setChannelTitle(String channelTitle) {
-    this.channelTitle = channelTitle;
-  }
-
   public String getAuthorAddress() {
     return authorAddress;
-  }
-
-  public void setAuthorAddress(String authorAddress) {
-    this.authorAddress = authorAddress;
   }
 
   public String getCategory() {
     return category;
   }
 
-  public void setCategory(String category) {
-    this.category = category;
-  }
-
   public String getComments() {
     return comments;
   }
 
-  public void setComments(String comments) {
-    this.comments = comments;
-  }
-
   public String getGuid() {
     return guid;
-  }
-
-  public void setGuid(String guid) {
-    this.guid = guid;
   }
 
   public String getPubDate() {
@@ -171,31 +142,23 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
     this.title = title;
   }
 
-  public void setLink(String link) {
-    this.link = link;
-  }
-
   public void setDescription(String description) {
     this.description = description;
-  }
-
-  public void setMediaUrl(String mediaUrl) {
-    this.mediaUrl = mediaUrl;
   }
 
   public boolean isRead(){
     return isRead;
   }
 
-  public boolean isDeleted() {
-    return isDeleted;
+  public boolean isArchived() {
+    return isArchived;
   }
   public void setRead(boolean isRead){
     this.isRead = isRead;
   }
 
-  public void setDeleted(boolean isDeleted){
-    this.isDeleted = isDeleted;
+  public void setArchived(boolean isDeleted){
+    this.isArchived = isDeleted;
   }
 
   public long getChannelId() {
@@ -216,51 +179,6 @@ public class RSSItem implements Parcelable, Comparable<RSSItem> {
 
   public void setMedia(Media media) {
     this.media = media;
-  }
-
-  @Override
-  public int compareTo(RSSItem other) {
-    RSSItem lhs = this;
-    RSSItem rhs = (RSSItem) other;
-    //SharedPreferences sharedPref = PreferenceManager
-    //      .getDefaultSharedPreferences(FeedsActivity.this);
-    //String ordering = sharedPref.getString(PREF_FEED_ORDERING, "reverse_time");
-    String ordering = "reverse_time";
-
-    int comparison = 0;
-    Date lhsDate = null;
-    Date rhsDate = null;
-    try {
-      lhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(lhs.getDate());
-      rhsDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).parse(rhs.getDate());
-    } catch (ParseException e) {
-      Log.e("Exception", e.toString());
-    }
-
-    // int comparisonByDate = lhs.getDate().compareTo(rhs.getDate());
-    int comparisonByDate = 0;
-    if ((lhsDate != null) && (rhsDate != null)) {
-      comparisonByDate = lhsDate.compareTo(rhsDate);
-    }
-    int comparisonByName = lhs.getTitle().compareTo(rhs.getTitle());
-
-    if (ordering.contains("alpha")) {
-      comparison = comparisonByName;
-    } else {
-      comparison = comparisonByDate;
-    }
-
-    int factor = 1;
-    if (ordering.contains("reverse")) {
-      factor = -1;
-    }
-
-    if (comparison == 0) {
-      comparison = comparisonByName + comparisonByDate;
-    }
-
-    return factor * comparison;
-
   }
 
   @Override

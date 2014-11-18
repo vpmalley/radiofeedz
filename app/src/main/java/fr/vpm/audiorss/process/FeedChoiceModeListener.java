@@ -48,7 +48,7 @@ public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeLis
 
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-    if (R.id.action_delete == menuItem.getItemId()) {
+    if (R.id.action_archive == menuItem.getItemId()) {
       dataModel.deleteData(selection);
       actionMode.finish();
       return true;

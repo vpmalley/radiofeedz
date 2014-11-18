@@ -11,9 +11,9 @@
           android:orderInCategory="90"
           android:showAsAction="ifRoom"
           android:icon="@drawable/ic_action_unread"/>
-    <item android:id="@+id/action_delete"
-          android:title="@string/action_delete"
+    <item android:id="@+id/action_archive"
+          android:title="@string/action_archive"
           android:orderInCategory="100"
           android:showAsAction="ifRoom"
-          android:icon="@drawable/ic_action_discard"/>
+          android:icon="@drawable/ic_action_accept"/>
 </menu>

@@ -187,7 +187,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     RSSItem[] itemsToDelete = new RSSItem[selection.size()];
     int i = 0;
     for (int position : selection){
-      items.get(position).setDeleted(true);
+      items.get(position).setArchived(true);
       itemsToDelete[i++] = items.get(position);
     }
     saveItems(itemsToDelete);

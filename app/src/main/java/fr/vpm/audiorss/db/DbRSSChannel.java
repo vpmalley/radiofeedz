@@ -163,7 +163,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     itemValues.put(RSSItem.LINK_TAG, item.getLink());
     itemValues.put(RSSItem.LOCAL_MEDIA_KEY, "");
     itemValues.put(RSSItem.READ_KEY, item.isRead());
-    itemValues.put(RSSItem.DELETED_KEY, item.isDeleted());
+    itemValues.put(RSSItem.ARCHIVED_KEY, item.isArchived());
     itemValues.put(RSSItem.MEDIA_KEY, item.getMediaUrl());
     if (item.getMedia() != null) {
       Media newMedia;
@@ -220,7 +220,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems) throws ParseException {
     String deletedCondition = "";
     if (!readAllItems){
-      deletedCondition = " AND " + RSSItem.DELETED_KEY + "=0";
+      deletedCondition = " AND " + RSSItem.ARCHIVED_KEY + "=0";
     }
     return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?" + deletedCondition,
         new String[]{String.valueOf(id)}, readAllItems);
@@ -256,7 +256,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String guid = c.getString(c.getColumnIndex(RSSItem.GUID_TAG));
     String link = c.getString(c.getColumnIndex(RSSItem.LINK_TAG));
     boolean isRead = c.getInt(c.getColumnIndex(RSSItem.READ_KEY)) > 0;
-    boolean isDeleted = c.getInt(c.getColumnIndex(RSSItem.DELETED_KEY)) > 0;
+    boolean isDeleted = c.getInt(c.getColumnIndex(RSSItem.ARCHIVED_KEY)) > 0;
     String mediaUrl = c.getString(c.getColumnIndex(RSSItem.MEDIA_KEY));
     long mediaId = c.getLong(c.getColumnIndex(RSSItem.MEDIA_ID_KEY));
     String title = c.getString(c.getColumnIndex(RSSItem.TITLE_TAG));

@@ -145,7 +145,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         playMedia();
         result = true;
         break;
-      case R.id.action_delete:
+      case R.id.action_archive:
         deleteItem(rssItem);
         result = true;
         break;
@@ -170,7 +170,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   }
 
   private void deleteItem(RSSItem rssItem) {
-    rssItem.setDeleted(true);
+    rssItem.setArchived(true);
     new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
       @Override
       public void onPreExecute() {
