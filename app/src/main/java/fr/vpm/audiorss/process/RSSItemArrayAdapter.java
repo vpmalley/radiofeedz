@@ -106,10 +106,14 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
     }
     if (!rssItem.isRead()) {
-      itemHolder.iconView1.setImageResource(R.drawable.ic_action_time);
+      itemHolder.iconView1.setVisibility(View.VISIBLE);
+    } else {
+      itemHolder.iconView1.setVisibility(View.INVISIBLE);
     }
     if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPodcastDownloaded(getContext()))) {
-      itemHolder.iconView2.setImageResource(R.drawable.ic_action_attachment);
+      itemHolder.iconView2.setVisibility(View.VISIBLE);
+    } else {
+      itemHolder.iconView2.setVisibility(View.INVISIBLE);
     }
     return convertView;
   }
