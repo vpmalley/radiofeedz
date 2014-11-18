@@ -64,6 +64,8 @@ public class Media implements Downloadable, Parcelable {
 
   private boolean isDownloaded = false;
 
+  private Boolean isPodcastDownloaded = null;
+
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
     this.name = name;
@@ -170,6 +172,13 @@ public class Media implements Downloadable, Parcelable {
         break;
     }
     return new File(dirFile, getFileName());
+  }
+
+  public boolean isPodcastDownloaded(Context context){
+    if (isPodcastDownloaded == null){
+      isPodcastDownloaded = getMediaFile(context, Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists();
+    }
+    return isPodcastDownloaded;
   }
 
   private boolean checkNetwork(int networkFlags, Context context) {

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -54,11 +55,13 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     if (convertView == null) {
       LayoutInflater layoutInflater = activity.getLayoutInflater();
       convertView = layoutInflater.inflate(resource, parent, false);
-      ImageView itemImage = (ImageView) convertView.findViewById(R.id.feed_pic);
+      ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
       TextView itemTitle = (TextView) convertView.findViewById(R.id.item_title);
       TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
+      ImageView itemIcon1 = (ImageView) convertView.findViewById(R.id.item_icon_1);
+      ImageView itemIcon2 = (ImageView) convertView.findViewById(R.id.item_icon_2);
 
-      itemHolder = new ViewHolder(itemTitle, itemDate, itemImage);
+      itemHolder = new ViewHolder(itemTitle, itemDate, feedImage, itemIcon1, itemIcon2);
       convertView.setTag(itemHolder);
     } else {
       itemHolder = (ViewHolder) convertView.getTag();
@@ -102,6 +105,12 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
     }
+    if (!rssItem.isRead()) {
+      itemHolder.iconView1.setImageResource(R.drawable.ic_action_time);
+    }
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPodcastDownloaded(getContext()))) {
+      itemHolder.iconView2.setImageResource(R.drawable.ic_action_attachment);
+    }
     return convertView;
   }
 
@@ -125,10 +134,16 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
     private final ImageView pictureView;
 
-    public ViewHolder(TextView titleView, TextView dateView, ImageView pictureView) {
+    private final ImageView iconView1;
+
+    private final ImageView iconView2;
+
+    public ViewHolder(TextView titleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2) {
       this.titleView = titleView;
       this.dateView = dateView;
       this.pictureView = pictureView;
+      this.iconView1 = iconView1;
+      this.iconView2 = iconView2;
     }
   }
 }

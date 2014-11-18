@@ -7,20 +7,22 @@
               android:paddingTop="@dimen/activity_vertical_margin"
               android:paddingBottom="@dimen/activity_vertical_margin"
               android:orientation="horizontal"
-              android:background="?android:attr/activatedBackgroundIndicator" >
+              android:background="?android:attr/activatedBackgroundIndicator">
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:minWidth="70dp"
         android:minHeight="70dp"
         android:maxWidth="70dp"
         android:maxHeight="70dp"
         android:adjustViewBounds="true"
-        android:id="@+id/feed_pic"/>
-    <LinearLayout android:layout_width="wrap_content"
+        android:id="@+id/feed_pic"
+        android:layout_weight="2" />
+    <LinearLayout android:layout_width="0dp"
                   android:layout_height="match_parent"
-                  android:orientation="vertical" >
+                  android:orientation="vertical"
+                  android:layout_weight="7" >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,15 +33,47 @@
             android:id="@+id/item_title"
             android:gravity="bottom|start"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
-        <TextView
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="horizontal" >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginStart="14dp"
+                android:layout_marginLeft="14dp"
+                android:id="@+id/item_date"
+                android:gravity="top|start"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout android:layout_width="0dp"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:layout_weight="1" >
+
+        <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="14dp"
-            android:layout_marginLeft="14dp"
-            android:id="@+id/item_date"
-            android:gravity="top|start"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
+            android:layout_margin="2dp"
+            android:minWidth="20dp"
+            android:minHeight="20dp"
+            android:maxWidth="20dp"
+            android:maxHeight="20dp"
+            android:adjustViewBounds="true"
+            android:id="@+id/item_icon_1"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:minWidth="20dp"
+            android:minHeight="20dp"
+            android:maxWidth="20dp"
+            android:maxHeight="20dp"
+            android:adjustViewBounds="true"
+            android:id="@+id/item_icon_2"/>
     </LinearLayout>
 </LinearLayout>

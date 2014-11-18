@@ -215,8 +215,10 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReader.class);
       RSSItem rssItem = items.get(position);
-      rssItem.setRead(true);
-      saveItems(new RSSItem[]{rssItem});
+      if (!rssItem.isRead()) {
+        rssItem.setRead(true);
+        saveItems(new RSSItem[]{rssItem});
+      }
       RSSChannel channel = channelsByItem.get(rssItem);
       i.putExtra(FeedItemReader.ITEM, rssItem);
       i.putExtra(FeedItemReader.CHANNEL, channel);
