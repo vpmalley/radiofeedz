@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -79,6 +80,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         date.setText(rssItem.getDate());
       }
       description.setText(Html.fromHtml(rssItem.getDescription()));
+      description.setMovementMethod(LinkMovementMethod.getInstance());
     }
     if (channel != null) {
       channelTitle.setText(channel.getTitle());
