@@ -51,16 +51,19 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     ViewHolder itemHolder;
+
+    // retrieving the view
     if (convertView == null) {
       LayoutInflater layoutInflater = activity.getLayoutInflater();
       convertView = layoutInflater.inflate(resource, parent, false);
       ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
       TextView itemTitle = (TextView) convertView.findViewById(R.id.item_title);
+      TextView feedTitle = (TextView) convertView.findViewById(R.id.feed_title);
       TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
       ImageView itemIcon1 = (ImageView) convertView.findViewById(R.id.item_icon_1);
       ImageView itemIcon2 = (ImageView) convertView.findViewById(R.id.item_icon_2);
 
-      itemHolder = new ViewHolder(itemTitle, itemDate, feedImage, itemIcon1, itemIcon2);
+      itemHolder = new ViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2);
       convertView.setTag(itemHolder);
     } else {
       itemHolder = (ViewHolder) convertView.getTag();
@@ -69,12 +72,19 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     //RSSChannel rssChannel = RSSChannel.fromDbById(rssItem.getChannelId(), getContext());
     RSSChannel rssChannel = channelsByItem.get(rssItem);
 
+
+    // Title
     itemHolder.titleView.setText(rssItem.getTitle());
     if (!rssItem.isRead()) {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
     } else {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT);
     }
+
+    // Feed title
+    itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
+
+    // Date
     try {
       Date itemDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(rssItem.getDate());
       Calendar yesterday = Calendar.getInstance();
@@ -94,6 +104,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       Log.w("date", "could not parse date");
     }
 
+    // Feed picture
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
     Bitmap feedPic = null;
     if (rssChannel != null) {
@@ -104,6 +115,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
     }
+
+    // Icons : unread / downloaded
     if (!rssItem.isRead()) {
       itemHolder.iconView1.setVisibility(View.VISIBLE);
     } else {
@@ -114,6 +127,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);
     }
+
     return convertView;
   }
 
@@ -133,6 +147,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
     private final TextView titleView;
 
+    private final TextView feedTitleView;
+
     private final TextView dateView;
 
     private final ImageView pictureView;
@@ -141,8 +157,9 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
     private final ImageView iconView2;
 
-    public ViewHolder(TextView titleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2) {
+    public ViewHolder(TextView titleView, TextView feedTitleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2) {
       this.titleView = titleView;
+      this.feedTitleView = feedTitleView;
       this.dateView = dateView;
       this.pictureView = pictureView;
       this.iconView1 = iconView1;

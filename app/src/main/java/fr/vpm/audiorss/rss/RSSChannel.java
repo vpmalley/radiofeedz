@@ -144,6 +144,16 @@ public class RSSChannel implements Parcelable {
     return title;
   }
 
+  public String getShortenedTitle() {
+    String shortTitle = title;
+    if ((title != null) && (title.length() > 12)) {
+      shortTitle = title.substring(0, 12);
+      shortTitle = shortTitle.substring(0, shortTitle.lastIndexOf(' '));
+      shortTitle += " ...";
+    }
+    return shortTitle;
+  }
+
   public String getLastBuildDate() {
     return lastBuildDate;
   }

@@ -66,6 +66,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:fontFamily="sans-serif-light"
                 android:textColor="@android:color/secondary_text_light"
+                android:textColorLink="@android:color/holo_blue_bright"
                 android:padding="10dp" />
         </LinearLayout>
     </ScrollView>

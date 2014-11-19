@@ -17,4 +17,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="today">Today</string>
+    <string name="ui_sep">-</string>
 </resources>

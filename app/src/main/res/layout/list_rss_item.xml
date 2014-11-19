@@ -36,17 +36,31 @@
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
-                      android:orientation="horizontal">
+                      android:orientation="horizontal"
+                      android:gravity="end">
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:layout_marginStart="14dp"
-                android:layout_marginLeft="14dp"
+                android:layout_margin="2dp"
+                android:id="@+id/feed_title"
+                android:gravity="bottom|end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/tertiary_text_light"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|end"
+                android:text="@string/ui_sep"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/tertiary_text_light"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
                 android:id="@+id/item_date"
                 android:gravity="bottom|end"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/tertiary_text_light"/>
         </LinearLayout>
     </LinearLayout>
 
