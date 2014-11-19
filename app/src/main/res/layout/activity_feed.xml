@@ -1,48 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    
-<TextView
-    android:id="@+id/title"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceLarge"
-    android:padding="10dp" />
-<ImageView
-    android:id="@+id/channelPic"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:maxWidth="300dp"
-    android:minHeight="150dp"
-    android:maxHeight="150dp"
-    android:adjustViewBounds="true"
-    android:padding="10dp"/>
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical" >
 
-<TextView
-    android:id="@+id/channelTitle"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceMedium"
-    android:padding="10dp" />
-
-<TextView
-    android:id="@+id/date"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceSmall"
-    android:padding="10dp" />
-
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
     <TextView
-        android:id="@+id/description"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textAppearance="?android:attr/textAppearanceMedium"
-    android:padding="10dp" />
-</ScrollView>
-    
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/secondary_text_light"
+        android:fontFamily="sans-serif-light"
+        android:background="@drawable/gradient_selector"
+        android:padding="10dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/darker_gray"
+        android:padding="2dp">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/channelPic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxWidth="300dp"
+                android:minHeight="150dp"
+                android:maxHeight="150dp"
+                android:adjustViewBounds="true"
+                android:padding="10dp"/>
+
+            <TextView
+                android:id="@+id/channelTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@android:color/tertiary_text_light"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="2dp"
+                android:paddingRight="2dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@android:color/tertiary_text_light"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:paddingEnd="2dp"
+                android:paddingRight="2dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:fontFamily="sans-serif-light"
+                android:textColor="@android:color/secondary_text_light"
+                android:padding="10dp" />
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
