@@ -16,6 +16,7 @@
     <string name="action_download">Download</string>
     <string name="action_web">Open website</string>
     <string name="action_delete">Delete</string>
+    <string name="action_delete_media">Delete media</string>
     <string name="action_share">Share</string>
     <string name="action_archive">Archive</string>
 </resources>

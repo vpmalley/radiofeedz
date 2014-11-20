@@ -150,6 +150,8 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
         break;
       case R.id.action_delete:
         deleteMediaFile(rssItem);
+        result = true;
+        break;
       case R.id.action_archive:
         archiveItem(rssItem);
         result = true;
