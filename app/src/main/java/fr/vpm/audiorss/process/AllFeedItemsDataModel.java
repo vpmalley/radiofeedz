@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
@@ -223,9 +224,10 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public Bundle getFeedItem(int position) {
+    RSSItem rssItem = items.get(position);
     Bundle args = new Bundle();
-    args.putParcelable(FeedItemReader.ITEM, items.get(position));
-    args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
+    args.putParcelable(FeedItemReader.ITEM, rssItem);
+    args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
     return args;
   }
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {
@@ -233,14 +235,13 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
-      RSSItem rssItem = items.get(position);
-      if (!rssItem.isRead()) {
-        rssItem.setRead(true);
-        saveItems(new RSSItem[]{rssItem});
+      i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, position);
+      long[] chIds = new long[channelIds.length];
+      int j = 0;
+      for (long chId : channelIds){
+        chIds[j++] = chId;
       }
-      RSSChannel channel = channelsByItem.get(rssItem);
-      i.putExtra(FeedItemReader.ITEM, rssItem);
-      i.putExtra(FeedItemReader.CHANNEL, channel);
+      i.putExtra(AllFeedItems.CHANNEL_ID, chIds);
       activity.startActivityForResult(i, REQ_ITEM_READ);
     }
 

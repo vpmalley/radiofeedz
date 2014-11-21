@@ -21,9 +21,13 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class FeedItemReaderActivity extends FragmentActivity implements FeedsActivity<RSSItemArrayAdapter> {
 
+  public static final String INITIAL_POSITION = "initial_position";
+
   private DataModel dataModel;
 
   private ViewPager viewPager;
+
+  private int initialPosition = 0;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,9 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
         channelIds[j++] = chId;
       }
     }
+    if (i.hasExtra(INITIAL_POSITION)) {
+      initialPosition = i.getIntExtra(INITIAL_POSITION, 0);
+    }
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds);
@@ -54,6 +61,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
   public void refreshView(RSSItemArrayAdapter data) {
     FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(rssItemAdapter);
+    viewPager.setCurrentItem(initialPosition);
   }
 
   @Override

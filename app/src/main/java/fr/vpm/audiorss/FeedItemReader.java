@@ -52,6 +52,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     View readerView = inflater.inflate(R.layout.fragment_feed, container, false);
+    setHasOptionsMenu(true);
 
     Bundle args = getArguments();
     if (args != null) {
@@ -110,6 +111,26 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
       if (channelBitmap != null){
         picView.setImageBitmap(channelBitmap);
       }
+    }
+  }
+
+  @Override
+  public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if ((isVisibleToUser) && (rssItem != null) && (!rssItem.isRead())) {
+      rssItem.setRead(true);
+      new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
+        @Override
+        public void onPreExecute() {
+          // do nothing
+        }
+
+        @Override
+        public void onPostExecute(List<RSSItem> result) {
+          // do nothing
+        }
+      },
+              getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItem);
     }
   }
 
@@ -213,7 +234,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
         getActivity().finish();
       }
     }, getActivity()).executeOnExecutor(AsyncTask
-        .THREAD_POOL_EXECUTOR, rssItem);
+            .THREAD_POOL_EXECUTOR, rssItem);
   }
 
   private void openWebsite() {
