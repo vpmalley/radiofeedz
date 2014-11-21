@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.process;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.widget.AdapterView;
 
 import java.util.Collection;
@@ -60,6 +61,8 @@ public interface DataModel {
    * @param selection the list of indices of the items
    */
   void downloadMedia(Set<Integer> selection);
+
+  Bundle getFeedItem(int position);
 
   interface RSSChannelInput {
 

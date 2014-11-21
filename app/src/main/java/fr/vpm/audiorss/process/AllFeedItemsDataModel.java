@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.SortedSet;
 
 import fr.vpm.audiorss.FeedItemReader;
+import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
@@ -219,11 +221,18 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
             getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
 
+  @Override
+  public Bundle getFeedItem(int position) {
+    Bundle args = new Bundle();
+    args.putParcelable(FeedItemReader.ITEM, items.get(position));
+    args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(items.get(position)));
+    return args;
+  }
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-      Intent i = new Intent(getContext(), FeedItemReader.class);
+      Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
       RSSItem rssItem = items.get(position);
       if (!rssItem.isRead()) {
         rssItem.setRead(true);

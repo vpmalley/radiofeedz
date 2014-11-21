@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -118,6 +119,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   @Override
   public boolean isReady() {
     return !feeds.isEmpty();
+  }
+
+  @Override
+  public Bundle getFeedItem(int position) {
+    return new Bundle();
   }
 
   @Override

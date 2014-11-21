@@ -1,17 +1,23 @@
 package fr.vpm.audiorss;
 
-import android.app.Activity;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -30,7 +36,7 @@ import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedItemReader extends Activity implements PictureLoadedListener {
+public class FeedItemReader extends Fragment implements PictureLoadedListener {
 
   public static final String ITEM = "rssItem";
 
@@ -43,32 +49,32 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
   private ImageView picView;
 
   @Override
-  protected void onCreate(Bundle savedInstanceState) {
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_feed);
-    getActionBar().setDisplayHomeAsUpEnabled(true);
+    View readerView = inflater.inflate(R.layout.fragment_feed, container, false);
 
-    Intent i = getIntent();
-    if (i.hasExtra(ITEM)) {
-      rssItem = (RSSItem) i.getExtras().get(ITEM);
+    Bundle args = getArguments();
+    if (args != null) {
+      if (args.containsKey(ITEM)) {
+        rssItem = args.getParcelable(ITEM);
+      }
+      if (args.containsKey(CHANNEL)) {
+        channel = args.getParcelable(CHANNEL);
+      }
     }
-    if (i.hasExtra(CHANNEL)) {
-      channel = i.getExtras().getParcelable(CHANNEL);
-    }
 
+    TextView title = (TextView) readerView.findViewById(R.id.title);
 
-    TextView title = (TextView) findViewById(R.id.title);
+    picView = (ImageView) readerView.findViewById(R.id.channelPic);
 
-    picView = (ImageView) findViewById(R.id.channelPic);
+    TextView channelTitle = (TextView) readerView.findViewById(R.id.channelTitle);
 
-    TextView channelTitle = (TextView) findViewById(R.id.channelTitle);
+    TextView date = (TextView) readerView.findViewById(R.id.date);
 
-    TextView date = (TextView) findViewById(R.id.date);
-
-    TextView description = (TextView) findViewById(R.id.description);
+    TextView description = (TextView) readerView.findViewById(R.id.description);
 
     if (rssItem != null) {
-      setTitle(rssItem.getTitle());
+      //getActivity().setTitle(rssItem.getTitle());
       title.setText(rssItem.getTitle());
 
       SimpleDateFormat datePrinter = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN);
@@ -86,32 +92,31 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
       channelTitle.setText(channel.getTitle());
     }
     setPicture();
-  }
 
+    return readerView;
+  }
 
   private void setPicture(){
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
     listeners.add(this);
 
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(this, listeners, Media.Folder.INTERNAL_ITEMS_PICS);
+      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(getActivity(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
       if (itemBitmap != null){
         picView.setImageBitmap(itemBitmap);
       }
     } else if (channel != null){
-      Bitmap channelBitmap = channel.getBitmap(this, listeners);
+      Bitmap channelBitmap = channel.getBitmap(getActivity(), listeners);
       if (channelBitmap != null){
         picView.setImageBitmap(channelBitmap);
       }
     }
-
-
   }
 
   @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.feeditem, menu);
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists())) {
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    inflater.inflate(R.menu.feeditem, menu);
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists())) {
       if (rssItem.getMedia().getMimeType().contains("image")) {
         MenuItem displayItem = menu.findItem(R.id.action_display);
         displayItem.setVisible(true);
@@ -123,12 +128,17 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
       downloadItem.setVisible(false);
     }
     MenuItem shareItem = menu.findItem(R.id.action_share);
+    addShareItem(shareItem);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+  private void addShareItem(MenuItem shareItem) {
     Intent shareIntent = new Intent(Intent.ACTION_SEND);
     shareIntent.putExtra(Intent.EXTRA_TEXT, this.rssItem.getLink());
     shareIntent.setType("text/plain");
     ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
     shareActionProvider.setShareIntent(shareIntent);
-    return super.onCreateOptionsMenu(menu);
   }
 
   @Override
@@ -168,11 +178,11 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
    */
   private void deleteMediaFile(RSSItem rssItem) {
     if ((rssItem.getMedia() != null) && (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))){
-      File mediaFile = rssItem.getMedia().getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
+      File mediaFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
       if (mediaFile.exists()){
         mediaFile.delete();
       }
-      rssItem.getMedia().isPodcastDownloaded(this, true);
+      rssItem.getMedia().isPodcastDownloaded(getActivity(), true);
     }
   }
 
@@ -180,7 +190,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = this.rssItem.getMedia();
     if (m != null) {
-      File mediaFile = m.getMediaFile(this, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
+      File mediaFile = m.getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
@@ -200,18 +210,10 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
       @Override
       public void onPostExecute(List<RSSItem> result) {
-        finish();
+        getActivity().finish();
       }
-    }, this).executeOnExecutor(AsyncTask
+    }, getActivity()).executeOnExecutor(AsyncTask
         .THREAD_POOL_EXECUTOR, rssItem);
-  }
-
-  private boolean isMediaDownloaded() {
-    Media media = rssItem.getMedia();
-    if (media == null) {
-      return false;
-    }
-    return media.isDownloaded();
   }
 
   private void openWebsite() {
@@ -221,7 +223,7 @@ public class FeedItemReader extends Activity implements PictureLoadedListener {
 
   private void downloadMedia() {
     Log.d("Download", rssItem.getMediaUrl());
-    rssItem.downloadMedia(this);
+    rssItem.downloadMedia(getActivity());
   }
 
   @Override
