@@ -217,7 +217,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
   }
 
-  private void saveItems(RSSItem[] itemsToSave) {
+  private void saveItems(RSSItem... itemsToSave) {
     new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this),
             getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
@@ -235,6 +235,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
+      RSSItem rssItem = items.get(position);
+      if (!rssItem.isRead()) {
+        rssItem.setRead(true);
+        saveItems(rssItem);
+      }
       i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, position);
       long[] chIds = new long[channelIds.length];
       int j = 0;
