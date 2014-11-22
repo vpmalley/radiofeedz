@@ -14,4 +14,15 @@
         <item>title ASC</item>
         <item>title DESC</item>
     </array>
+
+    <array name="pref_disp_items_layout_entries">
+        <item>@string/pref_disp_items_layout_list</item>
+        <item>@string/pref_disp_items_layout_grid</item>
+    </array>
+
+    <array name="pref_disp_items_layout_values">
+        <item>disp_list</item>
+        <item>disp_grid</item>
+    </array>
+
 </resources>

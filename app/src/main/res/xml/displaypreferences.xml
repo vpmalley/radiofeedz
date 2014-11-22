@@ -8,6 +8,14 @@
         android:entryValues="@array/pref_feed_ordering_values"
         android:defaultValue="@string/pref_feed_ordering_default" />
 
+    <ListPreference
+        android:key="pref_disp_items_layout"
+        android:title="@string/pref_disp_items_layout"
+        android:dialogTitle="@string/pref_disp_items_layout"
+        android:entries="@array/pref_disp_items_layout_entries"
+        android:entryValues="@array/pref_disp_items_layout_values"
+        android:defaultValue="disp_list" />
+
     <EditTextPreference
         android:key="pref_disp_max_items"
         android:title="@string/pref_disp_max_items"

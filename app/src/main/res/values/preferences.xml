@@ -33,6 +33,10 @@
     <string name="summary_pref_disp_max_items">Display only this number of items</string>
     <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
 
+    <string name="pref_disp_items_layout">Display items as …</string>
+    <string name="pref_disp_items_layout_list">List</string>
+    <string name="pref_disp_items_layout_grid">Grid</string>
+
     <string name="pref_storage_root">Storage unit root (advanced)</string>
     <string name="summary_pref_storage_root">The path to the root of the storage unit</string>
     <string name="dialog_pref_storage_root">Only if you know what you are doing. Phone storage used if empty</string>

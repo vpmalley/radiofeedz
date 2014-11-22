@@ -32,6 +32,10 @@
     <string name="summary_pref_disp_max_items">Seulement ce nombre de nouvelles sera affiché</string>
     <string name="dialog_pref_disp_max_items">Choisissez le nombre maximum de nouvelles à afficher</string>
 
+    <string name="pref_disp_items_layout">Afficher les nouvelles en tant que …</string>
+    <string name="pref_disp_items_layout_list">Liste</string>
+    <string name="pref_disp_items_layout_grid">Grille</string>
+
     <string name="pref_storage_root">Racine du stockage (avancé)</string>
     <string name="summary_pref_storage_root">Le chemin vers la racine du stockage</string>
     <string name="dialog_pref_storage_root">AVANCÉ. La mémoire du téléphone est utilisé si ce champ est vide</string>

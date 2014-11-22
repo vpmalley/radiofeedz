@@ -3,7 +3,9 @@ package fr.vpm.audiorss;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
@@ -20,6 +22,8 @@ import fr.vpm.audiorss.rss.RSSChannel;
 public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArrayAdapter> {
 
   public static final String CHANNEL_ID = "channelId";
+  public static final String DISP_GRID = "disp_grid";
+  public static final String DISP_LIST = "disp_list";
 
   private AbsListView mFeedItems;
 
@@ -34,6 +38,12 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     // list layouts
     int activity_layout = R.layout.activity_feeds_list;
     int rss_item_layout = R.layout.list_rss_item;
+    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+    if (DISP_GRID.equals(sharedPrefs.getString("pref_disp_items_layout", DISP_LIST))){
+      // grid layouts
+      activity_layout = R.layout.activity_feeds_grid;
+      rss_item_layout = R.layout.grid_rss_item;
+    }
 
     setContentView(activity_layout);
 
