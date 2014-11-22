@@ -137,6 +137,10 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
   @Override
   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     inflater.inflate(R.menu.feeditem, menu);
+    if (rssItem == null) {
+      super.onCreateOptionsMenu(menu, inflater);
+      return;
+    }
     if ((rssItem.getMedia() != null) && (rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists())) {
       if (rssItem.getMedia().getMimeType().contains("image")) {
         MenuItem displayItem = menu.findItem(R.id.action_display);

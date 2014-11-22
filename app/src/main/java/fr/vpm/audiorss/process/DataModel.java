@@ -64,6 +64,12 @@ public interface DataModel {
 
   Bundle getFeedItem(int position);
 
+  /**
+   * The number of elements in this structure
+   * @return the number of elements in this structure
+   */
+  int size();
+
   interface RSSChannelInput {
 
     /**

@@ -223,12 +223,20 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public Bundle getFeedItem(int position) {
-    RSSItem rssItem = items.get(position);
     Bundle args = new Bundle();
-    args.putParcelable(FeedItemReader.ITEM, rssItem);
-    args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
+    if (position < items.size()) {
+      RSSItem rssItem = items.get(position);
+      args.putParcelable(FeedItemReader.ITEM, rssItem);
+      args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
+    }
     return args;
   }
+
+  @Override
+  public int size() {
+    return items.size();
+  }
+
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {
 
     @Override

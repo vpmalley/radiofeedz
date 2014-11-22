@@ -126,6 +126,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
+  public int size() {
+    return feeds.size();
+  }
+
+  @Override
   public AdapterView.OnItemClickListener getOnItemClickListener() {
     return new AdapterView.OnItemClickListener() {
       @Override

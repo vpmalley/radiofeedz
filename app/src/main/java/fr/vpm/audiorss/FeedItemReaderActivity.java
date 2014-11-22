@@ -84,13 +84,17 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
 
     @Override
     public int getCount() {
-      return Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(getContext()).getString("pref_disp_max_items", "80"));
+      return dataModel.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-      RSSItem rssItem = dataModel.getFeedItem(position).getParcelable(FeedItemReader.ITEM);
-      return rssItem.getTitle();
+      String title = "";
+      Bundle feedItemArgs = dataModel.getFeedItem(position);
+      if (feedItemArgs.containsKey(FeedItemReader.ITEM)) {
+        title = ((RSSItem) feedItemArgs.getParcelable(FeedItemReader.ITEM)).getTitle();
+      }
+      return title;
     }
   }
 
