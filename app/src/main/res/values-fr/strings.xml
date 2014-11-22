@@ -8,9 +8,11 @@
     <string name="cannot_get_picture">Oops! L\'image pour ce flux n\'a pu être retrouvée.</string>
 
     <string name="not_connected">Oops! Cet appareil ne semble pas être connecté à Internet. Vérifiez les
-        paramètres.</string>
-    <string name="disabled_download">Oops! Les téléchargements sont désactivés sur les réseaux Wifi et mobiles. Vérifiez les
-        paramètres.</string>
+        paramètres de votre appareil.</string>
+    <string name="disabled_download">Oops! Les téléchargements sont désactivés sur les réseaux Wifi et/ou mobiles. Vérifiez les
+        paramètres de l\'application.</string>
+    <string name="disabled_refresh">Oops! Les téléchargements sont désactivés sur les réseaux Wifi et/ou mobiles. Vérifiez les
+        paramètres de l\'application.</string>
 
     <string name="please_clip_feed_url">Vous pouvez ajouter un flux en copiant son url vers le presse-papiers.
         Appuyez ensuite sur ce bouton.</string>

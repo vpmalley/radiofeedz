@@ -27,6 +27,7 @@ import java.util.List;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.persistence.FilePictureSaver;
 
 public class Media implements Downloadable, Parcelable {
@@ -96,8 +97,7 @@ public class Media implements Downloadable, Parcelable {
 
     r.setNotificationVisibility(visibility);
 
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    int networkFlags = retrieveNetworkFlags(sharedPref);
+    int networkFlags = retrieveNetworkFlags(context);
     r.setAllowedNetworkTypes(networkFlags);
 
     if (checkNetwork(networkFlags, context)) {
@@ -193,16 +193,15 @@ public class Media implements Downloadable, Parcelable {
     return (!(0 == networkFlags));
   }
 
-  private int retrieveNetworkFlags(SharedPreferences sharedPref) {
+  private int retrieveNetworkFlags(Context context) {
     int networkFlags = 0;
-    if (sharedPref.getBoolean("pref_wifi_network_enabled", true)) {
+    NetworkChecker networkChecker = new DefaultNetworkChecker();
+    if (networkChecker.isDownloadOverWifiAllowed(context)) {
       networkFlags += DownloadManager.Request.NETWORK_WIFI;
     }
-
-    if (sharedPref.getBoolean("pref_mobile_network_enabled", true)) {
+    if (networkChecker.isDownloadOverMobileAllowed(context)) {
       networkFlags += DownloadManager.Request.NETWORK_MOBILE;
     }
-
     return networkFlags;
   }
 
@@ -215,7 +214,7 @@ public class Media implements Downloadable, Parcelable {
     File pictureFile = getMediaFile(context, folder);
     if (pictureFile.exists()){
       b = pictureRetriever.retrieve(pictureFile);
-    } else if (new DefaultNetworkChecker().checkNetwork(context, false)) {
+    } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {
       AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 200, context, folder);
       pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }

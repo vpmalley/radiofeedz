@@ -21,12 +21,12 @@
         android:key="pref_network_download">
 
         <CheckBoxPreference
-            android:key="pref_wifi_network_enabled"
+            android:key="pref_media_wifi_network_enabled"
             android:title="@string/pref_media_wifi_network_enabled"
             android:defaultValue="true" />
 
         <CheckBoxPreference
-            android:key="pref_mobile_network_enabled"
+            android:key="pref_media_mobile_network_enabled"
             android:title="@string/pref_media_mobile_network_enabled"
             android:defaultValue="false" />
     </PreferenceCategory>

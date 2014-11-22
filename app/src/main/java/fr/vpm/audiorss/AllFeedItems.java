@@ -105,7 +105,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         result = true;
         break;
       case R.id.action_refresh:
-        if (networkChecker.checkNetwork(this, true)) {
+        if (networkChecker.checkNetworkForRefresh(this, true)) {
           dataModel.refreshData();
         }
         result = true;
