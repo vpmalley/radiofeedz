@@ -49,6 +49,8 @@ public class RSSChannel implements Parcelable {
 
   public static List<RSSChannel> allChannels = new ArrayList<RSSChannel>();
 
+  private static final int SHORT_TITLE_LENGTH = 14;
+
   /**
    * a Map with item id to item
    */
@@ -146,8 +148,8 @@ public class RSSChannel implements Parcelable {
 
   public String getShortenedTitle() {
     String shortTitle = title;
-    if ((title != null) && (title.length() > 12)) {
-      shortTitle = title.substring(0, 12);
+    if ((title != null) && (title.length() > SHORT_TITLE_LENGTH)) {
+      shortTitle = title.substring(0, SHORT_TITLE_LENGTH);
       int lastSpace = shortTitle.lastIndexOf(' ');
       if (lastSpace > -1) {
         shortTitle = shortTitle.substring(0, lastSpace);

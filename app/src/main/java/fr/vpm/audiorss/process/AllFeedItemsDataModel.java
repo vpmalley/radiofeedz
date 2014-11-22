@@ -160,7 +160,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void refreshData(){
-    SaveFeedCallback.updateFeedsCounter(feeds.size());
     for (RSSChannel feed : feeds) {
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
       new AsyncFeedRefresh(getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,

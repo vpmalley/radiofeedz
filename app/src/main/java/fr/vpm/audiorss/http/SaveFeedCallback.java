@@ -19,12 +19,6 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
 
   private final DataModel dataModel;
 
-  /**
-   * The counter is used to join all threads for the refresh of multiple feeds.
-   * The refresh of the view is done only once, when all feeds are up-to-date.
-   */
-  private static int feedsCounter = 0;
-
   public SaveFeedCallback(ProgressListener progressListener, DataModel dataModel) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;
@@ -50,16 +44,6 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
   private void handleException(Exception e) {
     Toast.makeText(dataModel.getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
     Log.e("Exception", e.toString());
-  }
-
-  public synchronized static boolean updateFeedsCounter(int change){
-    feedsCounter += change;
-    Log.d("refresh", "feeds " + feedsCounter);
-    return 0 == feedsCounter;
-  }
-
-  private synchronized boolean feedsAreLoaded(){
-    return updateFeedsCounter(-1);
   }
 
 }
