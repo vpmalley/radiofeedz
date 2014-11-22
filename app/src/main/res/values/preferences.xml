@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="prefs_category_display">Display</string>
+    <string name="prefs_category_download">Download</string>
+    <string name="prefs_category_network">Network</string>
+
+    <string name="prefs_summ_category_display">Feeds and items display settings</string>
+    <string name="prefs_summ_category_download">Media downloads settings</string>
+    <string name="prefs_summ_category_network">Network settings</string>
+
     <string name="pref_feed_ordering">Feeds order</string>
     <string name="pref_feed_ordering_summary">Choose how to order your feeds</string>
     <string name="pref_feed_ordering_default">pubDate DESC</string>
@@ -8,8 +16,14 @@
     <string name="pref_feed_ordering_alpha_first">Alphabetical order</string>
     <string name="pref_feed_ordering_alpha_last">Reversed alphabetical order</string>
 
-    <string name="pref_mobile_network_enabled">Download on mobile network</string>
-    <string name="pref_wifi_network_enabled">Download on Wifi network</string>
+    <string name="pref_network_refresh">Network settings to refresh feeds</string>
+    <string name="pref_network_download">Network settings to download media</string>
+
+    <string name="pref_refresh_wifi_network_enabled">Refresh feeds on Wifi connection</string>
+    <string name="pref_refresh_mobile_network_enabled">Refresh feeds on mobile connection</string>
+
+    <string name="pref_media_wifi_network_enabled">Download media on Wifi connection</string>
+    <string name="pref_media_mobile_network_enabled">Download media on mobile connection</string>
 
     <string name="pref_download_folder">Downloads folder</string>
     <string name="summary_pref_download_folder">Media will be dowloaded there</string>

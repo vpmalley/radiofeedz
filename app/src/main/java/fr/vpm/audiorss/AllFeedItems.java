@@ -111,7 +111,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         result = true;
         break;
       case R.id.action_settings:
-        i = new Intent(AllFeedItems.this, PreferencesActivity.class);
+        i = new Intent(AllFeedItems.this, AllPreferencesActivity.class);
         startActivity(i);
         result = true;
         break;

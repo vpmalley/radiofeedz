@@ -71,7 +71,7 @@
                 android:value="fr.vpm.audiorss.AllFeedItems" />
         </activity>
         <activity
-            android:name="fr.vpm.audiorss.PreferencesActivity"
+            android:name="fr.vpm.audiorss.AllPreferencesActivity"
             android:label="@string/app_name"
             android:parentActivityName=".AllFeedItems" >
             <meta-data

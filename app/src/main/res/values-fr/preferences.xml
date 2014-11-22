@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="prefs_category_display">Affichage</string>
+    <string name="prefs_category_download">Téléchargements</string>
+    <string name="prefs_category_network">Réseau</string>
+
+    <string name="prefs_summ_category_display">Paramètres d\'affichage des flux</string>
+    <string name="prefs_summ_category_download">Paramètres de téléchargement des médias</string>
+    <string name="prefs_summ_category_network">Paramètres de réseaux</string>
+
     <string name="pref_feed_ordering">Ordre d\'affichage des flux</string>
     <string name="pref_feed_ordering_summary">Choisissez dans quel ordre les flux sont affichés</string>
     <string name="pref_feed_ordering_latest_first">Le plus récent d\'abord</string>
@@ -7,8 +15,14 @@
     <string name="pref_feed_ordering_alpha_first">Ordre alphabétique</string>
     <string name="pref_feed_ordering_alpha_last">Ordre alphabétique inversé</string>
 
-    <string name="pref_mobile_network_enabled">Télécharger sur les réseaux mobiles</string>
-    <string name="pref_wifi_network_enabled">Télécharger sur les réseaux Wifi</string>
+    <string name="pref_network_refresh">Rafraîchissement des flux</string>
+    <string name="pref_network_download">Téléchargement des médias</string>
+
+    <string name="pref_refresh_wifi_network_enabled">Rafraîchir sur connexion Wifi</string>
+    <string name="pref_refresh_mobile_network_enabled">Rafraîchir sur connexion mobile</string>
+
+    <string name="pref_media_wifi_network_enabled">Télécharger sur connexion Wifi</string>
+    <string name="pref_media_mobile_network_enabled">Télécharger sur connexion mobiles</string>
 
     <string name="pref_download_folder">Dossier de téléchargement</string>
     <string name="summary_pref_download_folder">Les média seront téléchargés dans ce dossier</string>

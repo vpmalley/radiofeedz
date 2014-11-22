@@ -75,7 +75,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
         result = true;
         break;
       case R.id.action_settings:
-        i = new Intent(this, PreferencesActivity.class);
+        i = new Intent(this, AllPreferencesActivity.class);
         startActivity(i);
         result = true;
         break;
