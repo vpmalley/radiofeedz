@@ -31,7 +31,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
 
     dataModel = new FeedsManagerDataModel(this, progressBarListener, this);
 
-    mFeeds = (ListView) findViewById(R.id.list);
+    mFeeds = (ListView) findViewById(R.id.allitems);
     mFeeds.setTextFilterEnabled(true);
     mFeeds.setOnItemClickListener(dataModel.getOnItemClickListener());
 

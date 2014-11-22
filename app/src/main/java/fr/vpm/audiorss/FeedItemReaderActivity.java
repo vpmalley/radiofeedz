@@ -3,7 +3,6 @@ package fr.vpm.audiorss;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -50,7 +49,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     }
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, R.layout.list_rss_item);
     dataModel.loadData();
 
     viewPager = (ViewPager) findViewById(R.id.pager);

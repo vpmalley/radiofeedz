@@ -23,7 +23,6 @@ import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
-import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
@@ -68,12 +67,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Long[] channelIds;
 
+  private int resource;
+
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
-          feedsActivity, Long[] channelIds) {
+          feedsActivity, Long[] channelIds, int resId) {
     this.progressListener = progressListener;
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.channelIds = channelIds;
+    this.resource = resId;
   }
 
   @Override
@@ -142,8 +144,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public synchronized void refreshView() {
     if (rssItemAdapter == null) {
-      rssItemAdapter = new RSSItemArrayAdapter(activity,
-          R.layout.list_rss_item, items, channelsByItem);
+      rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
       feedsActivity.refreshView(rssItemAdapter);
     } else {
       rssItemAdapter.setItems(items);

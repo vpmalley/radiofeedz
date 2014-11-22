@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
+import android.widget.AbsListView;
 import android.widget.ProgressBar;
 
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -21,7 +21,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
   public static final String CHANNEL_ID = "channelId";
 
-  private ListView mFeedItems;
+  private AbsListView mFeedItems;
 
   private NetworkChecker networkChecker;
 
@@ -30,7 +30,12 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_feeds);
+
+    // list layouts
+    int activity_layout = R.layout.activity_feeds;
+    int rss_item_layout = R.layout.list_rss_item;
+
+    setContentView(activity_layout);
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
@@ -47,9 +52,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     // services
     networkChecker = new DefaultNetworkChecker();
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, rss_item_layout);
 
-    mFeedItems = (ListView) findViewById(R.id.list);
+    mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
 
@@ -66,7 +71,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
    * Defines the listener when long clicking on one or multiple items of the list
    */
   private void setContextualListeners() {
-    mFeedItems.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+    mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel, R.menu.items_context);
     mFeedItems.setMultiChoiceModeListener(actionModeCallback);
   }
