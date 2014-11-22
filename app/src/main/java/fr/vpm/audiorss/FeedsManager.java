@@ -26,7 +26,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_feeds);
+    setContentView(R.layout.activity_feeds_list);
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
     dataModel = new FeedsManagerDataModel(this, progressBarListener, this);

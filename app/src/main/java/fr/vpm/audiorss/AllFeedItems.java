@@ -32,7 +32,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     super.onCreate(savedInstanceState);
 
     // list layouts
-    int activity_layout = R.layout.activity_feeds;
+    int activity_layout = R.layout.activity_feeds_list;
     int rss_item_layout = R.layout.list_rss_item;
 
     setContentView(activity_layout);

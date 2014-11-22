@@ -82,27 +82,12 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     }
 
     // Feed title
-    itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
+    if (itemHolder.feedTitleView != null) {
+      itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
+    }
 
     // Date
-    try {
-      Date itemDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(rssItem.getDate());
-      Calendar yesterday = Calendar.getInstance();
-      yesterday.add(Calendar.HOUR, -24);
-      Calendar lastweek = Calendar.getInstance();
-      lastweek.add(Calendar.DAY_OF_YEAR, -7);
-      String dateText = "";
-      if (itemDate.after(yesterday.getTime())){
-        dateText = getContext().getResources().getString(R.string.today) + ", " + new SimpleDateFormat("HH:mm").format(itemDate);
-      } else if (itemDate.after(lastweek.getTime())){
-        dateText = new SimpleDateFormat("EEEE, HH:mm").format(itemDate);
-      } else {
-        dateText = new SimpleDateFormat("dd MMMM").format(itemDate);
-      }
-      itemHolder.dateView.setText(dateText);
-    } catch (ParseException e) {
-      Log.w("date", "could not parse date");
-    }
+    printDate(itemHolder, rssItem);
 
     // Feed picture
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
@@ -129,6 +114,28 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     }
 
     return convertView;
+  }
+
+  private void printDate(ViewHolder itemHolder, RSSItem rssItem) {
+    try {
+      Date itemDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(rssItem.getDate());
+      Calendar yesterday = Calendar.getInstance();
+      yesterday.add(Calendar.HOUR, -24);
+      Calendar lastweek = Calendar.getInstance();
+      lastweek.add(Calendar.DAY_OF_YEAR, -7);
+      String dateText = "";
+      if (itemDate.after(yesterday.getTime())){
+        // getContext().getResources().getString(R.string.today) + ", " +
+        dateText =  new SimpleDateFormat("HH:mm").format(itemDate);
+      } else if (itemDate.after(lastweek.getTime())){
+        dateText = new SimpleDateFormat("EEEE, HH:mm").format(itemDate);
+      } else {
+        dateText = new SimpleDateFormat("dd MMMM").format(itemDate);
+      }
+      itemHolder.dateView.setText(dateText);
+    } catch (ParseException e) {
+      Log.w("date", "could not parse date");
+    }
   }
 
   public void setItems(List<RSSItem> items) {
