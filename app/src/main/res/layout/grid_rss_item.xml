@@ -2,10 +2,10 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="@dimen/activity_horizontal_margin"
-              android:paddingRight="@dimen/activity_horizontal_margin"
-              android:paddingTop="@dimen/activity_vertical_margin"
-              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:paddingLeft="5dp"
+              android:paddingRight="5dp"
+              android:paddingTop="5dp"
+              android:paddingBottom="5dp"
               android:orientation="vertical"
               android:background="?android:attr/activatedBackgroundIndicator"
               android:minHeight="200dp"
@@ -26,14 +26,12 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:padding="4dp"
         android:id="@+id/item_title"
         android:layout_weight="4"
         android:gravity="start|top"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@android:color/white"/>
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="0dp"
