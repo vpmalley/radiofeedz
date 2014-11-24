@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.db.ItemRefreshViewCallback;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -40,7 +42,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private final int resource;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
-      RSSChannel> channelsByItem) {
+          RSSChannel> channelsByItem) {
     super(activity, resource, items);
     this.activity = activity;
     this.items = items;
@@ -90,16 +92,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     printDate(itemHolder, rssItem);
 
     // Feed picture
-    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-    Bitmap feedPic = null;
-    if (rssChannel != null) {
-      feedPic = rssChannel.getBitmap(activity, listeners);
-    }
-    if (feedPic != null) {
-      itemHolder.pictureView.setImageBitmap(feedPic);
-    } else {
-      itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
-    }
+    setPicture(rssItem, rssChannel, itemHolder);
 
     // Icons : unread / downloaded
     if (!rssItem.isRead()) {
@@ -114,6 +107,24 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     }
 
     return convertView;
+  }
+
+  private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
+    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+    Bitmap channelBitmap = null;
+    if ((rssItem != null) && (rssItem.getMedia().isPicture())){
+      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(getContext(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
+      if (itemBitmap != null){
+        itemHolder.pictureView.setImageBitmap(itemBitmap);
+      }
+    } else if (rssChannel != null){
+      channelBitmap = rssChannel.getBitmap(getContext(), listeners);
+      if (channelBitmap != null){
+        itemHolder.pictureView.setImageBitmap(channelBitmap);
+      }
+    } else {
+      itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
+    }
   }
 
   private void printDate(ViewHolder itemHolder, RSSItem rssItem) {
