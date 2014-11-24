@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -23,8 +24,9 @@ public interface DataModel {
 
   /**
    * Refreshes the view based on activityś data
+   * @param recreate whether the adapter for the list should be recreated or invalidated
    */
-  void refreshView();
+  void refreshView(boolean recreate);
 
   /**
    * Retrieves the Context bound with this Activity
@@ -63,6 +65,13 @@ public interface DataModel {
   void downloadMedia(Set<Integer> selection);
 
   Bundle getFeedItem(int position);
+
+  /**
+   * Filters the elements based on passed filter and reloads the data from the DB
+   *
+   * @param filter the filter to apply on the DB query
+   */
+  void filterData(QueryFilter filter);
 
   /**
    * The number of elements in this structure

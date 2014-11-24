@@ -21,6 +21,7 @@ import fr.vpm.audiorss.db.AsyncDbDeleteRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
@@ -60,7 +61,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
-  public void refreshView() {
+  public void refreshView(boolean recreate) {
     RSSChannelArrayAdapter feedAdapter = new RSSChannelArrayAdapter(activity, R.layout.list_rss_feeds,
         feeds);
     feedsActivity.refreshView(feedAdapter);
@@ -123,6 +124,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   @Override
   public Bundle getFeedItem(int position) {
     return new Bundle();
+  }
+
+  @Override
+  public void filterData(QueryFilter filter) {
+    // do nothing
   }
 
   @Override

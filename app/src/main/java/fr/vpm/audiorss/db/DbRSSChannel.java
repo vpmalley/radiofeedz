@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -63,7 +64,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems);
+        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems, null);
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -79,7 +80,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems);
+        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems, null);
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -96,7 +97,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       long id = c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID));
       RSSChannel channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, false);
+        Map<String, RSSItem> items = readItemsByChannelId(id, false, null);
         channel.update(channel.getLastBuildDate(), items);
       }
       channels.add(channel);
@@ -217,16 +218,19 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channel;
   }
 
-  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems) throws ParseException {
+  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems, QueryFilter filter) throws ParseException {
     String deletedCondition = "";
     if (!readAllItems){
       deletedCondition = " AND " + RSSItem.ARCHIVED_KEY + "=0";
     }
     return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?" + deletedCondition,
-        new String[]{String.valueOf(id)}, readAllItems);
+        new String[]{String.valueOf(id)}, readAllItems, filter);
   }
 
-  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues, boolean readAll) throws ParseException {
+  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues, boolean readAll, QueryFilter filter) throws ParseException {
+    if ((filter != null) && (!filter.getFilter().getSelectionQuery().isEmpty())) {
+      selectionQuery += " AND " + filter.getFilter().getSelectionQuery();
+    }
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String limit = null;
     if (!readAll) {

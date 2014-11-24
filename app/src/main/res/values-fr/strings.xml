@@ -22,4 +22,9 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="today">aujourd\'hui</string>
+    <string name="drawer_latest">Récents</string>
+    <string name="drawer_today">Aujourd\'hui</string>
+    <string name="drawer_unread">Non lus</string>
+    <string name="drawer_downloaded">Téléchargés</string>
+    <string name="drawer_archived">Archivés</string>
 </resources>

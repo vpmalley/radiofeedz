@@ -29,6 +29,7 @@ import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
@@ -67,6 +68,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Long[] channelIds;
 
+  private QueryFilter filter;
+
   private int resource;
 
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
@@ -94,7 +97,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromItems() {
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
-    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext());
+    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), filter);
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
   }
@@ -142,8 +145,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public synchronized void refreshView() {
-    if (rssItemAdapter == null) {
+  public synchronized void refreshView(boolean recreate) {
+    if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
       feedsActivity.refreshView(rssItemAdapter);
     } else {
@@ -231,6 +234,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
     }
     return args;
+  }
+
+  @Override
+  public void filterData(QueryFilter filter) {
+    this.filter = filter;
+    loadData();
   }
 
   @Override

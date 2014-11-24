@@ -6,11 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
@@ -75,6 +81,17 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
 
+    // Navigation drawer
+    final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    final ListView drawerList = (ListView) findViewById(R.id.left_drawer);
+    drawerList.setAdapter(ArrayAdapter.createFromResource(this, R.array.item_filters, R.layout.drawer_item));
+    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        dataModel.filterData(QueryFilter.fromPosition(position));
+        drawerLayout.closeDrawer(drawerList);
+      }
+    });
   }
 
   /**
