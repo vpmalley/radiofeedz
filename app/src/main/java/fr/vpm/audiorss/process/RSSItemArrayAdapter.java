@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;

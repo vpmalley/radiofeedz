@@ -30,6 +30,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   public static final String CHANNEL_ID = "channelId";
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
+  private static final int REQ_PREFS = 2;
 
   private AbsListView mFeedItems;
 
@@ -144,7 +145,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         break;
       case R.id.action_settings:
         i = new Intent(AllFeedItems.this, AllPreferencesActivity.class);
-        startActivity(i);
+        startActivityForResult(i, REQ_PREFS);
         result = true;
         break;
       case R.id.action_manage:
@@ -163,6 +164,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     super.onActivityResult(requestCode, resultCode, data);
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
       dataModel.loadData();
+    } else if (REQ_PREFS == requestCode){
+      dataModel.refreshView(true);
     }
   }
 }
