@@ -25,9 +25,13 @@
     <string name="pref_media_wifi_network_enabled">Download media on Wifi connection</string>
     <string name="pref_media_mobile_network_enabled">Download media on mobile connection</string>
 
-    <string name="pref_download_folder">Downloads folder</string>
-    <string name="summary_pref_download_folder">Media will be dowloaded there</string>
-    <string name="dialog_pref_download_folder">Set the folder to which media will be downloaded</string>
+    <string name="pref_download_podcasts_folder">Podcasts folder</string>
+    <string name="summary_pref_download_podcasts_folder">Podcasts will be dowloaded there</string>
+    <string name="dialog_pref_download_podcasts_folder">Set the folder to which podcasts will be downloaded</string>
+
+    <string name="pref_download_pictures_folder">Pictures folder</string>
+    <string name="summary_pref_download_pictures_folder">Pictures will be dowloaded there</string>
+    <string name="dialog_pref_download_pictures_folder">Set the folder to which pictures will be downloaded</string>
 
     <string name="pref_disp_max_items">Maximum RSS items to display</string>
     <string name="summary_pref_disp_max_items">Display only this number of items</string>

@@ -8,10 +8,17 @@
         android:dialogTitle="@string/dialog_pref_storage_root" />
 
     <EditTextPreference
-        android:key="pref_download_folder"
-        android:title="@string/pref_download_folder"
-        android:summary="@string/summary_pref_download_folder"
-        android:dialogTitle="@string/dialog_pref_download_folder"
-        android:defaultValue="Podcasts" />
+        android:key="pref_download_podcasts_folder"
+        android:title="@string/pref_download_podcasts_folder"
+        android:summary="@string/summary_pref_download_podcasts_folder"
+        android:dialogTitle="@string/dialog_pref_download_podcasts_folder"
+        android:defaultValue="music/Podcasts" />
+
+    <EditTextPreference
+        android:key="pref_download_pictures_folder"
+        android:title="@string/pref_download_pictures_folder"
+        android:summary="@string/summary_pref_download_pictures_folder"
+        android:dialogTitle="@string/dialog_pref_download_pictures_folder"
+        android:defaultValue="Pictures/RadioFeedz" />
 
 </PreferenceScreen>

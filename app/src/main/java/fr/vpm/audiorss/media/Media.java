@@ -35,11 +35,13 @@ public class Media implements Downloadable, Parcelable {
   public static final String INTERNAL_ITEMS_PIC_DIR = "items-icons";
   public static final String INTERNAL_FEEDS_PIC_DIR = "feeds-icons";
   public static final String INTERNAL_APP_DIR = "RadioFeedz";
+  public static final String MIME_IMAGE = "image";
 
   public enum Folder {
     INTERNAL_FEEDS_PICS,
     INTERNAL_ITEMS_PICS,
-    EXTERNAL_DOWNLOADS_PODCASTS
+    EXTERNAL_DOWNLOADS_PODCASTS,
+    EXTERNAL_DOWNLOADS_PICTURES
   }
 
   // db id
@@ -89,7 +91,11 @@ public class Media implements Downloadable, Parcelable {
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
-    r.setDestinationUri(Uri.fromFile(getMediaFile(context, Folder.EXTERNAL_DOWNLOADS_PODCASTS)));
+    Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
+    if (getMimeType().startsWith("image")){
+      externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
+    }
+    r.setDestinationUri(Uri.fromFile(getMediaFile(context, externalDownloadsFolder)));
 
     // When downloading music and videos they will be listed in the player
     // (Seems to be available since Honeycomb only)
@@ -114,15 +120,17 @@ public class Media implements Downloadable, Parcelable {
         DownloadManager.ACTION_DOWNLOAD_COMPLETE));
   }
 
-  public File getDownloadFolder(Context context) {
+  public File getDownloadFolder(Context context, Folder folder) {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     String storageMediaRoot = sharedPref.getString("pref_storage_root",
         Environment.getExternalStorageDirectory().getPath());
     if (storageMediaRoot.isEmpty()){
       storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
     }
-    String storageMediaDir = sharedPref.getString("pref_download_folder",
-        Environment.DIRECTORY_PODCASTS);
+    String storageMediaDir = sharedPref.getString("pref_download_podcasts_folder", "music/Podcasts");
+    if (folder.equals(Folder.EXTERNAL_DOWNLOADS_PICTURES)){
+      storageMediaDir = sharedPref.getString("pref_download_pictures_folder", "Pictures/RadioFeedz");
+    }
 
     StringBuilder dirPathBuilder = new StringBuilder();
     dirPathBuilder.append('/');
@@ -167,8 +175,9 @@ public class Media implements Downloadable, Parcelable {
         dirFile = getInternalItemsPicsFolder();
         break;
       case EXTERNAL_DOWNLOADS_PODCASTS:
+      case EXTERNAL_DOWNLOADS_PICTURES:
       default:
-        dirFile = getDownloadFolder(context);
+        dirFile = getDownloadFolder(context, folder);
         break;
     }
     return new File(dirFile, getFileName());
@@ -176,7 +185,12 @@ public class Media implements Downloadable, Parcelable {
 
   public boolean isPodcastDownloaded(Context context, boolean forceCheck){
     if (isPodcastDownloaded == null){
-      isPodcastDownloaded = getMediaFile(context, Folder.EXTERNAL_DOWNLOADS_PODCASTS).exists();
+
+      Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
+      if (getMimeType().startsWith("image")){
+        externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
+      }
+      isPodcastDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
     }
     return isPodcastDownloaded;
   }
@@ -222,7 +236,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public boolean isPicture() {
-    return getMimeType().startsWith("image");
+    return getMimeType().startsWith(MIME_IMAGE);
   }
 
   public long getId() {
