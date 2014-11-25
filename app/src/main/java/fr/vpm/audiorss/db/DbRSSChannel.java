@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.media.Media;
@@ -235,6 +236,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String limit = null;
     if (!readAll) {
       limit = sharedPrefs.getString("pref_disp_max_items", "80");
+      if (!Pattern.compile("\\d+").matcher(limit).matches()){
+        limit = "80";
+      }
     }
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,

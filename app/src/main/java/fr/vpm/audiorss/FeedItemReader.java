@@ -235,7 +235,9 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
 
       @Override
       public void onPostExecute(List<RSSItem> result) {
-        getActivity().finish();
+        if (FeedItemReader.this.isVisible()) {
+          getActivity().finish();
+        }
       }
     }, getActivity()).executeOnExecutor(AsyncTask
             .THREAD_POOL_EXECUTOR, rssItem);

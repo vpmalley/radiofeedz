@@ -74,10 +74,12 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
 
   @Override
   public void refreshData() {
-    for (RSSChannel channel : feeds) {
-      SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
-      new AsyncFeedRefresh(getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-          channel.getUrl());
+    if (new DefaultNetworkChecker().checkNetworkForRefresh(getContext(), false)) {
+      for (RSSChannel channel : feeds) {
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        new AsyncFeedRefresh(getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                channel.getUrl());
+      }
     }
   }
 
