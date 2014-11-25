@@ -10,4 +10,9 @@ public class UnreadFilter implements QueryFilter.SelectionFilter {
   public String getSelectionQuery() {
     return RSSItem.READ_KEY + "=0";
   }
+
+  @Override
+  public String[] getSelectionValues() {
+    return new String[0];
+  }
 }

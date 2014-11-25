@@ -23,4 +23,9 @@ public class TodayFilter implements QueryFilter.SelectionFilter {
     selectionBuilder.append("'");
     return selectionBuilder.toString();
   }
+
+  @Override
+  public String[] getSelectionValues() {
+    return new String[0];
+  }
 }

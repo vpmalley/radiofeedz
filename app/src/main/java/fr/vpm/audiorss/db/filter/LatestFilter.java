@@ -8,4 +8,9 @@ public class LatestFilter implements QueryFilter.SelectionFilter {
   public String getSelectionQuery() {
     return "";
   }
+
+  @Override
+  public String[] getSelectionValues() {
+    return new String[0];
+  }
 }
