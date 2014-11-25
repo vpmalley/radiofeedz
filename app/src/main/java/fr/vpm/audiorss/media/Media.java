@@ -22,6 +22,7 @@ import android.widget.Toast;
 import junit.framework.Assert;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
@@ -227,7 +228,12 @@ public class Media implements Downloadable, Parcelable {
     FilePictureSaver pictureRetriever = new FilePictureSaver(context);
     File pictureFile = getMediaFile(context, folder);
     if (pictureFile.exists()){
-      b = pictureRetriever.retrieve(pictureFile);
+      try {
+        b = pictureRetriever.retrieve(pictureFile);
+      } catch (FileNotFoundException e) {
+        Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
+        Log.w("file", e.toString());
+      }
     } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {
       AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 300, context, folder);
       pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);

@@ -6,12 +6,14 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.TypedValue;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.persistence.FilePictureSaver;
 import fr.vpm.audiorss.persistence.PictureSaver;
 
@@ -29,6 +31,8 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
   private final int reqHeight; // in pixels
 
   private final Context context;
+
+  private Exception thrownException;
 
   /**
    * Whether the picture should be persisted in internal storage
@@ -52,10 +56,16 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
     if (media.length == 0) {
       throw new IllegalArgumentException("at least one picture url was expected.");
     }
-    String pictureUrl = media[0].getInetUrl();
-    Bitmap pictureBitmap = downloadBitmap(pictureUrl);
-    if (pictureBitmap != null) {
-      persistBitmap(media[0], pictureBitmap);
+    Bitmap pictureBitmap = null;
+    try {
+      String pictureUrl = media[0].getInetUrl();
+      pictureBitmap = downloadBitmap(pictureUrl);
+      if (pictureBitmap != null) {
+        persistBitmap(media[0], pictureBitmap);
+      }
+    } catch (IOException e){
+      thrownException = e;
+      Log.w("file", e.toString());
     }
     return pictureBitmap;
   }
@@ -65,7 +75,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
    * @param picture the Media for this picture
    * @param picBitmap the Bitmap downloaded
    */
-  private void persistBitmap(Media picture, Bitmap picBitmap) {
+  private void persistBitmap(Media picture, Bitmap picBitmap) throws IOException {
     PictureSaver persister = new FilePictureSaver(context);
     persister.persist(picture.getMediaFile(context, folder), picBitmap);
   }
@@ -76,7 +86,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
    * @return
    * @throws java.lang.IllegalArgumentException caused by a wrongly formatted url
    */
-  private Bitmap downloadBitmap(String pictureUrl) {
+  private Bitmap downloadBitmap(String pictureUrl) throws IOException {
     Bitmap pictureBitmap = null;
     InputStream pictureStream = null;
     if (pictureUrl.isEmpty()){
@@ -100,9 +110,6 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
       options.inSampleSize = inSampleSize * 2;
       options.inJustDecodeBounds = false;
       pictureBitmap = BitmapFactory.decodeStream(pictureStream, null, options);
-    } catch (IOException e) {
-      //throw new IllegalArgumentException("A well-formatted url was expected.");
-      Log.e("picture", e.getMessage());
     } finally {
       if (pictureStream != null) {
         try {
@@ -117,7 +124,9 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
 
   @Override
   protected void onPostExecute(Bitmap pictureBitmap) {
-    if (pictureBitmap != null) {
+    if (thrownException != null){
+      Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture), Toast.LENGTH_SHORT).show();
+    } else if (pictureBitmap != null) {
       for (PictureLoadedListener pictureLoadedListener : pictureLoadedListeners) {
         pictureLoadedListener.onPictureLoaded(pictureBitmap);
       }

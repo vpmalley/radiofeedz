@@ -3,6 +3,8 @@ package fr.vpm.audiorss.persistence;
 import android.graphics.Bitmap;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by vincent on 06/10/14.
@@ -15,7 +17,7 @@ public interface PictureSaver {
    * @param pictureFile the file used to save the picture
    * @return the picture if it exists
    */
-  Bitmap retrieve(File pictureFile);
+  Bitmap retrieve(File pictureFile) throws FileNotFoundException;
 
   /**
    * Persists a blog picture to be retrieved later
@@ -24,7 +26,7 @@ public interface PictureSaver {
    * @param picture picture to save
    * @return whether it has been persisted successfully
    */
-  boolean persist(File pictureFile, Bitmap picture);
+  boolean persist(File pictureFile, Bitmap picture) throws IOException;
 
   /**
    * Deletes a persisted picture

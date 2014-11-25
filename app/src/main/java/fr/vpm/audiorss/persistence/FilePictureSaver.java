@@ -5,15 +5,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import fr.vpm.audiorss.R;
 
 /**
  * Created by vincent on 06/10/14.
@@ -30,7 +27,7 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   @Override
-  public Bitmap retrieve(File pictureFile) {
+  public Bitmap retrieve(File pictureFile) throws FileNotFoundException {
     if (!pictureFile.exists()){
       return null;
     }
@@ -39,10 +36,6 @@ public class FilePictureSaver implements PictureSaver {
     try {
       pictureStream = new FileInputStream(pictureFile);
       pictureBitmap = BitmapFactory.decodeStream(pictureStream);
-    } catch (FileNotFoundException e) {
-      Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture),
-          Toast.LENGTH_SHORT).show();
-      Log.e("file", e.getMessage());
     } finally {
       if (pictureStream != null){
         try {
@@ -56,17 +49,11 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   @Override
-  public boolean persist(File pictureFile, Bitmap picture) {
+  public boolean persist(File pictureFile, Bitmap picture) throws IOException {
     boolean saved = false;
     if (isExternalStorageWritable()) {
       if (!pictureFile.exists()) {
-        try {
-          pictureFile.createNewFile();
-        } catch (IOException e) {
-          Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture),
-              Toast.LENGTH_SHORT).show();
-          Log.e("file", e.getMessage());
-        }
+        pictureFile.createNewFile();
       }
       // fill file
       FileOutputStream pictureFileOut = null;
@@ -74,16 +61,12 @@ public class FilePictureSaver implements PictureSaver {
         pictureFileOut = new FileOutputStream(pictureFile);
         picture.compress(Bitmap.CompressFormat.PNG, 100, pictureFileOut);
         saved = true;
-      } catch (IOException e) {
-        Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture), Toast.LENGTH_SHORT).show();
       } finally {
         if (pictureFileOut != null) {
           try {
             pictureFileOut.close();
           } catch (IOException e) {
-            Toast.makeText(context, context.getResources().getString(R.string.might_not_save_picture),
-                Toast.LENGTH_SHORT).show();
-            Log.e("file", e.getMessage());
+            Log.w("file", e.getMessage());
           }
         }
       }
