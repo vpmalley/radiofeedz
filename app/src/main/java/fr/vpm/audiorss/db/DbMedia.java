@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.db;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
@@ -42,6 +43,30 @@ public class DbMedia {
   public DbMedia(SQLiteDatabase db) {
     mDb = db;
   }
+
+  /**
+   * Specifically for usage when not through a DbRSSChannel, as the DB is opened by DbRSSChannel.
+   * The DB must be closed with a call to closeDb() once all operations are run.
+   * @param context The current Android context
+   * @param writable whether the operations run after this call will write to the DB
+   */
+  public DbMedia(Context context, boolean writable){
+    DatabaseOpenHelper dbHelper = new DatabaseOpenHelper(context);
+    if (writable){
+      mDb = dbHelper.getWritableDatabase();
+    } else {
+      mDb = dbHelper.getReadableDatabase();
+    }
+  }
+
+  /**
+   * Closes the DB once all operations are run. Must be call if and only if the
+   * constructor DbMedia(Context, boolean) has been called.
+   */
+  public void closeDb() {
+    mDb.close();
+  }
+
 
   public Media readById(long id) throws ParseException {
     Media media = null;

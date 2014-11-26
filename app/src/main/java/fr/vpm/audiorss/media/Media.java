@@ -26,10 +26,12 @@ import java.io.FileNotFoundException;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.db.AsyncDbSaveMedia;
 import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.persistence.FilePictureSaver;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 
 public class Media implements Downloadable, Parcelable {
 
@@ -185,13 +187,24 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public boolean isPodcastDownloaded(Context context, boolean forceCheck){
-    if (isPodcastDownloaded == null){
-
+    if ((isPodcastDownloaded == null) || (forceCheck)) {
       Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
       if (getMimeType().startsWith("image")){
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
       isPodcastDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
+      isDownloaded = isPodcastDownloaded;
+      new AsyncDbSaveMedia(new AsyncCallbackListener<List<Media>>() {
+        @Override
+        public void onPreExecute() {
+          // do nothing
+        }
+
+        @Override
+        public void onPostExecute(List<Media> result) {
+          // do nothing
+        }
+      }, context);
     }
     return isPodcastDownloaded;
   }
