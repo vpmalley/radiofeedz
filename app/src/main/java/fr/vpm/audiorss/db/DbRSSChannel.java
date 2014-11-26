@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,9 +239,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       }
     }
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
-    Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
-        filter.getSelectionQuery(), filter.getSelectionValues(), null, null,
-        ordering, limit);
+    Cursor itemsC = queryItems(filter, limit, ordering);
     itemsC.moveToFirst();
     for (int i = 0; i < itemsC.getCount(); i++) {
       RSSItem item = itemFromCursor(itemsC);
@@ -248,6 +248,30 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
     itemsC.close();
     return items;
+  }
+
+  private Cursor queryItems(ConjunctionFilter filter, String limit, String ordering) {
+    StringBuilder rawQueryBuilder = new StringBuilder();
+    rawQueryBuilder.append("SELECT ");
+    rawQueryBuilder.append(StringUtils.join(DatabaseOpenHelper.COLS_RSS_ITEM, ','));
+    rawQueryBuilder.append(" FROM ");
+    rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
+    rawQueryBuilder.append(", ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+    rawQueryBuilder.append(" WHERE ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+    rawQueryBuilder.append("._ID=");
+    rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(RSSItem.MEDIA_ID_KEY);
+    rawQueryBuilder.append(" AND ");
+    rawQueryBuilder.append(filter.getSelectionQuery());
+    rawQueryBuilder.append(" ORDER BY ");
+    rawQueryBuilder.append(ordering);
+    rawQueryBuilder.append(" LIMIT ");
+    rawQueryBuilder.append(limit);
+    Cursor c = mDb.rawQuery(rawQueryBuilder.toString(), filter.getSelectionValues());
+    return c;
   }
 
   RSSItem itemFromCursor(Cursor c) throws ParseException {
