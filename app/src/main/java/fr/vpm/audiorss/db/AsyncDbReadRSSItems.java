@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.ItemComparator;
@@ -30,13 +31,13 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
 
   private final DbRSSChannel dbUpdater;
 
-  private final QueryFilter filter;
+  private final List<QueryFilter.SelectionFilter> filters;
 
-  public AsyncDbReadRSSItems(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context, QueryFilter filter) {
+  public AsyncDbReadRSSItems(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context, List<QueryFilter.SelectionFilter> filters) {
     this.context = context;
     this.dbUpdater = new DbRSSChannel(context, false);
     this.asyncCallbackListener = asyncCallbackListener;
-    this.filter = filter;
+    this.filters = filters;
     asyncCallbackListener.onPreExecute();
   }
 
@@ -45,10 +46,10 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
     Map<String, RSSItem> rssItems = new HashMap<String, RSSItem>();
     try {
       if (0 == channelIds.length) {
-        rssItems.putAll(dbUpdater.readItems(RSSItem.ARCHIVED_KEY + "=0", null, false, filter));
+        rssItems.putAll(dbUpdater.readItems(false, filters));
       } else {
         for (long channelId : channelIds){
-          rssItems.putAll(dbUpdater.readItemsByChannelId(channelId, false, filter));
+          rssItems.putAll(dbUpdater.readItemsByChannelId(channelId, false, filters));
         }
       }
     } catch (ParseException e) {

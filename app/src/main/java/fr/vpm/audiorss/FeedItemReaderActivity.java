@@ -10,6 +10,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
@@ -21,6 +25,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 public class FeedItemReaderActivity extends FragmentActivity implements FeedsActivity<RSSItemArrayAdapter> {
 
   public static final String INITIAL_POSITION = "initial_position";
+  public static final String ITEM_FILTER = "item_position";
 
   private DataModel dataModel;
 
@@ -50,6 +55,16 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, R.layout.list_rss_item);
+    if (i.hasExtra(ITEM_FILTER)) {
+      ArrayList<Integer> filterPositions = i.getIntegerArrayListExtra(ITEM_FILTER);
+      List<QueryFilter> filters = new ArrayList<QueryFilter>();
+      for (int filterPosition : filterPositions){
+        filters.add(QueryFilter.fromPosition(filterPosition));
+      }
+      if (!filters.isEmpty()) {
+        dataModel.filterData(filters);
+      }
+    }
     dataModel.loadData();
 
     viewPager = (ViewPager) findViewById(R.id.pager);

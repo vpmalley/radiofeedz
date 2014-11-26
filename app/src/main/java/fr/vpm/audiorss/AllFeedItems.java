@@ -16,6 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
@@ -89,7 +92,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        dataModel.filterData(QueryFilter.fromPosition(position));
+        List<QueryFilter> filters = new ArrayList<QueryFilter>();
+        filters.add(QueryFilter.fromPosition(position));
+        dataModel.filterData(filters);
         drawerLayout.closeDrawer(drawerList);
       }
     });

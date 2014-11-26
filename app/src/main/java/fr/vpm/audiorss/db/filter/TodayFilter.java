@@ -12,6 +12,11 @@ import fr.vpm.audiorss.rss.RSSItem;
 public class TodayFilter implements QueryFilter.SelectionFilter {
 
   @Override
+  public int index() {
+    return QueryFilter.TODAY.index();
+  }
+
+  @Override
   public String getSelectionQuery() {
     StringBuilder selectionBuilder = new StringBuilder();
     selectionBuilder.append(RSSItem.DATE_TAG);

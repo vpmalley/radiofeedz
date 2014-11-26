@@ -76,7 +76,6 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
     TextView description = (TextView) readerView.findViewById(R.id.description);
 
     if (rssItem != null) {
-      //getActivity().setTitle(rssItem.getTitle());
       title.setText(rssItem.getTitle());
 
       SimpleDateFormat datePrinter = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN);
@@ -117,22 +116,34 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
 
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
-    super.setUserVisibleHint(isVisibleToUser);
-    if ((isVisibleToUser) && (rssItem != null) && (!rssItem.isRead())) {
-      rssItem.setRead(true);
-      new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
-        @Override
-        public void onPreExecute() {
-          // do nothing
-        }
-
-        @Override
-        public void onPostExecute(List<RSSItem> result) {
-          // do nothing
-        }
-      },
-              getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItem);
+    if ((rssItem != null) && (!rssItem.isRead())) {
+      if (isVisibleToUser || getUserVisibleHint()) {
+        markAsRead();
+      }
     }
+    super.setUserVisibleHint(isVisibleToUser);
+  }
+
+  @Override
+  public void onStop() {
+    markAsRead();
+    super.onStop();
+  }
+
+  private void markAsRead() {
+    rssItem.setRead(true);
+    new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
+      @Override
+      public void onPreExecute() {
+        // do nothing
+      }
+
+      @Override
+      public void onPostExecute(List<RSSItem> result) {
+        // do nothing
+      }
+    },
+            getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItem);
   }
 
   @Override

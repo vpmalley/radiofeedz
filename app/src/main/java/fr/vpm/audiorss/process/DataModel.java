@@ -69,9 +69,9 @@ public interface DataModel {
   /**
    * Filters the elements based on passed filter and reloads the data from the DB
    *
-   * @param filter the filter to apply on the DB query
+   * @param filters the filter to apply on the DB query
    */
-  void filterData(QueryFilter filter);
+  void filterData(List<QueryFilter> filters);
 
   /**
    * The number of elements in this structure

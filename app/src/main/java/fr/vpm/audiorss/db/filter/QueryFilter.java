@@ -6,16 +6,19 @@ package fr.vpm.audiorss.db.filter;
  * Created by vince on 23/11/14.
  */
 public enum QueryFilter {
-  LATEST(new LatestFilter()),
-  TODAY(new TodayFilter()),
-  UNREAD(new UnreadFilter()),
-  DOWNLOADED(new LatestFilter()),
-  ARCHIVED(new LatestFilter());
+  LATEST(new EmptyFilter(), 0),
+  TODAY(new TodayFilter(), 1),
+  UNREAD(new UnreadFilter(), 2),
+  DOWNLOADED(new EmptyFilter(), 3),
+  ARCHIVED(new EmptyFilter(), 4);
 
-  private SelectionFilter selectionFilter;
+  private final int index;
 
-  QueryFilter(SelectionFilter filter){
+  private final SelectionFilter selectionFilter;
+
+  QueryFilter(SelectionFilter filter, int index){
     this.selectionFilter = filter;
+    this.index = index;
   }
 
   /**
@@ -44,7 +47,22 @@ public enum QueryFilter {
     return selectionFilter;
   }
 
+  /**
+   * Retrieves the index identifying the filter
+   * @return index identifying the filter
+   */
+  int index(){
+    return index;
+  }
+
   public interface SelectionFilter {
+
+    /**
+     * Retrieves the index identifying the filter
+     * @return index identifying the filter
+     */
+    int index();
+
     /**
      * Gives the selection query to put in an Android query call
      * @return

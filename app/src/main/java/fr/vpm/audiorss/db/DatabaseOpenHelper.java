@@ -21,7 +21,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
   static final String ITEM_ID_KEY = "item_id";
 
-  static final String CHANNEL_ID_KEY = "channel_id";
+  public static final String CHANNEL_ID_KEY = "channel_id";
 
   final static String[] COLS_RSS_CHANNEL_ITEM = {_ID, CHANNEL_ID_KEY, ITEM_ID_KEY};
 

@@ -30,6 +30,7 @@ import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
@@ -68,7 +69,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Long[] channelIds;
 
-  private QueryFilter filter;
+  private List<QueryFilter.SelectionFilter> itemFilters = new ArrayList<QueryFilter.SelectionFilter>();
+
+  private List<QueryFilter.SelectionFilter> channelFilters = new ArrayList<QueryFilter.SelectionFilter>();
 
   private int resource;
 
@@ -79,6 +82,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.activity = activity;
     this.channelIds = channelIds;
     this.resource = resId;
+    this.itemFilters.add(new UnArchivedFilter());
   }
 
   @Override
@@ -97,7 +101,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromItems() {
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
-    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), filter);
+    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), itemFilters);
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
   }
@@ -237,8 +241,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public void filterData(QueryFilter filter) {
-    this.filter = filter;
+  public void filterData(List<QueryFilter> filters) {
+    this.itemFilters.clear();
+    if (!filters.contains(QueryFilter.ARCHIVED)){
+      this.itemFilters.add(new UnArchivedFilter());
+    }
+    for (QueryFilter filter : filters){
+      this.itemFilters.add(filter.getFilter());
+    }
     loadData();
   }
 
@@ -252,11 +262,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
-      RSSItem rssItem = items.get(position);
-      if (!rssItem.isRead()) {
-        rssItem.setRead(true);
-        saveItems(rssItem);
-      }
       i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, position);
       long[] chIds = new long[channelIds.length];
       int j = 0;
@@ -264,6 +269,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         chIds[j++] = chId;
       }
       i.putExtra(AllFeedItems.CHANNEL_ID, chIds);
+      if (!itemFilters.isEmpty()){
+        ArrayList<Integer> filterPositions = new ArrayList<Integer>();
+        for (QueryFilter.SelectionFilter itemFilter : itemFilters){
+          if (itemFilter.index() > -1) {
+            filterPositions.add(itemFilter.index());
+          }
+        }
+        i.putIntegerArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, filterPositions);
+      }
       activity.startActivityForResult(i, REQ_ITEM_READ);
     }
 

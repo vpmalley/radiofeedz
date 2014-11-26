@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import fr.vpm.audiorss.db.filter.ChannelFilter;
+import fr.vpm.audiorss.db.filter.ConjunctionFilter;
 import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -65,7 +67,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems, null);
+        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems, new ArrayList<QueryFilter.SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -81,7 +83,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems, null);
+        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems, new ArrayList<QueryFilter.SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -91,14 +93,14 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   public List<RSSChannel> readAll(boolean readItems) throws ParseException {
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, null, null, null, null,
-        RSSChannel.TITLE_TAG);
+            RSSChannel.TITLE_TAG);
     List<RSSChannel> channels = new ArrayList<RSSChannel>();
     c.moveToFirst();
     for (int i = 0; i < c.getCount(); i++) {
       long id = c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID));
       RSSChannel channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, false, null);
+        Map<String, RSSItem> items = readItemsByChannelId(id, false, new ArrayList<QueryFilter.SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
       channels.add(channel);
@@ -124,7 +126,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     ContentValues channelValues = createContentValues(existingChannel);
     channelValues.put(DatabaseOpenHelper._ID, existingChannel.getId());
     mDb.update(T_RSS_CHANNEL, channelValues, DatabaseOpenHelper._ID + "=?",
-        new String[]{String.valueOf(existingChannel.getId())});
+            new String[]{String.valueOf(existingChannel.getId())});
 
     for (RSSItem item : existingChannel.getItems()) {
       addOrUpdate(item, existingChannel.getId());
@@ -219,19 +221,13 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channel;
   }
 
-  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems, QueryFilter filter) throws ParseException {
-    String deletedCondition = "";
-    if (!readAllItems){
-      deletedCondition = " AND " + RSSItem.ARCHIVED_KEY + "=0";
-    }
-    return readItems(DatabaseOpenHelper.CHANNEL_ID_KEY + "=?" + deletedCondition,
-        new String[]{String.valueOf(id)}, readAllItems, filter);
+  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems, List<QueryFilter.SelectionFilter> filters) throws ParseException {
+    filters.add(new ChannelFilter(id));
+    return readItems(readAllItems, filters);
   }
 
-  Map<String, RSSItem> readItems(String selectionQuery, String[] selectionValues, boolean readAll, QueryFilter filter) throws ParseException {
-    if ((filter != null) && (!filter.getFilter().getSelectionQuery().isEmpty())) {
-      selectionQuery += " AND " + filter.getFilter().getSelectionQuery();
-    }
+  Map<String, RSSItem> readItems(boolean readAll, List<QueryFilter.SelectionFilter> filters) throws ParseException {
+    ConjunctionFilter filter = new ConjunctionFilter(filters);
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String limit = null;
     if (!readAll) {
@@ -242,7 +238,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = mDb.query(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.COLS_RSS_ITEM,
-        selectionQuery, selectionValues, null, null,
+        filter.getSelectionQuery(), filter.getSelectionValues(), null, null,
         ordering, limit);
     itemsC.moveToFirst();
     for (int i = 0; i < itemsC.getCount(); i++) {

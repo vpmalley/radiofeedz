@@ -129,7 +129,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
-  public void filterData(QueryFilter filter) {
+  public void filterData(List<QueryFilter> filters) {
     // do nothing
   }
 
