@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -244,9 +245,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public void filterData(List<QueryFilter> filters) {
     this.itemFilters.clear();
     if (!filters.contains(QueryFilter.ARCHIVED)){
+      Log.d("filters", "unarchived");
       this.itemFilters.add(new UnArchivedFilter());
     }
     for (QueryFilter filter : filters){
+      Log.d("filters", filter.name());
       this.itemFilters.add(filter.getFilter());
     }
     loadData();

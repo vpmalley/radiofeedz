@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,20 +30,20 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   private static final String COMMA = ",";
   final static String T_RSS_CHANNEL = "rsschannel";
   final static String[] COLS_RSS_CHANNEL = {DatabaseOpenHelper._ID, RSSChannel.CAT_TAG,
-      RSSChannel.DATE_TAG, RSSChannel.DESC_TAG, RSSChannel.IMAGE_TAG, RSSChannel.LINK_TAG, RSSChannel.IMAGE_ID_TAG,
-      RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY};
+          RSSChannel.DATE_TAG, RSSChannel.DESC_TAG, RSSChannel.IMAGE_TAG, RSSChannel.LINK_TAG, RSSChannel.IMAGE_ID_TAG,
+          RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY};
 
   final static String T_CREATE_RSS_CHANNEL = "CREATE TABLE " + T_RSS_CHANNEL + " ("
-      + DatabaseOpenHelper._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + RSSChannel.CAT_TAG
-      + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.DATE_TAG + " TEXT" + COMMA
-      + RSSChannel.DESC_TAG + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.IMAGE_TAG
-      + " TEXT" + COMMA + RSSChannel.LINK_TAG
-      + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.IMAGE_ID_TAG
-      + " INTEGER" + COMMA + RSSChannel.LOCAL_IMAGE_TAG
-      + " TEXT" + COMMA + RSSChannel.TAGS_KEY
-      + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.TITLE_TAG
-      + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.URL_KEY
-      + DatabaseOpenHelper.TEXT_COLUMN + ")";
+          + DatabaseOpenHelper._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + RSSChannel.CAT_TAG
+          + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.DATE_TAG + " TEXT" + COMMA
+          + RSSChannel.DESC_TAG + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.IMAGE_TAG
+          + " TEXT" + COMMA + RSSChannel.LINK_TAG
+          + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.IMAGE_ID_TAG
+          + " INTEGER" + COMMA + RSSChannel.LOCAL_IMAGE_TAG
+          + " TEXT" + COMMA + RSSChannel.TAGS_KEY
+          + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.TITLE_TAG
+          + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.URL_KEY
+          + DatabaseOpenHelper.TEXT_COLUMN + ")";
 
   private DatabaseOpenHelper mDbHelper;
 
@@ -64,7 +65,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   public RSSChannel readById(long id, boolean readItems, boolean readAllItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?",
-        new String[]{String.valueOf(id)}, null, null, null);
+            new String[]{String.valueOf(id)}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
@@ -80,7 +81,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   public RSSChannel readByUrl(String url, boolean readItems, boolean readAllItems) throws ParseException {
     RSSChannel channel = null;
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, RSSChannel.URL_KEY + "=?",
-        new String[]{url}, null, null, null);
+            new String[]{url}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
@@ -189,7 +190,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     if (item.getDbId() > -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());
       mDb.update(DatabaseOpenHelper.T_RSS_ITEM, itemValues, DatabaseOpenHelper._ID + "=?",
-          new String[]{String.valueOf(item.getDbId())});
+              new String[]{String.valueOf(item.getDbId())});
     } else {
       long id = mDb.insert(DatabaseOpenHelper.T_RSS_ITEM, null, itemValues);
       item.setDbId(id);
@@ -200,7 +201,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   public void deleteById(long id) {
     mDb.delete(T_RSS_CHANNEL, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
     mDb.delete(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper.CHANNEL_ID_KEY + "=?",
-        new String[]{String.valueOf(id)});
+            new String[]{String.valueOf(id)});
   }
 
   RSSChannel channelFromCursorEntry(Cursor c) throws ParseException {
@@ -240,11 +241,13 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Cursor itemsC = queryItems(filter, limit, ordering);
-    itemsC.moveToFirst();
-    for (int i = 0; i < itemsC.getCount(); i++) {
-      RSSItem item = itemFromCursor(itemsC);
-      items.put(item.getId(), item);
-      itemsC.moveToNext();
+    if (itemsC.getCount() > 0) {
+      itemsC.moveToFirst();
+      for (int i = 0; i < itemsC.getCount(); i++) {
+        RSSItem item = itemFromCursor(itemsC);
+        items.put(item.getId(), item);
+        itemsC.moveToNext();
+      }
     }
     itemsC.close();
     return items;
@@ -264,12 +267,15 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
     rawQueryBuilder.append(".");
     rawQueryBuilder.append(RSSItem.MEDIA_ID_KEY);
-    rawQueryBuilder.append(" AND ");
+    if (!filter.getSelectionQuery().isEmpty()) {
+      rawQueryBuilder.append(" AND ");
+    }
     rawQueryBuilder.append(filter.getSelectionQuery());
     rawQueryBuilder.append(" ORDER BY ");
     rawQueryBuilder.append(ordering);
     rawQueryBuilder.append(" LIMIT ");
     rawQueryBuilder.append(limit);
+    Log.d("filters", rawQueryBuilder.toString());
     Cursor c = mDb.rawQuery(rawQueryBuilder.toString(), filter.getSelectionValues());
     return c;
   }
@@ -291,7 +297,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     long channelId = c.getLong(c.getColumnIndex(DatabaseOpenHelper.CHANNEL_ID_KEY));
     Media media = new DbMedia(mDb).readById(mediaId);
     RSSItem item = new RSSItem(channelTitle, title, link, description, authorAddress, category,
-        comments, media, guid, pubDate, isRead, channelId, isDeleted);
+            comments, media, guid, pubDate, isRead, channelId, isDeleted);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     return item;
   }

@@ -29,5 +29,7 @@
         <item>@string/drawer_latest</item>
         <item>@string/drawer_today</item>
         <item>@string/drawer_unread</item>
+        <item>@string/drawer_downloaded</item>
+        <item>@string/drawer_archived</item>
     </string-array>
 </resources>

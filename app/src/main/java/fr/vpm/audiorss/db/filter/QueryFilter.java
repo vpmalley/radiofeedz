@@ -9,8 +9,8 @@ public enum QueryFilter {
   LATEST(new EmptyFilter(), 0),
   TODAY(new TodayFilter(), 1),
   UNREAD(new UnreadFilter(), 2),
-  DOWNLOADED(new EmptyFilter(), 3),
-  ARCHIVED(new EmptyFilter(), 4);
+  DOWNLOADED(new DownloadedFilter(), 3),
+  ARCHIVED(new ArchivedFilter(), 4);
 
   private final int index;
 

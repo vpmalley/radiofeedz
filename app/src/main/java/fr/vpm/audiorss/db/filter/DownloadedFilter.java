@@ -1,20 +1,20 @@
 package fr.vpm.audiorss.db.filter;
 
-import fr.vpm.audiorss.rss.RSSItem;
+import fr.vpm.audiorss.db.DbMedia;
 
 /**
  * Created by vince on 23/11/14.
  */
-public class ArchivedFilter implements QueryFilter.SelectionFilter {
+public class DownloadedFilter implements QueryFilter.SelectionFilter {
 
   @Override
   public int index() {
-    return QueryFilter.ARCHIVED.index();
+    return QueryFilter.DOWNLOADED.index();
   }
 
   @Override
   public String getSelectionQuery() {
-    return RSSItem.ARCHIVED_KEY + "<>0";
+    return DbMedia.T_MEDIA + "." + DbMedia.IS_DL_KEY + ">0";
   }
 
   @Override
