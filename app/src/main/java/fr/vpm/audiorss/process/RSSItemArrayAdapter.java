@@ -110,17 +110,14 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
     List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-    Bitmap channelBitmap = null;
+    Bitmap bm = null;
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(getContext(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
-      if (itemBitmap != null){
-        itemHolder.pictureView.setImageBitmap(itemBitmap);
-      }
+      bm = rssItem.getMedia().getAsBitmap(getContext(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
     } else if (rssChannel != null){
-      channelBitmap = rssChannel.getBitmap(getContext(), listeners);
-      if (channelBitmap != null){
-        itemHolder.pictureView.setImageBitmap(channelBitmap);
-      }
+      bm = rssChannel.getBitmap(getContext(), listeners);
+    }
+    if (bm != null) {
+      itemHolder.pictureView.setImageBitmap(bm);
     } else {
       itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
     }
