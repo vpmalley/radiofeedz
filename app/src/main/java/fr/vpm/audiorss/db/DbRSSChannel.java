@@ -232,7 +232,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   Map<String, RSSItem> readItems(boolean readAll, List<QueryFilter.SelectionFilter> filters) throws ParseException {
     ConjunctionFilter filter = new ConjunctionFilter(filters);
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
-    String limit = null;
+    String limit = "80";
     if (!readAll) {
       limit = sharedPrefs.getString("pref_disp_max_items", "80");
       if (!Pattern.compile("\\d+").matcher(limit).matches()){
@@ -256,14 +256,14 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   private Cursor queryItems(ConjunctionFilter filter, String limit, String ordering) {
     StringBuilder rawQueryBuilder = new StringBuilder();
     rawQueryBuilder.append("SELECT ");
-    rawQueryBuilder.append(StringUtils.join(DatabaseOpenHelper.COLS_RSS_ITEM, ','));
+    rawQueryBuilder.append(StringUtils.join(DatabaseOpenHelper.COLS_RSS_ITEM, ", "));
     rawQueryBuilder.append(" FROM ");
     rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
     rawQueryBuilder.append(", ");
     rawQueryBuilder.append(DbMedia.T_MEDIA);
     rawQueryBuilder.append(" WHERE ");
     rawQueryBuilder.append(DbMedia.T_MEDIA);
-    rawQueryBuilder.append("._ID=");
+    rawQueryBuilder.append("._id=");
     rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
     rawQueryBuilder.append(".");
     rawQueryBuilder.append(RSSItem.MEDIA_ID_KEY);
@@ -271,10 +271,14 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       rawQueryBuilder.append(" AND ");
     }
     rawQueryBuilder.append(filter.getSelectionQuery());
-    rawQueryBuilder.append(" ORDER BY ");
-    rawQueryBuilder.append(ordering);
-    rawQueryBuilder.append(" LIMIT ");
-    rawQueryBuilder.append(limit);
+    if (ordering != null) {
+      rawQueryBuilder.append(" ORDER BY ");
+      rawQueryBuilder.append(ordering);
+    }
+    if (limit != null) {
+      rawQueryBuilder.append(" LIMIT ");
+      rawQueryBuilder.append(limit);
+    }
     Log.d("filters", rawQueryBuilder.toString());
     Cursor c = mDb.rawQuery(rawQueryBuilder.toString(), filter.getSelectionValues());
     return c;
