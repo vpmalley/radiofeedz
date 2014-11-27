@@ -16,7 +16,7 @@ All your podcasts/news are in your pocket to listen, read, watch anytime, on the
 
 ## How do I find these "RSS feeds" ?
 
-Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon ![RSS feed icon, from Wikimedia, uploaded by user Anomie](https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png =30x30), for podcasts, ...).
+Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon ![RSS feed icon, from Wikimedia, uploaded by user Anomie][rss-icon-wiki], for podcasts, ...).
 
 Once you find one of these feeds, copy the url to the RSS feed, then open your app and press the action button + at the top-right of the main screen. It is going to suggest you to add this feed. Press Yes and enjoy your podcasts and news!
 
@@ -36,6 +36,6 @@ I tried to test my app as I could, but I probably forgot some bugs. Do not hesit
 
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
-[rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png =30x30
+[rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
 [rss-wiki]: https://en.wikipedia.org/wiki/File:Feed-icon.svg
 [anomie-wiki]: https://en.wikipedia.org/wiki/User:Anomie
