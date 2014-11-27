@@ -36,6 +36,6 @@ I tried to test my app as I could, but I probably forgot some bugs. Do not hesit
 
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
-[rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
+[rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png =30x30
 [rss-wiki]: https://en.wikipedia.org/wiki/File:Feed-icon.svg
 [anomie-wiki]: https://en.wikipedia.org/wiki/User:Anomie
