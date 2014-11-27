@@ -204,7 +204,7 @@ public class Media implements Downloadable, Parcelable {
         public void onPostExecute(List<Media> result) {
           // do nothing
         }
-      }, context);
+      }, context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }
     return isPodcastDownloaded;
   }
