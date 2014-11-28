@@ -11,7 +11,9 @@ import android.support.v4.view.ViewPager;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.vpm.audiorss.db.filter.QueryFilter;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
@@ -68,7 +70,6 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     dataModel.loadData();
 
     viewPager = (ViewPager) findViewById(R.id.pager);
-
   }
 
   @Override
@@ -76,6 +77,11 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(rssItemAdapter);
     viewPager.setCurrentItem(initialPosition);
+
+    // trick to mark the picked item as read at the right time
+    Set<Integer> read = new HashSet<Integer>();
+    read.add(initialPosition);
+    dataModel.markDataRead(read, true);
   }
 
   @Override

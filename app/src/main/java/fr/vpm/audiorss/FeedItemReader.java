@@ -117,17 +117,11 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
   @Override
   public void setUserVisibleHint(boolean isVisibleToUser) {
     if ((rssItem != null) && (!rssItem.isRead())) {
-      if (isVisibleToUser || getUserVisibleHint()) {
+      if (isVisibleToUser) {
         markAsRead();
       }
     }
     super.setUserVisibleHint(isVisibleToUser);
-  }
-
-  @Override
-  public void onStop() {
-    markAsRead();
-    super.onStop();
   }
 
   private void markAsRead() {
