@@ -31,7 +31,7 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
     progressListener.stopRefreshProgress();
     dataModel.setItemsAndBuildModel(result);
     if (dataModel.isReady()) {
-      dataModel.refreshView(true);
+      dataModel.refreshView();
     }
   }
 }

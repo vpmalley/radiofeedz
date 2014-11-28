@@ -170,7 +170,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
       dataModel.loadData();
     } else if (REQ_PREFS == requestCode){
-      dataModel.refreshView(true);
+      dataModel.refreshView();
     }
   }
 }

@@ -34,13 +34,13 @@ public class ChannelRefreshViewCallback implements AsyncCallbackListener<List<RS
     progressListener.stopRefreshProgress();
     dataModel.setChannelsAndBuildModel(result);
     if (dataModel.isReady()) {
-      dataModel.refreshView(true);
+      dataModel.refreshView();
     }
   }
 
   @Override
   public void onPictureLoaded(Bitmap pictureBitmap) {
-    dataModel.refreshView(false);
+    dataModel.refreshView();
   }
 
 }

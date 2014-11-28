@@ -24,9 +24,8 @@ public interface DataModel {
 
   /**
    * Refreshes the view based on activityś data
-   * @param recreate whether the adapter for the list should be recreated or invalidated
    */
-  void refreshView(boolean recreate);
+  void refreshView();
 
   /**
    * Retrieves the Context bound with this Activity

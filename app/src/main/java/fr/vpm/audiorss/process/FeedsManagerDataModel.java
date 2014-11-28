@@ -61,7 +61,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
-  public void refreshView(boolean recreate) {
+  public void refreshView() {
     RSSChannelArrayAdapter feedAdapter = new RSSChannelArrayAdapter(activity, R.layout.list_rss_feeds,
         feeds);
     feedsActivity.refreshView(feedAdapter);

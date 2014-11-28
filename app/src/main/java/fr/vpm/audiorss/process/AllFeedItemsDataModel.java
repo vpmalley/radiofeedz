@@ -76,6 +76,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private int resource;
 
+  /**
+   * Whether the view should be recreated when refreshed
+   */
+  private boolean recreate = false;
+
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
           feedsActivity, Long[] channelIds, int resId) {
     this.progressListener = progressListener;
@@ -114,12 +119,18 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void setChannelsAndBuildModel(List<RSSChannel> channels) {
+    if (channels.size() != this.feeds.size()){
+      recreate = true;
+    }
     this.feeds = channels;
     buildChannelsByItem();
   }
 
   @Override
   public void setItemsAndBuildModel(List<RSSItem> items) {
+    if (items.size() != this.items.size()){
+      recreate = true;
+    }
     this.items = items;
     buildChannelsByItem();
   }
@@ -137,23 +148,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
   }
 
-  /**
-   * Using the number of items in the set and the maximum of items displayed in the preferences, determines the maximum of items to display.
-   *
-   * @param allItems the set of available items
-   * @return the number of items to display
-   */
-  private int getNbDisplayedItems(SharedPreferences sharedPref, SortedSet<RSSItem> allItems) {
-    // preparing the number of items to display
-    int maxItems = Integer.valueOf(sharedPref.getString(PREF_DISP_MAX_ITEMS, String.valueOf(DEFAULT_MAX_ITEMS)));
-    return Math.min(allItems.size(), maxItems);
-  }
-
   @Override
-  public synchronized void refreshView(boolean recreate) {
+  public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
       feedsActivity.refreshView(rssItemAdapter);
+      recreate = false;
     } else {
       rssItemAdapter.setItems(items);
       rssItemAdapter.setChannelsByItem(channelsByItem);
