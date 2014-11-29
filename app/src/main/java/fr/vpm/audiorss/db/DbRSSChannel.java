@@ -189,6 +189,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
     if (item.getDbId() > -1) {
       itemValues.put(DatabaseOpenHelper._ID, item.getDbId());
+
       mDb.update(DatabaseOpenHelper.T_RSS_ITEM, itemValues, DatabaseOpenHelper._ID + "=?",
               new String[]{String.valueOf(item.getDbId())});
     } else {

@@ -137,7 +137,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
         // do nothing
       }
     },
-            getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItem);
+            getActivity()).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, rssItem);
   }
 
   @Override
@@ -257,7 +257,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
         }
       }
     }, getActivity()).executeOnExecutor(AsyncTask
-            .THREAD_POOL_EXECUTOR, rssItem);
+            .SERIAL_EXECUTOR, rssItem);
   }
 
   private void openWebsite() {

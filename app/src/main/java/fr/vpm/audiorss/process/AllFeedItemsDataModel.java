@@ -102,14 +102,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         new ChannelRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
+    asyncDbReader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, channelIds);
   }
 
   public void loadDataFromItems() {
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), itemFilters);
     // read all RSS items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
+    asyncDbReader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, channelIds);
   }
 
   @Override
@@ -227,7 +227,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private void saveItems(RSSItem... itemsToSave) {
     new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this),
-            getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
+            getContext()).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, itemsToSave);
   }
 
   @Override

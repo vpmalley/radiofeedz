@@ -105,7 +105,7 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
     for (int position : selection) {
       feedsToDelete[i++] = feeds.get(position);
     }
-    feedDeletion.execute(feedsToDelete);
+    feedDeletion.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, feedsToDelete);
   }
 
   @Override
