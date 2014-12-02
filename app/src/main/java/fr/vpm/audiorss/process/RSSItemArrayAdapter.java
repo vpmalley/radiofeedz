@@ -99,7 +99,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder.iconView1.setVisibility(View.INVISIBLE);
     }
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPodcastDownloaded(getContext(), false))) {
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isDownloaded(getContext(), false))) {
       itemHolder.iconView2.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);

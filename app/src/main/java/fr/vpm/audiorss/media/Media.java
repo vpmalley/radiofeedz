@@ -68,9 +68,7 @@ public class Media implements Downloadable, Parcelable {
 
   private long downloadId;
 
-  private boolean isDownloaded = false;
-
-  private Boolean isPodcastDownloaded = null;
+  private boolean isDownloaded;
 
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
@@ -186,14 +184,19 @@ public class Media implements Downloadable, Parcelable {
     return new File(dirFile, getFileName());
   }
 
-  public boolean isPodcastDownloaded(Context context, boolean forceCheck){
-    if ((isPodcastDownloaded == null) || (forceCheck)) {
+  /**
+   * Determines whether the media is downloaded and available for play/display on the device
+   * @param context the current Android context
+   * @param forceCheck whether to actually check for the file existence (set to true when state is expected to change)
+   * @return whether the file is downloaded
+   */
+  public boolean isDownloaded(Context context, boolean forceCheck){
+    if (forceCheck) {
       Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
       if (getMimeType().startsWith("image")){
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
-      isPodcastDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
-      isDownloaded = isPodcastDownloaded;
+      isDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
       new AsyncDbSaveMedia(new AsyncCallbackListener<List<Media>>() {
         @Override
         public void onPreExecute() {
@@ -206,7 +209,7 @@ public class Media implements Downloadable, Parcelable {
         }
       }, context).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
     }
-    return isPodcastDownloaded;
+    return isDownloaded;
   }
 
   private boolean checkNetwork(int networkFlags, Context context) {

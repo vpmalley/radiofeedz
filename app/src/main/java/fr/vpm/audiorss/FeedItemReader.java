@@ -88,6 +88,11 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
       }
       description.setText(Html.fromHtml(rssItem.getDescription()));
       description.setMovementMethod(LinkMovementMethod.getInstance());
+
+      // check the media exists
+      if (rssItem.getMedia() != null) {
+        rssItem.getMedia().isDownloaded(getActivity(), true);
+      }
     }
     if (channel != null) {
       channelTitle.setText(channel.getTitle());
@@ -220,7 +225,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
       if (mediaFile.exists()){
         mediaFile.delete();
       }
-      rssItem.getMedia().isPodcastDownloaded(getActivity(), true);
+      rssItem.getMedia().isDownloaded(getActivity(), true);
     }
   }
 
