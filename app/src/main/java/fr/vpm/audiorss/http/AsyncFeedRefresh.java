@@ -3,6 +3,7 @@ package fr.vpm.audiorss.http;
 import java.io.IOException;
 import java.text.ParseException;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -48,7 +49,13 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
       Log.d("refresh", "received resp " + resp.getStatusLine().toString());
     } else {
       // build an error message
-      throw new IOException("Connection problem : " + resp.getStatusLine().toString());
+      String errHeaders = "";
+      for (Header h : resp.getAllHeaders()){
+        errHeaders += ", ";
+        errHeaders += h.getName();
+        errHeaders += h.getValue();
+      }
+      throw new IOException("Connection problem : " + resp.getStatusLine().toString() + ", " + errHeaders);
     }
     Log.d("measures", "refresh -end- " + rssUrl + String.valueOf(System.currentTimeMillis()));
     return entity;
