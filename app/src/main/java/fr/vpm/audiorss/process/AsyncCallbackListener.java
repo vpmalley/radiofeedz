@@ -20,4 +20,21 @@ public interface AsyncCallbackListener<T> {
    * @param result the result of the processing of the AsyncTask.
    */
   void onPostExecute(T result);
+
+  /**
+   * A dummy asynchronous callback listener, because often we do not want to do anything before/after the asynchronous task.
+   * @param <T> the type for the listener
+   */
+  class DummyCallback<T> implements AsyncCallbackListener<T> {
+
+    @Override
+    public void onPreExecute() {
+
+    }
+
+    @Override
+    public void onPostExecute(T result) {
+
+    }
+  }
 }
