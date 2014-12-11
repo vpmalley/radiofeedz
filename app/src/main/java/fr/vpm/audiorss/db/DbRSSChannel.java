@@ -285,6 +285,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return c;
   }
 
+  public void deleteItemById(long id) {
+    mDb.delete(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
+  }
+
   RSSItem itemFromCursor(Cursor c) throws ParseException {
     String authorAddress = c.getString(c.getColumnIndex(RSSItem.AUTHOR_TAG));
     String category = c.getString(c.getColumnIndex(RSSItem.CAT_TAG));

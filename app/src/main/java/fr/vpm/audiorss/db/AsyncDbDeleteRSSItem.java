@@ -26,16 +26,16 @@ public class AsyncDbDeleteRSSItem extends AsyncTask<RSSItem, Integer, List<RSSIt
 
   @Override
   protected List<RSSItem> doInBackground(RSSItem... rssItems) {
-    List<RSSItem> deletedChannels  = new ArrayList<RSSItem>();
+    List<RSSItem> deletedItems  = new ArrayList<RSSItem>();
     if (rssItems.length > 0) {
       for (RSSItem item : rssItems){
         if (item.getDbId() > -1) {
-          dbUpdater.deleteById(item.getDbId());
-          deletedChannels.add(item);
+          dbUpdater.deleteItemById(item.getDbId());
+          deletedItems.add(item);
         }
       }
     }
-    return deletedChannels;
+    return deletedItems;
   }
 
   @Override
