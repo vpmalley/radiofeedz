@@ -17,9 +17,6 @@ import java.io.IOException;
  */
 public class FilePictureSaver implements PictureSaver {
 
-  public static final String FEEDS_PIC_DIR = "feeds-icons";
-  public static final String APP_DIR = "RadioFeedz";
-  public static final String PNG_EXT = ".png";
   private final Context context;
 
   public FilePictureSaver(Context context) {
@@ -84,26 +81,28 @@ public class FilePictureSaver implements PictureSaver {
   }
 
   /**
-   * Returns the file, created if non-existent, for the picture
-   *
-   * @param picFileName the name we want to store the picture in
-   * @return an existing file for the post
-   * @pre the external storage should be writable
-   */
-  private File getFileForPic(String picFileName) {
-    File dir = new File(Environment.getExternalStoragePublicDirectory(APP_DIR), FEEDS_PIC_DIR);
-    dir.mkdirs();
-    // create file if non existent
-    File picFile = new File(dir, picFileName.replace(' ', '_') + PNG_EXT);
-    return picFile;
-  }
-
-  /**
    * Finds out whether the external storage is writable
    *
    * @return whether it is writable
    */
   private boolean isExternalStorageWritable() {
     return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
+  }
+
+  /**
+   * Cleans a folder by removing all files older than {daysThreshold} days
+   * @param folder the folder to clean
+   * @param threshold the number of icons that triggers the deletion of all icons
+   * @param expiryTime the time after which we delete the pictures (in ms)
+   */
+  public void cleanFolder(File folder, int threshold, long expiryTime){
+    File[] allFiles = folder.listFiles();
+    if (allFiles.length > threshold) {
+      for (File f : allFiles) {
+        if ((System.currentTimeMillis() - f.lastModified()) > expiryTime) {
+          f.delete();
+        }
+      }
+    }
   }
 }

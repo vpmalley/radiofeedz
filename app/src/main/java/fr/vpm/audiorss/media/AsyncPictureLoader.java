@@ -42,10 +42,8 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
   public AsyncPictureLoader(List<PictureLoadedListener> pictureLoadedListeners, int reqWidth, int reqHeight,
                             Context context, Media.Folder folder) {
 
-    this.reqHeight = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, reqHeight,
-        context.getResources().getDisplayMetrics()));
-    this.reqWidth = Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, reqWidth,
-        context.getResources().getDisplayMetrics()));
+    this.reqHeight = dpToPixels(reqHeight, context);
+    this.reqWidth = dpToPixels(reqWidth, context);
     this.pictureLoadedListeners = pictureLoadedListeners;
     this.context = context;
     this.folder = folder;
@@ -120,6 +118,17 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
       }
     }
     return pictureBitmap;
+  }
+
+  /**
+   * Converts the size in dp to a size in pixels, for downloading pictures
+   * @param dpDim the dimension in dp
+   * @param context the current Android context
+   * @return the dimension in pixels
+   */
+  private int dpToPixels(int dpDim, Context context) {
+    return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpDim,
+            context.getResources().getDisplayMetrics()));
   }
 
   @Override

@@ -118,13 +118,13 @@ public class Media implements Downloadable, Parcelable {
 
     BroadcastReceiver downloadFinished = new MediaBroadcastReceiver();
     context.registerReceiver(downloadFinished, new IntentFilter(
-        DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            DownloadManager.ACTION_DOWNLOAD_COMPLETE));
   }
 
   public File getDownloadFolder(Context context, Folder folder) {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     String storageMediaRoot = sharedPref.getString("pref_storage_root",
-        Environment.getExternalStorageDirectory().getPath());
+            Environment.getExternalStorageDirectory().getPath());
     if (storageMediaRoot.isEmpty()){
       storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
     }
@@ -145,13 +145,13 @@ public class Media implements Downloadable, Parcelable {
     return dirFile;
   }
 
-  public File getInternalFeedsPicsFolder(){
+  public static File getInternalFeedsPicsFolder(){
     File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_FEEDS_PIC_DIR);
     dir.mkdirs();
     return dir;
   }
 
-  public File getInternalItemsPicsFolder(){
+  public static File getInternalItemsPicsFolder(){
     File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_ITEMS_PIC_DIR);
     dir.mkdirs();
     return dir;
@@ -216,10 +216,10 @@ public class Media implements Downloadable, Parcelable {
     // Start download
     if (0 == networkFlags) {
       Toast
-          .makeText(
-              context,
-              context.getResources().getString(R.string.disabled_download),
-              Toast.LENGTH_LONG).show();
+              .makeText(
+                      context,
+                      context.getResources().getString(R.string.disabled_download),
+                      Toast.LENGTH_LONG).show();
     }
     return (!(0 == networkFlags));
   }
@@ -339,7 +339,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public static final Parcelable.Creator<Media> CREATOR
-      = new Parcelable.Creator<Media>() {
+          = new Parcelable.Creator<Media>() {
     public Media createFromParcel(Parcel in) {
       return new Media(in);
     }
@@ -378,7 +378,7 @@ public class Media implements Downloadable, Parcelable {
 
       }
       Log.d("BReceiver", "The status for " + id + " is " + status + ". It is located at "
-          + deviceUri);
+              + deviceUri);
     }
 
   }
