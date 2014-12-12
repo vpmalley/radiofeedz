@@ -5,14 +5,9 @@ import fr.vpm.audiorss.db.DatabaseOpenHelper;
 /**
  * Created by vince on 23/11/14.
  */
-public class ChannelFilter implements QueryFilter.SelectionFilter {
+public class ChannelFilter implements SelectionFilter {
 
   private final long channelId;
-
-  @Override
-  public int index() {
-    return -1;
-  }
 
   public ChannelFilter(long channelId) {
     this.channelId = channelId;

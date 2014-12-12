@@ -1,6 +1,9 @@
 package fr.vpm.audiorss;
 
 import android.content.Context;
+import android.widget.ArrayAdapter;
+
+import fr.vpm.audiorss.process.NavigationDrawerList;
 
 /**
  * Created by vince on 03/11/14.
@@ -12,7 +15,7 @@ public interface FeedsActivity<T> {
   /**
    * Refreshes the view based on some data item
    */
-  void refreshView(T data);
+  void refreshView(T data, ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> navigationDrawerAdapter);
 
   /**
    * Retrieves the Context bound with this Activity

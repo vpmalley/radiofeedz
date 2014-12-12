@@ -1,7 +1,9 @@
 package fr.vpm.audiorss.http;
 
-import java.io.IOException;
-import java.text.ParseException;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -13,10 +15,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.content.Context;
-import android.os.AsyncTask;
-import android.util.Log;
-import android.widget.Toast;
+import java.io.IOException;
+import java.text.ParseException;
 
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.ItemParser;

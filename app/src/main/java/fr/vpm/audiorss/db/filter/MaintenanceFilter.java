@@ -9,17 +9,12 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 23/11/14.
  */
-public class MaintenanceFilter implements QueryFilter.SelectionFilter {
+public class MaintenanceFilter implements SelectionFilter {
 
   private final int daysExpiry;
 
   public MaintenanceFilter(int daysExpiry) {
     this.daysExpiry = daysExpiry;
-  }
-
-  @Override
-  public int index() {
-    return -1;
   }
 
   @Override

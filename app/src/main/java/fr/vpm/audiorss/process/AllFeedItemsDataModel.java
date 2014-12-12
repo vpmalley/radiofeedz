@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,20 +16,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 
 import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
+import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.ArchivedFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -70,9 +70,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Long[] channelIds;
 
-  private List<QueryFilter.SelectionFilter> itemFilters = new ArrayList<QueryFilter.SelectionFilter>();
+  private List<SelectionFilter> itemFilters = new ArrayList<SelectionFilter>();
 
-  private List<QueryFilter.SelectionFilter> channelFilters = new ArrayList<QueryFilter.SelectionFilter>();
+  private List<SelectionFilter> channelFilters = new ArrayList<SelectionFilter>();
 
   private int resource;
 
@@ -152,7 +152,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
-      feedsActivity.refreshView(rssItemAdapter);
+      feedsActivity.refreshView(rssItemAdapter, getNavigationDrawerAdapter());
       recreate = false;
     } else {
       rssItemAdapter.setItems(items);
@@ -242,15 +242,17 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public void filterData(List<QueryFilter> filters) {
+  public void filterData(List<SelectionFilter> filters) {
     this.itemFilters.clear();
-    if (!filters.contains(QueryFilter.ARCHIVED)){
-      Log.d("filters", "unarchived");
-      this.itemFilters.add(new UnArchivedFilter());
+    boolean needsUnarchivedFilter = true;
+    for (SelectionFilter filter : filters){
+      this.itemFilters.add(filter);
+      if (filter instanceof ArchivedFilter){
+        needsUnarchivedFilter = false;
+      }
     }
-    for (QueryFilter filter : filters){
-      Log.d("filters", filter.name());
-      this.itemFilters.add(filter.getFilter());
+    if (needsUnarchivedFilter){
+      this.itemFilters.add(new UnArchivedFilter());
     }
     loadData();
   }
@@ -258,6 +260,13 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public int size() {
     return items.size();
+  }
+
+  public ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> getNavigationDrawerAdapter() {
+    NavigationDrawerList navigationDrawerList = new NavigationDrawerList(getContext());
+    navigationDrawerList.addStaticItems();
+    navigationDrawerList.addChannels(feeds);
+    return navigationDrawerList.getAdapter(R.layout.drawer_item);
   }
 
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {
@@ -273,11 +282,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       }
       i.putExtra(AllFeedItems.CHANNEL_ID, chIds);
       if (!itemFilters.isEmpty()){
+        // TODO apply new things
         ArrayList<Integer> filterPositions = new ArrayList<Integer>();
-        for (QueryFilter.SelectionFilter itemFilter : itemFilters){
+        for (SelectionFilter itemFilter : itemFilters){
+          /*
           if (itemFilter.index() > -1) {
             filterPositions.add(itemFilter.index());
           }
+          */
         }
         i.putIntegerArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, filterPositions);
       }

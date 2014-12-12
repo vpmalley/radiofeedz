@@ -3,12 +3,7 @@ package fr.vpm.audiorss.db.filter;
 /**
  * Created by vince on 23/11/14.
  */
-public class EmptyFilter implements QueryFilter.SelectionFilter {
-
-  @Override
-  public int index() {
-    return -1;
-  }
+public class EmptyFilter implements SelectionFilter {
 
   @Override
   public String getSelectionQuery() {

@@ -5,12 +5,7 @@ import fr.vpm.audiorss.db.DbMedia;
 /**
  * Created by vince on 23/11/14.
  */
-public class DownloadedFilter implements QueryFilter.SelectionFilter {
-
-  @Override
-  public int index() {
-    return QueryFilter.DOWNLOADED.index();
-  }
+public class DownloadedFilter implements SelectionFilter {
 
   @Override
   public String getSelectionQuery() {

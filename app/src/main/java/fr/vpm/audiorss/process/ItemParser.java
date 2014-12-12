@@ -1,5 +1,12 @@
 package fr.vpm.audiorss.process;
 
+import android.util.Log;
+import android.util.Xml;
+
+import org.apache.http.HttpEntity;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
@@ -11,13 +18,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.apache.http.HttpEntity;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.util.Log;
-import android.util.Xml;
 
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;

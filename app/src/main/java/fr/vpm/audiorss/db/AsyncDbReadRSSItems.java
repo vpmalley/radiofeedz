@@ -14,8 +14,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import fr.vpm.audiorss.db.filter.ChannelFilter;
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -31,11 +30,11 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
 
   private final DbRSSChannel dbUpdater;
 
-  private final List<QueryFilter.SelectionFilter> filters;
+  private final List<SelectionFilter> filters;
 
   private boolean forceReadAll = false;
 
-  public AsyncDbReadRSSItems(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context, List<QueryFilter.SelectionFilter> filters) {
+  public AsyncDbReadRSSItems(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context, List<SelectionFilter> filters) {
     this.context = context;
     this.dbUpdater = new DbRSSChannel(context, false);
     this.asyncCallbackListener = asyncCallbackListener;

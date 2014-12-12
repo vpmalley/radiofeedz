@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -70,7 +70,7 @@ public interface DataModel {
    *
    * @param filters the filter to apply on the DB query
    */
-  void filterData(List<QueryFilter> filters);
+  void filterData(List<SelectionFilter> filters);
 
   /**
    * The number of elements in this structure

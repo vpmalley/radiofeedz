@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.FeedsManagerDataModel;
+import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.RSSChannelArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -40,7 +42,7 @@ public class FeedsManager extends Activity implements FeedsActivity<RSSChannelAr
   }
 
   @Override
-  public void refreshView(RSSChannelArrayAdapter feedAdapter) {
+  public void refreshView(RSSChannelArrayAdapter feedAdapter, ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> navigationDrawerAdapter) {
     mFeeds.setAdapter(feedAdapter);
   }
 

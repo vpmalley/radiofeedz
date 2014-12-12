@@ -8,7 +8,6 @@ import java.util.List;
 
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
-import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 20/10/14.

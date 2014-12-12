@@ -5,12 +5,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 23/11/14.
  */
-public class UnArchivedFilter implements QueryFilter.SelectionFilter {
-
-  @Override
-  public int index() {
-    return -1;
-  }
+public class UnArchivedFilter implements SelectionFilter {
 
   @Override
   public String getSelectionQuery() {

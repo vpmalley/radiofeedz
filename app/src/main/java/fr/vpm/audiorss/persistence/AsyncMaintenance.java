@@ -12,7 +12,7 @@ import java.util.List;
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -52,7 +52,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     int itemsExpiryTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).
             getString("pref_items_deletion", "180"));
     MaintenanceFilter maintenanceFilter = new MaintenanceFilter(itemsExpiryTime);
-    List<QueryFilter.SelectionFilter> filters = new ArrayList<QueryFilter.SelectionFilter>();
+    List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
     filters.add(maintenanceFilter);
     AsyncDbReadRSSItems asyncReader = new AsyncDbReadRSSItems(new AsyncCallbackListener<List<RSSItem>>() {
       @Override

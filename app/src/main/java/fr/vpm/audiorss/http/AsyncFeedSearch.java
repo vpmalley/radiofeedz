@@ -1,11 +1,11 @@
 package fr.vpm.audiorss.http;
 
-import java.io.IOException;
-import java.util.List;
+import android.os.AsyncTask;
 
 import org.apache.http.client.ClientProtocolException;
 
-import android.os.AsyncTask;
+import java.io.IOException;
+import java.util.List;
 
 import fr.vpm.audiorss.SearchFeedActivity;
 

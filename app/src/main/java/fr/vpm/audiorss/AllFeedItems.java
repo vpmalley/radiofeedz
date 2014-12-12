@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.media.Media;
@@ -28,6 +28,7 @@ import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
+import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -43,6 +44,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   private NetworkChecker networkChecker;
 
   private DataModel dataModel;
+  private ListView drawerList;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +92,12 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     // Navigation drawer
     final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    final ListView drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setAdapter(ArrayAdapter.createFromResource(this, R.array.item_filters, R.layout.drawer_item));
+    drawerList = (ListView) findViewById(R.id.left_drawer);
     drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List<QueryFilter> filters = new ArrayList<QueryFilter>();
-        filters.add(QueryFilter.fromPosition(position));
+        List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
+        filters.add(((NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position)).getFilter());
         dataModel.filterData(filters);
         drawerLayout.closeDrawer(drawerList);
       }
@@ -116,8 +117,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter rssItemAdapter) {
+  public void refreshView(RSSItemArrayAdapter rssItemAdapter, ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> navigationDrawerAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
+    drawerList.setAdapter(navigationDrawerAdapter);
   }
 
   @Override

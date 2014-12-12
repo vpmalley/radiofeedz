@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.ConjunctionFilter;
-import fr.vpm.audiorss.db.filter.QueryFilter;
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -70,7 +70,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems, new ArrayList<QueryFilter.SelectionFilter>());
+        Map<String, RSSItem> items = readItemsByChannelId(id, readAllItems, new ArrayList<SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -86,7 +86,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       c.moveToFirst();
       channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems, new ArrayList<QueryFilter.SelectionFilter>());
+        Map<String, RSSItem> items = readItemsByChannelId(channel.getId(), readAllItems, new ArrayList<SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
     }
@@ -103,7 +103,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
       long id = c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID));
       RSSChannel channel = channelFromCursorEntry(c);
       if (readItems) {
-        Map<String, RSSItem> items = readItemsByChannelId(id, false, new ArrayList<QueryFilter.SelectionFilter>());
+        Map<String, RSSItem> items = readItemsByChannelId(id, false, new ArrayList<SelectionFilter>());
         channel.update(channel.getLastBuildDate(), items);
       }
       channels.add(channel);
@@ -225,12 +225,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return channel;
   }
 
-  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems, List<QueryFilter.SelectionFilter> filters) throws ParseException {
+  Map<String, RSSItem> readItemsByChannelId(long id, boolean readAllItems, List<SelectionFilter> filters) throws ParseException {
     filters.add(new ChannelFilter(id));
     return readItems(readAllItems, filters);
   }
 
-  Map<String, RSSItem> readItems(boolean readAll, List<QueryFilter.SelectionFilter> filters) throws ParseException {
+  Map<String, RSSItem> readItems(boolean readAll, List<SelectionFilter> filters) throws ParseException {
     ConjunctionFilter filter = new ConjunctionFilter(filters);
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String limit = "80";
