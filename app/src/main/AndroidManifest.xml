@@ -38,6 +38,8 @@
                 <data android:host="*"/>
                 <data android:pathPattern=".*\\.xml"/>
                 <data android:pathPattern=".*\\.rss"/>
+                <data android:pathPattern=".*feed.*"/>
+                <data android:pathPattern=".*rss.*"/>
             </intent-filter>
 
             <intent-filter>
@@ -49,6 +51,7 @@
                 <data android:host="feedproxy.google.com"/>
                 <data android:host="feeds2.feedburner.com"/>
                 <data android:host="feedsproxy.google.com"/>
+                <data android:host=".*feed.*"/>
             </intent-filter>
 
             <intent-filter>
