@@ -33,6 +33,8 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
 
   private final List<QueryFilter.SelectionFilter> filters;
 
+  private boolean forceReadAll = false;
+
   public AsyncDbReadRSSItems(AsyncCallbackListener<List<RSSItem>> asyncCallbackListener, Context context, List<QueryFilter.SelectionFilter> filters) {
     this.context = context;
     this.dbUpdater = new DbRSSChannel(context, false);
@@ -41,12 +43,16 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
     asyncCallbackListener.onPreExecute();
   }
 
+  public void forceReadAll(){
+    forceReadAll = true;
+  }
+
   @Override
   protected List<RSSItem> doInBackground(Long... channelIds) {
     Map<String, RSSItem> rssItems = new HashMap<String, RSSItem>();
     try {
       if (0 == channelIds.length) {
-        rssItems.putAll(dbUpdater.readItems(false, filters));
+        rssItems.putAll(dbUpdater.readItems(forceReadAll, filters));
       } else {
         for (long channelId : channelIds){
           rssItems.putAll(dbUpdater.readItemsByChannelId(channelId, false, filters));

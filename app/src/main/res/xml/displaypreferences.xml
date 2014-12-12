@@ -23,4 +23,10 @@
         android:dialogTitle="@string/dialog_pref_disp_max_items"
         android:defaultValue="80"/>
 
+    <EditTextPreference
+        android:key="pref_items_deletion"
+        android:title="@string/pref_items_deletion"
+        android:summary="@string/summary_pref_items_deletion"
+        android:dialogTitle="@string/dialog_pref_items_deletion"
+        android:defaultValue="180"/>
 </PreferenceScreen>

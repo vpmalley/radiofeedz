@@ -2,6 +2,7 @@ package fr.vpm.audiorss.persistence;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,10 +49,12 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
    * Cleans the items in the Db after N days
    */
   private void cleanItems() {
-    MaintenanceFilter maintenanceFilter = new MaintenanceFilter(ITEMS_EXPIRY_TIME);
+    int itemsExpiryTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).
+            getString("pref_items_deletion", "180"));
+    MaintenanceFilter maintenanceFilter = new MaintenanceFilter(itemsExpiryTime);
     List<QueryFilter.SelectionFilter> filters = new ArrayList<QueryFilter.SelectionFilter>();
     filters.add(maintenanceFilter);
-    new AsyncDbReadRSSItems(new AsyncCallbackListener<List<RSSItem>>() {
+    AsyncDbReadRSSItems asyncReader = new AsyncDbReadRSSItems(new AsyncCallbackListener<List<RSSItem>>() {
       @Override
       public void onPreExecute() {
         // do nothing
@@ -62,7 +65,9 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
          new AsyncDbDeleteRSSItem(new DummyCallback<List<RSSItem>>(), context).
                 executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, result.toArray(new RSSItem[result.size()]));
       }
-    }, context, filters).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+    }, context, filters);
+    asyncReader.forceReadAll();
+    asyncReader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
   }
 
   /**

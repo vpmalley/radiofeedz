@@ -39,4 +39,8 @@
     <string name="pref_storage_root">Racine du stockage (avancé)</string>
     <string name="summary_pref_storage_root">Le chemin vers la racine du stockage</string>
     <string name="dialog_pref_storage_root">AVANCÉ. La mémoire du téléphone est utilisé si ce champ est vide</string>
+
+    <string name="pref_items_deletion">Suppression des nouvelles anciennes</string>
+    <string name="summary_pref_items_deletion">Automatiquement supprimer les nouvelles pour faire de la place</string>
+    <string name="dialog_pref_items_deletion">Supprimer les nouvelles après N jours</string>
 </resources>
