@@ -1,5 +1,8 @@
 package fr.vpm.audiorss.db.filter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -28,4 +31,24 @@ public class TodayFilter implements SelectionFilter {
   public String[] getSelectionValues() {
     return new String[0];
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+  }
+
+  public static final Parcelable.Creator<TodayFilter> CREATOR
+          = new Parcelable.Creator<TodayFilter>() {
+    public TodayFilter createFromParcel(Parcel in) {
+      return new TodayFilter();
+    }
+
+    public TodayFilter[] newArray(int size) {
+      return new TodayFilter[size];
+    }
+  };
 }

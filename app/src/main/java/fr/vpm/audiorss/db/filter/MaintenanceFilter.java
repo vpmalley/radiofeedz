@@ -1,5 +1,8 @@
 package fr.vpm.audiorss.db.filter;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -34,4 +37,25 @@ public class MaintenanceFilter implements SelectionFilter {
   public String[] getSelectionValues() {
     return new String[0];
   }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(daysExpiry);
+  }
+
+  public static final Parcelable.Creator<MaintenanceFilter> CREATOR
+          = new Parcelable.Creator<MaintenanceFilter>() {
+    public MaintenanceFilter createFromParcel(Parcel in) {
+      return new MaintenanceFilter(in.readInt());
+    }
+
+    public MaintenanceFilter[] newArray(int size) {
+      return new MaintenanceFilter[size];
+    }
+  };
 }

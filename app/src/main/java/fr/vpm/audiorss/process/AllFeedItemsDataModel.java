@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
@@ -70,7 +69,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Long[] channelIds;
 
-  private List<SelectionFilter> itemFilters = new ArrayList<SelectionFilter>();
+  private ArrayList<SelectionFilter> itemFilters = new ArrayList<SelectionFilter>();
 
   private List<SelectionFilter> channelFilters = new ArrayList<SelectionFilter>();
 
@@ -275,24 +274,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
       i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, position);
-      long[] chIds = new long[channelIds.length];
-      int j = 0;
-      for (long chId : channelIds){
-        chIds[j++] = chId;
-      }
-      i.putExtra(AllFeedItems.CHANNEL_ID, chIds);
-      if (!itemFilters.isEmpty()){
-        // TODO apply new things
-        ArrayList<Integer> filterPositions = new ArrayList<Integer>();
-        for (SelectionFilter itemFilter : itemFilters){
-          /*
-          if (itemFilter.index() > -1) {
-            filterPositions.add(itemFilter.index());
-          }
-          */
-        }
-        i.putIntegerArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, filterPositions);
-      }
+      i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, itemFilters);
       activity.startActivityForResult(i, REQ_ITEM_READ);
     }
 

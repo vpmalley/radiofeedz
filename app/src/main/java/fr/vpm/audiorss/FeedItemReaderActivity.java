@@ -3,6 +3,7 @@ package fr.vpm.audiorss;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,9 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.NavigationDrawerList;
@@ -57,16 +61,12 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
     dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, R.layout.list_rss_item);
     if (i.hasExtra(ITEM_FILTER)) {
-      /*
-      ArrayList<Integer> filterPositions = i.getIntegerArrayListExtra(ITEM_FILTER);
-      List<QueryFilter> filters = new ArrayList<QueryFilter>();
-      for (int filterPosition : filterPositions){
-        filters.add(QueryFilter.fromIndex(filterPosition));
+      List<Parcelable> parcelledFilters = i.getParcelableArrayListExtra(ITEM_FILTER);
+      List<SelectionFilter> selectionFilters = new ArrayList<SelectionFilter>();
+      for (Parcelable filter : parcelledFilters) {
+        selectionFilters.add((SelectionFilter) filter);
       }
-      if (!filters.isEmpty()) {
-        dataModel.filterData(filters);
-      }
-      */
+      dataModel.filterData(selectionFilters);
     }
     dataModel.loadData();
 
