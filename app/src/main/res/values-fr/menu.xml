@@ -5,7 +5,6 @@
     <string name="action_add">Ajouter</string>
     <string name="action_refresh">Rafrîchir</string>
     <string name="action_search">Rechercher</string>
-    <string name="action_manage">Gérer les flux</string>
 
     <string name="action_read">Marquer comme lu</string>
     <string name="action_unread">Marquer comme non-lu</string>

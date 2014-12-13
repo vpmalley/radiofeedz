@@ -161,11 +161,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         startActivityForResult(i, REQ_PREFS);
         result = true;
         break;
-      case R.id.action_manage:
-        i = new Intent(AllFeedItems.this, FeedsManager.class);
-        startActivity(i);
-        result = true;
-        break;
       default:
         result = super.onOptionsItemSelected(item);
     }
