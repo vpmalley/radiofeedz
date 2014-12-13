@@ -16,8 +16,14 @@ public class FeedAddingActivity extends Activity {
     super.onCreate(savedInstanceState);
 
     Intent i = getIntent();
+
     Intent intent = new Intent(this, AllFeedItems.class);
-    intent.putExtra(CHANNEL_NEW_URL, i.getData().toString());
+    if (Intent.ACTION_SEND.equals(i.getAction()) && ("text/plain".equals(i.getType()))) {
+      intent.putExtra(CHANNEL_NEW_URL, i.getStringExtra(Intent.EXTRA_TEXT));
+    } else {
+      intent.putExtra(CHANNEL_NEW_URL, i.getData().toString());
+    }
+
     startActivity(intent);
   }
 }
