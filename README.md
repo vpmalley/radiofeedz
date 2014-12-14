@@ -18,15 +18,21 @@ All your podcasts/news are in your pocket to listen, read, watch anytime, on the
 
 ## How do I find these "RSS feeds" ?
 
-Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon <img alt="RSS feed icon, from Wikimedia, uploaded by user Anomie" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png" height="30px" width="30px" />, for podcasts, ...).
+Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon <img alt="RSS feed icon, from Wikimedia, uploaded by user Anomie" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png" height="22px" width="22px" />, for podcasts, ...).
 
-Once you find one of these feeds, copy the url of the RSS feed, then open your RadioFeedz app and press the action button '+' at the top-right of the main screen. It is going to suggest you to add this feed. Press Yes and enjoy your podcasts and news!
+Once you find one of these feeds, copy the url of the RSS feed, then open your RadioFeedz app and press the <img alt="'new' icon from the Icon pack provided by Android" src="/screenshots/ic_action_new.png" height="22px" width="22px" /> icon at the top-right of the main screen. It is going to suggest you to add this feed. Press Yes and enjoy your podcasts and news!
+
+<img alt="action bar where you can see the '+' button" src="/screenshots/actionbar.png" height="50px" />
+
 
 ### Examples
 
-I first developed this app for the podcasts from [France Inter][fi], a French radio. The RSS feeds are available for each talk-show. Go to the page of the show, click the menu item `podcast` and click `s'abonner au podcast via RSS`. Copy the url of the page that opened, then open the RadioFeedz app and click the + button at the top-right of the screen.
+You can add feeds for most radios around the world. Let's take the example of the BBC World Service. You can go to the page for the podcast for a talk-show like [`the World this week`][twtw] and long-click on the [link to the rss feed][twtw-rss]. You will see the option to open an application, click it and you will see the Radiofeedz option. Choose it and it will suggest to add this feed to your list.
 
-It is possible to listen to the recently popular podcast [*Serial*][serial] by going to the `subscribe` page (there is the small icon). There you copy the url of the link [`RSS Feed`][serial-rss]. You open your RadioFeedz app and click the + button at the top-right of the screen. Hop, you're good to listen these adventures.
+<img alt="multiple applications to open the feed url" src="/screenshots/intent-fr.png" height="100px" align="center" />
+
+
+It is possible to listen to the recently popular podcast [*Serial*][serial] by going to the `subscribe` page (there is the small icon). There you copy the url of the link [`RSS Feed`][serial-rss]. You open your RadioFeedz app and click the <img alt="'new' icon from the Icon pack provided by Android" src="/screenshots/ic_action_new.png" height="22px" width="22px" /> button at the top-right of the screen. Hop, you're good to listen this investigation.
 
 ## I love this app
 
@@ -48,3 +54,4 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 [fi]: http://www.franceinter.fr
 [serial]: http://serialpodcast.org/
 [serial-rss]: http://feeds.serialpodcast.org/serialpodcast
+[twtw]: http://www.bbc.co.uk/podcasts/series/twtw
