@@ -5,6 +5,8 @@ Your favourite *podcasts*, always with you in your pocket.
 
 With RadioFeedz you can get, save and listen to your favourite podcast, right in your pocket.
 
+[Download it now](/radiofeedz.apk)
+
 ## How does it work ?
 
 You add your favourite RSS feed (be it a podcast feed, a news feed, a picture feed) to RadioFeedz.
@@ -45,6 +47,7 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 ## References
 
 [RSS feed icon from Wikimedia][rss-wiki], by [user Anomie][anomie-wiki]
+<br>
 [Iconography and icon pack for Android][android-icons]
 
 
