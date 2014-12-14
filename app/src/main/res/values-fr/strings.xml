@@ -22,6 +22,7 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="today">aujourd\'hui</string>
+    <string name="ui_sep">-</string>
     <string name="drawer_latest">Récents</string>
     <string name="drawer_today">Aujourd\'hui</string>
     <string name="drawer_unread">Non lus</string>
