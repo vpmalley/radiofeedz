@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +20,6 @@ import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
 import fr.vpm.audiorss.FeedsActivity;
 import fr.vpm.audiorss.ProgressListener;
-import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
@@ -79,6 +77,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
    * Whether the view should be recreated when refreshed
    */
   private boolean recreate = false;
+  private NavigationDrawerList navigationDrawerList;
 
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
           feedsActivity, Long[] channelIds, int resId) {
@@ -151,7 +150,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
-      feedsActivity.refreshView(rssItemAdapter, getNavigationDrawerAdapter());
+      feedsActivity.refreshView(rssItemAdapter, getNavigationDrawer());
       recreate = false;
     } else {
       rssItemAdapter.setItems(items);
@@ -261,11 +260,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     return items.size();
   }
 
-  public ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> getNavigationDrawerAdapter() {
-    NavigationDrawerList navigationDrawerList = new NavigationDrawerList(getContext());
+  public NavigationDrawerProvider getNavigationDrawer() {
+    if (navigationDrawerList == null) {
+      navigationDrawerList = new NavigationDrawerList(getContext(), this, progressListener);
+    }
+    navigationDrawerList.clear();
     navigationDrawerList.addStaticItems();
     navigationDrawerList.addChannels(feeds);
-    return navigationDrawerList.getAdapter(R.layout.drawer_item);
+    return navigationDrawerList;
   }
 
   public class OnRSSItemClickListener implements AdapterView.OnItemClickListener {

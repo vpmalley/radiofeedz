@@ -9,7 +9,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ import java.util.Set;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
-import fr.vpm.audiorss.process.NavigationDrawerList;
+import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -74,7 +73,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter data, ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> navigationDrawerAdapter) {
+  public void refreshView(RSSItemArrayAdapter data, NavigationDrawerProvider navigationDrawer) {
     FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(rssItemAdapter);
     viewPager.setCurrentItem(initialPosition);

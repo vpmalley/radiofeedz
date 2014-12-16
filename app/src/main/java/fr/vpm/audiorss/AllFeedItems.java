@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
@@ -29,6 +28,7 @@ import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
+import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -83,13 +83,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
 
-    setContextualListeners();
-    dataModel.loadData();
-
-    if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
-      dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
-    }
-
     // Navigation drawer
     final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawerList = (ListView) findViewById(R.id.left_drawer);
@@ -103,6 +96,13 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       }
     });
 
+    setContextualListeners();
+    dataModel.loadData();
+
+    if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
+      dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
+    }
+
     // deletes old items at app startup
     new AsyncMaintenance(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Media.getInternalItemsPicsFolder(), Media.getInternalFeedsPicsFolder());
   }
@@ -114,12 +114,15 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel, R.menu.items_context);
     mFeedItems.setMultiChoiceModeListener(actionModeCallback);
+    drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+    FeedChoiceModeListener<RSSChannel> drawerModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel.getNavigationDrawer(), R.menu.feeds_context);
+    drawerList.setMultiChoiceModeListener(drawerModeCallback);
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter rssItemAdapter, ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> navigationDrawerAdapter) {
+  public void refreshView(RSSItemArrayAdapter rssItemAdapter, NavigationDrawerProvider navigationDrawer) {
     mFeedItems.setAdapter(rssItemAdapter);
-    drawerList.setAdapter(navigationDrawerAdapter);
+    drawerList.setAdapter(navigationDrawer.getAdapter(R.layout.drawer_item));
   }
 
   @Override

@@ -4,9 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.widget.AdapterView;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -15,7 +13,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 09/11/14.
  */
-public interface DataModel {
+public interface DataModel extends ContextualActions {
 
   /**
    * Loads the data and refreshes the view once data is retrieved.
@@ -40,28 +38,10 @@ public interface DataModel {
   AdapterView.OnItemClickListener getOnItemClickListener();
 
   /**
-   * Deletes the selected items
-   * @param selection the list of indices of the items
-   */
-  void deleteData(Collection<Integer> selection);
-
-  /**
-   * Marks the selected items as read/unread
-   * @param selection the list of indices of the items
-   */
-  void markDataRead(Set<Integer> selection, boolean isRead);
-
-  /**
    * Whether the data model is built and ready for display
    * @return Whether the data model is built and ready for display
    */
   boolean isReady();
-
-  /**
-   * Downloads the media associated with the selected items
-   * @param selection the list of indices of the items
-   */
-  void downloadMedia(Set<Integer> selection);
 
   Bundle getFeedItem(int position);
 
@@ -95,6 +75,8 @@ public interface DataModel {
      */
     void setItemsAndBuildModel(List<RSSItem> data);
   }
+
+  NavigationDrawerProvider getNavigationDrawer();
 
   public interface RSSChannelDataModel extends DataModel, RSSChannelInput {}
 

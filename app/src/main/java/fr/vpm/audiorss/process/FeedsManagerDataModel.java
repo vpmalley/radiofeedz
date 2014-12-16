@@ -139,6 +139,11 @@ public class FeedsManagerDataModel implements DataModel.RSSChannelDataModel {
   }
 
   @Override
+  public NavigationDrawerProvider getNavigationDrawer() {
+    return null;
+  }
+
+  @Override
   public AdapterView.OnItemClickListener getOnItemClickListener() {
     return new AdapterView.OnItemClickListener() {
       @Override

@@ -15,14 +15,14 @@ import fr.vpm.audiorss.R;
  */
 public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeListener {
 
-  private final DataModel dataModel;
+  private final ContextualActions contextualActions;
 
   private final Set<Integer> selection = new HashSet<Integer>();
 
   private final int menuResource;
 
-  public FeedChoiceModeListener(DataModel dataModel, int menuResource) {
-    this.dataModel = dataModel;
+  public FeedChoiceModeListener(ContextualActions contextualActions, int menuResource) {
+    this.contextualActions = contextualActions;
     this.menuResource = menuResource;
   }
 
@@ -49,20 +49,20 @@ public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeLis
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     if (R.id.action_download == menuItem.getItemId()) {
-      dataModel.downloadMedia(selection);
+      contextualActions.downloadMedia(selection);
       actionMode.finish();
       return true;
     } else if ((R.id.action_delete == menuItem.getItemId()) ||
             (R.id.action_archive == menuItem.getItemId())) {
-      dataModel.deleteData(selection);
+      contextualActions.deleteData(selection);
       actionMode.finish();
       return true;
     } else if (R.id.action_read == menuItem.getItemId()) {
-      dataModel.markDataRead(selection, true);
+      contextualActions.markDataRead(selection, true);
       actionMode.finish();
       return true;
     } else if (R.id.action_unread == menuItem.getItemId()) {
-      dataModel.markDataRead(selection, false);
+      contextualActions.markDataRead(selection, false);
       actionMode.finish();
       return true;
     }
