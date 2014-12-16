@@ -20,12 +20,22 @@ All your podcasts/news are in your pocket to listen, read, watch anytime, on the
 
 ## How do I find these "RSS feeds" ?
 
+### Media
+
 Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon <img alt="RSS feed icon, from Wikimedia, uploaded by user Anomie" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png" height="22px" width="22px" />, for podcasts, ...).
 
 Once you find one of these feeds, copy the url of the RSS feed, then open your RadioFeedz app and press the <img alt="'new' icon from the Icon pack provided by Android" src="/screenshots/ic_action_new.png" height="18px" width="18px" /> icon at the top-right of the main screen. It is going to suggest you to add this feed. Press Yes and enjoy your podcasts and news!
 
 <img alt="action bar where you can see the '+' button" src="/screenshots/actionbar.png" width="400px" />
 
+### Search engines
+
+There are some search engines or RSS feed providers available on the web. You can try the following:
+
+- [Instant RSS search](http://ctrlq.org/rss/) lets you search for existing media with RSS feeds
+- [Feedzilla](http://www.feedzilla.com/gallery) offers a gallery of RSS feeds searchable by category
+
+Once you picked a RSS feed among them, long-click on it if you are on your Android browser. Click on Share and you should be able to choose Radiofeedz. It will redirect you to the app, and you will be able to read the news from this source.
 
 ### Examples
 
