@@ -4,7 +4,7 @@ import android.content.Context;
 
 public interface Downloadable {
 
-  public void download(final Context context, int visibility);
+  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener);
 
   public long getDownloadId();
 

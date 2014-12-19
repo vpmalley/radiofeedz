@@ -22,6 +22,7 @@ import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.DataModel;
 
@@ -198,7 +199,7 @@ public class RSSChannel implements Parcelable {
   }
 
   public void downloadImage(Context context) {
-    image.download(context, DownloadManager.Request.VISIBILITY_HIDDEN);
+    image.download(context, DownloadManager.Request.VISIBILITY_HIDDEN, new MediaDownloadListener.DummyMediaDownloadListener());
   }
 
   public Collection<RSSItem> getItems() {

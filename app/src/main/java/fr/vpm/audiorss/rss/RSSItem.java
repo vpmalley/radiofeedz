@@ -9,6 +9,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.MediaDownloadListener;
 
 public class RSSItem implements Parcelable {
 
@@ -165,12 +166,12 @@ public class RSSItem implements Parcelable {
     return channelId;
   }
 
-  public void downloadMedia(Context context) {
+  public void downloadMedia(Context context, MediaDownloadListener mediaDownloadListener) {
     if (media == null) {
       Log.w("media", "media is not expected to be null here");
       media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl, "");
     }
-    media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+    media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener);
   }
 
   public Media getMedia() {

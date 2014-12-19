@@ -19,8 +19,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import junit.framework.Assert;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -88,7 +86,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   @Override
-  public void download(final Context context, int visibility) {
+  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener) {
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
@@ -116,7 +114,7 @@ public class Media implements Downloadable, Parcelable {
       downloadId = dm.enqueue(r);
     }
 
-    BroadcastReceiver downloadFinished = new MediaBroadcastReceiver();
+    BroadcastReceiver downloadFinished = new MediaBroadcastReceiver(mediaDownloadListener);
     context.registerReceiver(downloadFinished, new IntentFilter(
             DownloadManager.ACTION_DOWNLOAD_COMPLETE));
   }
@@ -352,6 +350,12 @@ public class Media implements Downloadable, Parcelable {
 
   private class MediaBroadcastReceiver extends BroadcastReceiver {
 
+    private final MediaDownloadListener mediaDownloadListener;
+
+    private MediaBroadcastReceiver(MediaDownloadListener mediaDownloadListener) {
+      this.mediaDownloadListener = mediaDownloadListener;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
       Log.d("BReceiver", "A download is complete");
@@ -374,6 +378,7 @@ public class Media implements Downloadable, Parcelable {
         isDownloaded = true;
 
         new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, Media.this);
+        mediaDownloadListener.onMediaDownloaded();
       }
       Log.d("BReceiver", "The status for " + id + " is " + status + ". It is located at "
               + deviceUri);

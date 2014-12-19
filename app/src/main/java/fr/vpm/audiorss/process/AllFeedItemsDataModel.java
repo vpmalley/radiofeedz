@@ -32,6 +32,7 @@ import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
+import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -218,8 +219,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public void downloadMedia(Set<Integer> selection) {
     for (int position : selection){
       if (items.get(position).getMedia() != null){
-        items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-      };
+        items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
+                new MediaDownloadListener.DummyMediaDownloadListener());
+      }
     }
   }
 

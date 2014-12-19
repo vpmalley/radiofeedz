@@ -31,12 +31,13 @@ import java.util.Locale;
 
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class FeedItemReader extends Fragment implements PictureLoadedListener {
+public class FeedItemReader extends Fragment implements PictureLoadedListener, MediaDownloadListener {
 
   public static final String ITEM = "rssItem";
 
@@ -48,6 +49,9 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
   private RSSChannel channel = null;
 
   private ImageView picView;
+  private MenuItem downloadItem;
+  private MenuItem playItem;
+  private MenuItem displayItem;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -152,23 +156,36 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
       super.onCreateOptionsMenu(menu, inflater);
       return;
     }
+
+    displayItem = menu.findItem(R.id.action_display);
+    playItem = menu.findItem(R.id.action_play);
+    downloadItem = menu.findItem(R.id.action_download);
+
+    updateActionMediaItems();
+    MenuItem shareItem = menu.findItem(R.id.action_share);
+    addShareItem(shareItem);
+    super.onCreateOptionsMenu(menu, inflater);
+  }
+
+  /**
+   * Updates the visibility of the media item in the action bar
+   */
+  private void updateActionMediaItems() {
+    displayItem.setVisible(false);
+    playItem.setVisible(false);
+    downloadItem.setVisible(false);
+
     if (rssItem.getMedia() != null){
       File picFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PICTURES);
       File podcastFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
       if ((picFile != null) && (picFile.exists())){
-        MenuItem displayItem = menu.findItem(R.id.action_display);
         displayItem.setVisible(true);
       } else if ((podcastFile != null) && (podcastFile.exists())){
-        MenuItem playItem = menu.findItem(R.id.action_play);
         playItem.setVisible(true);
       } else {
-        MenuItem downloadItem = menu.findItem(R.id.action_download);
         downloadItem.setVisible(true);
       }
     }
-    MenuItem shareItem = menu.findItem(R.id.action_share);
-    addShareItem(shareItem);
-    super.onCreateOptionsMenu(menu, inflater);
   }
 
   @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
@@ -226,6 +243,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
         mediaFile.delete();
       }
       rssItem.getMedia().isDownloaded(getActivity(), true);
+      updateActionMediaItems();
     }
   }
 
@@ -272,11 +290,16 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener {
 
   private void downloadMedia() {
     Log.d("Download", rssItem.getMediaUrl());
-    rssItem.downloadMedia(getActivity());
+    rssItem.downloadMedia(getActivity(), this);
   }
 
   @Override
   public void onPictureLoaded(Bitmap pictureBitmap) {
     picView.setImageBitmap(pictureBitmap);
+  }
+
+  @Override
+  public void onMediaDownloaded() {
+    updateActionMediaItems();
   }
 }
