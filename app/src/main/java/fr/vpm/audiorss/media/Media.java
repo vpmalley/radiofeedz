@@ -356,7 +356,6 @@ public class Media implements Downloadable, Parcelable {
     public void onReceive(Context context, Intent intent) {
       Log.d("BReceiver", "A download is complete");
       long fileId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-      //Assert.assertEquals(downloadId, fileId);
       if (downloadId != fileId){
         return;
       }
@@ -368,14 +367,13 @@ public class Media implements Downloadable, Parcelable {
       Cursor c = dm.query(query);
       c.moveToFirst();
 
-      long id = c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID));
-      Assert.assertEquals(downloadId, id);
       int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 
       if (DownloadManager.STATUS_SUCCESSFUL == status) {
         deviceUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
         isDownloaded = true;
 
+        new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, Media.this);
       }
       Log.d("BReceiver", "The status for " + id + " is " + status + ". It is located at "
               + deviceUri);
