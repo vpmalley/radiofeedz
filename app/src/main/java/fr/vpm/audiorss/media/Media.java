@@ -245,7 +245,9 @@ public class Media implements Downloadable, Parcelable {
       try {
         b = pictureRetriever.retrieve(pictureFile);
       } catch (FileNotFoundException e) {
-        Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
+        if (Folder.EXTERNAL_DOWNLOADS_PICTURES.equals(folder)) {
+          Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
+        }
         Log.w("file", e.toString());
       }
     } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {

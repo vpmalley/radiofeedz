@@ -182,7 +182,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         displayItem.setVisible(true);
       } else if ((podcastFile != null) && (podcastFile.exists())){
         playItem.setVisible(true);
-      } else {
+      } else if (!rssItem.getMedia().getInetUrl().isEmpty()) {
         downloadItem.setVisible(true);
       }
     }
