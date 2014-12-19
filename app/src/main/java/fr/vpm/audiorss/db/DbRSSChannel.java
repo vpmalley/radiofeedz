@@ -132,8 +132,11 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
             new String[]{String.valueOf(existingChannel.getId())});
 
     for (RSSItem item : existingChannel.getItems()) {
-      addOrUpdate(item, existingChannel.getId());
+      if (item.getDbId() < 0) {
+        addOrUpdate(item, existingChannel.getId());
+      }
     }
+
     return existingChannel;
   }
 

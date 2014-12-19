@@ -1,0 +1,113 @@
+12-18 21:32:10.276  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956330 281
+12-18 21:32:10.276  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956330 282
+12-18 21:32:10.281  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956330 287
+12-18 21:32:10.286  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956330 290
+12-18 21:32:10.286  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956330 290
+12-18 21:32:10.826  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956330 833
+
+12-18 21:32:11.041  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956331 049
+12-18 21:32:11.046  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956331 051
+12-18 21:32:11.051  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956331 054
+12-18 21:32:11.051  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956331 057
+12-18 21:32:11.051  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956331 057
+12-18 21:32:11.621  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956331 625
+
+12-18 21:32:11.656  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956331 662
+12-18 21:32:11.656  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956331 662
+12-18 21:32:11.661  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956331 666
+12-18 21:32:11.661  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956331 669
+12-18 21:32:11.661  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956331 669
+12-18 21:32:11.751  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956331 759
+
+12-18 21:32:11.791  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956331 796
+12-18 21:32:11.791  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956331 797
+12-18 21:32:11.796  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956331 800
+12-18 21:32:11.796  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956331 804
+12-18 21:32:11.796  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956331 804
+12-18 21:32:11.886  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956331 890
+
+12-18 21:32:11.996  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956332 002
+12-18 21:32:11.996  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956332 002
+12-18 21:32:12.001  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956332 006
+12-18 21:32:12.001  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956332 009
+12-18 21:32:12.001  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956332 009
+12-18 21:32:12.601  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956332 605
+
+12-18 21:32:12.676  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956332 680
+12-18 21:32:12.676  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956332 681
+12-18 21:32:12.676  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956332 684
+12-18 21:32:12.681  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956332 688
+12-18 21:32:12.681  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956332 688
+12-18 21:32:12.996  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956333 003
+
+12-18 21:32:13.086  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956333 094
+12-18 21:32:13.091  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956333 095
+12-18 21:32:13.091  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956333 098
+12-18 21:32:13.096  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956333 102
+12-18 21:32:13.096  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956333 102
+12-18 21:32:14.091  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956334 095
+
+12-18 21:32:14.131  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956334 138
+12-18 21:32:14.131  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956334 139
+12-18 21:32:14.136  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956334 143
+12-18 21:32:14.141  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956334 146
+12-18 21:32:14.141  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956334 147
+12-18 21:32:14.596  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956334 601
+
+12-18 21:32:14.806  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956334 811
+12-18 21:32:14.806  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956334 811
+12-18 21:32:14.806  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956334 814
+12-18 21:32:14.811  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956334 818
+12-18 21:32:14.811  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956334 818
+12-18 21:32:16.206  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956336 214
+
+12-18 21:32:16.361  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956336 367
+12-18 21:32:16.361  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956336 368
+12-18 21:32:16.366  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956336 372
+12-18 21:32:16.371  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956336 375
+12-18 21:32:16.371  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956336 375
+12-18 21:32:17.396  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956337 400
+
+12-18 21:32:17.486  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956337 492
+12-18 21:32:17.486  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956337 493
+12-18 21:32:17.491  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956337 496
+12-18 21:32:17.496  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956337 500
+12-18 21:32:17.496  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956337 501
+12-18 21:32:17.586  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956337 593
+
+12-18 21:32:17.676  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956337 682
+12-18 21:32:17.676  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956337 682
+12-18 21:32:17.681  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956337 685
+12-18 21:32:17.681  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956337 689
+12-18 21:32:17.681  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956337 689
+12-18 21:32:18.091  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956338 097
+
+12-18 21:32:18.196  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956338 200
+12-18 21:32:18.196  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956338 201
+12-18 21:32:18.201  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956338 205
+12-18 21:32:18.201  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956338 208
+12-18 21:32:18.201  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956338 208
+12-18 21:32:18.521  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956338 526
+
+12-18 21:32:18.656  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956338 663
+12-18 21:32:18.656  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956338 664
+12-18 21:32:18.966  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956338 971
+12-18 21:32:18.971  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956338 976
+12-18 21:32:18.971  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956338 976
+12-18 21:32:19.571  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956339 579
+
+12-18 21:32:19.621  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956339 626
+12-18 21:32:19.621  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956339 628
+12-18 21:32:19.626  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956339 632
+12-18 21:32:19.636  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956339 640
+12-18 21:32:19.636  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956339 641
+12-18 21:32:19.671  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956339 676
+
+12-18 21:32:20.221  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up start 1418956340 228
+12-18 21:32:20.221  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ up -end- 1418956340 229
+12-18 21:32:20.226  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db start 1418956340 233
+12-18 21:32:20.231  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ db -end- 1418956340 237
+12-18 21:32:20.231  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it start 1418956340 237
+12-18 21:32:22.326  29859-29873/fr.vpm.audiorss D/upRSSChannel﹕ it -end- 1418956342 330
+
+Updating the items takes often half a second
