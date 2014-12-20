@@ -3,6 +3,7 @@ package fr.vpm.audiorss.process;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,8 +64,9 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
       ImageView itemIcon1 = (ImageView) convertView.findViewById(R.id.item_icon_1);
       ImageView itemIcon2 = (ImageView) convertView.findViewById(R.id.item_icon_2);
+      TextView itemContent = (TextView) convertView.findViewById(R.id.item_content);
 
-      itemHolder = new ViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2);
+      itemHolder = new ViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent);
       convertView.setTag(itemHolder);
     } else {
       itemHolder = (ViewHolder) convertView.getTag();
@@ -103,6 +105,11 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       itemHolder.iconView2.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);
+    }
+
+    // Feed content
+    if (itemHolder.contentView != null) {
+      itemHolder.contentView.setText(Html.fromHtml(rssItem.getDescription()));
     }
 
     return convertView;
@@ -170,13 +177,16 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
     private final ImageView iconView2;
 
-    public ViewHolder(TextView titleView, TextView feedTitleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2) {
+    private final TextView contentView;
+
+    public ViewHolder(TextView titleView, TextView feedTitleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2, TextView contentView) {
       this.titleView = titleView;
       this.feedTitleView = feedTitleView;
       this.dateView = dateView;
       this.pictureView = pictureView;
       this.iconView1 = iconView1;
       this.iconView2 = iconView2;
+      this.contentView = contentView;
     }
   }
 }

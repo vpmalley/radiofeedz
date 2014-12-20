@@ -2,24 +2,21 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingLeft="5dp"
-              android:paddingRight="5dp"
-              android:paddingTop="5dp"
-              android:paddingBottom="5dp"
+              android:padding="6dp"
               android:orientation="vertical"
               android:background="?android:attr/activatedBackgroundIndicator"
-              android:minHeight="200dp"
-              android:maxHeight="200dp" >
+              android:minHeight="220dp"
+              android:maxHeight="220dp" >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:minHeight="70dp"
         android:background="@android:color/white" >
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top"
+            android:gravity="center_horizontal|center_vertical"
             android:minWidth="70dp"
             android:minHeight="70dp"
             android:maxWidth="70dp"
@@ -30,7 +27,7 @@
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:orientation="horizontal"
-                      android:layout_alignParentBottom="true"
+                      android:layout_alignParentTop="true"
             >
             <TextView
                 android:layout_width="wrap_content"
@@ -40,7 +37,8 @@
                 android:gravity="center_vertical"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColorHighlight="@android:color/white"
-                android:textColor="@android:color/tertiary_text_light"/>
+                android:textColor="@android:color/tertiary_text_light"
+                android:visibility="gone" />
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -73,11 +71,28 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:padding="4dp"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:minHeight="50dp"
+        android:maxHeight="50dp"
         android:id="@+id/item_title"
+        android:layout_weight="3"
+        android:gravity="start|top"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@android:color/white"
+        android:maxLines="3" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:minHeight="100dp"
+        android:maxHeight="100dp"
+        android:id="@+id/item_content"
         android:layout_weight="4"
         android:gravity="start|top"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white"
+        android:maxLines="5"
+        android:textStyle="italic"
+        android:textColor="@android:color/tertiary_text_light" />
 </LinearLayout>
