@@ -15,31 +15,44 @@ Vous téléchargez vos podcasts à votre appareil Android en quelques clics.
 
 Tous vos podcasts et nouvelles sont dans votre poche, prêts à être écoutés, regardés ou lus, à tout moment, dans le bus, l'avion ou dans votre canapé.
 
-Le reste est à traduire.
+## Comment puis-je trouver ces "flux RSS" ?
 
-## How do I find these "RSS feeds" ?
+### Médias
 
-Most (if not all) news websites have RSS feeds. There is usually a link on the home page to the RSS feeds (search for RSS, for this icon <img alt="RSS feed icon, from Wikimedia, uploaded by user Anomie" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png" height="30px" width="30px" />, for podcasts, ...).
+La plupart (sinon tous) les sites des médias proposent des flux RSS. Il y a généralement un lien sur la page d'accueil vers les flux RSS. Cherchez le mot-clé RSS, le mot-clé podcast, cette icône <img alt="RSS feed icon, from Wikimedia, uploaded by user Anomie" src="https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png" height="30px" width="30px" />, ...
 
-Once you find one of these feeds, copy the url of the RSS feed, then open your RadioFeedz app and press the action button '+' at the top-right of the main screen. It is going to suggest you to add this feed. Press Yes and enjoy your podcasts and news!
+Une fois que vous avez trouvé un de ces flux, copiez l'url du flux RSS, puis ouvrez l'application Radiofeedz et cliquez l'icône <img alt="'new' icon from the Icon pack provided by Android" src="/screenshots/ic_action_new.png" height="18px" width="18px" /> en haut à droite de l'écran principal. On vous proposera d'ajouter ce flux. Cliquez sur Oui et appréciez vos podcasts et nouvelles!
 
-### Examples
+<img alt="barre d'action avec l'icône '+'" src="/screenshots/actionbar.png" width="400px" />
 
-I first developed this app for the podcasts from [France Inter][fi], a French radio. The RSS feeds are available for each talk-show. Go to the page of the show, click the menu item `podcast` and click `s'abonner au podcast via RSS`. Copy the url of the page that opened, then open the RadioFeedz app and click the + button at the top-right of the screen.
+### Moteurs de recherche
 
-It is possible to listen to the recently popular podcast [*Serial*][serial] by going to the `subscribe` page (there is the small icon). There you copy the url of the link [`RSS Feed`][serial-rss]. You open your RadioFeedz app and click the + button at the top-right of the screen. Hop, you're good to listen these adventures.
+Il y a plusieurs moteurs de recherche et fournisseurs de flux RSS accessibles sur le Web. Vous pouvez essayer l'un d'eux:
 
-## I love this app
+- [Recherche RSS Instantanée](http://ctrlq.org/rss/) vous permet de rechercher les flux RSS des médias existants.
+- [Feedzilla](http://www.feedzilla.com/gallery) offre une galerie de flux RSS par catégorie.
 
-Great! Let your friends know, let them enjoy their podcasts as well.
+Une fois que vous avez choisi un flux RSS parmi ceux-ci, cliquez longuement sur le lien vers le flux RSS, dans votre navigateur Android. Choisissez l'option de partage, puis vous pouvez choisir Radiofeedz. Cela vous redirigera vers l'application, et vous pourrez lire les nouvelles et écouter les podcasts de cette source.
 
-## There are bugs, the application crashes, what do I do ?
+### Exemples
 
-I tried to test my app as much as I could, but I probably forgot some bugs. Do not hesitate to [open an issue in Github][gh-issues] if you find one. If you do, please be as precise as you can (what feed you used, what button you pressed ...). In particular, some feeds might not work as expected (as I tested only the few feeds I follow).
+Vous pouvez ajouter des flux de podcasts de la plupart des radios du monde. Prenons l'exemple des radios de Radio France. J'ai développé cette application pour écouter les podcasts de [France Inter][fi], à l'origine. Deux options pour s'abonner aux podcasts des radios de Radio France:
+- Si vous disposez de l'application de la radio, ouvrez-la, sur le volet de gauche cliquez sur "Toutes les émissions" puis choisissez votre émission préférée. En haut à droite, il y a une icône ressemblant à une personne émettant des ondes. Cliquez dessus, choisissez l'option "Copier le lien". Ouvrez l'application Radiofeedz, puis cliquez sur l'icône <img alt="barre d'action avec l'icône '+'" src="/screenshots/actionbar.png" width="400px" /> en haut de l'écran. Vous pouvez ainsi ajouter vos podcasts préférés.
+- Si vous utilisez votre navigateur sur votre appareil Android, naviguez vers la page de votre émission préférée. Cliquez sur le menu `podcast` puis longuement sur `s'abonner au podcast via RSS`. Un menu d'options apparaît, choisissez `Ouvrir avec une application` puis Radiofeedz. Il vous reste à accepter l'ajout de votre podcast puis l'apprécier!
 
-## References
+Par exemple, [voici le lien vers le flux RSS de la chronique Géopolitique de Bernard Guetta][fi-geo]
 
-[RSS feed icon from Wikimedia][rss-wiki], by [user Anomie][anomie-wiki]
+## J'adore cette appli!
+
+Parfait! Dites-le à vos amis, laissez-les profiter de leurs podcasts eux aussi.
+
+## Il y a des bugs, l'application crashe, qu'est-ce que je fais ?
+
+J'ai testé l'application autant que j'aie pu, mais j'ai probablement oublié des bugs. N'hésitez pas à [ouvrir un problème sur Github][gh-issues] si vous en trouvez. Si c'est le cas, essayez d'être aussi précis que possible (quel flux RSS vous avez utilisé, quel bouton vous avez appuyé, ...). Je pourrai plus facilement corriger les problèmes. En particulier, certains flux peuvent ne pas fonctionner, je n'ai bien entendu pas pu tous les tester.
+
+## Références
+
+[Icône de flux RSS de Wikimedia][rss-wiki], par [Anomie][anomie-wiki]
 
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
@@ -47,5 +60,6 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 [rss-wiki]: https://en.wikipedia.org/wiki/File:Feed-icon.svg
 [anomie-wiki]: https://en.wikipedia.org/wiki/User:Anomie
 [fi]: http://www.franceinter.fr
+[fi-geo]: http://radiofrance-podcast.net/podcast09/rss_10009.xml
 [serial]: http://serialpodcast.org/
 [serial-rss]: http://feeds.serialpodcast.org/serialpodcast
