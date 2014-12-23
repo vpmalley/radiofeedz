@@ -44,21 +44,12 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
     Intent i = getIntent();
-    Long[] channelIds = new Long[0];
-    if (i.hasExtra(AllFeedItems.CHANNEL_ID)) {
-      long[] chIds = i.getExtras().getLongArray(AllFeedItems.CHANNEL_ID);
-      int j = 0;
-      channelIds = new Long[chIds.length];
-      for (long chId : chIds){
-        channelIds[j++] = chId;
-      }
-    }
     if (i.hasExtra(INITIAL_POSITION)) {
       initialPosition = i.getIntExtra(INITIAL_POSITION, 0);
     }
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, R.layout.list_rss_item);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, new Long[0], R.layout.list_rss_item);
     if (i.hasExtra(ITEM_FILTER)) {
       List<Parcelable> parcelledFilters = i.getParcelableArrayListExtra(ITEM_FILTER);
       List<SelectionFilter> selectionFilters = new ArrayList<SelectionFilter>();
