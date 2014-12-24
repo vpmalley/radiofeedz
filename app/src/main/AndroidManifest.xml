@@ -17,6 +17,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <receiver android:name=".media.MediaBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/>
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".AllFeedItems"
             android:label="@string/app_name" >

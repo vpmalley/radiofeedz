@@ -2,12 +2,8 @@ package fr.vpm.audiorss.media;
 
 import android.app.Activity;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -114,9 +110,8 @@ public class Media implements Downloadable, Parcelable {
       downloadId = dm.enqueue(r);
     }
 
-    BroadcastReceiver downloadFinished = new MediaBroadcastReceiver(mediaDownloadListener);
-    context.registerReceiver(downloadFinished, new IntentFilter(
-            DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    MediaBroadcastReceiver.addMedia(this);
+    MediaBroadcastReceiver.addListener(mediaDownloadListener);
   }
 
   public File getDownloadFolder(Context context, Folder folder) {
@@ -298,6 +293,10 @@ public class Media implements Downloadable, Parcelable {
     return deviceUri;
   }
 
+  public void setDeviceUri(String deviceUri) {
+    this.deviceUri = deviceUri;
+  }
+
   @Override
   public long getDownloadId() {
     return downloadId;
@@ -349,43 +348,5 @@ public class Media implements Downloadable, Parcelable {
     }
   };
 
-
-  private class MediaBroadcastReceiver extends BroadcastReceiver {
-
-    private final MediaDownloadListener mediaDownloadListener;
-
-    private MediaBroadcastReceiver(MediaDownloadListener mediaDownloadListener) {
-      this.mediaDownloadListener = mediaDownloadListener;
-    }
-
-    @Override
-    public void onReceive(Context context, Intent intent) {
-      Log.d("BReceiver", "A download is complete");
-      long fileId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-      if (downloadId != fileId){
-        return;
-      }
-
-      // query the status of the file
-      DownloadManager.Query query = new DownloadManager.Query();
-      query.setFilterById(fileId);
-      DownloadManager dm = (DownloadManager) context.getSystemService(Activity.DOWNLOAD_SERVICE);
-      Cursor c = dm.query(query);
-      c.moveToFirst();
-
-      int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
-
-      if (DownloadManager.STATUS_SUCCESSFUL == status) {
-        deviceUri = c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-        isDownloaded = true;
-
-        new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, Media.this);
-        mediaDownloadListener.onMediaDownloaded();
-      }
-      Log.d("BReceiver", "The status for " + id + " is " + status + ". It is located at "
-              + deviceUri);
-    }
-
-  }
 
 }
