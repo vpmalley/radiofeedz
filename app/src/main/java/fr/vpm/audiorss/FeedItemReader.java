@@ -300,6 +300,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   @Override
   public void onMediaDownloaded() {
-    updateActionMediaItems();
+    if (isVisible()) {
+      updateActionMediaItems();
+    }
   }
 }
