@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,6 +47,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
   private DataModel dataModel;
   private ListView drawerList;
+  private ActionBarDrawerToggle drawerToggle;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -84,18 +87,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
 
     // Navigation drawer
-    final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
-        filters.add(((NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position)).getFilter());
-        dataModel.filterData(filters);
-        drawerLayout.closeDrawer(drawerList);
-      }
-    });
+    setNavigationDrawer();
 
+    // Contextual actions
     setContextualListeners();
     dataModel.loadData();
 
@@ -108,6 +102,45 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   }
 
   /**
+   * Sets the navigation drawer and related elements
+   */
+  private void setNavigationDrawer() {
+    // the navigation drawer
+    final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+    drawerList = (ListView) findViewById(R.id.left_drawer);
+    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
+        filters.add(((NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position)).getFilter());
+        dataModel.filterData(filters);
+        drawerLayout.closeDrawer(drawerList);
+      }
+    });
+
+    // set up the app icon in the action to open/close the drawer
+    getActionBar().setDisplayHomeAsUpEnabled(true);
+    drawerToggle = new ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.drawable.ic_drawer,
+            R.string.drawer_open,
+            R.string.drawer_close
+    ) {
+      public void onDrawerClosed(View view) {
+        getActionBar().setTitle(R.string.drawer_closed_title);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+
+      public void onDrawerOpened(View drawerView) {
+        getActionBar().setTitle(R.string.drawer_opened_title);
+        invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+      }
+    };
+    drawerLayout.setDrawerListener(drawerToggle);
+  }
+
+  /**
    * Defines the listener when long clicking on one or multiple items of the list
    */
   private void setContextualListeners() {
@@ -117,6 +150,18 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener<RSSChannel> drawerModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel.getNavigationDrawer(), R.menu.feeds_context);
     drawerList.setMultiChoiceModeListener(drawerModeCallback);
+  }
+
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    drawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    drawerToggle.onConfigurationChanged(newConfig);
   }
 
   @Override
@@ -143,6 +188,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   public boolean onOptionsItemSelected(MenuItem item) {
     Intent i;
     boolean result = false;
+    if (drawerToggle.onOptionsItemSelected(item)) {
+      return true;
+    }
     switch (item.getItemId()) {
       case R.id.action_search:
         i = new Intent(AllFeedItems.this, SearchFeedActivity.class);

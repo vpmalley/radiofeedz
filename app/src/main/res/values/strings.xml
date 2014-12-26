@@ -25,4 +25,8 @@
     <string name="drawer_downloaded">Downloaded</string>
     <string name="drawer_archived">Archived</string>
     <string name="drawer_audio">Audio podcasts</string>
+    <string name="drawer_open">Apply filters</string>
+    <string name="drawer_close">Filters applied</string>
+    <string name="drawer_closed_title">Your news</string>
+    <string name="drawer_opened_title">Filter your news</string>
 </resources>
