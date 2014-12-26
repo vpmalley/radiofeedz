@@ -15,6 +15,7 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSChannel;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.filter.ArchivedFilter;
+import fr.vpm.audiorss.db.filter.AudioFilter;
 import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.DownloadedFilter;
 import fr.vpm.audiorss.db.filter.EmptyFilter;
@@ -27,6 +28,13 @@ import fr.vpm.audiorss.rss.RSSChannel;
  *
  * The data model for the navigation drawer
  *
+ * This is where a new filter should be added to appear in the navigation drawer.
+ * For that,
+ * 1. create a new subclass SelectionFilter in package fr.vpm.audiorss.db.filter
+ * 2. add an instance of this filter at the end of the STATIC_ITEM_FILTERS array, below
+ * 3. add a resource for the name of this filter at the end of the STATIC_ITEM_TITLES array, below
+ * (and do not forget to add a French translation for that)
+ *
  * Created by vince on 12/12/14.
  */
 public class NavigationDrawerList implements NavigationDrawerProvider {
@@ -36,7 +44,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
    * Must have the same length as STATIC_ITEM_TITLES
    */
   private static final SelectionFilter[] STATIC_ITEM_FILTERS = new SelectionFilter[] {
-          new EmptyFilter(), new TodayFilter(), new UnreadFilter(), new DownloadedFilter(), new ArchivedFilter()
+          new EmptyFilter(), new TodayFilter(), new UnreadFilter(), new DownloadedFilter(), new ArchivedFilter(), new AudioFilter()
   };
 
   /**
@@ -44,7 +52,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
    * Must have the same length as STATIC_ITEM_FILTERS
    */
   private static final int[] STATIC_ITEM_TITLES = new int[] {
-          R.string.drawer_latest, R.string.drawer_today, R.string.drawer_unread, R.string.drawer_downloaded, R.string.drawer_archived
+          R.string.drawer_latest, R.string.drawer_today, R.string.drawer_unread, R.string.drawer_downloaded, R.string.drawer_archived, R.string.drawer_audio
   };
 
   private final Context context;

@@ -28,4 +28,5 @@
     <string name="drawer_unread">Non lus</string>
     <string name="drawer_downloaded">Téléchargés</string>
     <string name="drawer_archived">Archivés</string>
+    <string name="drawer_audio">Podcasts audio</string>
 </resources>

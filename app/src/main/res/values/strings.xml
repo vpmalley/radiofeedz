@@ -24,4 +24,5 @@
     <string name="drawer_unread">Unread</string>
     <string name="drawer_downloaded">Downloaded</string>
     <string name="drawer_archived">Archived</string>
+    <string name="drawer_audio">Audio podcasts</string>
 </resources>
