@@ -203,7 +203,7 @@ public class ItemParser {
   private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
       XmlPullParserException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
-    String content = null;
+    String content = "";
     if (parser.next() == XmlPullParser.TEXT) {
       content = parser.getText();
       parser.nextTag();
