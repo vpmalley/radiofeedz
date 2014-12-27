@@ -118,9 +118,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     long id = mDb.insert(T_RSS_CHANNEL, null, channelValues);
     channel.setId(id);
 
-    for (RSSItem item : channel.getItems()) {
-      addOrUpdate(item, channel.getId());
-    }
+    bulkAddOrUpdateItems(channel);
     return channel;
   }
 
@@ -131,13 +129,24 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     mDb.update(T_RSS_CHANNEL, channelValues, DatabaseOpenHelper._ID + "=?",
             new String[]{String.valueOf(existingChannel.getId())});
 
-    for (RSSItem item : existingChannel.getItems()) {
-      if (item.getDbId() < 0) {
-        addOrUpdate(item, existingChannel.getId());
-      }
-    }
-
+    bulkAddOrUpdateItems(existingChannel);
     return existingChannel;
+  }
+
+  /**
+   * Wraps into a transaction the items insertions
+   * @param channel the channel for which to insert or update the items
+   */
+  private void bulkAddOrUpdateItems(RSSChannel channel) {
+    try {
+      mDb.beginTransaction();
+      for (RSSItem item : channel.getItems()) {
+        addOrUpdate(item, channel.getId());
+      }
+      mDb.setTransactionSuccessful();
+    } finally {
+      mDb.endTransaction();
+    }
   }
 
   public ContentValues createContentValues(RSSChannel channel) {
