@@ -3,12 +3,14 @@ package fr.vpm.audiorss.process;
 import android.util.Log;
 import android.util.Xml;
 
-import org.apache.http.HttpEntity;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -29,12 +31,16 @@ public class ItemParser {
   private static final String RSS_TAG = "rss";
   private static final String ITEM_TAG = "item";
 
-  public RSSChannel parseChannel(HttpEntity entity, String rssUrl) throws XmlPullParserException,
+  public RSSChannel parseChannel(String rssUrl) throws XmlPullParserException,
       IOException, ParseException {
     InputStream in = null;
+    HttpURLConnection urlConnection = null;
     try {
       Log.d("ItemParser", "started reading channel");
-      in = entity.getContent();
+      URL formattedUrl = new URL(rssUrl);
+      urlConnection = (HttpURLConnection) formattedUrl.openConnection();
+      in = new BufferedInputStream(urlConnection.getInputStream());
+
       XmlPullParser parser = Xml.newPullParser();
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
       parser.setInput(in, null);

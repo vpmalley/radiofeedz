@@ -3,8 +3,6 @@ package fr.vpm.audiorss.process;
 import java.io.IOException;
 import java.text.ParseException;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -17,7 +15,7 @@ public class ItemParserTest {
 		
 		ItemParser parser = new ItemParser();
 		
-		RSSChannel channel = parser.parseChannel(null, "someUrl");
+		RSSChannel channel = parser.parseChannel("someUrl");
 		/*
 		Assert.assertEquals(SAMPLE_TITLE, channel.title);
 		Assert.assertEquals(SAMPLE_LINK, channel.link);
