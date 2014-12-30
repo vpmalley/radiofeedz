@@ -1,5 +1,6 @@
 package fr.vpm.audiorss;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -10,12 +11,25 @@ public class ProgressBarListener implements ProgressListener {
 
   private final ProgressBar mRefreshProgress;
 
+  private long initialTime = -1;
+
+  private int ctrStart = 0;
+
+  private int ctrStop = 0;
+
+  private boolean isVisible = false;
+
   public ProgressBarListener(ProgressBar mRefreshProgress) {
     this.mRefreshProgress = mRefreshProgress;
   }
 
   public void startRefreshProgress() {
-    mRefreshProgress.setVisibility(View.VISIBLE);
+    ctrStart++;
+    if (!isVisible) {
+      initialTime = System.currentTimeMillis();
+      mRefreshProgress.setVisibility(View.VISIBLE);
+      isVisible = true;
+    }
   }
 
   public void updateProgress(int progress) {
@@ -23,6 +37,11 @@ public class ProgressBarListener implements ProgressListener {
   }
 
   public void stopRefreshProgress() {
-    mRefreshProgress.setVisibility(View.GONE);
+    ctrStop++;
+    if (isVisible && (ctrStop == ctrStart)) {
+      mRefreshProgress.setVisibility(View.GONE);
+      isVisible = false;
+      Log.d("progress", "-end- " + (System.currentTimeMillis() - initialTime));
+    }
   }
 }
