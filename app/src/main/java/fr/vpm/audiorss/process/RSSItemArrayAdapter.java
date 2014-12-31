@@ -85,7 +85,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     }
 
     // Feed title
-    if (itemHolder.feedTitleView != null) {
+    if ((itemHolder.feedTitleView != null) && (rssChannel != null)) {
       itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
     }
 
