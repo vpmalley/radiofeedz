@@ -167,18 +167,36 @@ public class ItemParser {
         // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
         try {
+
+          // time zone : Z/ZZ/ZZZ
+          Pattern expectedNumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
+          Matcher numM = expectedNumPattern.matcher(pubDate);
+
+          // time zone : ZZZZZ
+          Pattern expectedTimePattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{2}:[0-9]{2}");
+          Matcher timeM = expectedTimePattern.matcher(pubDate);
+
           Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
-          Date date;
           Matcher m = expectedMinimumPattern.matcher(pubDate);
-          if (m.find()){
+
+          Date date;
+          if (numM.find()){
+            Log.d("datePattern", "4D");
+            date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
+          } else if (timeM.find()){
+            Log.d("datePattern", "2D:2D");
+            date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
+          } else if (m.find()){
+            Log.d("datePattern", "default");
             date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
           } else {
-            Log.w("date", "Could not parse the right date, defaulting to current date");
+            Log.w("datePattern", "Could not parse the right date, defaulting to current date");
             date = Calendar.getInstance().getTime();
           }
           pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
         } catch (ParseException e) {
-          Log.w("date", "tried parsing date but failed: " + pubDate);
+          Log.w("datePattern", "tried parsing date but failed: " + pubDate + ". " + e.getMessage());
+          pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
         }
       } else {
         skip(parser);
