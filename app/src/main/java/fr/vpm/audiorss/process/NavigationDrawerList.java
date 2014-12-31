@@ -90,15 +90,28 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
   @Override
   public void deleteData(Collection<Integer> selection) {
     AsyncDbDeleteRSSChannel feedDeletion = new AsyncDbDeleteRSSChannel(loadCallback, context);
-    RSSChannel[] feedsToDelete = new RSSChannel[selection.size()];
     int i = 0;
+    // first figure how many selected feeds are actually feeds
+    for (int position : selection) {
+      if (items.get(position).hasBoundChannel()) {
+        i++;
+      }
+    }
+
+    // fill an array with the selected feeds
+    RSSChannel[] feedsToDelete = new RSSChannel[i];
+    i = 0;
     for (int position : selection) {
       if (items.get(position).hasBoundChannel()) {
         feedsToDelete[i++] = items.get(position).getBoundChannel();
       }
     }
+
+    // delete these feeds
     Log.d("deletefeed", String.valueOf(feedsToDelete.length));
-    feedDeletion.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, feedsToDelete);
+    if (feedsToDelete.length > 0) {
+      feedDeletion.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, feedsToDelete);
+    }
   }
 
   @Override
