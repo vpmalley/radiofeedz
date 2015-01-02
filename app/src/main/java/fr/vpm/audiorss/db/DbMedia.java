@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.vpm.audiorss.media.Media;
 
@@ -28,15 +30,15 @@ public class DbMedia {
   public final static String MIME_KEY = "mime_type";
 
   public final static String[] COLS_MEDIA = {DatabaseOpenHelper._ID, NAME_KEY, TITLE_KEY,
-      INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY, MIME_KEY};
+          INET_URL_KEY, DEVICE_URI_KEY, DL_ID_KEY, IS_DL_KEY, MIME_KEY};
 
   public final static String T_MEDIA = "media";
 
   final static String T_CREATE_MEDIA = "CREATE TABLE " + T_MEDIA + " (" + DatabaseOpenHelper._ID
-      + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME_KEY + DatabaseOpenHelper.TEXT_COLUMN + COMMA
-      + TITLE_KEY + " TEXT" + COMMA + INET_URL_KEY + " TEXT" + COMMA
-      + DEVICE_URI_KEY + " TEXT" + COMMA + DL_ID_KEY + " INTEGER" + COMMA
-      + IS_DL_KEY + " INTEGER" + COMMA + MIME_KEY + " TEXT" + ")";
+          + " INTEGER PRIMARY KEY AUTOINCREMENT, " + NAME_KEY + DatabaseOpenHelper.TEXT_COLUMN + COMMA
+          + TITLE_KEY + " TEXT" + COMMA + INET_URL_KEY + " TEXT" + COMMA
+          + DEVICE_URI_KEY + " TEXT" + COMMA + DL_ID_KEY + " INTEGER" + COMMA
+          + IS_DL_KEY + " INTEGER" + COMMA + MIME_KEY + " TEXT" + ")";
 
   private SQLiteDatabase mDb = null;
 
@@ -67,6 +69,23 @@ public class DbMedia {
     mDb.close();
   }
 
+  public List<Media> readAll() throws ParseException {
+    if (!mDb.isOpen()) {
+      throw new IllegalArgumentException("Database is not open to read a media");
+    }
+    Cursor c = mDb.query(T_MEDIA, COLS_MEDIA, null, null, null, null, null);
+
+    List<Media> medias = new ArrayList<>();
+    if (c.getCount() > 0) {
+      c.moveToFirst();
+      for (int i = 0; i < c.getCount(); i++) {
+        medias.add(mediaFromCursorEntry(c));
+        c.moveToNext();
+      }
+    }
+    c.close();
+    return medias;
+  }
 
   public Media readById(long id) throws ParseException {
     Media media = null;
@@ -74,7 +93,7 @@ public class DbMedia {
       throw new IllegalArgumentException("Database is not open to read a media");
     }
     Cursor c = mDb.query(T_MEDIA, COLS_MEDIA, DatabaseOpenHelper._ID + "=?",
-        new String[]{String.valueOf(id)}, null, null, null);
+            new String[]{String.valueOf(id)}, null, null, null);
     if (c.getCount() > 0) {
       c.moveToFirst();
       media = mediaFromCursorEntry(c);
@@ -95,7 +114,7 @@ public class DbMedia {
     ContentValues mediaValues = createContentValues(media);
     mediaValues.put(DatabaseOpenHelper._ID, media.getId());
     mDb.update(T_MEDIA, mediaValues, DatabaseOpenHelper._ID + "=?",
-        new String[]{String.valueOf(media.getId())});
+            new String[]{String.valueOf(media.getId())});
     return media;
   }
 

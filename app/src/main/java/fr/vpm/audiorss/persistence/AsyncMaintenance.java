@@ -3,16 +3,21 @@ package fr.vpm.audiorss.persistence;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.File;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
+import fr.vpm.audiorss.db.DbMedia;
+import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -41,6 +46,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
     cleanFolders(params);
     cleanItems();
+    refreshDownloadedPodcasts();
 
     return null;
   }
@@ -81,5 +87,25 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     for (File folder : params) {
       fileSaver.cleanFolder(folder, PICS_THRESHOLD, ICONS_EXPIRY_TIME);
     }
+  }
+
+  /**
+   * Refreshes all the media items for which a file exists on the filesystem
+   */
+  private void refreshDownloadedPodcasts() {
+    DbMedia dbUpdater = new DbMedia(context, true);
+    List<Media> medias = new ArrayList<>();
+    try {
+      medias = dbUpdater.readAll();
+    } catch (ParseException e) {
+      Log.w("db", "Failed retrieving the medias: " + e.getMessage());
+    }
+    for (Media media : medias) {
+      boolean beforeUpdate = media.isDownloaded();
+      if (beforeUpdate != media.isDownloaded(context, true)) {
+        dbUpdater.update(media);
+      }
+    }
+    dbUpdater.closeDb();
   }
 }
