@@ -59,14 +59,11 @@
                 android:paddingTop="2dp"
                 android:paddingBottom="2dp" />
 
-            <TextView
+            <WebView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:fontFamily="sans-serif-light"
-                android:textColor="@android:color/secondary_text_light"
-                android:textColorLink="@android:color/holo_blue_dark"
                 android:padding="10dp" />
         </LinearLayout>
     </ScrollView>

@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
@@ -77,7 +78,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
     TextView date = (TextView) readerView.findViewById(R.id.date);
 
-    TextView description = (TextView) readerView.findViewById(R.id.description);
+    WebView description = (WebView) readerView.findViewById(R.id.description);
 
     if (rssItem != null) {
       title.setText(rssItem.getTitle());
@@ -90,8 +91,9 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         Log.d("date", "Could not parse date " + rssItem.getDate());
         date.setText(rssItem.getDate());
       }
-      description.setText(Html.fromHtml(rssItem.getDescription()));
-      description.setMovementMethod(LinkMovementMethod.getInstance());
+      String style = "<style type=\"text/css\">body{color: #5A5A5A; font-family: sans-serif-light;}</style>";
+      description.loadDataWithBaseURL(null, style + rssItem.getDescription(), "text/html", "utf-8", null);
+      description.setBackgroundColor(0x00000000);
 
       // check the media exists
       if (rssItem.getMedia() != null) {
