@@ -79,6 +79,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
    */
   private boolean recreate = false;
   private NavigationDrawerList navigationDrawerList;
+  private int savingFeeds = 0;
 
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
           feedsActivity, Long[] channelIds, int resId) {
@@ -92,8 +93,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void loadData() {
-    loadDataFromChannels(false);
-    loadDataFromItems();
+    if (savingFeeds > 0) {
+      savingFeeds--;
+    } else {
+      loadDataFromChannels(false);
+      loadDataFromItems();
+    }
   }
 
   public void loadDataFromChannels(boolean readItems) {
@@ -172,6 +177,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
       new AsyncFeedRefresh(getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           feed.getUrl());
+      savingFeeds++;
     }
   }
 

@@ -34,7 +34,8 @@ public class AsyncDbReadRSSChannel extends AsyncTask<Long, Integer, List<RSSChan
   @Override
   protected List<RSSChannel> doInBackground(Long... ids) {
     List<RSSChannel> foundChannels = new ArrayList<RSSChannel>();
-    Log.d("measures", "load start " + String.valueOf(System.currentTimeMillis()));
+    Log.d("measures", "load ch start");
+    long initLoad = System.currentTimeMillis();
     try {
       if (0 == ids.length) { // if no argument, read all RSSChannel in DB
         foundChannels.addAll(dbReader.readAll(readItems));
@@ -48,7 +49,7 @@ public class AsyncDbReadRSSChannel extends AsyncTask<Long, Integer, List<RSSChan
     } finally {
       dbReader.closeDb();
     }
-    Log.d("measures", "load -end- " + String.valueOf(System.currentTimeMillis()));
+    Log.d("measures", "load ch -end- " + String.valueOf(System.currentTimeMillis() - initLoad));
     return foundChannels;
   }
 

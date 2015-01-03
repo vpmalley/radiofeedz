@@ -36,13 +36,13 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
     }
     RSSChannel persistedChannel = null;
     RSSChannel newChannel = rssChannels[0];
-    Log.d("measures", "save start " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    Log.d("measures", "save start ch");
+    long initSave = System.currentTimeMillis();
     try {
       RSSChannel existingChannel = dbUpdater.readByUrl(newChannel.getUrl(), true, true);
       if (existingChannel != null) {
         persistedChannel = dbUpdater.update(existingChannel, newChannel);
       } else { // new channel
-        //newChannel.downloadImage(context);
         persistedChannel = dbUpdater.add(newChannel);
       }
     } catch (ParseException e) {
@@ -50,7 +50,7 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
     } finally {
       dbUpdater.closeDb();
     }
-    Log.d("measures", "save -end- " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
+    Log.d("measures", "save ch -end- " + String.valueOf(System.currentTimeMillis() - initSave));
     return persistedChannel;
   }
 

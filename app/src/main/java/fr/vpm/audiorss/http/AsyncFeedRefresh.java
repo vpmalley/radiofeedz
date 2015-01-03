@@ -26,7 +26,6 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
                           AsyncCallbackListener<RSSChannel> asyncCallbackListener) {
     this.context = context;
     this.asyncCallbackListener = asyncCallbackListener;
-    Log.d("measures", "openDialog " + String.valueOf(System.currentTimeMillis()));
   }
 
   @Override
@@ -40,9 +39,10 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
     String url = params[0];
     RSSChannel newChannel = null;
     try {
-      Log.d("refresh", "received a response for feed");
+      Log.d("measures", "refresh start");
+      long initRefresh = System.currentTimeMillis();
       newChannel = new ItemParser().parseChannel(url);
-      Log.d("refresh", "created feed from " + newChannel.getUrl());
+      Log.d("measures", "refresh -end- " + (System.currentTimeMillis() - initRefresh));
     } catch (XmlPullParserException | IOException | ParseException e) {
       mE = e;
     }
@@ -51,18 +51,11 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
 
   @Override
   protected void onPostExecute(RSSChannel newChannel) {
-    if (newChannel != null) {
-      Log.d("measures", "postRefresh s " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    }
-
     if (mE != null) {
       Toast.makeText(context, "Could not refresh a feed", Toast.LENGTH_SHORT).show();
       Log.e("Exception", mE.toString());
     }
     asyncCallbackListener.onPostExecute(newChannel);
-    if (newChannel != null) {
-      Log.d("measures", "postRefresh e " + newChannel.getUrl() + String.valueOf(System.currentTimeMillis()));
-    }
     super.onPostExecute(newChannel);
   }
 

@@ -49,6 +49,8 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
   @Override
   protected List<RSSItem> doInBackground(Long... channelIds) {
     Map<String, RSSItem> rssItems = new HashMap<String, RSSItem>();
+    Log.d("measures", "load it start");
+    long initLoad = System.currentTimeMillis();
     try {
       if (0 == channelIds.length) {
         rssItems.putAll(dbUpdater.readItems(forceReadAll, filters));
@@ -67,6 +69,7 @@ public class AsyncDbReadRSSItems extends AsyncTask<Long, Integer, List<RSSItem>>
     String ordering = sharedPref.getString("pref_feed_ordering", "pubDate DESC");
     SortedSet<RSSItem> allItems = new TreeSet<RSSItem>(new ItemComparator(ordering));
     allItems.addAll(rssItems.values());
+    Log.d("measures", "load it -end- " + String.valueOf(System.currentTimeMillis() - initLoad));
     return new ArrayList<RSSItem>(allItems);
   }
 
