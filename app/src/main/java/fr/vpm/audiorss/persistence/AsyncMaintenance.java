@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
@@ -64,9 +65,12 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
    * Cleans the items in the Db after N days
    */
   private void cleanItems() {
-    int itemsExpiryTime = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(context).
-            getString("pref_items_deletion", "180"));
-    MaintenanceFilter maintenanceFilter = new MaintenanceFilter(itemsExpiryTime);
+    String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
+            getString("pref_items_deletion", "180");
+    if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
+      itemsExpiryTime = "180";
+    }
+    MaintenanceFilter maintenanceFilter = new MaintenanceFilter(Integer.valueOf(itemsExpiryTime));
     List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
     filters.add(maintenanceFilter);
     AsyncDbReadRSSItems asyncReader = new AsyncDbReadRSSItems(new AsyncCallbackListener<List<RSSItem>>() {
@@ -77,7 +81,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
       @Override
       public void onPostExecute(List<RSSItem> result) {
-         new AsyncDbDeleteRSSItem(new DummyCallback<List<RSSItem>>(), context).
+        new AsyncDbDeleteRSSItem(new DummyCallback<List<RSSItem>>(), context).
                 executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, result.toArray(new RSSItem[result.size()]));
       }
     }, context, filters);

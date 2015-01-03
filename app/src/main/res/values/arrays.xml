@@ -11,8 +11,8 @@
     <array name="pref_feed_ordering_values">
         <item>pubDate DESC</item>
         <item>pubDate ASC</item>
-        <item>title ASC</item>
-        <item>title DESC</item>
+        <item>rssitem.title ASC</item>
+        <item>rssitem.title DESC</item>
     </array>
 
     <array name="pref_disp_items_layout_entries">
