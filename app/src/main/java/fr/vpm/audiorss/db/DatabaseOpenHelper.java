@@ -48,10 +48,20 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
   final private static Integer DB_VERSION = 15;
   final private Context mContext;
 
-  public DatabaseOpenHelper(Context context) {
+  private static DatabaseOpenHelper sHelper;
+
+  private DatabaseOpenHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
     this.mContext = context;
   }
+
+  public static DatabaseOpenHelper getInstance(Context context){
+    if (sHelper == null) {
+      sHelper = new DatabaseOpenHelper(context);
+    }
+    return sHelper;
+  }
+
 
   @Override
   public void onCreate(SQLiteDatabase db) {

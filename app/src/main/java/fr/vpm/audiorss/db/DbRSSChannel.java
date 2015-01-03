@@ -45,18 +45,16 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
           + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.URL_KEY
           + DatabaseOpenHelper.TEXT_COLUMN + ")";
 
-  private DatabaseOpenHelper mDbHelper;
 
-  private SQLiteDatabase mDb = null;
+  private SQLiteDatabase mDb;
 
   private final SharedPreferences sharedPrefs;
 
   public DbRSSChannel(Context context, boolean writable) {
-    mDbHelper = new DatabaseOpenHelper(context);
     if (writable){
-      mDb = mDbHelper.getWritableDatabase();
+      mDb = DatabaseOpenHelper.getInstance(context).getWritableDatabase();
     } else {
-      mDb = mDbHelper.getReadableDatabase();
+      mDb = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
     }
     sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
   }
@@ -324,7 +322,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   public void closeDb() {
-    mDb.close();
+    //mDb.close();
   }
-
 }

@@ -53,7 +53,8 @@ public class DbMedia {
    * @param writable whether the operations run after this call will write to the DB
    */
   public DbMedia(Context context, boolean writable){
-    DatabaseOpenHelper dbHelper = new DatabaseOpenHelper(context);
+    DatabaseOpenHelper dbHelper = DatabaseOpenHelper.getInstance(context);
+    //new DatabaseOpenHelper(context);
     if (writable){
       mDb = dbHelper.getWritableDatabase();
     } else {
@@ -66,7 +67,7 @@ public class DbMedia {
    * constructor DbMedia(Context, boolean) has been called.
    */
   public void closeDb() {
-    mDb.close();
+    //mDb.close();
   }
 
   public List<Media> readAll() throws ParseException {
