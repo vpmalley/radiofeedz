@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
@@ -43,9 +44,18 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   @Override
   protected File doInBackground(File... params) {
 
-    cleanFolders(params);
-    cleanItems();
-    refreshDownloadedPodcasts();
+    // introducing randomization in maintenance to improve performances
+    int randomMaintenance = new Random().nextInt(1000);
+    if (randomMaintenance < 10) {
+      Log.d("maintenance", "cleaning folders");
+      cleanFolders(params);
+    } else if (randomMaintenance < 20) {
+      Log.d("maintenance", "cleaning items");
+      cleanItems();
+    } else if (randomMaintenance < 30) {
+      Log.d("maintenance", "refresh downloads");
+      refreshDownloadedPodcasts();
+    }
 
     return null;
   }
