@@ -137,18 +137,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   private void markAsRead() {
     rssItem.setRead(true);
-    new AsyncDbSaveRSSItem(new AsyncCallbackListener<List<RSSItem>>() {
-      @Override
-      public void onPreExecute() {
-        // do nothing
-      }
-
-      @Override
-      public void onPostExecute(List<RSSItem> result) {
-        // do nothing
-      }
-    },
-            getActivity()).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, rssItem);
+    new AsyncDbSaveRSSItem(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+            getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItem);
   }
 
   @Override
@@ -282,7 +272,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         }
       }
     }, getActivity()).executeOnExecutor(AsyncTask
-            .SERIAL_EXECUTOR, rssItem);
+            .THREAD_POOL_EXECUTOR, rssItem);
   }
 
   private void openWebsite() {

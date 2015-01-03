@@ -69,11 +69,11 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
       @Override
       public void onPostExecute(List<RSSItem> result) {
          new AsyncDbDeleteRSSItem(new DummyCallback<List<RSSItem>>(), context).
-                executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, result.toArray(new RSSItem[result.size()]));
+                executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, result.toArray(new RSSItem[result.size()]));
       }
     }, context, filters);
     asyncReader.forceReadAll();
-    asyncReader.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
+    asyncReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   /**

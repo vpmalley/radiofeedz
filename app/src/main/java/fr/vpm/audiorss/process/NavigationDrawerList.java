@@ -110,7 +110,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     // delete these feeds
     Log.d("deletefeed", String.valueOf(feedsToDelete.length));
     if (feedsToDelete.length > 0) {
-      feedDeletion.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, feedsToDelete);
+      feedDeletion.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToDelete);
     }
   }
 

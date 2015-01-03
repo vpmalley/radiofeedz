@@ -190,17 +190,8 @@ public class Media implements Downloadable, Parcelable {
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
       isDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
-      new AsyncDbSaveMedia(new AsyncCallbackListener<List<Media>>() {
-        @Override
-        public void onPreExecute() {
-          // do nothing
-        }
-
-        @Override
-        public void onPostExecute(List<Media> result) {
-          // do nothing
-        }
-      }, context).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
+      new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).
+              executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
     }
     return isDownloaded;
   }
