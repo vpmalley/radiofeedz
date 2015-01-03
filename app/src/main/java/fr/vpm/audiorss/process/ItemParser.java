@@ -36,7 +36,6 @@ public class ItemParser {
     InputStream in = null;
     HttpURLConnection urlConnection = null;
     try {
-      Log.d("ItemParser", "started reading channel");
       URL formattedUrl = new URL(rssUrl);
       urlConnection = (HttpURLConnection) formattedUrl.openConnection();
       in = new BufferedInputStream(urlConnection.getInputStream());
@@ -47,7 +46,9 @@ public class ItemParser {
       parser.nextTag();
       return readFeed(parser, rssUrl);
     } finally {
-      in.close();
+      if (in != null) {
+        in.close();
+      }
     }
   }
 
@@ -85,10 +86,8 @@ public class ItemParser {
       } else if (tagName.equals(ITEM_TAG)) {
         RSSItem item = readEntry(parser, title);
         if (item.getId() != null) {
-          Log.d("adding item with id", item.getId());
           items.put(item.getId(), item);
         } else {
-          Log.d("adding item with link", item.getLink());
           items.put(item.getLink(), item);
         }
       } else {
@@ -181,13 +180,10 @@ public class ItemParser {
 
           Date date;
           if (numM.find()){
-            Log.d("datePattern", "4D");
             date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
           } else if (timeM.find()){
-            Log.d("datePattern", "2D:2D");
             date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
           } else if (m.find()){
-            Log.d("datePattern", "default");
             date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
           } else {
             Log.w("datePattern", "Could not parse the right date, defaulting to current date");
@@ -232,7 +228,6 @@ public class ItemParser {
       content = parser.getText();
       parser.nextTag();
     }
-    // Log.d(tagName, content);
     parser.require(XmlPullParser.END_TAG, null, tagName);
     return content;
   }
