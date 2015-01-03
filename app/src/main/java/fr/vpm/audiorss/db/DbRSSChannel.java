@@ -241,17 +241,8 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   }
 
   Map<String, RSSItem> readItems(boolean readAll, List<SelectionFilter> filters) throws ParseException {
-    ConjunctionFilter filter = new ConjunctionFilter(filters);
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
-    String limit = "80";
-    if (!readAll) {
-      limit = sharedPrefs.getString("pref_disp_max_items", "80");
-      if (!Pattern.compile("\\d+").matcher(limit).matches()){
-        limit = "80";
-      }
-    }
-    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
-    Cursor itemsC = queryItems(filter, limit, ordering);
+    Cursor itemsC = readItemsAsCursor(readAll, filters);
     if (itemsC.getCount() > 0) {
       itemsC.moveToFirst();
       for (int i = 0; i < itemsC.getCount(); i++) {
@@ -262,6 +253,33 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     }
     itemsC.close();
     return items;
+  }
+
+  List<RSSItem> readItemsAsList(boolean readAll, List<SelectionFilter> filters) throws ParseException {
+    List<RSSItem> items = new ArrayList<>();
+    Cursor itemsC = readItemsAsCursor(readAll, filters);
+    if (itemsC.getCount() > 0) {
+      itemsC.moveToFirst();
+      for (int i = 0; i < itemsC.getCount(); i++) {
+        items.add(itemFromCursor(itemsC));
+        itemsC.moveToNext();
+      }
+    }
+    itemsC.close();
+    return items;
+  }
+
+  private Cursor readItemsAsCursor(boolean readAll, List<SelectionFilter> filters) {
+    ConjunctionFilter filter = new ConjunctionFilter(filters);
+    String limit = "80";
+    if (!readAll) {
+      limit = sharedPrefs.getString("pref_disp_max_items", "80");
+      if (!Pattern.compile("\\d+").matcher(limit).matches()){
+        limit = "80";
+      }
+    }
+    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
+    return queryItems(filter, limit, ordering);
   }
 
   private Cursor queryItems(ConjunctionFilter filter, String limit, String ordering) {

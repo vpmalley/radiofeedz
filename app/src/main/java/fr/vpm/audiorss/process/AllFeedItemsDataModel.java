@@ -66,8 +66,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private RSSItemArrayAdapter rssItemAdapter;
 
-  private Long[] channelIds;
-
   private ArrayList<SelectionFilter> itemFilters = new ArrayList<SelectionFilter>();
 
   private List<SelectionFilter> channelFilters = new ArrayList<SelectionFilter>();
@@ -82,11 +80,10 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   private int savingFeeds = 0;
 
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
-          feedsActivity, Long[] channelIds, int resId) {
+          feedsActivity, int resId) {
     this.progressListener = progressListener;
     this.feedsActivity = feedsActivity;
     this.activity = activity;
-    this.channelIds = channelIds;
     this.resource = resId;
     this.itemFilters.add(new UnArchivedFilter());
   }
@@ -106,14 +103,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         new ChannelRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   public void loadDataFromItems() {
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), itemFilters);
     // read all RSS items from DB and refresh views
-    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, channelIds);
+    asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override

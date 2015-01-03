@@ -67,20 +67,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
-    Long[] channelIds = new Long[0];
-    Intent i = getIntent();
-    if (i.hasExtra(CHANNEL_ID)) {
-      long[] chIds = i.getExtras().getLongArray(CHANNEL_ID);
-      int j = 0;
-      channelIds = new Long[chIds.length];
-      for (long chId : chIds){
-        channelIds[j++] = chId;
-      }
-    }
-
     // services
     networkChecker = new DefaultNetworkChecker();
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, channelIds, rss_item_layout);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, rss_item_layout);
 
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
@@ -93,6 +82,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     setContextualListeners();
     dataModel.loadData();
 
+    Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
       dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }

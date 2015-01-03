@@ -14,7 +14,6 @@ import java.util.List;
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.DbMedia;
-import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.media.Media;
