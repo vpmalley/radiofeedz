@@ -44,8 +44,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
       + " (" + _ID + INTEGER_PRIMARY_KEY_AUTO + CHANNEL_ID_KEY + TEXT_COLUMN + SEP_COLUMN
       + ITEM_ID_KEY + TEXT_COLUMN + ")";
 
+  final private static String I_CREATE_RSSITEM_RECENT = "CREATE INDEX IF NOT EXISTS rssitem_recent_index ON " + T_RSS_ITEM +
+          " (" + RSSItem.ARCHIVED_KEY + ", " + RSSItem.DATE_TAG + " DESC);";
+  final private static String I_CREATE_RSSITEM_CHANNEL = "CREATE INDEX IF NOT EXISTS rssitem_channel_index ON " + T_RSS_ITEM +
+          " (" + CHANNEL_ID_KEY + ", " + RSSItem.ARCHIVED_KEY + ", " + RSSItem.DATE_TAG + " DESC);";
+
   final private static String DB_NAME = "rss_db";
-  final private static Integer DB_VERSION = 15;
+  final private static Integer DB_VERSION = 18;
   final private Context mContext;
 
   private static DatabaseOpenHelper sHelper;
@@ -68,15 +73,20 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     db.execSQL(DbRSSChannel.T_CREATE_RSS_CHANNEL);
     db.execSQL(T_CREATE_RSS_ITEM);
     db.execSQL(DbMedia.T_CREATE_MEDIA);
+    db.execSQL(I_CREATE_RSSITEM_RECENT);
+    db.execSQL(I_CREATE_RSSITEM_CHANNEL);
   }
 
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    //deleteDatabase();
+    /*
     db.execSQL("DROP TABLE IF EXISTS " + T_RSS_ITEM);
     db.execSQL("DROP TABLE IF EXISTS " + DbRSSChannel.T_RSS_CHANNEL);
     db.execSQL("DROP TABLE IF EXISTS " + DbMedia.T_MEDIA);
     onCreate(db);
+    */
+    db.execSQL(I_CREATE_RSSITEM_RECENT);
+    db.execSQL(I_CREATE_RSSITEM_CHANNEL);
   }
 
   void deleteDatabase() {
