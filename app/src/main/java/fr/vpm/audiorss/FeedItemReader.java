@@ -89,7 +89,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         Log.d("date", "Could not parse date " + rssItem.getDate());
         date.setText(rssItem.getDate());
       }
-      String style = "<style type=\"text/css\">body{color: #5A5A5A; font-family: sans-serif-light;}</style>";
+      String style = "<style type=\"text/css\">body{color: #434343; font-family: sans-serif-light; text-align: justify;}</style>";
       description.loadDataWithBaseURL(null, style + rssItem.getDescription(), "text/html", "utf-8", null);
       description.setBackgroundColor(0x00000000);
 

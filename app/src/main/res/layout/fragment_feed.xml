@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/darker_gray"
+              android:background="#bdbdbd"
               android:orientation="vertical" >
 
     <TextView
@@ -64,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:padding="10dp" />
+                android:padding="5dp"
+                android:layout_margin="5dp"/>
         </LinearLayout>
     </ScrollView>
 
