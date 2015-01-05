@@ -2,15 +2,12 @@
 <resources>
 
     <string name="app_name">RadioFeedz</string>
-
     <string name="cannot_save_picture">Oops! Picture for this feed cannot be saved.</string>
     <string name="might_not_save_picture">Picture for this feed might not have been saved.</string>
     <string name="cannot_get_picture">Oops! Picture for this feed cannot be retrieved.</string>
-
     <string name="not_connected">Oops! This device does not appear connected to the Internet. Check Device Settings.</string>
     <string name="disabled_download">Oops! Downloads are disabled on Wifi and/or mobile networks, the download will not start. Check Application Settings.</string>
     <string name="disabled_refresh">Oops! Feed refreshes are disabled on Wifi and/or mobile networks, the refresh will not start. Check Application Settings.</string>
-
     <string name="please_clip_feed_url">You can add a feed by copying it to the clipboard. Then press this button.</string>
     <string name="add_feed_clipboard">Add feed from clipboard</string>
     <string name="cannot_add_feed">Oops! Issue adding the feed. Please retry.</string>
@@ -29,4 +26,7 @@
     <string name="drawer_close">Filters applied</string>
     <string name="drawer_closed_title">Your news</string>
     <string name="drawer_opened_title">Filter your news</string>
+    <string name="title_activity_catalog">Catalog</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>

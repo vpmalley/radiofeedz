@@ -37,7 +37,10 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
         result.saveToDb(progressListener, dataModel);
       } catch (ParseException e) {
         handleException(e);
+        dataModel.onFeedFailureBeforeLoad();
       }
+    } else {
+      dataModel.onFeedFailureBeforeLoad();
     }
   }
 

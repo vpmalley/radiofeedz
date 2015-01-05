@@ -90,7 +90,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void loadData() {
-    if (savingFeeds > 0) {
+    if (savingFeeds > 1) {
       savingFeeds--;
     } else {
       loadDataFromChannels(false);
@@ -176,6 +176,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           feed.getUrl());
       savingFeeds++;
     }
+  }
+
+  @Override
+  public void onFeedFailureBeforeLoad() {
+    savingFeeds--;
   }
 
   @Override

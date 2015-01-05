@@ -58,6 +58,8 @@ public interface DataModel extends ContextualActions {
    */
   int size();
 
+  void onFeedFailureBeforeLoad();
+
   interface RSSChannelInput {
 
     /**

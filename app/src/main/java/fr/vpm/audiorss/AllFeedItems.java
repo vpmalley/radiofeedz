@@ -40,6 +40,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
   private static final int REQ_PREFS = 2;
+  private static final int REQ_CATALOG = 3;
 
   private AbsListView mFeedItems;
 
@@ -170,7 +171,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.allfeedsitem, menu);
     MenuItem searchItem = menu.findItem(R.id.action_search);
-    searchItem.setVisible(false);
+    //searchItem.setVisible(false);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -183,8 +184,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     }
     switch (item.getItemId()) {
       case R.id.action_search:
-        i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
-        startActivity(i);
+        i = new Intent(AllFeedItems.this, CatalogActivity.class);
+        startActivityForResult(i, REQ_CATALOG);
         result = true;
         break;
       case R.id.action_add:
@@ -215,6 +216,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       dataModel.loadData();
     } else if (REQ_PREFS == requestCode){
       dataModel.refreshView();
+    } else if (REQ_CATALOG == requestCode){
+      String feedUrl = data.getStringExtra(CatalogActivity.FEED_URL_EXTRA);
+      dataModel.addData(feedUrl);
     }
   }
 }
