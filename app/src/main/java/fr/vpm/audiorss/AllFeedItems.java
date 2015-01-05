@@ -171,7 +171,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     // Inflate the menu; this adds items to the action bar if it is present.
     getMenuInflater().inflate(R.menu.allfeedsitem, menu);
     MenuItem searchItem = menu.findItem(R.id.action_search);
-    //searchItem.setVisible(false);
+    searchItem.setVisible(false);
     return super.onCreateOptionsMenu(menu);
   }
 
@@ -184,6 +184,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     }
     switch (item.getItemId()) {
       case R.id.action_search:
+        i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
+        startActivity(i);
+        result = true;
+        break;
+      case R.id.action_catalog:
         i = new Intent(AllFeedItems.this, CatalogActivity.class);
         startActivityForResult(i, REQ_CATALOG);
         result = true;
