@@ -1,0 +1,15 @@
+[
+  {
+    name : "BBC",
+    feeds : [
+      {
+        name : "BBC - The world this week",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml"
+      },
+      {
+        name : "BBC - From our own correspondent",
+        url : "http://downloads.bbc.co.uk/podcasts/radio4/fooc/rss.xml"
+      }
+    ]
+  }
+]

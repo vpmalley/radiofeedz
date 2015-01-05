@@ -1,11 +1,18 @@
 package fr.vpm.audiorss.catalog;
 
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.catalog.json.Feed;
+import fr.vpm.audiorss.catalog.json.FeedGroup;
 
 /**
  * Created by vince on 04/01/15.
@@ -21,36 +28,59 @@ public class Catalog {
   public static final String[] GROUP_KEYS = new String[]{NAME_KEY};
   public static final String[] CHILD_KEYS = new String[]{NAME_KEY};
   public static final String URL_KEY = "url";
+  public static final String ICON_URL_KEY = "iconUrl";
 
-  private List<List<Map<String, String>>> allGroups = new ArrayList<>();
+  private List<FeedGroup> feeds = new ArrayList<>();
 
   public void loadData() {
-
+    // use R.raw.catalog;
   }
 
   public List<? extends Map<String, ?>> getGroups() {
-    Map<String, String> bbcGroup = new HashMap<>();
-    bbcGroup.put(NAME_KEY, "BBC");
     List<Map<String, String>> allGroups = new ArrayList<>();
-    allGroups.add(bbcGroup);
+    for (FeedGroup feedGroup : feeds) {
+      allGroups.add(feedGroup.getAsMap());
+    }
     return allGroups;
   }
 
   public List<? extends List<? extends Map<String, ?>>> getChildren() {
-    Map<String, String> twtwItem = new HashMap<>();
-    twtwItem.put(NAME_KEY, "BBC The world this week");
-    twtwItem.put(URL_KEY, "http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml");
-    Map<String, String> foocItem = new HashMap<>();
-    foocItem.put(NAME_KEY, "BBC From our own Correspondent");
-    foocItem.put(URL_KEY, "http://downloads.bbc.co.uk/podcasts/radio4/fooc/rss.xml");
-    List<Map<String, String>> bbcGroup = new ArrayList<>();
-    bbcGroup.add(twtwItem);
-    bbcGroup.add(foocItem);
-    allGroups.add(bbcGroup);
+    List<List<Map<String, String>>> allGroups = new ArrayList<>();
+    for (FeedGroup feedGroup : feeds) {
+      List<Map<String, String>> feedGroupAsList = new ArrayList<>();
+      for (Feed feed : feedGroup.getFeeds()){
+        feedGroupAsList.add(feed.getAsMap());
+      }
+      allGroups.add(feedGroupAsList);
+    }
     return allGroups;
   }
 
   public String getUrl(int groupPosition, int childPosition) {
-    return allGroups.get(groupPosition).get(childPosition).get(URL_KEY);
+    return feeds.get(groupPosition).getFeeds().get(childPosition).getUrl();
   }
+
+
+  public List<FeedGroup> retrieve(File catalogFile) throws FileNotFoundException {
+    if (!catalogFile.exists()){
+      return null;
+    }
+    FileInputStream pictureStream = null;
+    try {
+      pictureStream = new FileInputStream(catalogFile);
+      // read to a string?
+      // use Gson to parse the json catalog
+
+    } finally {
+      if (pictureStream != null){
+        try {
+          pictureStream.close();
+        } catch (IOException e) {
+          Log.e("file", e.getMessage());
+        }
+      }
+    }
+    return feeds;
+  }
+
 }
