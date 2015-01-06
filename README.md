@@ -60,6 +60,9 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 <br>
 [Iconography and icon pack for Android][android-icons]
 
+This application uses some third-party libraries that help build quality applications :
+- [Apache Commons Lang (Lang3.0)][lang3] for I/O manipulations
+- [Gson] for JSON deserialization
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
 [rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
@@ -71,3 +74,5 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 [twtw]: http://www.bbc.co.uk/podcasts/series/twtw
 [twtw-rss]: http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml
 [android-icons]: https://developer.android.com/design/style/iconography.html
+[lang3]: https://commons.apache.org/proper/commons-lang/
+[Gson]: https://sites.google.com/site/gson/Home

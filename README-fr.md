@@ -54,6 +54,9 @@ J'ai testé l'application autant que j'aie pu, mais j'ai probablement oublié de
 
 [Icône de flux RSS de Wikimedia][rss-wiki], par [Anomie][anomie-wiki]
 
+Cette application dait usage de bibliothèques tierces qui permettent de construire des applications de qualités :
+- [Apache Commons Lang (Lang3.0)][lang3] pour les manipulations de flux
+- [Gson] pour la désérialisation depuis le format JSON
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
 [rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
@@ -63,3 +66,5 @@ J'ai testé l'application autant que j'aie pu, mais j'ai probablement oublié de
 [fi-geo]: http://radiofrance-podcast.net/podcast09/rss_10009.xml
 [serial]: http://serialpodcast.org/
 [serial-rss]: http://feeds.serialpodcast.org/serialpodcast
+[lang3]: https://commons.apache.org/proper/commons-lang/
+[Gson]: https://sites.google.com/site/gson/Home
