@@ -1,14 +1,276 @@
 [
   {
-    name : "BBC",
+    name : "BBC World Service Podcasts",
     feeds : [
       {
-        name : "BBC - The world this week",
+        name : "Global News",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/rss.xml"
+      },
+      {
+        name : "Newshour",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/newshour/rss.xml"
+      },
+      {
+        name : "Discovery",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/discovery/rss.xml"
+      },
+      {
+        name : "Science Hour",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/science/rss.xml"
+      },
+      {
+        name : "World Update: Daily Commute",
+        url : "http://downloads.bbc.co.uk/podcasts/worldservice/worldupmc/rss.xml"
+      },
+      {
+        name : "The world this week",
         url : "http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml"
       },
       {
-        name : "BBC - From our own correspondent",
+        name : "From our own correspondent",
         url : "http://downloads.bbc.co.uk/podcasts/radio4/fooc/rss.xml"
+      }
+    ]
+  },
+  {
+    name : "France Inter - semaine",
+    feeds : [
+      {
+        name : "Géopolitique",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10009.xml"
+      },
+      {
+        name : "l'édito éco",
+        url : "http://radiofrance-podcast.net/podcast09/rss_18770.xml"
+      },
+      {
+        name : "l'édito politique",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10217.xml"
+      },
+      {
+        name : "Boomerang",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13937.xml"
+      },
+      {
+        name : "L'instant M",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13938.xml"
+      },
+      {
+        name : "Service public",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10207.xml"
+      },
+      {
+        name : "La bande originale",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13939.xml"
+      },
+      {
+        name : "Carnets de campagne",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10205.xml"
+      },
+      {
+        name : "Le jeu des 1000 euros",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10206.xml"
+      },
+      {
+        name : "Journal de 13H",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11673.xml"
+      },
+      {
+        name : "La marche de l'histoire",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11739.xml"
+      },
+      {
+        name : "La tête au carré",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10212.xml"
+      },
+      {
+        name : "Affaires sensibles",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13940.xml"
+      },
+      {
+        name : "Classic avec Dessay",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13941.xml"
+      },
+      {
+        name : "Un temps de Pauchon",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10616.xml"
+      },
+      {
+        name : "Si tu écoutes, j'annule tout",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13942.xml"
+      },
+      {
+        name : "Un jour dans le monde",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13958.xml"
+      },
+      {
+        name : "Partout ailleurs",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11483.xml"
+      },
+      {
+        name : "La fabrique du nouveau monde",
+        url : "http://radiofrance-podcast.net/podcast09/rss_14023.xml"
+      },
+      {
+        name : "Une histoire dans le monde",
+        url : "http://radiofrance-podcast.net/podcast09/rss_14157.xml"
+      },
+      {
+        name : "Journal de 19H",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11736.xml"
+      },
+      {
+        name : "Le téléphone sonne",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11176.xml"
+      },
+      {
+        name : "Secrets d'info",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13944.xml"
+      },
+      {
+        name : "L'humeur vagabonde",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10054.xml"
+      },
+      {
+        name : "L'heure des rêveurs",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13106.xml"
+      },
+      {
+        name : "Il existe un endroit",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13284.xml"
+      },
+      {
+        name : "L'album de minuit",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13936.xml"
+      },
+      {
+        name : "Nuits noires",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11709.xml"
+      }
+    ]
+  },
+  {
+    name : "France Inter - week-end",
+    feeds : [
+      {
+        name : "On n'arrête pas l'éco",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11548.xml"
+      },
+      {
+        name : "On aura tout vu",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10617.xml"
+      },
+      {
+        name : "Sur les épaules de Darwin",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11549.xml"
+      },
+      {
+        name : "La prochaine fois je vous le chanterai",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10387.xml"
+      },
+      {
+        name : "Rendez-vous avec X",
+        url : "http://radiofrance-podcast.net/podcast09/rss_14726.xml"
+      },
+      {
+        name : "CO2 mon amour",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10006.xml"
+      },
+      {
+        name : "La librairie francophone",
+        url : "http://radiofrance-podcast.net/podcast09/rss_18647.xml"
+      },
+      {
+        name : "Comme un bruit qui court",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13947.xml"
+      },
+      {
+        name : "Si l'Amérique m'était contée",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13343.xml"
+      },
+      {
+        name : "Ça peut pas faire de mal",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11262.xml"
+      },
+      {
+        name : "La vie est un je",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13945.xml"
+      },
+      {
+        name : "Pop Fiction",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13948.xml"
+      },
+      {
+        name : "Coming up !",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13960.xml"
+      },
+      {
+        name : "Les savanturiers",
+        url : "http://radiofrance-podcast.net/podcast09/rss_12097.xml"
+      },
+      {
+        name : "Les récits d'Isabelle Autissier",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11484.xml"
+      },
+      {
+        name : "Dans tes rêves",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13949.xml"
+      },
+      {
+        name : "Interception",
+        url : "http://radiofrance-podcast.net/podcast09/rss_14934.xml"
+      },
+      {
+        name : "Remède à la mélancolie",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13022.xml"
+      },
+      {
+        name : "On va déguster",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11370.xml"
+      },
+      {
+        name : "3D le journal",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11558.xml"
+      },
+      {
+        name : "Périphéries",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10040.xml"
+      },
+      {
+        name : "Cosmopolitaine",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10051.xml"
+      },
+      {
+        name : "Les femmes, toute une histoire",
+        url : "http://radiofrance-podcast.net/podcast09/rss_12155.xml"
+      },
+      {
+        name : "116 rue Albert-Londres",
+        url : "http://radiofrance-podcast.net/podcast09/rss_13950.xml"
+      },
+      {
+        name : "L'Afrique enchantée",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10804.xml"
+      },
+      {
+        name : "Tous politiques",
+        url : "http://radiofrance-podcast.net/podcast09/rss_12688.xml"
+      },
+      {
+        name : "Les p'tits bateaux",
+        url : "http://radiofrance-podcast.net/podcast09/rss_10137.xml"
+      },
+      {
+        name : "Le masque et la plume",
+        url : "http://radiofrance-podcast.net/podcast09/rss_14007.xml"
+      },
+      {
+        name : "Summertime",
+        url : "http://radiofrance-podcast.net/podcast09/rss_12309.xml"
+      },
+      {
+        name : "Partir avec...",
+        url : "http://radiofrance-podcast.net/podcast09/rss_11538.xml"
       }
     ]
   }
