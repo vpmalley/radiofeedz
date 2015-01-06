@@ -37,7 +37,7 @@ public class CatalogActivity extends Activity {
     });
 
     feedsCatalog = new Catalog();
-    feedsCatalog.loadData();
+    feedsCatalog.loadData(this);
     ExpandableListAdapter feedsAdapter = new SimpleExpandableListAdapter(this, feedsCatalog.getGroups(), Catalog.GROUP_LAYOUT,
             Catalog.GROUP_KEYS, Catalog.GROUP_VIEWS, feedsCatalog.getChildren(), Catalog.CHILD_LAYOUT, Catalog.CHILD_KEYS, Catalog.CHILD_VIEWS);
     feedsView.setAdapter(feedsAdapter);

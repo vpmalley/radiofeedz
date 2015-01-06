@@ -1,11 +1,16 @@
 package fr.vpm.audiorss.catalog;
 
+import android.content.Context;
 import android.util.Log;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,10 +37,34 @@ public class Catalog {
 
   private List<FeedGroup> feeds = new ArrayList<>();
 
-  public void loadData() {
-    // use R.raw.catalog;
+  /**
+   * Loads the catalog from file. To be done before any other action.
+   * @param context the current Android context
+   */
+  public void loadData(Context context) {
+    InputStream catalogStream = null;
+    try {
+      catalogStream = context.getResources().openRawResource(R.raw.catalog);
+      Reader catalogReader = new InputStreamReader(catalogStream);
+
+      Type feedCollection = new TypeToken<List<FeedGroup>>(){}.getType();
+      feeds = new Gson().fromJson(catalogReader, feedCollection);
+    } finally {
+      if (catalogStream != null){
+        try {
+          catalogStream.close();
+        } catch (IOException e) {
+          Log.e("file", e.getMessage());
+        }
+      }
+    }
   }
 
+  /**
+   * Extracts from the catalog data the feed groups information, to pass to the expandable list adapter.
+   * @return the data for the feed groups of the catalog
+   * @pre The method {@link fr.vpm.audiorss.catalog.Catalog#loadData(android.content.Context)} must have been called first to load the catalog.
+   */
   public List<? extends Map<String, ?>> getGroups() {
     List<Map<String, String>> allGroups = new ArrayList<>();
     for (FeedGroup feedGroup : feeds) {
@@ -44,6 +73,11 @@ public class Catalog {
     return allGroups;
   }
 
+  /**
+   * Extracts from the catalog data the feeds information, to pass to the expandable list adapter.
+   * @return the data for the feeds of the catalog
+   * @pre The method {@link fr.vpm.audiorss.catalog.Catalog#loadData(android.content.Context)} must have been called first to load the catalog.
+   */
   public List<? extends List<? extends Map<String, ?>>> getChildren() {
     List<List<Map<String, String>>> allGroups = new ArrayList<>();
     for (FeedGroup feedGroup : feeds) {
@@ -56,31 +90,20 @@ public class Catalog {
     return allGroups;
   }
 
+  /**
+   * Retrieves the feed url based on the picked item, identified by a group and child index
+   * @param groupPosition the group index for the picked item
+   * @param childPosition the child index for the picked item
+   * @return the feed url for the picked item
+   * @pre The method {@link fr.vpm.audiorss.catalog.Catalog#loadData(android.content.Context)} must have been called first to load the catalog.
+   */
   public String getUrl(int groupPosition, int childPosition) {
-    return feeds.get(groupPosition).getFeeds().get(childPosition).getUrl();
-  }
-
-
-  public List<FeedGroup> retrieve(File catalogFile) throws FileNotFoundException {
-    if (!catalogFile.exists()){
-      return null;
+    String url = null;
+    if (feeds.isEmpty()){
+      Log.w("catalog", "The catalog is empty. Did you load it with Catalog.loadData(Context) ?");
+    } else {
+      url = feeds.get(groupPosition).getFeeds().get(childPosition).getUrl();
     }
-    FileInputStream pictureStream = null;
-    try {
-      pictureStream = new FileInputStream(catalogFile);
-      // read to a string?
-      // use Gson to parse the json catalog
-
-    } finally {
-      if (pictureStream != null){
-        try {
-          pictureStream.close();
-        } catch (IOException e) {
-          Log.e("file", e.getMessage());
-        }
-      }
-    }
-    return feeds;
+    return url;
   }
-
 }
