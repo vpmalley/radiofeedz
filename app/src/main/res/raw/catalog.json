@@ -1,6 +1,6 @@
 [
   {
-    name : "BBC World Service Podcasts",
+    name : "BBC World Service Podcasts (UK)",
     feeds : [
       {
         name : "Global News",
@@ -33,7 +33,7 @@
     ]
   },
   {
-    name : "France Inter - semaine",
+    name : "France Inter - semaine (France)",
     feeds : [
       {
         name : "Géopolitique",
@@ -150,7 +150,7 @@
     ]
   },
   {
-    name : "France Inter - week-end",
+    name : "France Inter - week-end (France)",
     feeds : [
       {
         name : "On n'arrête pas l'éco",
@@ -273,5 +273,34 @@
         url : "http://radiofrance-podcast.net/podcast09/rss_11538.xml"
       }
     ]
-  }
+  },
+  {
+    name : "The Guardian (UK)",
+    feeds : [
+      {
+        name : "World news",
+        url : "http://www.theguardian.com/world/rss"
+      },
+      {
+        name : "UK",
+        url : "http://www.theguardian.com/uk/rss"
+      },
+      {
+        name : "US",
+        url : "http://www.theguardian.com/us/rss"
+      },
+      {
+        name : "Economics",
+        url : "http://www.theguardian.com/business/economics/rss"
+      },
+      {
+        name : "Technology",
+        url : "http://www.theguardian.com/technology/rss"
+      },
+      {
+        name : "Culture",
+        url : "http://www.theguardian.com/uk/culture/rss"
+      }
+    ]
+  } 
 ]
