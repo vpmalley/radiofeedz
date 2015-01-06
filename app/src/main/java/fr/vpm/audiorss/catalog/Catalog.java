@@ -24,9 +24,9 @@ import fr.vpm.audiorss.catalog.json.FeedGroup;
  */
 public class Catalog {
 
-  public static final int GROUP_LAYOUT = R.layout.drawer_item;
+  public static final int GROUP_LAYOUT = R.layout.list_item_indented;
   public static final int[] GROUP_VIEWS = new int[]{R.id.feed_item};
-  public static final int CHILD_LAYOUT = R.layout.drawer_item;
+  public static final int CHILD_LAYOUT = R.layout.list_item;
   public static final int[] CHILD_VIEWS = new int[]{R.id.feed_item};
 
   public static final String NAME_KEY = "name";
