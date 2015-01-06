@@ -17,6 +17,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
+    TextView emptyView = (TextView) findViewById(R.id.emptyView);
+    emptyView.setText(getString(R.string.emptynews));
+    mFeedItems.setEmptyView(emptyView);
 
     // Navigation drawer
     setNavigationDrawer();
@@ -221,9 +225,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       dataModel.loadData();
     } else if (REQ_PREFS == requestCode){
       dataModel.refreshView();
-    } else if (REQ_CATALOG == requestCode){
-      String feedUrl = data.getStringExtra(CatalogActivity.FEED_URL_EXTRA);
-      dataModel.addData(feedUrl);
+    } else if (REQ_CATALOG == requestCode) {
+      if (data != null) {
+        String feedUrl = data.getStringExtra(CatalogActivity.FEED_URL_EXTRA);
+        dataModel.addData(feedUrl);
+      }
     }
   }
 }

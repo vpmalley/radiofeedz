@@ -26,6 +26,14 @@
             android:layout_height="match_parent"
             android:layout_gravity="center">
         </ListView>
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:fontFamily="sans-serif-light"
+            android:padding="12dp"
+            />
 
     </FrameLayout>
     <!-- The navigation drawer -->

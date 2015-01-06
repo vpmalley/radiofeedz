@@ -10,15 +10,15 @@
           android:title="@string/action_catalog"
           android:showAsAction="ifRoom" />
     
-    <item android:id="@+id/action_add"
-          android:icon="@drawable/ic_action_new"
-          android:title="@string/action_add"
-          android:showAsAction="ifRoom" />
-    
     <item android:id="@+id/action_refresh"
           android:icon="@drawable/ic_action_refresh"
           android:title="@string/action_refresh"
           android:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_add"
+          android:icon="@drawable/ic_action_new"
+          android:title="@string/action_add"
+          android:showAsAction="never" />
     
     <item
         android:id="@+id/action_settings"
