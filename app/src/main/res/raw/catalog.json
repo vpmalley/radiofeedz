@@ -302,5 +302,99 @@
         url : "http://www.theguardian.com/uk/culture/rss"
       }
     ]
-  } 
+  },
+  {
+    name : "Huffington Post (US)",
+    feeds : [
+      {
+        name : "All news and blog articles",
+        url : "http://www.huffingtonpost.com/feeds/index.xml"
+      },
+      {
+        name : "Business",
+        url : "http://www.huffingtonpost.com/feeds/verticals/business/index.xml"
+      },
+      {
+        name : "Education",
+        url : "http://www.huffingtonpost.com/feeds/verticals/education/index.xml"
+      },
+      {
+        name : "Politics",
+        url : "http://www.huffingtonpost.com/feeds/verticals/politics/index.xml"
+      },
+      {
+        name : "Religion",
+        url : "http://www.huffingtonpost.com/feeds/verticals/religion/index.xml"
+      },
+      {
+        name : "Science",
+        url : "http://www.huffingtonpost.com/feeds/verticals/science/index.xml"
+      },
+      {
+        name : "Sports",
+        url : "http://www.huffingtonpost.com/feeds/verticals/sports/index.xml"
+      },
+      {
+        name : "Technology",
+        url : "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml"
+      },
+      {
+        name : "Travel",
+        url : "http://www.huffingtonpost.com/feeds/verticals/travel/index.xml"
+      },
+      {
+        name : "Weird news",
+        url : "http://www.huffingtonpost.com/feeds/verticals/weird-news/index.xml"
+      }
+    ]
+  },
+    {
+    name : "The New York Times (US)",
+    feeds : [
+      {
+        name : "World",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/World.xml"
+      },
+      {
+        name : "US",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/US.xml"
+      },
+      {
+        name : "US Politics",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/Politics.xml"
+      },
+      {
+        name : "Business",
+        url : "http://feeds.nytimes.com/nyt/rss/Business"
+      },
+      {
+        name : "Technology",
+        url : "http://feeds.nytimes.com/nyt/rss/Technology"
+      },
+      {
+        name : "Sports",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/Sports.xml"
+      },
+      {
+        name : "Science",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/Science.xml"
+      },
+      {
+        name : "Arts",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/Arts.xml"
+      },
+      {
+        name : "Style",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml"
+      },
+      {
+        name : "Travel",
+        url : "http://www.nytimes.com/services/xml/rss/nyt/Travel.xml"
+      },
+      {
+        name : "Editorials",
+        url : "http://topics.nytimes.com/top/opinion/editorialsandoped/editorials/index.html?rss=1"
+      }
+    ]
+  }
 ]
