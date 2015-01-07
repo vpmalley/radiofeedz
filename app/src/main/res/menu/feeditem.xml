@@ -28,18 +28,16 @@
         android:id="@+id/action_share"
         android:showAsAction="always"
         android:title="@string/action_share"
-        android:orderInCategory="90"
+        android:orderInCategory="100"
         android:actionProviderClass=
             "android.widget.ShareActionProvider" />
     <item android:id="@+id/action_archive"
           android:icon="@drawable/ic_action_accept"
           android:title="@string/action_archive"
-          android:orderInCategory="100"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="never" />
     <item android:id="@+id/action_delete"
           android:icon="@drawable/ic_action_discard"
           android:title="@string/action_delete_media"
-          android:orderInCategory="110"
-          android:showAsAction="ifRoom" />
+          android:showAsAction="never" />
 
 </menu>

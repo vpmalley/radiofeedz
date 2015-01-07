@@ -33,6 +33,7 @@
     <string name="drawer_close">Filtrage appliqué</string>
     <string name="drawer_closed_title">Vos nouvelles</string>
     <string name="drawer_opened_title">Filtrez vos nouvelles</string>
+    <string name="title_activity_catalog">Catalogue</string>
     <string name="emptynews">Bienvenue dans Radiofeedz! \nIl semble qu\'il n\'y a pas de nouvelles ici. \n\nTu peux ajouter du contenu en cliquant sur l\'icône \'+\' au centre de la barre d\'action, en haut. \n\nUne fois que tu as des nouvelles, tu peux les filtrer dans le panneau latéral, en cliquant sur l\'icône de l\'application en haut à gauche!\n\nJ\'espère que tu apprécieras cette application!</string>
 
 </resources>

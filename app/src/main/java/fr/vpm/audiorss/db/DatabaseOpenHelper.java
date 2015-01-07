@@ -48,6 +48,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
           " (" + RSSItem.ARCHIVED_KEY + ", " + RSSItem.DATE_TAG + " DESC);";
   final private static String I_CREATE_RSSITEM_CHANNEL = "CREATE INDEX IF NOT EXISTS rssitem_channel_index ON " + T_RSS_ITEM +
           " (" + CHANNEL_ID_KEY + ", " + RSSItem.ARCHIVED_KEY + ", " + RSSItem.DATE_TAG + " DESC);";
+  final private static String I_DROP_RSSITEM_RECENT = "DROP INDEX IF EXISTS rssitem_recent_index;";
+  final private static String I_DROP_RSSITEM_CHANNEL = "DROP INDEX IF EXISTS rssitem_channel_index;";
 
   final private static String DB_NAME = "rss_db";
   final private static Integer DB_VERSION = 18;
@@ -85,6 +87,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     db.execSQL("DROP TABLE IF EXISTS " + DbMedia.T_MEDIA);
     onCreate(db);
     */
+    db.execSQL(I_DROP_RSSITEM_RECENT);
+    db.execSQL(I_DROP_RSSITEM_CHANNEL);
     db.execSQL(I_CREATE_RSSITEM_RECENT);
     db.execSQL(I_CREATE_RSSITEM_CHANNEL);
   }
