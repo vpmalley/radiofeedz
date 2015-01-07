@@ -396,5 +396,132 @@
         url : "http://topics.nytimes.com/top/opinion/editorialsandoped/editorials/index.html?rss=1"
       }
     ]
+  },
+  {
+    name : "Reuters (UK)",
+    feeds : [
+      {
+        name : "World",
+        url : "http://feeds.reuters.com/Reuters/worldNews"
+      },
+      {
+        name : "US news",
+        url : "http://feeds.reuters.com/Reuters/domesticNews"
+      },
+      {
+        name : "Arts",
+        url : "http://feeds.reuters.com/news/artsculture"
+      },
+      {
+        name : "Business",
+        url : "http://feeds.reuters.com/reuters/businessNews"
+      },
+      {
+        name : "Environment",
+        url : "http://feeds.reuters.com/reuters/environment"
+      },
+      {
+        name : "Lifestyle",
+        url : "http://feeds.reuters.com/reuters/lifestyle"
+      },
+      {
+        name : "Politics",
+        url : "http://feeds.reuters.com/Reuters/PoliticsNews"
+      },
+      {
+        name : "Science",
+        url : "http://feeds.reuters.com/reuters/scienceNews"
+      },
+      {
+        name : "Sports",
+        url : "http://feeds.reuters.com/reuters/sportsNews"
+      },
+      {
+        name : "Technology",
+        url : "http://feeds.reuters.com/reuters/technologyNews"
+      }
+    ]
+  },
+  {
+    name : "The Globe and Mail (Canada)",
+    feeds : [
+      {
+        name : "News",
+        url : "http://www.theglobeandmail.com/news/?service=rss"
+      },
+      {
+        name : "Sports",
+        url : "http://www.theglobeandmail.com/sports/?service=rss"
+      },
+      {
+        name : "Technology",
+        url : "http://www.theglobeandmail.com/technology/?service=rss"
+      },
+      {
+        name : "Arts",
+        url : "http://www.theglobeandmail.com/arts/?service=rss"
+      },
+      {
+        name : "Canadian Business News",
+        url : "http://www.theglobeandmail.com/report-on-business/?service=rss"
+      },
+      {
+        name : "Globe Investor",
+        url : "http://www.theglobeandmail.com/globe-investor/?service=rss"
+      }
+    ]
+  },
+  {
+    name : "Le Monde (France)",
+    feeds : [
+      {
+        name : "A la une",
+        url : "http://www.lemonde.fr/rss/une.xml"
+      },
+      {
+        name : "Économie",
+        url : "http://www.lemonde.fr/economie/rss_full.xml"
+      },
+      {
+        name : "Idées",
+        url : "http://www.lemonde.fr/idees/rss_full.xml"
+      },
+      {
+        name : "International",
+        url : "http://www.lemonde.fr/international/rss_full.xml"
+      },
+      {
+        name : "Pixels",
+        url : "http://www.lemonde.fr/pixels/rss_full.xml"
+      },
+      {
+        name : "Planète",
+        url : "http://www.lemonde.fr/planete/rss_full.xml"
+      },
+      {
+        name : "Politique",
+        url : "http://www.lemonde.fr/politique/rss_full.xml"
+      },
+      {
+        name : "Santé",
+        url : "http://www.lemonde.fr/sante/rss_full.xml"
+      },
+      {
+        name : "Sciences",
+        url : "http://www.lemonde.fr/sciences/rss_full.xml"
+      },
+      {
+        name : "Société",
+        url : "http://www.lemonde.fr/societe/rss_full.xml"
+      },
+      {
+        name : "Sport",
+        url : "http://www.lemonde.fr/sport/rss_full.xml"
+      },
+      {
+        name : "Technologies",
+        url : "http://www.lemonde.fr/technologies/rss_full.xml"
+      }
+    ]
   }
 ]
