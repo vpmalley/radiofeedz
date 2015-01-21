@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -23,6 +24,7 @@ public class MaintenanceFilter implements SelectionFilter {
   @Override
   public String getSelectionQuery() {
     StringBuilder selectionBuilder = new StringBuilder();
+    // date part of the query
     selectionBuilder.append(RSSItem.DATE_TAG);
     selectionBuilder.append("<'");
     Calendar yesterday = Calendar.getInstance();
@@ -30,6 +32,15 @@ public class MaintenanceFilter implements SelectionFilter {
     String yesterdayDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(yesterday.getTime());
     selectionBuilder.append(yesterdayDate);
     selectionBuilder.append("'");
+
+    selectionBuilder.append(" AND ");
+
+    // download part (we do not delete the items that have been downloaded)
+    selectionBuilder.append(DbMedia.T_MEDIA);
+    selectionBuilder.append(".");
+    selectionBuilder.append(DbMedia.IS_DL_KEY);
+    selectionBuilder.append("=0");
+
     return selectionBuilder.toString();
   }
 

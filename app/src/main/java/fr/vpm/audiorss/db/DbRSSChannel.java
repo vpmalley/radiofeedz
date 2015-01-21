@@ -271,7 +271,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private Cursor readItemsAsCursor(boolean readAll, List<SelectionFilter> filters) {
     ConjunctionFilter filter = new ConjunctionFilter(filters);
-    String limit = "80";
+    String limit = null;
     if (!readAll) {
       limit = sharedPrefs.getString("pref_disp_max_items", "80");
       if (!Pattern.compile("\\d+").matcher(limit).matches()){

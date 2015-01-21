@@ -28,5 +28,5 @@
         android:title="@string/pref_items_deletion"
         android:summary="@string/summary_pref_items_deletion"
         android:dialogTitle="@string/dialog_pref_items_deletion"
-        android:defaultValue="180"/>
+        android:defaultValue="30"/>
 </PreferenceScreen>
