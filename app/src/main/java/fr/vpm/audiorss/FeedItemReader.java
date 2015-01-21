@@ -280,7 +280,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   private void downloadMedia() {
     Log.d("Download", rssItem.getMediaUrl());
-    rssItem.downloadMedia(getActivity(), this);
+    rssItem.downloadMedia(getActivity(), new DummyMediaDownloadListener());
   }
 
   @Override

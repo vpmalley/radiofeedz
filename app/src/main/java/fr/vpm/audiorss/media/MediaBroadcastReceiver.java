@@ -46,6 +46,7 @@ public class MediaBroadcastReceiver extends BroadcastReceiver {
   public static void addListener(MediaDownloadListener listener){
     getListeners().add(listener);
   }
+
   @Override
   public void onReceive(Context context, Intent intent) {
     Log.d("BReceiver", "A download is complete");
