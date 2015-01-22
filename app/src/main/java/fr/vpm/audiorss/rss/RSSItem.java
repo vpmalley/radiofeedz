@@ -131,10 +131,6 @@ public class RSSItem implements Parcelable {
     return guid;
   }
 
-  public String getPubDate() {
-    return pubDate;
-  }
-
   public void setPubDate(String pubDate) {
     this.pubDate = pubDate;
   }

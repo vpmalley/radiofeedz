@@ -2,6 +2,7 @@ package fr.vpm.audiorss.db;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,12 @@ public class AsyncDbDeleteRSSItem extends AsyncTask<RSSItem, Integer, List<RSSIt
     if (rssItems.length > 0) {
       for (RSSItem item : rssItems){
         if (item.getDbId() > -1) {
-          dbUpdater.deleteItemById(item.getDbId());
+          dbUpdater.deleteItemAndItsMedia(item);
           deletedItems.add(item);
         }
       }
     }
+    Log.d("items", "deleted " + deletedItems.size());
     return deletedItems;
   }
 

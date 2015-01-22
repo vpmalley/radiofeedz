@@ -122,6 +122,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   public RSSChannel update(RSSChannel existingChannel, RSSChannel channel) throws ParseException {
     existingChannel.update(channel.getLastBuildDate(), channel.getMappedItems());
+    if (existingChannel.getImage() == null){
+      existingChannel.setImage(channel.getImage());
+    }
     ContentValues channelValues = createContentValues(existingChannel);
     channelValues.put(DatabaseOpenHelper._ID, existingChannel.getId());
     mDb.update(T_RSS_CHANNEL, channelValues, DatabaseOpenHelper._ID + "=?",
@@ -271,7 +274,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private Cursor readItemsAsCursor(boolean readAll, List<SelectionFilter> filters) {
     ConjunctionFilter filter = new ConjunctionFilter(filters);
-    String limit = null;
+    String limit = "10000"; // this is a high limit to avoid OutOfMemoryError
     if (!readAll) {
       limit = sharedPrefs.getString("pref_disp_max_items", "80");
       if (!Pattern.compile("\\d+").matcher(limit).matches()){
@@ -313,8 +316,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     return c;
   }
 
-  public void deleteItemById(long id) {
-    mDb.delete(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
+  public void deleteItemAndItsMedia(RSSItem rssItem) {
+    DbMedia dbMediaUpdater = new DbMedia(mDb);
+    dbMediaUpdater.deleteById(rssItem.getMedia().getId());
+    mDb.delete(DatabaseOpenHelper.T_RSS_ITEM, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(rssItem.getDbId())});
   }
 
   RSSItem itemFromCursor(Cursor c) throws ParseException {
@@ -337,6 +342,12 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
             comments, media, guid, pubDate, isRead, channelId, isDeleted);
     item.setDbId(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
     return item;
+  }
+
+  public int getItemCount(){
+    Cursor c = mDb.rawQuery("SELECT COUNT(*) AS nbitems FROM " + DatabaseOpenHelper.T_RSS_ITEM, new String[0]);
+    c.moveToFirst();
+    return c.getInt(c.getColumnIndex("nbitems"));
   }
 
   public void closeDb() {

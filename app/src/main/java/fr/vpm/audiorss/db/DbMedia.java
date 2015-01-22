@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 public class DbMedia {
 
@@ -74,7 +77,8 @@ public class DbMedia {
     if (!mDb.isOpen()) {
       throw new IllegalArgumentException("Database is not open to read a media");
     }
-    Cursor c = mDb.query(T_MEDIA, COLS_MEDIA, null, null, null, null, null);
+    Cursor c = mDb.query(T_MEDIA, COLS_MEDIA, null, null, null, null, null, "5000");
+    // the limit is to avoid OutOfMemoryError which is not supposed to happen in the first place
 
     List<Media> medias = new ArrayList<>();
     if (c.getCount() > 0) {
@@ -121,6 +125,66 @@ public class DbMedia {
 
   public void deleteById(long id) {
     mDb.delete(T_MEDIA, DatabaseOpenHelper._ID + "=?", new String[]{String.valueOf(id)});
+  }
+
+  public int getMediaCount(){
+    Cursor c = mDb.rawQuery("SELECT COUNT(*) AS nbitems FROM " + DbMedia.T_MEDIA, new String[0]);
+    c.moveToFirst();
+    return c.getInt(c.getColumnIndex("nbitems"));
+  }
+
+  public void deleteOrphans(){
+    StringBuilder rawQueryBuilder = new StringBuilder();
+    rawQueryBuilder.append("SELECT ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(DatabaseOpenHelper._ID);
+    rawQueryBuilder.append(", ");
+    rawQueryBuilder.append(INET_URL_KEY);
+    rawQueryBuilder.append(" FROM ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+
+    rawQueryBuilder.append(" LEFT JOIN ");
+    rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
+    rawQueryBuilder.append(" ON ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(DatabaseOpenHelper._ID);
+    rawQueryBuilder.append("=");
+    rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(RSSItem.MEDIA_ID_KEY);
+
+    rawQueryBuilder.append(", ");
+    rawQueryBuilder.append(DbRSSChannel.T_RSS_CHANNEL);
+    rawQueryBuilder.append(" ON ");
+    rawQueryBuilder.append(DbMedia.T_MEDIA);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(DatabaseOpenHelper._ID);
+    rawQueryBuilder.append("=");
+    rawQueryBuilder.append(DbRSSChannel.T_RSS_CHANNEL);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(RSSChannel.IMAGE_ID_TAG);
+
+    rawQueryBuilder.append(" WHERE ");
+    rawQueryBuilder.append(DatabaseOpenHelper.T_RSS_ITEM);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(DatabaseOpenHelper._ID);
+    rawQueryBuilder.append(" IS NULL");
+    rawQueryBuilder.append(" OR ");
+    rawQueryBuilder.append(DbRSSChannel.T_RSS_CHANNEL);
+    rawQueryBuilder.append(".");
+    rawQueryBuilder.append(DatabaseOpenHelper._ID);
+    rawQueryBuilder.append(" IS NULL;");
+
+    Log.d("orphans-filter", rawQueryBuilder.toString());
+    Cursor c = mDb.rawQuery(rawQueryBuilder.toString(), new String[0]);
+    Log.d("orphans", "query returned " + c.getCount());
+    c.moveToFirst();
+    for (int i = 0; i < c.getCount(); i++) {
+      deleteById(c.getLong(c.getColumnIndex(DatabaseOpenHelper._ID)));
+      c.moveToNext();
+    }
   }
 
   ContentValues createContentValues(Media media) {
