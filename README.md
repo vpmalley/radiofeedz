@@ -5,6 +5,11 @@ Your favourite *podcasts*, always with you in your pocket.
 
 With RadioFeedz you can get, save and listen to your favourite podcast, right in your pocket.
 
+<a href="https://play.google.com/store/apps/details?id=fr.vpm.audiorss">
+  <img alt="Android app on Google Play"
+       src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" />
+</a>
+
 [Download it now](/radiofeedz.apk)
 
 ## How does it work ?
