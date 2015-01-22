@@ -5,6 +5,11 @@ Vos *podcasts* favoris, toujours avec vous dans votre poche.
 
 Avec Radiofeedz vous pouvez avoir accès, télécharger et écouter vos podcasts favoris, dieecrement dans votre poche.
 
+<a href="https://play.google.com/store/apps/details?id=fr.vpm.audiorss">
+  <img alt="Android app on Google Play"
+       src="https://developer.android.com/images/brand/fr_app_rgb_wo_60.png" />
+</a>
+
 ## Comment ça marche ?
 
 Vous ajoutez votre flux RSS favori (un flux de podcasts, de nouvelles, de photos) à Radiofeedz.
