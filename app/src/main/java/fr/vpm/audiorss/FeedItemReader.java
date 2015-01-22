@@ -32,6 +32,7 @@ import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
+import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -252,6 +253,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         playIntent.setDataAndType(new Uri.Builder().path(m.getInetUrl()).build(), m.getMimeType());
       }
       startActivity(playIntent);
+      // take advantage of media playing to do some maintenance
+      new AsyncMaintenance(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Media.getInternalItemsPicsFolder(), Media.getInternalFeedsPicsFolder());
     }
   }
 

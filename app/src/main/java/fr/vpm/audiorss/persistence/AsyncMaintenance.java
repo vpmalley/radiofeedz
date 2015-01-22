@@ -8,7 +8,6 @@ import android.util.Log;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -46,7 +45,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   protected File doInBackground(File... params) {
 
     // introducing randomization in maintenance to improve performances
-    int randomMaintenance = new Random().nextInt(1000);
+    int randomMaintenance = new Random().nextInt(100);
     if (randomMaintenance < 10) {
       Log.d("maintenance", "cleaning folders");
       cleanFolders(params);
@@ -81,6 +80,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
       @Override
       public void onPostExecute(List<RSSItem> result) {
+        Log.d("items", "there are " + result.size());
         new AsyncDbDeleteRSSItem(new DummyCallback<List<RSSItem>>(), context).
                 executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, result.toArray(new RSSItem[result.size()]));
       }
@@ -94,8 +94,6 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
    * @param params the folders to clean
    */
   private void cleanFolders(File[] params) {
-    Calendar yesterday = Calendar.getInstance();
-    yesterday.add(Calendar.DAY_OF_YEAR, -1);
     FilePictureSaver fileSaver = new FilePictureSaver(context);
     for (File folder : params) {
       fileSaver.cleanFolder(folder, PICS_THRESHOLD, ICONS_EXPIRY_TIME);
@@ -110,6 +108,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     List<Media> medias = new ArrayList<>();
     try {
       medias = dbUpdater.readAll();
+      Log.d("medias", "there are " + medias.size());
     } catch (ParseException e) {
       Log.w("db", "Failed retrieving the medias: " + e.getMessage());
     }

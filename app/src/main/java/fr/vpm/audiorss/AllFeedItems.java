@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -25,8 +24,6 @@ import java.util.List;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.media.Media;
-import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
@@ -91,9 +88,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
       dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
-
-    // deletes old items at app startup
-    new AsyncMaintenance(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Media.getInternalItemsPicsFolder(), Media.getInternalFeedsPicsFolder());
   }
 
   /**

@@ -41,7 +41,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
     try {
       Log.d("measures", "refresh start");
       long initRefresh = System.currentTimeMillis();
-      newChannel = new ItemParser().parseChannel(url);
+      newChannel = new ItemParser().parseChannel(url, context);
       Log.d("measures", "refresh -end- " + (System.currentTimeMillis() - initRefresh));
     } catch (XmlPullParserException | IOException | ParseException e) {
       mE = e;

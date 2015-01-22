@@ -1,5 +1,7 @@
 package fr.vpm.audiorss.process;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml;
 
@@ -31,7 +33,7 @@ public class ItemParser {
   private static final String RSS_TAG = "rss";
   private static final String ITEM_TAG = "item";
 
-  public RSSChannel parseChannel(String rssUrl) throws XmlPullParserException,
+  public RSSChannel parseChannel(String rssUrl, Context context) throws XmlPullParserException,
       IOException, ParseException {
     InputStream in = null;
     HttpURLConnection urlConnection = null;
@@ -44,7 +46,7 @@ public class ItemParser {
       parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
       parser.setInput(in, null);
       parser.nextTag();
-      return readFeed(parser, rssUrl);
+      return readFeed(parser, rssUrl, getThresholdDate(context));
     } finally {
       if (in != null) {
         in.close();
@@ -52,7 +54,7 @@ public class ItemParser {
     }
   }
 
-  private RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
+  private RSSChannel readFeed(XmlPullParser parser, String rssUrl, String thresholdDate) throws XmlPullParserException,
       IOException, ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String title = "";
@@ -85,10 +87,13 @@ public class ItemParser {
         imageUrl = readImage(parser);
       } else if (tagName.equals(ITEM_TAG)) {
         RSSItem item = readEntry(parser, title);
-        if (item.getId() != null) {
-          items.put(item.getId(), item);
-        } else {
-          items.put(item.getLink(), item);
+        // if item date is after the threshold date
+        if (thresholdDate.compareTo(item.getDate()) < 0){
+          if (item.getId() != null) {
+            items.put(item.getId(), item);
+          } else {
+            items.put(item.getLink(), item);
+          }
         }
       } else {
         skip(parser);
@@ -106,6 +111,22 @@ public class ItemParser {
 
     return channel;
 
+  }
+
+  /**
+   * Retrieves from preferences the threshold date before which no item should be kept.
+   * @param context the current Android context
+   * @return the threshold date
+   */
+  private String getThresholdDate(Context context) {
+    String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
+            getString("pref_items_deletion", "30");
+    if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
+      itemsExpiryTime = "30";
+    }
+    Calendar yesterday = Calendar.getInstance();
+    yesterday.add(Calendar.DAY_OF_YEAR, -1 * Integer.valueOf(itemsExpiryTime));
+    return new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(yesterday.getTime());
   }
 
   private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -165,35 +186,7 @@ public class ItemParser {
         // Wed, 29 Jan 2014 15:05:00 +0100
         // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
-        try {
-
-          // time zone : Z/ZZ/ZZZ
-          Pattern expectedNumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
-          Matcher numM = expectedNumPattern.matcher(pubDate);
-
-          // time zone : ZZZZZ
-          Pattern expectedTimePattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{2}:[0-9]{2}");
-          Matcher timeM = expectedTimePattern.matcher(pubDate);
-
-          Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
-          Matcher m = expectedMinimumPattern.matcher(pubDate);
-
-          Date date;
-          if (numM.find()){
-            date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
-          } else if (timeM.find()){
-            date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
-          } else if (m.find()){
-            date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
-          } else {
-            Log.w("datePattern", "Could not parse the right date, defaulting to current date");
-            date = Calendar.getInstance().getTime();
-          }
-          pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
-        } catch (ParseException e) {
-          Log.w("datePattern", "tried parsing date but failed: " + pubDate + ". " + e.getMessage());
-          pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
-        }
+        pubDate = parseAndFormatDate(pubDate);
       } else {
         skip(parser);
       }
@@ -202,6 +195,44 @@ public class ItemParser {
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
         media, guid, pubDate, false, -1, false);
     return item;
+  }
+
+  /**
+   * Parses the date to make sure it is understandable and formats it into our own internal formats
+   * @param pubDate the date retrieved from the RSS file
+   * @return the date, formatted for internal storage
+   */
+  String parseAndFormatDate(String pubDate) {
+    try {
+
+      // time zone : Z/ZZ/ZZZ
+      Pattern expectedNumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
+      Matcher numM = expectedNumPattern.matcher(pubDate);
+
+      // time zone : ZZZZZ
+      Pattern expectedTimePattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{2}:[0-9]{2}");
+      Matcher timeM = expectedTimePattern.matcher(pubDate);
+
+      Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
+      Matcher m = expectedMinimumPattern.matcher(pubDate);
+
+      Date date;
+      if (numM.find()){
+        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
+      } else if (timeM.find()){
+        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
+      } else if (m.find()){
+        date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
+      } else {
+        Log.w("datePattern", "Could not parse the right date, defaulting to current date");
+        date = Calendar.getInstance().getTime();
+      }
+      pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
+    } catch (ParseException e) {
+      Log.w("datePattern", "tried parsing date but failed: " + pubDate + ". " + e.getMessage());
+      pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
+    }
+    return pubDate;
   }
 
   private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)

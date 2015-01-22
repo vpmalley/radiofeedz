@@ -171,7 +171,7 @@ public class DbMedia {
     rawQueryBuilder.append(".");
     rawQueryBuilder.append(DatabaseOpenHelper._ID);
     rawQueryBuilder.append(" IS NULL");
-    rawQueryBuilder.append(" OR ");
+    rawQueryBuilder.append(" AND ");
     rawQueryBuilder.append(DbRSSChannel.T_RSS_CHANNEL);
     rawQueryBuilder.append(".");
     rawQueryBuilder.append(DatabaseOpenHelper._ID);
