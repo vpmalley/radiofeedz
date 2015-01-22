@@ -25,18 +25,68 @@ import fr.vpm.audiorss.rss.RSSChannel;
 public class ItemParserTest {
 
   @Test
-	public void testParse() throws XmlPullParserException, IOException, ParseException {
-		
+	public void testParseFull4DDate() throws XmlPullParserException, IOException, ParseException {
 		ItemParser parser = new ItemParser();
 
-    Assert.assertEquals(2, 1 + 1);
-    //RSSChannel channel = parser.parseChannel("someUrl");
-		/*
-		Assert.assertEquals(SAMPLE_TITLE, channel.title);
-		Assert.assertEquals(SAMPLE_LINK, channel.link);
-		Assert.assertEquals(SAMPLE_DESCRIPTION, channel.description);
-		Assert.assertEquals(SAMPLE_CATEGORY, channel.category);
-		Assert.assertEquals(SAMPLE_TAG, channel.tags.get(0));
-		*/
+    String rawDate = "Wed, 29 Jan 2014 15:05:00 +0100";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-09:05:00--0500", formattedDate);
 	}
+
+  @Test
+  public void testParseMinimalDate() throws XmlPullParserException, IOException, ParseException {
+    ItemParser parser = new ItemParser();
+
+    String rawDate = "29 Jan 2014 15:05";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-15:05:00--0500", formattedDate);
+  }
+
+  @Test
+  public void testParseWeirdDate() throws XmlPullParserException, IOException, ParseException {
+    ItemParser parser = new ItemParser();
+
+    String rawDate = "29 Jan 2014 15:05:00 Z";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-15:05:00--0500", formattedDate);
+  }
+
+  @Test
+  public void testParseGMTDate() throws XmlPullParserException, IOException, ParseException {
+    ItemParser parser = new ItemParser();
+
+    String rawDate = "29 Jan 2014 15:05:00 GMT";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);
+  }
+
+  @Test
+  public void testParse2D2DDate() throws XmlPullParserException, IOException, ParseException {
+    ItemParser parser = new ItemParser();
+
+    String rawDate = "29 Jan 2014 15:05:00 +01:00";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);
+  }
+
+  @Test
+  public void testParseGMT2D2DDate() throws XmlPullParserException, IOException, ParseException {
+    ItemParser parser = new ItemParser();
+
+    String rawDate = "29 Jan 2014 15:05:00 GMT+01:00";
+    String formattedDate = parser.parseAndFormatDate(rawDate);
+    // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
+    // the result we expect has Locale US
+    Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);
+  }
 }
