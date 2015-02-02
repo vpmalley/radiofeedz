@@ -141,6 +141,10 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
       this.boundChannel = boundChannel;
     }
 
+    public String getTitle() {
+      return title;
+    }
+
     public SelectionFilter getFilter(){
       return filter;
     }

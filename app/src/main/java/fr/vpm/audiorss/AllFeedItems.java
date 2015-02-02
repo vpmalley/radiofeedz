@@ -48,6 +48,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   private ListView drawerList;
   private ActionBarDrawerToggle drawerToggle;
 
+  private String title = "Radiofeedz";
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -101,7 +103,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
-        filters.add(((NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position)).getFilter());
+        NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+        filters.add(navigationDrawerItem.getFilter());
+        title = navigationDrawerItem.getTitle();
         dataModel.filterData(filters);
         drawerLayout.closeDrawer(drawerList);
       }
@@ -117,7 +121,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
             R.string.drawer_close
     ) {
       public void onDrawerClosed(View view) {
-        getActionBar().setTitle(R.string.drawer_closed_title);
+        getActionBar().setTitle(title);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
 
