@@ -4,7 +4,8 @@ buildscript {
             mavenCentral()
         }
         classpath "com.android.tools.build:gradle:1.0.0"
-        classpath "com.github.jcandksolutions.gradle:android-unit-test:2.1.1"
+        //classpath "com.github.jcandksolutions.gradle:android-unit-test:2.1.1"
+        classpath 'org.robolectric:robolectric-gradle-plugin:0.14.1'
     }
 }
 
@@ -12,7 +13,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.1"
+    buildToolsVersion "21.1.2"
 
     defaultConfig {
         applicationId "fr.vpm.audiorss"
@@ -22,6 +23,7 @@ android {
 
 }
 
+/*
 dependencies {
     compile "com.android.support:support-v4:21.0.3"
     compile "org.apache.commons:commons-lang3:3.3.2"
@@ -35,4 +37,59 @@ dependencies {
     testCompile "org.assertj:assertj-core:1.7.0"
     testCompile group: 'org.robolectric', name: 'robolectric', version: '2.4'
     testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.+'
+}
+
+*/
+
+apply plugin: 'robolectric'
+
+robolectric {
+    include '**/*Test.class'
+    exclude '**/espresso/**/*.class'
+}
+
+dependencies {
+
+    compile "com.android.support:support-v4:21.0.3"
+    compile "org.apache.commons:commons-lang3:3.3.2"
+    compile "com.google.code.gson:gson:2.3.1"
+
+    repositories {
+        mavenCentral()
+    }
+// Espresso
+    androidTestCompile files('lib/espresso-1.1.jar', 'lib/testrunner-1.1.jar', 'lib/testrunner-runtime-1.1.jar')
+    androidTestCompile 'com.google.guava:guava:18.0'
+    androidTestCompile 'com.squareup.dagger:dagger:1.1.0'
+    androidTestCompile 'org.hamcrest:hamcrest-integration:1.1'
+    androidTestCompile 'org.hamcrest:hamcrest-core:1.1'
+    androidTestCompile 'org.hamcrest:hamcrest-library:1.1'
+    androidTestCompile('junit:junit:4.12') {
+        exclude module: 'hamcrest-core'
+    }
+    androidTestCompile('org.robolectric:robolectric:2.4') {
+        exclude module: 'classworlds'
+        exclude module: 'commons-logging'
+        exclude module: 'httpclient'
+        exclude module: 'maven-artifact'
+        exclude module: 'maven-artifact-manager'
+        exclude module: 'maven-error-diagnostics'
+        exclude module: 'maven-model'
+        exclude module: 'maven-project'
+        exclude module: 'maven-settings'
+        exclude module: 'plexus-container-default'
+        exclude module: 'plexus-interpolation'
+        exclude module: 'plexus-utils'
+        exclude module: 'wagon-file'
+        exclude module: 'wagon-http-lightweight'
+        exclude module: 'wagon-provider-api'
+    }
+}
+
+apply plugin: 'idea'
+
+idea {
+    module {
+        testOutputDir = file('build/test-classes/debug')
+    }
 }

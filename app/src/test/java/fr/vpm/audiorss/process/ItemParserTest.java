@@ -29,7 +29,7 @@ public class ItemParserTest {
 		ItemParser parser = new ItemParser();
 
     String rawDate = "Wed, 29 Jan 2014 15:05:00 +0100";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-09:05:00--0500", formattedDate);
@@ -40,7 +40,7 @@ public class ItemParserTest {
     ItemParser parser = new ItemParser();
 
     String rawDate = "29 Jan 2014 15:05";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-15:05:00--0500", formattedDate);
@@ -51,7 +51,7 @@ public class ItemParserTest {
     ItemParser parser = new ItemParser();
 
     String rawDate = "29 Jan 2014 15:05:00 Z";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-15:05:00--0500", formattedDate);
@@ -62,7 +62,7 @@ public class ItemParserTest {
     ItemParser parser = new ItemParser();
 
     String rawDate = "29 Jan 2014 15:05:00 GMT";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);
@@ -73,7 +73,7 @@ public class ItemParserTest {
     ItemParser parser = new ItemParser();
 
     String rawDate = "29 Jan 2014 15:05:00 +01:00";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);
@@ -84,7 +84,7 @@ public class ItemParserTest {
     ItemParser parser = new ItemParser();
 
     String rawDate = "29 Jan 2014 15:05:00 GMT+01:00";
-    String formattedDate = parser.parseAndFormatDate(rawDate);
+    String formattedDate = parser.parseDate(rawDate);
     // we expect pattern "yyyy-MM-dd-HH:mm:ss-ZZZZZ"
     // the result we expect has Locale US
     Assert.assertEquals("2014-01-29-10:05:00--0500", formattedDate);

@@ -186,7 +186,10 @@ public class ItemParser {
         // Wed, 29 Jan 2014 15:05:00 +0100
         // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
-        pubDate = parseAndFormatDate(pubDate);
+        Log.d("date before", pubDate);
+        Date date = parseDate(pubDate);
+        pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
+        Log.d("date  after", pubDate);
       } else {
         skip(parser);
       }
@@ -202,7 +205,8 @@ public class ItemParser {
    * @param pubDate the date retrieved from the RSS file
    * @return the date, formatted for internal storage
    */
-  String parseAndFormatDate(String pubDate) {
+  Date parseDate(String pubDate) {
+    Date date;
     try {
 
       // time zone : Z/ZZ/ZZZ
@@ -213,26 +217,29 @@ public class ItemParser {
       Pattern expectedTimePattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{2}:[0-9]{2}");
       Matcher timeM = expectedTimePattern.matcher(pubDate);
 
+      // time zone : z
+      Pattern expectedGMTPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[A-z]{3}");
+      Matcher gmtM = expectedGMTPattern.matcher(pubDate);
+
       Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
       Matcher m = expectedMinimumPattern.matcher(pubDate);
-
-      Date date;
       if (numM.find()){
         date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
       } else if (timeM.find()){
         date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
+      } else if (gmtM.find()){
+        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_GMT, Locale.US).parse(gmtM.group());
       } else if (m.find()){
         date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
       } else {
         Log.w("datePattern", "Could not parse the right date, defaulting to current date");
         date = Calendar.getInstance().getTime();
       }
-      pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
     } catch (ParseException e) {
       Log.w("datePattern", "tried parsing date but failed: " + pubDate + ". " + e.getMessage());
-      pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
+      date = Calendar.getInstance().getTime();
     }
-    return pubDate;
+    return date;
   }
 
   private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
