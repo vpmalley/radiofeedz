@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -90,9 +91,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void loadData() {
-    if (savingFeeds > 1) {
+    Log.d("decrease", String.valueOf(savingFeeds));
+    if (savingFeeds > 0) {
       savingFeeds--;
-    } else {
+    }
+    if (savingFeeds < 2) {
       loadDataFromChannels(false);
       loadDataFromItems();
     }
@@ -172,7 +175,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public void refreshData(){
     for (RSSChannel feed : feeds) {
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
-      new AsyncFeedRefresh(getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+      new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
           feed.getUrl());
       savingFeeds++;
     }

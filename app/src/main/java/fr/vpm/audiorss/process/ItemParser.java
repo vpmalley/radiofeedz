@@ -40,6 +40,7 @@ public class ItemParser {
     try {
       URL formattedUrl = new URL(rssUrl);
       urlConnection = (HttpURLConnection) formattedUrl.openConnection();
+      urlConnection.setConnectTimeout(30000);
       in = new BufferedInputStream(urlConnection.getInputStream());
 
       XmlPullParser parser = Xml.newPullParser();

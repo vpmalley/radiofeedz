@@ -103,7 +103,7 @@ public class FeedAdder {
       Toast.makeText(dataModel.getContext(), R.string.cannot_add_feed, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetworkForRefresh(dataModel.getContext(), true)) {
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel);
-      new AsyncFeedRefresh(dataModel.getContext(), callback).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+      new AsyncFeedRefresh(dataModel.getContext(), callback, dataModel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
     }
   }
 }
