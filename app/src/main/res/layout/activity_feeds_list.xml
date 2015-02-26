@@ -20,11 +20,22 @@
             android:max="100"
             />
 
+        <TextView
+            android:id="@+id/latestupdate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:fontFamily="sans-serif-light"
+            android:padding="6dp"
+            android:gravity="center_horizontal"
+            />
+
         <ListView
             android:id="@+id/allitems"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:paddingTop="30dp" >
         </ListView>
         <TextView
             android:id="@+id/emptyView"

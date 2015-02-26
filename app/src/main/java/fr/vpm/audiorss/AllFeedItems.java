@@ -66,7 +66,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
     setContentView(activity_layout);
 
-    ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
+    ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress), (TextView) findViewById(R.id.latestupdate));
 
     // services
     networkChecker = new DefaultNetworkChecker();
