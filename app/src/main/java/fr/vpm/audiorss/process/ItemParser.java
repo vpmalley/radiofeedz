@@ -209,6 +209,13 @@ public class ItemParser {
     Date date;
     try {
 
+      // Wed, 25 Feb 2015 14:00:22 Z
+      Pattern expectedZPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\sZ");
+      Matcher zM = expectedZPattern.matcher(pubDate);
+      if (zM.find()){
+        pubDate = pubDate.replace("Z", "GMT");
+      }
+
       // time zone : Z/ZZ/ZZZ
       Pattern expectedNumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
       Matcher numM = expectedNumPattern.matcher(pubDate);
