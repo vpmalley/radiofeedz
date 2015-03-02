@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -131,24 +126,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   }
 
   private void printDate(ViewHolder itemHolder, RSSItem rssItem) {
-    try {
-      Date itemDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(rssItem.getDate());
-      Calendar yesterday = Calendar.getInstance();
-      yesterday.add(Calendar.HOUR, -24);
-      Calendar lastweek = Calendar.getInstance();
-      lastweek.add(Calendar.DAY_OF_YEAR, -7);
-      String dateText = "";
-      if (itemDate.after(yesterday.getTime())){
-        dateText =  new SimpleDateFormat("HH:mm").format(itemDate);
-      } else if (itemDate.after(lastweek.getTime())){
-        dateText = new SimpleDateFormat("EEEE").format(itemDate);
-      } else {
-        dateText = new SimpleDateFormat("dd MMMM").format(itemDate);
-      }
-      itemHolder.dateView.setText(dateText);
-    } catch (ParseException e) {
-      Log.w("date", "could not parse date");
-    }
+    String dateText = DateUtils.getDisplayDate(rssItem.getDate());
+    itemHolder.dateView.setText(dateText);
   }
 
   public void setItems(List<RSSItem> items) {

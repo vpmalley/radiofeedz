@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -21,7 +21,7 @@ public class TodayFilter implements SelectionFilter {
     selectionBuilder.append(">'");
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.HOUR, -24);
-    String yesterdayDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(yesterday.getTime());
+    String yesterdayDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(yesterday.getTime());
     selectionBuilder.append(yesterdayDate);
     selectionBuilder.append("'");
     return selectionBuilder.toString();

@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.media.Media;
@@ -61,7 +60,7 @@ public class ItemParser {
     String title = "";
     String link = "";
     String description = "";
-    String lastBuildDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(Calendar.getInstance().getTime());
+    String lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(Calendar.getInstance().getTime());
     String category = "";
     String imageUrl = "";
 
@@ -126,7 +125,7 @@ public class ItemParser {
     }
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.DAY_OF_YEAR, -1 * Integer.valueOf(itemsExpiryTime));
-    return new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(yesterday.getTime());
+    return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(yesterday.getTime());
   }
 
   private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -187,8 +186,8 @@ public class ItemParser {
         // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
         Log.d("date before", pubDate);
-        Date date = parseDate(pubDate);
-        pubDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US).format(date);
+        Date date = DateUtils.parseDate(pubDate);
+        pubDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(date);
         Log.d("date  after", pubDate);
       } else {
         skip(parser);
@@ -198,55 +197,6 @@ public class ItemParser {
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
         media, guid, pubDate, false, -1, false);
     return item;
-  }
-
-  /**
-   * Parses the date to make sure it is understandable and formats it into our own internal formats
-   * @param pubDate the date retrieved from the RSS file
-   * @return the date, formatted for internal storage
-   */
-  Date parseDate(String pubDate) {
-    Date date;
-    try {
-
-      // Wed, 25 Feb 2015 14:00:22 Z
-      Pattern expectedZPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\sZ");
-      Matcher zM = expectedZPattern.matcher(pubDate);
-      if (zM.find()){
-        pubDate = pubDate.replace("Z", "GMT");
-      }
-
-      // time zone : Z/ZZ/ZZZ
-      Pattern expectedNumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{4}");
-      Matcher numM = expectedNumPattern.matcher(pubDate);
-
-      // time zone : ZZZZZ
-      Pattern expectedTimePattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[\\+\\-][0-9]{2}:[0-9]{2}");
-      Matcher timeM = expectedTimePattern.matcher(pubDate);
-
-      // time zone : z
-      Pattern expectedGMTPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[A-z]{3}");
-      Matcher gmtM = expectedGMTPattern.matcher(pubDate);
-
-      Pattern expectedMinimumPattern = Pattern.compile("[0-9]{2}\\s[A-Z][a-z]{2}\\s[0-9]{4}\\s[0-9]{2}:[0-9]{2}");
-      Matcher m = expectedMinimumPattern.matcher(pubDate);
-      if (numM.find()){
-        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_4D, Locale.US).parse(numM.group());
-      } else if (timeM.find()){
-        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_TZ_2D_2D, Locale.US).parse(timeM.group());
-      } else if (gmtM.find()){
-        date = new SimpleDateFormat(RSSChannel.RSS_DATE_PATTERN_GMT, Locale.US).parse(gmtM.group());
-      } else if (m.find()){
-        date = new SimpleDateFormat(RSSChannel.RSS_DATE_MIN_PATTERN, Locale.US).parse(m.group());
-      } else {
-        Log.w("datePattern", "Could not parse the right date, defaulting to current date");
-        date = Calendar.getInstance().getTime();
-      }
-    } catch (ParseException e) {
-      Log.w("datePattern", "tried parsing date but failed: " + pubDate + ". " + e.getMessage());
-      date = Calendar.getInstance().getTime();
-    }
-    return date;
   }
 
   private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)

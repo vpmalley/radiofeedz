@@ -43,13 +43,6 @@ public class RSSChannel implements Parcelable {
   public static final String URL_KEY = "url";
   public static final String TAGS_KEY = "tags";
 
-  public static final String RSS_DATE_MIN_PATTERN = "dd MMM yyyy HH:mm";
-  public static final String RSS_DATE_PATTERN_TZ_4D = "dd MMM yyyy HH:mm:ss ZZZ";
-  public static final String RSS_DATE_PATTERN_TZ_2D_2D = "dd MMM yyyy HH:mm:ss ZZZZZ";
-  public static final String DISPLAY_PATTERN = "EEEE, dd MMMM yyyy - HH:mm";
-  public static final String DB_DATE_PATTERN = "yyyy-MM-dd-HH:mm:ss-ZZZZZ"; // should allow sorting date
-  public static final String RSS_DATE_PATTERN_GMT = "dd MMM yyyy HH:mm:ss z";
-
   public static List<RSSChannel> allChannels = new ArrayList<RSSChannel>();
 
   private static final int SHORT_TITLE_LENGTH = 14;

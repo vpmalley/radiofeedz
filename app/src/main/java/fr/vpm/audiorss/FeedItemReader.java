@@ -34,6 +34,7 @@ import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -82,8 +83,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     if (rssItem != null) {
       title.setText(rssItem.getTitle());
 
-      SimpleDateFormat datePrinter = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN);
-      SimpleDateFormat dateParser = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN, Locale.US);
+      SimpleDateFormat datePrinter = new SimpleDateFormat(DateUtils.DISPLAY_PATTERN);
+      SimpleDateFormat dateParser = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US);
       try {
         date.setText(datePrinter.format(dateParser.parse(rssItem.getDate())));
       } catch (ParseException e) {
