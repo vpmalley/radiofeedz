@@ -23,7 +23,7 @@ public class LastRefreshListener implements ProgressListener {
   public LastRefreshListener(TextView mLatestUpdate, DataModel dataModel) {
     this.mLatestUpdate = mLatestUpdate;
     this.dataModel = dataModel;
-    refreshView();
+    mLatestUpdate.setText("");
   }
 
   @Override
@@ -42,15 +42,13 @@ public class LastRefreshListener implements ProgressListener {
   }
 
   private void refreshView() {
-    if (mLatestUpdate != null) { // should occur only after a refresh
-      Date lastUpdateDate = Calendar.getInstance().getTime();
-      try {
-        lastUpdateDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(dataModel.getLastBuildDate());
-      } catch (ParseException e) {
-        Log.w("date", "wrong parsing of last update date");
-      }
-      String currentDate = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN).format(lastUpdateDate);
-      mLatestUpdate.setText("Last update : " + currentDate);
+    Date lastUpdateDate = Calendar.getInstance().getTime();
+    try {
+      lastUpdateDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).parse(dataModel.getLastBuildDate());
+    } catch (ParseException e) {
+      Log.w("date", "wrong parsing of last update date");
     }
+    String currentDate = new SimpleDateFormat(RSSChannel.DISPLAY_PATTERN).format(lastUpdateDate);
+    mLatestUpdate.setText("Last update : " + currentDate);
   }
 }

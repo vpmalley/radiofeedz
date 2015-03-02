@@ -61,8 +61,7 @@ public class ItemParser {
     String title = "";
     String link = "";
     String description = "";
-    // Date lastBuildDate = new Date();
-    String lastBuildDate = "";
+    String lastBuildDate = new SimpleDateFormat(RSSChannel.DB_DATE_PATTERN).format(Calendar.getInstance().getTime());
     String category = "";
     String imageUrl = "";
 
@@ -81,7 +80,7 @@ public class ItemParser {
       } else if (tagName.equals(RSSChannel.DESC_TAG)) {
         description = readTagContent(parser, RSSChannel.DESC_TAG);
       } else if (tagName.equals(RSSChannel.DATE_TAG)) {
-        lastBuildDate = readTagContent(parser, RSSChannel.DATE_TAG);
+        //lastBuildDate = readTagContent(parser, RSSChannel.DATE_TAG);
       } else if (tagName.equals(RSSItem.CAT_TAG)) {
         category = readTagContent(parser, RSSItem.CAT_TAG);
       } else if (tagName.equals(RSSChannel.IMAGE_TAG)) {

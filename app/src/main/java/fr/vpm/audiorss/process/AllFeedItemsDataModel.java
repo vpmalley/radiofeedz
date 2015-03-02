@@ -187,6 +187,17 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
+  public String getLastBuildDate() {
+    String lastRefresh = "";
+    for (RSSChannel feed : feeds) {
+      if (feed.getLastBuildDate().compareTo(lastRefresh) > 0) {
+        lastRefresh = feed.getLastBuildDate();
+      }
+    }
+    return lastRefresh;
+  }
+
+  @Override
   public void addData(String feedUrl) {
     FeedAdder feedAdder = new FeedAdder(this, new DefaultNetworkChecker(), progressListener);
     if (feedUrl == null) {

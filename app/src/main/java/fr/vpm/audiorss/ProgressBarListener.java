@@ -19,8 +19,14 @@ public class ProgressBarListener implements ProgressListener {
 
   private boolean isVisible = false;
 
+  private ProgressListener delegate;
+
   public ProgressBarListener(ProgressBar mRefreshProgress) {
     this.mRefreshProgress = mRefreshProgress;
+  }
+
+  public void setDelegate(ProgressListener delegate) {
+    this.delegate = delegate;
   }
 
   public void startRefreshProgress() {
@@ -30,10 +36,16 @@ public class ProgressBarListener implements ProgressListener {
       mRefreshProgress.setVisibility(View.VISIBLE);
       isVisible = true;
     }
+    if (delegate != null) {
+      delegate.startRefreshProgress();
+    }
   }
 
   public void updateProgress(int progress) {
     mRefreshProgress.setProgress(progress);
+    if (delegate != null) {
+      delegate.updateProgress(progress);
+    }
   }
 
   public void stopRefreshProgress() {
@@ -42,6 +54,9 @@ public class ProgressBarListener implements ProgressListener {
       mRefreshProgress.setVisibility(View.GONE);
       isVisible = false;
       Log.d("measures", "progress -end- " + (System.currentTimeMillis() - initialTime));
+    }
+    if (delegate != null) {
+      delegate.stopRefreshProgress();
     }
   }
 }

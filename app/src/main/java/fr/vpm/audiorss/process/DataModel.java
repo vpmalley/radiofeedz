@@ -60,6 +60,12 @@ public interface DataModel extends ContextualActions {
 
   void onFeedFailureBeforeLoad();
 
+  /**
+   * Determines the latest date any of the feeds was refreshed
+   * @return
+   */
+  String getLastBuildDate();
+
   interface RSSChannelInput {
 
     /**
