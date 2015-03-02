@@ -26,4 +26,9 @@ public interface ContextualActions {
    */
   void downloadMedia(Set<Integer> selection);
 
+  /**
+   * Refreshes specifically the selected feeds
+   * @param selection the list of indices of the feeds
+   */
+  void refreshData(Set<Integer> selection);
 }

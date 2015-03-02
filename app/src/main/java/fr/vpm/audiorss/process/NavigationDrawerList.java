@@ -22,6 +22,8 @@ import fr.vpm.audiorss.db.filter.EmptyFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.TodayFilter;
 import fr.vpm.audiorss.db.filter.UnreadFilter;
+import fr.vpm.audiorss.http.AsyncFeedRefresh;
+import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -61,8 +63,11 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
   private final List<NavigationDrawerItem> items = new ArrayList<NavigationDrawerItem>();
 
+  private final DataModel dataModel;
+
   public NavigationDrawerList(Context context, DataModel dataModel, ProgressListener progressListener) {
     this.context = context;
+    this.dataModel = dataModel;
     this.loadCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel);
   }
 
@@ -122,6 +127,11 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
   @Override
   public void downloadMedia(Set<Integer> selection) {
     // do nothing
+  }
+
+  @Override
+  public void refreshData(Set<Integer> selection) {
+    dataModel.refreshData(selection);
   }
 
   /**

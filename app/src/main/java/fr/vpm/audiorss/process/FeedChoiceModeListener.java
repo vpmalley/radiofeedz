@@ -65,6 +65,10 @@ public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeLis
       contextualActions.markDataRead(selection, false);
       actionMode.finish();
       return true;
+    } else if (R.id.action_refresh == menuItem.getItemId()) {
+      contextualActions.refreshData(selection);
+      actionMode.finish();
+      return true;
     }
     return false;
   }

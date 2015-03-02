@@ -182,6 +182,16 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
+  public void refreshData(Set<Integer> selection) {
+      for (int position : selection) {
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                feeds.get(position).getUrl());
+        savingFeeds++;
+      }
+  }
+
+  @Override
   public void onFeedFailureBeforeLoad() {
     savingFeeds--;
   }
