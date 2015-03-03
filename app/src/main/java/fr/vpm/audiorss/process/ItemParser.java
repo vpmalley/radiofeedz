@@ -79,7 +79,7 @@ public class ItemParser {
       } else if (tagName.equals(RSSChannel.DESC_TAG)) {
         description = readTagContent(parser, RSSChannel.DESC_TAG);
       } else if (tagName.equals(RSSChannel.DATE_TAG)) {
-        //lastBuildDate = readTagContent(parser, RSSChannel.DATE_TAG);
+        readTagContent(parser, RSSChannel.DATE_TAG);
       } else if (tagName.equals(RSSItem.CAT_TAG)) {
         category = readTagContent(parser, RSSItem.CAT_TAG);
       } else if (tagName.equals(RSSChannel.IMAGE_TAG)) {
