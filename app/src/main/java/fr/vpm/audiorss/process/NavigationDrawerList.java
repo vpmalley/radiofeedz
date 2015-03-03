@@ -131,7 +131,13 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
   @Override
   public void refreshData(Set<Integer> selection) {
-    dataModel.refreshData(selection);
+    List<RSSChannel> feeds = new ArrayList<>();
+    for (int position : selection) {
+      if (items.get(position).hasBoundChannel()) {
+        feeds.add(items.get(position).getBoundChannel());
+      }
+    }
+    dataModel.refreshData(feeds);
   }
 
   /**

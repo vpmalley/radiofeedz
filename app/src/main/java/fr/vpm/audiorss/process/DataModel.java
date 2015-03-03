@@ -33,6 +33,8 @@ public interface DataModel extends ContextualActions {
 
   void refreshData();
 
+  void refreshData(List<RSSChannel> feedsToUpdate);
+
   void addData(String feedUrl);
 
   AdapterView.OnItemClickListener getOnItemClickListener();
