@@ -64,6 +64,8 @@ public class Media implements Downloadable, Parcelable {
 
   private boolean isDownloaded;
 
+  private Bitmap preloadedBitmap = null;
+
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
     this.name = name;
@@ -224,23 +226,24 @@ public class Media implements Downloadable, Parcelable {
     if (!isPicture()){
       return null;
     }
-    Bitmap b = null;
-    FilePictureSaver pictureRetriever = new FilePictureSaver(context);
-    File pictureFile = getMediaFile(context, folder);
-    if (pictureFile.exists()){
-      try {
-        b = pictureRetriever.retrieve(pictureFile);
-      } catch (FileNotFoundException e) {
-        if (Folder.EXTERNAL_DOWNLOADS_PICTURES.equals(folder)) {
-          Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
+    if (preloadedBitmap == null) {
+      FilePictureSaver pictureRetriever = new FilePictureSaver(context);
+      File pictureFile = getMediaFile(context, folder);
+      if (pictureFile.exists()) {
+        try {
+          preloadedBitmap = pictureRetriever.retrieve(pictureFile);
+        } catch (FileNotFoundException e) {
+          if (Folder.EXTERNAL_DOWNLOADS_PICTURES.equals(folder)) {
+            //Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
+          }
+          Log.w("file", e.toString());
         }
-        Log.w("file", e.toString());
+      } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {
+        AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 300, context, folder);
+        pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
       }
-    } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {
-      AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 300, context, folder);
-      pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
     }
-    return b;
+    return preloadedBitmap;
   }
 
   public boolean isPicture() {
