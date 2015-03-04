@@ -11,6 +11,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.vpm.audiorss.db.AsyncDbSaveMedia;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
@@ -20,7 +21,7 @@ import fr.vpm.audiorss.process.AsyncCallbackListener;
 */
 public class MediaBroadcastReceiver extends BroadcastReceiver {
 
-  private static List<Media> medias = new ArrayList<>();
+  private static CopyOnWriteArrayList<Media> medias = new CopyOnWriteArrayList<>();
   private static List<MediaDownloadListener> mediaDownloadListeners = new ArrayList<>();
 
   /**
