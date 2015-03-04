@@ -11,6 +11,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
@@ -22,7 +23,7 @@ import fr.vpm.audiorss.persistence.PictureSaver;
  * <p/>
  * An asynchronous task to download a picture. It calls a listener once loaded.
  */
-public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
+public class AsyncPictureLoader extends AsyncTask<Media, Integer, List<Bitmap>> {
 
   private final List<PictureLoadedListener> pictureLoadedListeners;
 
@@ -50,22 +51,26 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
   }
 
   @Override
-  protected Bitmap doInBackground(Media... media) {
+  protected List<Bitmap> doInBackground(Media... media) {
+    List<Bitmap> pictureBitmaps = new ArrayList<>();
     if (media.length == 0) {
       throw new IllegalArgumentException("at least one picture url was expected.");
     }
-    Bitmap pictureBitmap = null;
-    try {
-      String pictureUrl = media[0].getInetUrl();
-      pictureBitmap = downloadBitmap(pictureUrl);
-      if (pictureBitmap != null) {
-        persistBitmap(media[0], pictureBitmap);
+    for (Media picture : media) {
+      Bitmap pictureBitmap = null;
+      try {
+        String pictureUrl = picture.getInetUrl();
+        pictureBitmap = downloadBitmap(pictureUrl);
+        if (pictureBitmap != null) {
+          persistBitmap(picture, pictureBitmap);
+        }
+        pictureBitmaps.add(pictureBitmap);
+      } catch (IOException e) {
+        thrownException = e;
+        Log.w("file", e.toString());
       }
-    } catch (IOException e){
-      thrownException = e;
-      Log.w("file", e.toString());
     }
-    return pictureBitmap;
+    return pictureBitmaps;
   }
 
   /**
@@ -132,12 +137,15 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, Bitmap> {
   }
 
   @Override
-  protected void onPostExecute(Bitmap pictureBitmap) {
+  protected void onPostExecute(List<Bitmap> pictureBitmaps) {
     if (thrownException != null){
       Toast.makeText(context, context.getResources().getString(R.string.cannot_save_picture), Toast.LENGTH_SHORT).show();
-    } else if (pictureBitmap != null) {
+      Log.w("picture", "Picture could not be saved");
+    } else if (pictureBitmaps != null) {
       for (PictureLoadedListener pictureLoadedListener : pictureLoadedListeners) {
-        pictureLoadedListener.onPictureLoaded(pictureBitmap);
+        for (Bitmap pictureBitmap: pictureBitmaps) {
+          pictureLoadedListener.onPictureLoaded(pictureBitmap);
+        }
       }
     }
   }
