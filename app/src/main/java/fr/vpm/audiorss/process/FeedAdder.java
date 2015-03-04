@@ -104,6 +104,7 @@ public class FeedAdder {
     } else if (networkChecker.checkNetworkForRefresh(dataModel.getContext(), true)) {
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel);
       new AsyncFeedRefresh(dataModel.getContext(), callback, dataModel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
+      Toast.makeText(dataModel.getContext(), R.string.added_feed, Toast.LENGTH_SHORT).show();
     }
   }
 }
