@@ -214,6 +214,18 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
+  public int getItemPositionByGuid(String guid) {
+    int position = 0;
+    while ((position < items.size()) && (!guid.equals(items.get(position).getGuid()))){
+      position++;
+    }
+    if (!guid.equals(items.get(position).getGuid())) {
+      position = -1;
+    }
+    return position;
+  }
+
+  @Override
   public void addData(String feedUrl) {
     FeedAdder feedAdder = new FeedAdder(this, new DefaultNetworkChecker(), progressListener);
     if (feedUrl == null) {
@@ -315,7 +327,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
-      i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, position);
+      i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, items.get(position).getGuid());
       i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, itemFilters);
       activity.startActivityForResult(i, REQ_ITEM_READ);
     }

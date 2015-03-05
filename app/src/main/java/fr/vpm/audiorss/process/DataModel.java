@@ -68,6 +68,13 @@ public interface DataModel extends ContextualActions {
    */
   String getLastBuildDate();
 
+  /**
+   * Gives the position of an item based on its unique GUID
+   * @param guid the unique identifier of the new item
+   * @return the current position in the list
+   */
+  int getItemPositionByGuid(String guid);
+
   interface RSSChannelInput {
 
     /**

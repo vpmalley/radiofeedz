@@ -35,7 +35,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
 
   private ViewPager viewPager;
 
-  private int initialPosition = 0;
+  private String initialGuid;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
 
     Intent i = getIntent();
     if (i.hasExtra(INITIAL_POSITION)) {
-      initialPosition = i.getIntExtra(INITIAL_POSITION, 0);
+      initialGuid = i.getStringExtra(INITIAL_POSITION);
     }
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
@@ -65,6 +65,8 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
 
   @Override
   public void refreshView(RSSItemArrayAdapter data, NavigationDrawerProvider navigationDrawer) {
+    int initialPosition = dataModel.getItemPositionByGuid(initialGuid);
+
     FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(rssItemAdapter);
     viewPager.setCurrentItem(initialPosition);
