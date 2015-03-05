@@ -227,7 +227,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public String getItemGuidByPosition(int position) {
-    return items.get(position).getGuid();
+    String guid = "";
+    if (!items.isEmpty()){
+      guid = items.get(position).getGuid();
+    }
+    return guid;
   }
 
   @Override
