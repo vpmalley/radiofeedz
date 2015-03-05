@@ -61,6 +61,10 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     dataModel.loadData();
 
     viewPager = (ViewPager) findViewById(R.id.pager);
+
+    if (savedInstanceState != null) {
+      initialGuid = savedInstanceState.getString("initialPosition");
+    }
   }
 
   @Override
@@ -111,4 +115,9 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     }
   }
 
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    outState.putString("initialPosition", dataModel.getItemGuidByPosition(viewPager.getCurrentItem()));
+  }
 }

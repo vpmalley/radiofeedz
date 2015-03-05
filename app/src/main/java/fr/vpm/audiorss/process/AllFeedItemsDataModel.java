@@ -226,6 +226,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
+  public String getItemGuidByPosition(int position) {
+    return items.get(position).getGuid();
+  }
+
+  @Override
   public void addData(String feedUrl) {
     FeedAdder feedAdder = new FeedAdder(this, new DefaultNetworkChecker(), progressListener);
     if (feedUrl == null) {
