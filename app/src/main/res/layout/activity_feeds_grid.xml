@@ -26,7 +26,8 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:fontFamily="sans-serif-light"
-            android:padding="12dp"
+            android:padding="6dp"
+            android:gravity="center_horizontal"
             />
 
         <GridView
@@ -46,8 +47,10 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:fontFamily="sans-serif-light"
+            android:paddingBottom="12dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:paddingTop="30dp"
-            android:padding="12dp"
             />
 
     </FrameLayout>
