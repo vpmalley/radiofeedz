@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:fontFamily="sans-serif-light"
+            android:paddingTop="30dp"
             android:padding="12dp"
             />
 
