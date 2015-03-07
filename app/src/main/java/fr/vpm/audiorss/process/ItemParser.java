@@ -15,9 +15,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -60,9 +62,11 @@ public class ItemParser {
     String title = "";
     String link = "";
     String description = "";
-    String lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(Calendar.getInstance().getTime());
+    String lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
     String category = "";
     String imageUrl = "";
+
+    List<String> itemDates = new ArrayList<>();
 
     parser.require(XmlPullParser.START_TAG, null, RSS_TAG);
     parser.nextTag();
@@ -86,6 +90,7 @@ public class ItemParser {
         imageUrl = readImage(parser);
       } else if (tagName.equals(ITEM_TAG)) {
         RSSItem item = readEntry(parser, title);
+        itemDates.add(item.getDate());
         // if item date is after the threshold date
         if (thresholdDate.compareTo(item.getDate()) < 0){
           if (item.getId() != null) {
@@ -107,9 +112,56 @@ public class ItemParser {
     Media image = new Media(title, "media-miniature", imageUrl, imageType);
     RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, image);
     channel.update(lastBuildDate, items);
-
+    Log.d("next refresh", channel.getTitle() + " to be refreshed next on " + getWhenToRefreshNext(itemDates));
     return channel;
 
+  }
+
+  /**
+   * Determines when to refresh for this feed the next time
+   * @param itemDates the list of dates of items,
+   *                  formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   * @return the date the feed should be refreshed the next time,
+   *         formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   */
+  private String getWhenToRefreshNext(List<String> itemDates) {
+    // if no more than 2 items in the feed, the average is probably not trustable
+    if (itemDates.size() > 2) {
+      return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
+    }
+
+    String latest = itemDates.get(0);
+    String earliest = itemDates.get(0);
+
+    for (String date : itemDates) {
+      if (date.compareTo(latest) > 0) {
+        latest = date;
+      }
+      if (date.compareTo(earliest) < 0) {
+        earliest = date;
+      }
+    }
+
+    long totalTime = 0;
+    long latestPublished = 0;
+    try {
+      Date latestItem = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(latest);
+      Date earliestItem = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(earliest);
+      totalTime = latestItem.getTime() - earliestItem.getTime();
+      latestPublished = latestItem.getTime();
+    } catch (ParseException e) {
+      Log.w("dateParsing", e.toString());
+    }
+
+    long average = totalTime / itemDates.size();
+    Log.d("average", totalTime + " so on average " + average);
+
+    // determine last check
+    long OFFSET = 360000; // we check one hour before next is supposed to be published, to make sure
+    long nextRefresh = latestPublished + average - OFFSET;
+    String formattedNextRefresh = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(new Date(nextRefresh));
+    Log.d("next refresh", formattedNextRefresh);
+    return formattedNextRefresh;
   }
 
   /**
@@ -125,7 +177,7 @@ public class ItemParser {
     }
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.DAY_OF_YEAR, -1 * Integer.valueOf(itemsExpiryTime));
-    return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(yesterday.getTime());
+    return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(yesterday.getTime());
   }
 
   private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {

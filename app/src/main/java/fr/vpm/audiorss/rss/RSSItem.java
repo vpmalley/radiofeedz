@@ -83,6 +83,9 @@ public class RSSItem implements Parcelable {
     this.isArchived = isDeleted;
   }
 
+  /**
+   * @return The date of the item formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   */
   public String getDate() {
     return pubDate;
   }

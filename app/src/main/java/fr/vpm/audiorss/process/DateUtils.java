@@ -24,17 +24,17 @@ public class DateUtils {
   public static String getDisplayDate(String date) {
     String dateText = "";
     try {
-      Date itemDate = new SimpleDateFormat(DB_DATE_PATTERN).parse(date);
+      Date itemDate = new SimpleDateFormat(DB_DATE_PATTERN, Locale.US).parse(date);
       Calendar yesterday = Calendar.getInstance();
       yesterday.add(Calendar.HOUR, -18);
       Calendar lastweek = Calendar.getInstance();
       lastweek.add(Calendar.DAY_OF_YEAR, -6);
       if (itemDate.after(yesterday.getTime())){
-        dateText =  new SimpleDateFormat("HH:mm").format(itemDate);
+        dateText =  new SimpleDateFormat("HH:mm", Locale.getDefault()).format(itemDate);
       } else if (itemDate.after(lastweek.getTime())){
-        dateText = new SimpleDateFormat("EEEE").format(itemDate);
+        dateText = new SimpleDateFormat("EEEE", Locale.getDefault()).format(itemDate);
       } else {
-        dateText = new SimpleDateFormat("dd MMMM").format(itemDate);
+        dateText = new SimpleDateFormat("dd MMMM", Locale.getDefault()).format(itemDate);
       }
     } catch (ParseException e) {
       Log.w("date", "could not parse date");
