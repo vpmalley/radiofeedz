@@ -26,9 +26,9 @@ public class DateUtils {
     try {
       Date itemDate = new SimpleDateFormat(DB_DATE_PATTERN).parse(date);
       Calendar yesterday = Calendar.getInstance();
-      yesterday.add(Calendar.HOUR, -24);
+      yesterday.add(Calendar.HOUR, -18);
       Calendar lastweek = Calendar.getInstance();
-      lastweek.add(Calendar.DAY_OF_YEAR, -7);
+      lastweek.add(Calendar.DAY_OF_YEAR, -6);
       if (itemDate.after(yesterday.getTime())){
         dateText =  new SimpleDateFormat("HH:mm").format(itemDate);
       } else if (itemDate.after(lastweek.getTime())){
