@@ -219,7 +219,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     while ((position < items.size()) && (!guid.equals(items.get(position).getGuid()))){
       position++;
     }
-    if (!guid.equals(items.get(position).getGuid())) {
+    if ((position >= items.size()) || (!guid.equals(items.get(position).getGuid()))) {
       position = -1;
     }
     return position;
@@ -265,11 +265,17 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void markDataRead(Set<Integer> selection, boolean isRead) {
-    RSSItem[] itemsToSave = new RSSItem[selection.size()];
+    List<RSSItem> unreadItems = new ArrayList<>();
     int i = 0;
     for (int position : selection){
-      items.get(position).setRead(isRead);
-      itemsToSave[i++] = items.get(position);
+      if ((position > -1) && (position < items.size()) && (!items.get(position).isRead())) {
+        items.get(position).setRead(isRead);
+        unreadItems.add(items.get(position));
+      }
+    }
+    RSSItem[] itemsToSave = new RSSItem[unreadItems.size()];
+    for (int j = 0; j < unreadItems.size(); j++) {
+      itemsToSave[j] = unreadItems.get(j);
     }
     saveItems(itemsToSave);
   }
@@ -277,7 +283,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void downloadMedia(Set<Integer> selection) {
     for (int position : selection){
-      if (items.get(position).getMedia() != null){
+      if (position > -1 && position < items.size() && (items.get(position).getMedia() != null)) {
         items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
                 new MediaDownloadListener.DummyMediaDownloadListener());
       }
