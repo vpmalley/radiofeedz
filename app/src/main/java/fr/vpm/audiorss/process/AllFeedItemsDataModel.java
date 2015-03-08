@@ -103,7 +103,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromChannels(boolean readItems) {
     ChannelRefreshViewCallback callback =
-        new ChannelRefreshViewCallback(progressListener, this);
+            new ChannelRefreshViewCallback(progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -174,10 +174,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     for (RSSChannel feed : feeds) {
-      SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
-      new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-          feed.getUrl());
-      savingFeeds++;
+      if (feed.shouldRefresh()) {
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                feed.getUrl());
+        savingFeeds++;
+      }
     }
   }
 
@@ -189,11 +191,13 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(List<RSSChannel> feedsToUpdate) {
     for (RSSChannel feed : feedsToUpdate) {
-      Log.d("refresh", feed.getTitle());
-      SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
-      new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-              feed.getUrl());
-      savingFeeds++;
+      if (feed.shouldRefresh()) {
+        Log.d("refresh", feed.getTitle());
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                feed.getUrl());
+        savingFeeds++;
+      }
     }
   }
 

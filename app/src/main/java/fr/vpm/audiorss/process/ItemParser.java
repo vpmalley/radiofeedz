@@ -112,7 +112,9 @@ public class ItemParser {
     Media image = new Media(title, "media-miniature", imageUrl, imageType);
     RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, image);
     channel.update(lastBuildDate, items);
-    Log.d("next refresh", channel.getTitle() + " to be refreshed next on " + getWhenToRefreshNext(itemDates));
+    String whenToRefreshNext = getWhenToRefreshNext(itemDates);
+    channel.setNextRefresh(whenToRefreshNext);
+    Log.d("next refresh", channel.getTitle() + " to be refreshed next on " + whenToRefreshNext);
     return channel;
 
   }
@@ -125,8 +127,8 @@ public class ItemParser {
    *         formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
    */
   private String getWhenToRefreshNext(List<String> itemDates) {
-    // if no more than 2 items in the feed, the average is probably not trustable
-    if (itemDates.size() > 2) {
+    // if no less than 3 items in the feed, the average is probably not trustable
+    if (itemDates.size() < 3) {
       return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
     }
 

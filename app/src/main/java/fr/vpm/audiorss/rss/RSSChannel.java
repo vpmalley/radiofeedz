@@ -10,11 +10,15 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import fr.vpm.audiorss.ProgressListener;
@@ -25,6 +29,7 @@ import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.process.DateUtils;
 
 /**
  * The representation of a RSS feed
@@ -42,6 +47,7 @@ public class RSSChannel implements Parcelable {
 
   public static final String URL_KEY = "url";
   public static final String TAGS_KEY = "tags";
+  public static final String NEXT_REFRESH_KEY = "nextRefresh";
 
   public static List<RSSChannel> allChannels = new ArrayList<RSSChannel>();
 
@@ -69,6 +75,8 @@ public class RSSChannel implements Parcelable {
   private Media image = null;
 
   private ArrayList<String> tags;
+
+  private String nextRefresh;
 
   public RSSChannel(String rssUrl, String title, String link, String description, String category, Media image) {
     super();
@@ -156,6 +164,23 @@ public class RSSChannel implements Parcelable {
     return lastBuildDate;
   }
 
+  /**
+   * Determine whether to refresh this feed
+   * @return whether to refresh this feed
+   */
+  public boolean shouldRefresh() {
+    boolean shouldRefresh = true;
+    try {
+      if (nextRefresh != null) {
+        Date whenToRefresh = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(nextRefresh);
+        shouldRefresh = whenToRefresh.before(Calendar.getInstance().getTime());
+      }
+    } catch (ParseException e) {
+      Log.w("dateParsing", e.toString());
+    }
+    return shouldRefresh;
+  }
+
   public String getLink() {
     return link;
   }
@@ -232,6 +257,7 @@ public class RSSChannel implements Parcelable {
     b.putString(CAT_TAG, category);
     b.putParcelable(IMAGE_TAG, image);
     b.putStringArrayList(TAGS_KEY, tags);
+    b.putString(NEXT_REFRESH_KEY, nextRefresh);
     parcel.writeBundle(b);
   }
 
@@ -249,6 +275,7 @@ public class RSSChannel implements Parcelable {
     category = b.getString(CAT_TAG);
     image = b.getParcelable(IMAGE_TAG);
     tags = b.getStringArrayList(TAGS_KEY);
+    nextRefresh = b.getString(NEXT_REFRESH_KEY);
   }
 
   public static final Parcelable.Creator<RSSChannel> CREATOR
@@ -261,4 +288,8 @@ public class RSSChannel implements Parcelable {
       return new RSSChannel[size];
     }
   };
+
+  public void setNextRefresh(String nextRefresh) {
+    this.nextRefresh = nextRefresh;
+  }
 }
