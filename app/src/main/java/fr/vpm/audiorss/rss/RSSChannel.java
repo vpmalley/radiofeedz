@@ -201,6 +201,14 @@ public class RSSChannel implements Parcelable {
     this.title = title;
   }
 
+  public String getNextRefresh() {
+    return nextRefresh;
+  }
+
+  public void setNextRefresh(String nextRefresh) {
+    this.nextRefresh = nextRefresh;
+  }
+
   public void saveToDb(ProgressListener progressListener, DataModel dataModel) throws ParseException {
     LoadDataRefreshViewCallback<RSSChannel> callback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel);
     AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(callback, dataModel.getContext());
@@ -288,8 +296,4 @@ public class RSSChannel implements Parcelable {
       return new RSSChannel[size];
     }
   };
-
-  public void setNextRefresh(String nextRefresh) {
-    this.nextRefresh = nextRefresh;
-  }
 }

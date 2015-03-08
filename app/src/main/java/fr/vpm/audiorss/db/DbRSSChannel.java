@@ -31,7 +31,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
   final static String T_RSS_CHANNEL = "rsschannel";
   final static String[] COLS_RSS_CHANNEL = {DatabaseOpenHelper._ID, RSSChannel.CAT_TAG,
           RSSChannel.DATE_TAG, RSSChannel.DESC_TAG, RSSChannel.IMAGE_TAG, RSSChannel.LINK_TAG, RSSChannel.IMAGE_ID_TAG,
-          RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY};
+          RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY, RSSChannel.NEXT_REFRESH_KEY};
 
   final static String T_CREATE_RSS_CHANNEL = "CREATE TABLE " + T_RSS_CHANNEL + " ("
           + DatabaseOpenHelper._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + RSSChannel.CAT_TAG
@@ -43,6 +43,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
           + " TEXT" + COMMA + RSSChannel.TAGS_KEY
           + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.TITLE_TAG
           + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.URL_KEY
+          + DatabaseOpenHelper.TEXT_COLUMN + COMMA + RSSChannel.NEXT_REFRESH_KEY
           + DatabaseOpenHelper.TEXT_COLUMN + ")";
 
 
@@ -122,6 +123,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   public RSSChannel update(RSSChannel existingChannel, RSSChannel channel) throws ParseException {
     existingChannel.update(channel.getLastBuildDate(), channel.getMappedItems());
+    existingChannel.setNextRefresh(channel.getNextRefresh());
     if (existingChannel.getImage() == null){
       existingChannel.setImage(channel.getImage());
     }
@@ -168,6 +170,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     channelValues.put(RSSChannel.TAGS_KEY, TextUtils.join(COMMA, channel.getTags()));
     channelValues.put(RSSChannel.TITLE_TAG, channel.getTitle());
     channelValues.put(RSSChannel.URL_KEY, channel.getUrl());
+    channelValues.put(RSSChannel.NEXT_REFRESH_KEY, channel.getNextRefresh());
     return channelValues;
   }
 
@@ -228,7 +231,9 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     String tags = c.getString(c.getColumnIndex(RSSChannel.TAGS_KEY));
     String title = c.getString(c.getColumnIndex(RSSChannel.TITLE_TAG));
     String url = c.getString(c.getColumnIndex(RSSChannel.URL_KEY));
+    String nextRefresh = c.getString(c.getColumnIndex(RSSChannel.NEXT_REFRESH_KEY));
     RSSChannel channel = new RSSChannel(url, title, link, description, category, image);
+    channel.setNextRefresh(nextRefresh);
     String[] tagList = tags.split(COMMA);
     for (String tag : tagList) {
       channel.addTag(tag);

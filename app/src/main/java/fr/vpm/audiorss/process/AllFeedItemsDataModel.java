@@ -10,10 +10,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -173,14 +178,28 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void refreshData(){
+    boolean forceRefresh = shouldForceRefresh();
     for (RSSChannel feed : feeds) {
-      if (feed.shouldRefresh()) {
+      Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
+      if ((forceRefresh) || (feed.shouldRefresh())) {
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
         new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
                 feed.getUrl());
         savingFeeds++;
       }
     }
+  }
+
+  public boolean shouldForceRefresh() {
+    Calendar fiveMinutesAgo = Calendar.getInstance();
+    fiveMinutesAgo.add(Calendar.MINUTE, -5);
+    Date lastBuildDate = fiveMinutesAgo.getTime();
+    try {
+      lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(getLastBuildDate());
+    } catch (ParseException e) {
+      Log.w("dateParsing", e.toString());
+    }
+    return lastBuildDate.after(fiveMinutesAgo.getTime());
   }
 
   @Override
@@ -191,13 +210,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(List<RSSChannel> feedsToUpdate) {
     for (RSSChannel feed : feedsToUpdate) {
-      if (feed.shouldRefresh()) {
-        Log.d("refresh", feed.getTitle());
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
-        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                feed.getUrl());
-        savingFeeds++;
-      }
+      Log.d("refresh", feed.getTitle());
+      SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+      new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+              feed.getUrl());
+      savingFeeds++;
     }
   }
 

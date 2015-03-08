@@ -3,7 +3,9 @@ package fr.vpm.audiorss.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
+import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
 public class DatabaseOpenHelper extends SQLiteOpenHelper {
@@ -52,7 +54,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
   final private static String I_DROP_RSSITEM_CHANNEL = "DROP INDEX IF EXISTS rssitem_channel_index;";
 
   final private static String DB_NAME = "rss_db";
-  final private static Integer DB_VERSION = 18;
+  final private static Integer DB_VERSION = 19;
   final private Context mContext;
 
   private static DatabaseOpenHelper sHelper;
@@ -87,10 +89,15 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     db.execSQL("DROP TABLE IF EXISTS " + DbMedia.T_MEDIA);
     onCreate(db);
     */
+    Log.d("db", oldVersion + " to " + newVersion);
+    if ((oldVersion < 19) && (newVersion > 18)) {
+      db.execSQL("ALTER TABLE " + DbRSSChannel.T_RSS_CHANNEL + " ADD COLUMN " + RSSChannel.NEXT_REFRESH_KEY + " TEXT;");
+    }
     db.execSQL(I_DROP_RSSITEM_RECENT);
     db.execSQL(I_DROP_RSSITEM_CHANNEL);
     db.execSQL(I_CREATE_RSSITEM_RECENT);
     db.execSQL(I_CREATE_RSSITEM_CHANNEL);
+
   }
 
   void deleteDatabase() {
