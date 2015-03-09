@@ -10,15 +10,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -193,12 +190,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public boolean shouldForceRefresh() {
     Calendar fiveMinutesAgo = Calendar.getInstance();
     fiveMinutesAgo.add(Calendar.MINUTE, -5);
-    Date lastBuildDate = fiveMinutesAgo.getTime();
-    try {
-      lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(getLastBuildDate());
-    } catch (ParseException e) {
-      Log.w("dateParsing", e.toString());
-    }
+    Date lastBuildDate = DateUtils.parseDBDate(getLastBuildDate(), fiveMinutesAgo.getTime());
     return lastBuildDate.after(fiveMinutesAgo.getTime());
   }
 

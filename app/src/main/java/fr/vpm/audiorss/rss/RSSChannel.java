@@ -10,7 +10,6 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -18,7 +17,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import fr.vpm.audiorss.ProgressListener;
@@ -172,7 +170,7 @@ public class RSSChannel implements Parcelable {
     boolean shouldRefresh = true;
     try {
       if (nextRefresh != null) {
-        Date whenToRefresh = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(nextRefresh);
+        Date whenToRefresh = DateUtils.parseDBDate(nextRefresh);
         shouldRefresh = whenToRefresh.before(Calendar.getInstance().getTime());
       }
     } catch (ParseException e) {

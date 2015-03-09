@@ -3,7 +3,6 @@ package fr.vpm.audiorss.db.filter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import fr.vpm.audiorss.process.DateUtils;
@@ -21,7 +20,7 @@ public class TodayFilter implements SelectionFilter {
     selectionBuilder.append(">'");
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.HOUR, -24);
-    String yesterdayDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN).format(yesterday.getTime());
+    String yesterdayDate = DateUtils.formatDBDate(yesterday.getTime());
     selectionBuilder.append(yesterdayDate);
     selectionBuilder.append("'");
     return selectionBuilder.toString();

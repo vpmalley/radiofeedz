@@ -24,7 +24,7 @@ public class DateUtils {
   public static String getDisplayDate(String date) {
     String dateText = "";
     try {
-      Date itemDate = new SimpleDateFormat(DB_DATE_PATTERN, Locale.US).parse(date);
+      Date itemDate = parseDBDate(date);
       Calendar yesterday = Calendar.getInstance();
       yesterday.add(Calendar.HOUR, -18);
       Calendar lastweek = Calendar.getInstance();
@@ -37,7 +37,7 @@ public class DateUtils {
         dateText = new SimpleDateFormat("dd MMMM", Locale.getDefault()).format(itemDate);
       }
     } catch (ParseException e) {
-      Log.w("date", "could not parse date");
+      Log.w("dateParsing", "could not parse date");
     }
     return dateText;
   }
@@ -89,5 +89,39 @@ public class DateUtils {
       date = Calendar.getInstance().getTime();
     }
     return date;
+  }
+
+  /**
+   * Parses a date formatted for the database
+   * @param dateToParse the date to parse, formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   * @param defaultDate if the dateToParse cannot be parsed properly, use this default date
+   * @return the parsed date or the default value
+   */
+  public static Date parseDBDate(String dateToParse, Date defaultDate) {
+    try {
+      defaultDate = parseDBDate(dateToParse);
+    } catch (ParseException e) {
+      Log.w("dateParsing", e.toString());
+    }
+    return defaultDate;
+  }
+
+  /**
+   * Parses a date formatted for the database
+   * @param dateToParse the date to parse, formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   * @return the parsed date
+   * @throws ParseException
+   */
+  public static Date parseDBDate(String dateToParse) throws ParseException {
+    return new SimpleDateFormat(DB_DATE_PATTERN, Locale.US).parse(dateToParse);
+  }
+
+  /**
+   *
+   * @param date
+   * @return the date as text, formatted as {@link fr.vpm.audiorss.process.DateUtils#DB_DATE_PATTERN} and with the US locale
+   */
+  public static String formatDBDate(Date date) {
+    return new SimpleDateFormat(DB_DATE_PATTERN, Locale.US).format(date);
   }
 }

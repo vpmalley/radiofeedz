@@ -22,9 +22,9 @@ import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import java.io.File;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,14 +83,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     if (rssItem != null) {
       title.setText(rssItem.getTitle());
 
-      SimpleDateFormat datePrinter = new SimpleDateFormat(DateUtils.DISPLAY_PATTERN);
-      SimpleDateFormat dateParser = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US);
-      try {
-        date.setText(datePrinter.format(dateParser.parse(rssItem.getDate())));
-      } catch (ParseException e) {
-        Log.d("date", "Could not parse date " + rssItem.getDate());
-        date.setText(rssItem.getDate());
-      }
+      SimpleDateFormat datePrinter = new SimpleDateFormat(DateUtils.DISPLAY_PATTERN, Locale.getDefault());
+      date.setText(datePrinter.format(DateUtils.parseDBDate(rssItem.getDate(), Calendar.getInstance().getTime())));
       String style = "<style type=\"text/css\">body{color: #434343; font-family: sans-serif-light; text-align: justify;}</style>";
       description.loadDataWithBaseURL(null, style + rssItem.getDescription(), "text/html", "utf-8", null);
       description.setBackgroundColor(0x00000000);

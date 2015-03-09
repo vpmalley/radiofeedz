@@ -14,13 +14,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -35,7 +33,7 @@ public class ItemParser {
   private static final String ITEM_TAG = "item";
 
   public RSSChannel parseChannel(String rssUrl, Context context) throws XmlPullParserException,
-      IOException, ParseException {
+          IOException, ParseException {
     InputStream in = null;
     HttpURLConnection urlConnection = null;
     try {
@@ -57,12 +55,12 @@ public class ItemParser {
   }
 
   private RSSChannel readFeed(XmlPullParser parser, String rssUrl, String thresholdDate) throws XmlPullParserException,
-      IOException, ParseException {
+          IOException, ParseException {
     Map<String, RSSItem> items = new HashMap<String, RSSItem>();
     String title = "";
     String link = "";
     String description = "";
-    String lastBuildDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
+    String lastBuildDate = DateUtils.formatDBDate(Calendar.getInstance().getTime());
     String category = "";
     String imageUrl = "";
 
@@ -129,7 +127,7 @@ public class ItemParser {
   private String getWhenToRefreshNext(List<String> itemDates) {
     // if no less than 3 items in the feed, the average is probably not trustable
     if (itemDates.size() < 3) {
-      return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(Calendar.getInstance().getTime());
+      return DateUtils.formatDBDate(Calendar.getInstance().getTime());
     }
 
     String latest = itemDates.get(0);
@@ -147,8 +145,8 @@ public class ItemParser {
     long totalTime = 0;
     long latestPublished = 0;
     try {
-      Date latestItem = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(latest);
-      Date earliestItem = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).parse(earliest);
+      Date latestItem = DateUtils.parseDBDate(latest);
+      Date earliestItem = DateUtils.parseDBDate(earliest);
       totalTime = latestItem.getTime() - earliestItem.getTime();
       latestPublished = latestItem.getTime();
     } catch (ParseException e) {
@@ -161,7 +159,7 @@ public class ItemParser {
     // determine last check
     long OFFSET = 360000; // we check one hour before next is supposed to be published, to make sure
     long nextRefresh = latestPublished + average - OFFSET;
-    String formattedNextRefresh = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(new Date(nextRefresh));
+    String formattedNextRefresh = DateUtils.formatDBDate(new Date(nextRefresh));
     Log.d("next refresh", formattedNextRefresh);
     return formattedNextRefresh;
   }
@@ -179,7 +177,7 @@ public class ItemParser {
     }
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.DAY_OF_YEAR, -1 * Integer.valueOf(itemsExpiryTime));
-    return new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(yesterday.getTime());
+    return DateUtils.formatDBDate(yesterday.getTime());
   }
 
   private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
@@ -199,7 +197,7 @@ public class ItemParser {
   }
 
   private RSSItem readEntry(XmlPullParser parser, String feedTitle) throws IOException,
-      XmlPullParserException {
+          XmlPullParserException {
     String title = "";
     String link = "";
     String description = "";
@@ -241,7 +239,7 @@ public class ItemParser {
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
         Log.d("date before", pubDate);
         Date date = DateUtils.parseDate(pubDate);
-        pubDate = new SimpleDateFormat(DateUtils.DB_DATE_PATTERN, Locale.US).format(date);
+        pubDate = DateUtils.formatDBDate(date);
         Log.d("date  after", pubDate);
       } else {
         skip(parser);
@@ -249,12 +247,12 @@ public class ItemParser {
     }
     Media media = new Media(title, feedTitle, mediaUrl, mediaType);
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
-        media, guid, pubDate, false, -1, false);
+            media, guid, pubDate, false, -1, false);
     return item;
   }
 
   private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
-      throws XmlPullParserException, IOException {
+          throws XmlPullParserException, IOException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     Map<String, String> attributes = new HashMap<String, String>();
     for (String attName : attNames) {
@@ -270,7 +268,7 @@ public class ItemParser {
   }
 
   private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
-      XmlPullParserException {
+          XmlPullParserException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     String content = "";
     if (parser.next() == XmlPullParser.TEXT) {
