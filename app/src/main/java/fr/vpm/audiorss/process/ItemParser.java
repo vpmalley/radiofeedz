@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.media.Media;
@@ -130,17 +132,10 @@ public class ItemParser {
       return DateUtils.formatDBDate(Calendar.getInstance().getTime());
     }
 
-    String latest = itemDates.get(0);
-    String earliest = itemDates.get(0);
+    SortedSet<String> sortedDates = new TreeSet<>(itemDates);
 
-    for (String date : itemDates) {
-      if (date.compareTo(latest) > 0) {
-        latest = date;
-      }
-      if (date.compareTo(earliest) < 0) {
-        earliest = date;
-      }
-    }
+    String earliest = sortedDates.first();
+    String latest = sortedDates.last();
 
     long totalTime = 0;
     long latestPublished = 0;
@@ -154,13 +149,31 @@ public class ItemParser {
     }
 
     long average = totalTime / itemDates.size();
-    Log.d("average", totalTime + " so on average " + average);
+    Log.d("average", ((float) average / 3600000 / 24 ) + " days");
 
-    // determine last check
-    long OFFSET = 360000; // we check one hour before next is supposed to be published, to make sure
-    long nextRefresh = latestPublished + average - OFFSET;
+    // starting another strategy
+    String previousDate = sortedDates.first();
+    totalTime = 0;
+    for (String date : sortedDates) {
+      try {
+        Date previousItem = DateUtils.parseDBDate(previousDate);
+        Date currentItem = DateUtils.parseDBDate(date);
+        long betweenTwo = currentItem.getTime() - previousItem.getTime();
+        if (betweenTwo < (average * 1.2)) {
+          totalTime += betweenTwo;
+        }
+      } catch (ParseException e) {
+        Log.w("dateParsing", e.toString());
+      }
+      previousDate = date;
+    }
+    long newAverage = totalTime / itemDates.size();
+    Log.d("average", ((float) newAverage / 3600000 / 24 ) + " days (new computation)");
+    // ending the other strategy
+
+    long nextRefresh = latestPublished + (long)( newAverage / 1.2) ;
     String formattedNextRefresh = DateUtils.formatDBDate(new Date(nextRefresh));
-    Log.d("next refresh", formattedNextRefresh);
+
     return formattedNextRefresh;
   }
 
