@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -39,6 +38,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   public static final String DISP_LIST = "disp_list";
   private static final int REQ_PREFS = 2;
   private static final int REQ_CATALOG = 3;
+  private static final String FILTERS_KEY = "filters";
 
   private AbsListView mFeedItems;
 
@@ -49,6 +49,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   private ActionBarDrawerToggle drawerToggle;
 
   private String title = "Radiofeedz";
+  private ArrayList<SelectionFilter> filters;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +86,17 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     // Navigation drawer
     setNavigationDrawer();
 
+    // restoring data if possible
+    if (savedInstanceState != null) {
+      filters = savedInstanceState.getParcelableArrayList(FILTERS_KEY);
+    }
+    if (filters == null) {
+      filters = new ArrayList<>();
+    }
+    dataModel.filterData(filters);
+
     // Contextual actions
     setContextualListeners();
-    dataModel.loadData();
 
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
@@ -105,8 +114,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+        filters.clear();
         filters.add(navigationDrawerItem.getFilter());
         title = navigationDrawerItem.getTitle();
         dataModel.filterData(filters);
@@ -232,5 +241,11 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         dataModel.addData(feedUrl);
       }
     }
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    outState.putParcelableArrayList(FILTERS_KEY, filters);
+    super.onSaveInstanceState(outState);
   }
 }
