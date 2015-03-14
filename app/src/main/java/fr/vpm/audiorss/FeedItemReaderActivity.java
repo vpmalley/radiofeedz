@@ -43,6 +43,8 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     setContentView(R.layout.activity_feed);
     getActionBar().setDisplayHomeAsUpEnabled(true);
 
+    viewPager = (ViewPager) findViewById(R.id.pager);
+
     Intent i = getIntent();
     if (i.hasExtra(INITIAL_POSITION)) {
       initialGuid = i.getStringExtra(INITIAL_POSITION);
@@ -59,7 +61,6 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     }
     dataModel.filterData(selectionFilters);
 
-    viewPager = (ViewPager) findViewById(R.id.pager);
 
     if (savedInstanceState != null) {
       initialGuid = savedInstanceState.getString("initialPosition");

@@ -15,6 +15,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,8 +53,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private static final int DEFAULT_MAX_ITEMS = 80;
 
-  private Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
-
   private static class ItemsAndFeeds {
 
     /**
@@ -65,12 +64,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
     ArrayList<SelectionFilter> itemFilters;
 
+    Map<RSSItem, RSSChannel> channelsByItem;
+
     private static ItemsAndFeeds instance;
 
     private ItemsAndFeeds() {
       items = new ArrayList<>();
       feeds = new ArrayList<>();
       itemFilters = new ArrayList<>();
+      channelsByItem = new HashMap<>();
     }
 
     public static ItemsAndFeeds getInstance(){
@@ -78,6 +80,25 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         instance = new ItemsAndFeeds();
       }
       return instance;
+    }
+
+    /**
+     * Determines whether the other list of filters is similar to this instance's filters
+     * @param otherFilters other filters to compare with this instance's filters
+     * @return whether the filters are the same
+     */
+    public boolean hasSimilarFilters(List<SelectionFilter> otherFilters) {
+      Set<String> filterNames = getFilterNames(this.itemFilters);
+      Set<String> otherFilterNames = getFilterNames(otherFilters);
+      return filterNames.equals(otherFilterNames);
+    }
+
+    private Set<String> getFilterNames(List<SelectionFilter> filters){
+      Set<String> filterNames = new HashSet<>();
+      for (SelectionFilter filter : filters) {
+        filterNames.add(filter.getClass().getName());
+      }
+      return filterNames;
     }
 
   }
@@ -107,8 +128,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    coreData = ItemsAndFeeds.getInstance();
-    this.coreData.itemFilters.add(new UnArchivedFilter());
+    this.coreData = ItemsAndFeeds.getInstance();
   }
 
   @Override
@@ -140,7 +160,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public boolean isReady() {
-    return !channelsByItem.isEmpty();
+    return !coreData.channelsByItem.isEmpty();
   }
 
   @Override
@@ -163,11 +183,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private void buildChannelsByItem(){
     if ((coreData.items.size() > 0) && (coreData.feeds.size() > 0)) {
-      channelsByItem.clear();
+      coreData.channelsByItem.clear();
       for (RSSItem item : coreData.items) {
         for (RSSChannel channel : coreData.feeds) {
           if (channel.getId() == item.getChannelId()) {
-            channelsByItem.put(item, channel);
+            coreData.channelsByItem.put(item, channel);
           }
         }
       }
@@ -177,12 +197,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
-      rssItemAdapter = new RSSItemArrayAdapter(activity, resource, coreData.items, channelsByItem);
+      rssItemAdapter = new RSSItemArrayAdapter(activity, resource, coreData.items, coreData.channelsByItem);
       feedsActivity.refreshView(rssItemAdapter, getNavigationDrawer());
       recreate = false;
     } else {
       rssItemAdapter.setItems(coreData.items);
-      rssItemAdapter.setChannelsByItem(channelsByItem);
+      rssItemAdapter.setChannelsByItem(coreData.channelsByItem);
       rssItemAdapter.notifyDataSetChanged();
     }
   }
@@ -334,25 +354,30 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     if (position < coreData.items.size()) {
       RSSItem rssItem = coreData.items.get(position);
       args.putParcelable(FeedItemReader.ITEM, rssItem);
-      args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
+      args.putParcelable(FeedItemReader.CHANNEL, coreData.channelsByItem.get(rssItem));
     }
     return args;
   }
 
   @Override
   public void filterData(List<SelectionFilter> filters) {
-    this.coreData.itemFilters.clear();
     boolean needsUnarchivedFilter = true;
     for (SelectionFilter filter : filters){
-      this.coreData.itemFilters.add(filter);
       if (filter instanceof ArchivedFilter){
         needsUnarchivedFilter = false;
       }
     }
     if (needsUnarchivedFilter){
-      this.coreData.itemFilters.add(new UnArchivedFilter());
+      filters.add(new UnArchivedFilter());
     }
-    loadData();
+    boolean filtersAreUpToDate = coreData.hasSimilarFilters(filters);
+    if (!filtersAreUpToDate) {
+      coreData.itemFilters.clear();
+      coreData.itemFilters.addAll(filters);
+      loadData();
+    } else {
+      refreshView();
+    }
   }
 
   @Override
