@@ -54,12 +54,35 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private Map<RSSItem, RSSChannel> channelsByItem = new HashMap<RSSItem, RSSChannel>();
 
-  /**
-   * the items of feeds that are displayed
-   */
-  private List<RSSItem> items = new ArrayList<RSSItem>();
+  private static class ItemsAndFeeds {
 
-  private List<RSSChannel> feeds = new ArrayList<RSSChannel>();
+    /**
+     * the items of feeds that are displayed
+     */
+    List<RSSItem> items;
+
+    List<RSSChannel> feeds;
+
+    ArrayList<SelectionFilter> itemFilters;
+
+    private static ItemsAndFeeds instance;
+
+    private ItemsAndFeeds() {
+      items = new ArrayList<>();
+      feeds = new ArrayList<>();
+      itemFilters = new ArrayList<>();
+    }
+
+    public static ItemsAndFeeds getInstance(){
+      if (instance == null) {
+        instance = new ItemsAndFeeds();
+      }
+      return instance;
+    }
+
+  }
+
+  private final ItemsAndFeeds coreData;
 
   private final ProgressListener progressListener;
 
@@ -68,10 +91,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   private final FeedsActivity<RSSItemArrayAdapter> feedsActivity;
 
   private RSSItemArrayAdapter rssItemAdapter;
-
-  private ArrayList<SelectionFilter> itemFilters = new ArrayList<SelectionFilter>();
-
-  private List<SelectionFilter> channelFilters = new ArrayList<SelectionFilter>();
 
   private int resource;
 
@@ -88,7 +107,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    this.itemFilters.add(new UnArchivedFilter());
+    coreData = ItemsAndFeeds.getInstance();
+    this.coreData.itemFilters.add(new UnArchivedFilter());
   }
 
   @Override
@@ -113,7 +133,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromItems() {
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
-    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), itemFilters);
+    AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), coreData.itemFilters);
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
@@ -125,27 +145,27 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void setChannelsAndBuildModel(List<RSSChannel> channels) {
-    if (channels.size() != this.feeds.size()){
+    if (channels.size() != this.coreData.feeds.size()){
       recreate = true;
     }
-    this.feeds = channels;
+    this.coreData.feeds = channels;
     buildChannelsByItem();
   }
 
   @Override
   public void setItemsAndBuildModel(List<RSSItem> items) {
-    if (items.size() != this.items.size()){
+    if (items.size() != this.coreData.items.size()){
       recreate = true;
     }
-    this.items = items;
+    this.coreData.items = items;
     buildChannelsByItem();
   }
 
   private void buildChannelsByItem(){
-    if ((items.size() > 0) && (feeds.size() > 0)) {
+    if ((coreData.items.size() > 0) && (coreData.feeds.size() > 0)) {
       channelsByItem.clear();
-      for (RSSItem item : items) {
-        for (RSSChannel channel : feeds) {
+      for (RSSItem item : coreData.items) {
+        for (RSSChannel channel : coreData.feeds) {
           if (channel.getId() == item.getChannelId()) {
             channelsByItem.put(item, channel);
           }
@@ -157,11 +177,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
-      rssItemAdapter = new RSSItemArrayAdapter(activity, resource, items, channelsByItem);
+      rssItemAdapter = new RSSItemArrayAdapter(activity, resource, coreData.items, channelsByItem);
       feedsActivity.refreshView(rssItemAdapter, getNavigationDrawer());
       recreate = false;
     } else {
-      rssItemAdapter.setItems(items);
+      rssItemAdapter.setItems(coreData.items);
       rssItemAdapter.setChannelsByItem(channelsByItem);
       rssItemAdapter.notifyDataSetChanged();
     }
@@ -176,7 +196,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
-    for (RSSChannel feed : feeds) {
+    for (RSSChannel feed : coreData.feeds) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
@@ -218,7 +238,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public String getLastBuildDate() {
     String lastRefresh = "";
-    for (RSSChannel feed : feeds) {
+    for (RSSChannel feed : coreData.feeds) {
       if (feed.getLastBuildDate().compareTo(lastRefresh) > 0) {
         lastRefresh = feed.getLastBuildDate();
       }
@@ -229,10 +249,10 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public int getItemPositionByGuid(String guid) {
     int position = 0;
-    while ((position < items.size()) && (!guid.equals(items.get(position).getGuid()))){
+    while ((position < coreData.items.size()) && (!guid.equals(coreData.items.get(position).getGuid()))){
       position++;
     }
-    if ((position >= items.size()) || (!guid.equals(items.get(position).getGuid()))) {
+    if ((position >= coreData.items.size()) || (!guid.equals(coreData.items.get(position).getGuid()))) {
       position = -1;
     }
     return position;
@@ -241,8 +261,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public String getItemGuidByPosition(int position) {
     String guid = "";
-    if (!items.isEmpty()){
-      guid = items.get(position).getGuid();
+    if (!coreData.items.isEmpty()){
+      guid = coreData.items.get(position).getGuid();
     }
     return guid;
   }
@@ -254,7 +274,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       feedUrl = feedAdder.retrieveFeedFromClipboard();
     }
     if (feedUrl != null) {
-      feedAdder.askForFeedValidation(feeds, feedUrl);
+      feedAdder.askForFeedValidation(coreData.feeds, feedUrl);
     } else {
       feedAdder.tellToCopy();
     }
@@ -270,8 +290,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     RSSItem[] itemsToDelete = new RSSItem[selection.size()];
     int i = 0;
     for (int position : selection){
-      items.get(position).setArchived(true);
-      itemsToDelete[i++] = items.get(position);
+      coreData.items.get(position).setArchived(true);
+      itemsToDelete[i++] = coreData.items.get(position);
     }
     saveItems(itemsToDelete);
   }
@@ -281,9 +301,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     List<RSSItem> unreadItems = new ArrayList<>();
     int i = 0;
     for (int position : selection){
-      if ((position > -1) && (position < items.size()) && (!items.get(position).isRead())) {
-        items.get(position).setRead(isRead);
-        unreadItems.add(items.get(position));
+      if ((position > -1) && (position < coreData.items.size()) && (!coreData.items.get(position).isRead())) {
+        coreData.items.get(position).setRead(isRead);
+        unreadItems.add(coreData.items.get(position));
       }
     }
     RSSItem[] itemsToSave = new RSSItem[unreadItems.size()];
@@ -296,8 +316,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void downloadMedia(Set<Integer> selection) {
     for (int position : selection){
-      if (position > -1 && position < items.size() && (items.get(position).getMedia() != null)) {
-        items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
+      if (position > -1 && position < coreData.items.size() && (coreData.items.get(position).getMedia() != null)) {
+        coreData.items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
                 new MediaDownloadListener.DummyMediaDownloadListener());
       }
     }
@@ -311,8 +331,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public Bundle getFeedItem(int position) {
     Bundle args = new Bundle();
-    if (position < items.size()) {
-      RSSItem rssItem = items.get(position);
+    if (position < coreData.items.size()) {
+      RSSItem rssItem = coreData.items.get(position);
       args.putParcelable(FeedItemReader.ITEM, rssItem);
       args.putParcelable(FeedItemReader.CHANNEL, channelsByItem.get(rssItem));
     }
@@ -321,23 +341,23 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void filterData(List<SelectionFilter> filters) {
-    this.itemFilters.clear();
+    this.coreData.itemFilters.clear();
     boolean needsUnarchivedFilter = true;
     for (SelectionFilter filter : filters){
-      this.itemFilters.add(filter);
+      this.coreData.itemFilters.add(filter);
       if (filter instanceof ArchivedFilter){
         needsUnarchivedFilter = false;
       }
     }
     if (needsUnarchivedFilter){
-      this.itemFilters.add(new UnArchivedFilter());
+      this.coreData.itemFilters.add(new UnArchivedFilter());
     }
     loadData();
   }
 
   @Override
   public int size() {
-    return items.size();
+    return coreData.items.size();
   }
 
   public NavigationDrawerProvider getNavigationDrawer() {
@@ -346,7 +366,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
     navigationDrawerList.clear();
     navigationDrawerList.addStaticItems();
-    navigationDrawerList.addChannels(feeds);
+    navigationDrawerList.addChannels(coreData.feeds);
     return navigationDrawerList;
   }
 
@@ -355,8 +375,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
-      i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, items.get(position).getGuid());
-      i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, itemFilters);
+      i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, coreData.items.get(position).getGuid());
+      i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, coreData.itemFilters);
       activity.startActivityForResult(i, REQ_ITEM_READ);
     }
 
