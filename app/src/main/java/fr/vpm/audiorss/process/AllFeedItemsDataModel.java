@@ -31,6 +31,7 @@ import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.filter.ArchivedFilter;
+import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
@@ -98,7 +99,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     private Set<String> getFilterNames(List<SelectionFilter> filters){
       Set<String> filterNames = new HashSet<>();
       for (SelectionFilter filter : filters) {
-        filterNames.add(filter.getClass().getName());
+        if (filter instanceof ChannelFilter) {
+          filterNames.add(filter.getClass().getName() + ",id=" + filter.getSelectionValues()[0]);
+        } else {
+          filterNames.add(filter.getClass().getName());
+        }
       }
       return filterNames;
     }
