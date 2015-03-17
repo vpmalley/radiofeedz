@@ -37,9 +37,8 @@ import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
-import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.AsyncBitmapLoader;
 import fr.vpm.audiorss.media.MediaDownloadListener;
-import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -129,12 +128,15 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   private NavigationDrawerList navigationDrawerList;
   private int savingFeeds = 0;
 
+  private final boolean preloadPictures;
+
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
-          feedsActivity, int resId) {
+          feedsActivity, int resId, boolean preloadPictures) {
     this.progressListener = progressListener;
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
+    this.preloadPictures = preloadPictures;
     this.coreData = ItemsAndFeeds.getInstance();
   }
 
@@ -186,10 +188,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
     this.coreData.items = items;
     buildChannelsByItem();
-    for (RSSItem rssItem : coreData.items) {
-      if ((rssItem.getMedia() != null) && (rssItem.getMedia().isPicture())) {
-        rssItem.getMedia().getAsBitmap(getContext(), new ArrayList<PictureLoadedListener>(), Media.Folder.INTERNAL_ITEMS_PICS);
-      }
+    if (preloadPictures) {
+      List<RSSItem> rssItemsSubset = coreData.items.subList(6, Math.min(coreData.items.size(), 20));
+      new AsyncBitmapLoader(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItemsSubset.toArray(new RSSItem[rssItemsSubset.size()]));
     }
   }
 

@@ -65,6 +65,7 @@ public class Media implements Downloadable, Parcelable {
   private boolean isDownloaded;
 
   private Bitmap preloadedBitmap = null;
+  private boolean loadingBitmap = false;
 
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
@@ -226,7 +227,8 @@ public class Media implements Downloadable, Parcelable {
     if (!isPicture()){
       return null;
     }
-    if (preloadedBitmap == null) {
+    if ((preloadedBitmap == null) && (!loadingBitmap) && (exists())) {
+      loadingBitmap = true;
       FilePictureSaver pictureRetriever = new FilePictureSaver(context);
       File pictureFile = getMediaFile(context, folder);
       if (pictureFile.exists()) {
@@ -244,6 +246,10 @@ public class Media implements Downloadable, Parcelable {
       }
     }
     return preloadedBitmap;
+  }
+
+  private boolean exists() {
+    return !getInetUrl().isEmpty();
   }
 
   public boolean isPicture() {
