@@ -31,4 +31,10 @@ public interface ContextualActions {
    * @param selection the list of indices of the feeds
    */
   void refreshData(Set<Integer> selection);
+
+  /**
+   * Creates a playlist from the selected items
+   * @param selection the list of indices of the items
+   */
+  void createPlaylist(Set<Integer> selection);
 }

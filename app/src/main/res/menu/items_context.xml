@@ -21,4 +21,9 @@
           android:orderInCategory="100"
           android:showAsAction="ifRoom"
           android:icon="@drawable/ic_action_download"/>
+    <item android:id="@+id/action_playlist"
+          android:title="@string/action_playlist"
+          android:orderInCategory="110"
+          android:showAsAction="ifRoom"
+          android:icon="@drawable/ic_action_add_to_queue"/>
 </menu>

@@ -38,7 +38,9 @@ import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.media.AsyncBitmapLoader;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
+import fr.vpm.audiorss.media.Playlist;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -354,6 +356,18 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
                 new MediaDownloadListener.DummyMediaDownloadListener());
       }
     }
+  }
+
+  @Override
+  public void createPlaylist(Set<Integer> selection) {
+    Playlist playlist = new Playlist();
+    for (int i : selection) {
+      Media media = coreData.items.get(i).getMedia();
+      if (media.isDownloaded(getContext(), false)) {
+        playlist.add(media);
+      }
+    }
+    playlist.createPlaylist(getContext());
   }
 
   private void saveItems(RSSItem... itemsToSave) {

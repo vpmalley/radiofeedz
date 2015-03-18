@@ -117,7 +117,7 @@ public class Media implements Downloadable, Parcelable {
     MediaBroadcastReceiver.addListener(mediaDownloadListener);
   }
 
-  public File getDownloadFolder(Context context, Folder folder) {
+  public static File getDownloadFolder(Context context, Folder folder) {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     String storageMediaRoot = sharedPref.getString("pref_storage_root",
             Environment.getExternalStorageDirectory().getPath());

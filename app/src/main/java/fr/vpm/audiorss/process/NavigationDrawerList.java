@@ -138,6 +138,11 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     dataModel.refreshData(feeds);
   }
 
+  @Override
+  public void createPlaylist(Set<Integer> selection) {
+    throw new UnsupportedOperationException();
+  }
+
   /**
    * Simple data structure for any item to show up in the navigation drawer
    */

@@ -30,5 +30,6 @@
     <string name="emptynews">Welcome to Radiofeedz! \nIt looks like you have no news in this list. \n\nYou can add some more content from the catalog the \'+\' icon in the middle of the action bar, up there. \n\nOnce you have some news, you can filter it by using the left panel, click the top-left app icon to access it!\n\nI hope you will enjoy it!</string>
     <string name="last_refresh">Last synchronisation</string>
     <string name="added_feed">Feed added. Find it in the left pane</string>
+    <string name="action_playlist">Create a playlist</string>
 
 </resources>
