@@ -191,7 +191,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.coreData.items = items;
     buildChannelsByItem();
     if (preloadPictures) {
-      List<RSSItem> rssItemsSubset = coreData.items.subList(6, Math.min(coreData.items.size(), 20));
+      List<RSSItem> rssItemsSubset = coreData.items;
+      int MAX_CACHED = 20;
+      if (coreData.items.size() > MAX_CACHED){
+        rssItemsSubset = coreData.items.subList(6, Math.min(coreData.items.size(), MAX_CACHED));
+      }
       new AsyncBitmapLoader(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItemsSubset.toArray(new RSSItem[rssItemsSubset.size()]));
     }
   }
