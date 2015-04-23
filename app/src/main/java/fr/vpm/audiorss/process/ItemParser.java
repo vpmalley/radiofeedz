@@ -5,12 +5,15 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.util.Xml;
 
+import org.apache.commons.io.IOUtils;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.ParseException;
@@ -35,41 +38,104 @@ public class ItemParser {
   private static final String ITEM_TAG = "item";
 
   public RSSChannel parseChannel(String rssUrl, Context context) throws XmlPullParserException,
-          IOException, ParseException {
+      IOException, ParseException {
     InputStream in = null;
     HttpURLConnection urlConnection = null;
+    String channel = "";
+    List<String> items = new ArrayList<>();
+
     try {
       URL formattedUrl = new URL(rssUrl);
       urlConnection = (HttpURLConnection) formattedUrl.openConnection();
       urlConnection.setConnectTimeout(30000);
       in = new BufferedInputStream(urlConnection.getInputStream());
 
-      XmlPullParser parser = Xml.newPullParser();
-      parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-      parser.setInput(in, null);
-      parser.nextTag();
-      return readFeed(parser, rssUrl, getThresholdDate(context));
+      StringWriter sw = new StringWriter();
+      IOUtils.copy(in, sw, "UTF-8");
+      String content = sw.toString();
+      for (String token : content.split("<item>")) {
+        if (token.contains("</item>")) {
+          items.add(token);
+        } else {
+          // TODO add what is in the last part
+          channel = token.substring(token.indexOf("<channel>")) + "</channel>";
+        }
+      }
     } finally {
       if (in != null) {
         in.close();
       }
     }
+
+    RSSChannel rssChannel = extractRSSChannel(rssUrl, channel);
+
+    extractRSSItems(context, items, rssChannel);
+
+    return rssChannel;
   }
 
-  private RSSChannel readFeed(XmlPullParser parser, String rssUrl, String thresholdDate) throws XmlPullParserException,
-          IOException, ParseException {
-    Map<String, RSSItem> items = new HashMap<String, RSSItem>();
+  private RSSChannel extractRSSChannel(String rssUrl, String channel) throws XmlPullParserException, IOException, ParseException {
+    RSSChannel rssChannel;
+    InputStream channelStream = null;
+    try {
+      channelStream = new ByteArrayInputStream(channel.getBytes("UTF-8"));
+      XmlPullParser channelParser = Xml.newPullParser();
+      channelParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+      channelParser.setInput(channelStream, null);
+      channelParser.nextTag();
+      rssChannel = readFeed(channelParser, rssUrl);
+    } finally {
+      if (channelStream != null) {
+        channelStream.close();
+      }
+    }
+    return rssChannel;
+  }
+
+  private void extractRSSItems(Context context, List<String> items, RSSChannel rssChannel) throws XmlPullParserException, IOException {
+    Map<String, RSSItem> allItems = new HashMap<>();
+    List<String> itemDates = new ArrayList<>();
+    String thresholdDate = getThresholdDate(context);
+
+    for (String item : items) {
+      InputStream itemStream = null;
+      try {
+        itemStream = new ByteArrayInputStream(item.getBytes("UTF-8"));
+        XmlPullParser itemParser = Xml.newPullParser();
+        itemParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+        itemParser.setInput(itemStream, null);
+        itemParser.nextTag();
+
+        RSSItem rssItem = readEntry(itemParser, rssChannel.getTitle());
+        itemDates.add(rssItem.getDate());
+        // if item date is after the threshold date
+        if (thresholdDate.compareTo(rssItem.getDate()) < 0) {
+          if (rssItem.getId() != null) {
+            allItems.put(rssItem.getId(), rssItem);
+          } else {
+            allItems.put(rssItem.getLink(), rssItem);
+          }
+        }
+      } finally {
+        if (itemStream != null) {
+          itemStream.close();
+        }
+      }
+    }
+
+    rssChannel.update(DateUtils.formatDBDate(Calendar.getInstance().getTime()), allItems);
+    String whenToRefreshNext = getWhenToRefreshNext(itemDates);
+    rssChannel.setNextRefresh(whenToRefreshNext);
+  }
+
+  private RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
+      IOException, ParseException {
     String title = "";
     String link = "";
     String description = "";
-    String lastBuildDate = DateUtils.formatDBDate(Calendar.getInstance().getTime());
     String category = "";
     String imageUrl = "";
 
-    List<String> itemDates = new ArrayList<>();
-
-    parser.require(XmlPullParser.START_TAG, null, RSS_TAG);
-    parser.nextTag();
     parser.require(XmlPullParser.START_TAG, null, CHANNEL_TAG);
     while (parser.next() != XmlPullParser.END_TAG) {
       if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -88,17 +154,6 @@ public class ItemParser {
         category = readTagContent(parser, RSSItem.CAT_TAG);
       } else if (tagName.equals(RSSChannel.IMAGE_TAG)) {
         imageUrl = readImage(parser);
-      } else if (tagName.equals(ITEM_TAG)) {
-        RSSItem item = readEntry(parser, title);
-        itemDates.add(item.getDate());
-        // if item date is after the threshold date
-        if (thresholdDate.compareTo(item.getDate()) < 0){
-          if (item.getId() != null) {
-            items.put(item.getId(), item);
-          } else {
-            items.put(item.getLink(), item);
-          }
-        }
       } else {
         skip(parser);
       }
@@ -111,10 +166,6 @@ public class ItemParser {
     }
     Media image = new Media(title, "media-miniature", imageUrl, imageType);
     RSSChannel channel = new RSSChannel(rssUrl, title, link, description, category, image);
-    channel.update(lastBuildDate, items);
-    String whenToRefreshNext = getWhenToRefreshNext(itemDates);
-    channel.setNextRefresh(whenToRefreshNext);
-    Log.d("next refresh", channel.getTitle() + " to be refreshed next on " + whenToRefreshNext);
     return channel;
 
   }
@@ -184,7 +235,7 @@ public class ItemParser {
    */
   private String getThresholdDate(Context context) {
     String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
-            getString("pref_items_deletion", "30");
+        getString("pref_items_deletion", "30");
     if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
       itemsExpiryTime = "30";
     }
@@ -210,7 +261,7 @@ public class ItemParser {
   }
 
   private RSSItem readEntry(XmlPullParser parser, String feedTitle) throws IOException,
-          XmlPullParserException {
+      XmlPullParserException {
     String title = "";
     String link = "";
     String description = "";
@@ -260,12 +311,12 @@ public class ItemParser {
     }
     Media media = new Media(title, feedTitle, mediaUrl, mediaType);
     RSSItem item = new RSSItem(feedTitle, title, link, description, author, category, comments,
-            media, guid, pubDate, false, -1, false);
+        media, guid, pubDate, false, -1, false);
     return item;
   }
 
   private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
-          throws XmlPullParserException, IOException {
+      throws XmlPullParserException, IOException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     Map<String, String> attributes = new HashMap<String, String>();
     for (String attName : attNames) {
@@ -281,7 +332,7 @@ public class ItemParser {
   }
 
   private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
-          XmlPullParserException {
+      XmlPullParserException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     String content = "";
     if (parser.next() == XmlPullParser.TEXT) {

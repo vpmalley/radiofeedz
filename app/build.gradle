@@ -21,6 +21,13 @@ android {
         targetSdkVersion 21
     }
 
+    packagingOptions {
+        exclude 'plugin.properties'
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+
 }
 
 /*
@@ -53,6 +60,7 @@ dependencies {
     compile "com.android.support:support-v4:21.0.3"
     compile "org.apache.commons:commons-lang3:3.3.2"
     compile "com.google.code.gson:gson:2.3.1"
+    compile 'commons-io:commons-io:2.4'
 
     repositories {
         mavenCentral()
