@@ -85,7 +85,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
       SimpleDateFormat datePrinter = new SimpleDateFormat(DateUtils.DISPLAY_PATTERN, Locale.getDefault());
       date.setText(datePrinter.format(DateUtils.parseDBDate(rssItem.getDate(), Calendar.getInstance().getTime())));
-      String style = "<style type=\"text/css\">body{color: #434343; font-family: sans-serif-light; text-align: justify;}</style>";
+      String style = "<style type=\"text/css\">body{color: #434343; font-family: sans-serif-light; text-align: justify; max-width: 100%;} img{max-width: 100%;}</style>";
       description.loadDataWithBaseURL(null, style + rssItem.getDescription(), "text/html", "utf-8", null);
       description.setBackgroundColor(0x00000000);
 

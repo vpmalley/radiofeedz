@@ -2,6 +2,7 @@ package fr.vpm.audiorss;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
+import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
@@ -61,10 +63,10 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     }
     dataModel.filterData(selectionFilters);
 
-
     if (savedInstanceState != null) {
       initialGuid = savedInstanceState.getString("initialPosition");
     }
+    new AsyncMaintenance(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   @Override
