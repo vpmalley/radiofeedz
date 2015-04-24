@@ -20,9 +20,11 @@ import java.util.Set;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
+import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -61,7 +63,8 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
         selectionFilters.add((SelectionFilter) filter);
       }
     }
-    dataModel.filterData(selectionFilters);
+    dataModel.filterData(selectionFilters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+        new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
 
     if (savedInstanceState != null) {
       initialGuid = savedInstanceState.getString("initialPosition");

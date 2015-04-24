@@ -5,6 +5,8 @@ import java.util.List;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 03/11/14.
@@ -28,6 +30,6 @@ public class LoadDataRefreshViewCallback<T> implements AsyncCallbackListener<Lis
   @Override
   public void onPostExecute(List<T> result) {
     progressListener.stopRefreshProgress();
-    dataModel.loadData();
+    dataModel.loadData(new DummyCallback<List<RSSItem>>(), new DummyCallback<List<RSSChannel>>());
   }
 }

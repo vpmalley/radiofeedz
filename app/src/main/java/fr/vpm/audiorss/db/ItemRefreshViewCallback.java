@@ -12,11 +12,14 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSItem>> {
 
+  private final AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback;
+
   private final ProgressListener progressListener;
 
   private final DataModel.RSSItemDataModel dataModel;
 
-  public ItemRefreshViewCallback(ProgressListener progressListener, DataModel.RSSItemDataModel dataModel) {
+  public ItemRefreshViewCallback(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, ProgressListener progressListener, DataModel.RSSItemDataModel dataModel) {
+    this.itemsLoadedCallback = itemsLoadedCallback;
     this.progressListener = progressListener;
     this.dataModel = dataModel;
   }
@@ -33,5 +36,6 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
     if (dataModel.isReady()) {
       dataModel.refreshView();
     }
+    itemsLoadedCallback.onPostExecute(result);
   }
 }

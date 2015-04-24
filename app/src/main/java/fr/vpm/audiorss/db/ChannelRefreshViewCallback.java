@@ -15,11 +15,14 @@ import fr.vpm.audiorss.rss.RSSChannel;
  */
 public class ChannelRefreshViewCallback implements AsyncCallbackListener<List<RSSChannel>>,PictureLoadedListener {
 
+  private final AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback;
+
   private final ProgressListener progressListener;
 
   private final DataModel.RSSChannelDataModel dataModel;
 
-  public ChannelRefreshViewCallback(ProgressListener progressListener, DataModel.RSSChannelDataModel dataModel) {
+  public ChannelRefreshViewCallback(AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback, ProgressListener progressListener, DataModel.RSSChannelDataModel dataModel) {
+    this.channelsLoadedCallback = channelsLoadedCallback;
     this.progressListener = progressListener;
     this.dataModel = dataModel;
   }
@@ -36,6 +39,7 @@ public class ChannelRefreshViewCallback implements AsyncCallbackListener<List<RS
     if (dataModel.isReady()) {
       dataModel.refreshView();
     }
+    channelsLoadedCallback.onPostExecute(result);
   }
 
   @Override

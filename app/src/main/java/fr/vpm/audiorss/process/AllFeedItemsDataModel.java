@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -143,27 +144,27 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public void loadData() {
+  public void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
     Log.d("decrease", String.valueOf(savingFeeds));
     if (savingFeeds > 0) {
       savingFeeds--;
     }
     if (savingFeeds < 2) {
-      loadDataFromChannels(false);
-      loadDataFromItems();
+      loadDataFromChannels(false, channelsLoadedCallback);
+      loadDataFromItems(itemsLoadedCallback);
     }
   }
 
-  public void loadDataFromChannels(boolean readItems) {
+  public void loadDataFromChannels(boolean readItems, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
     ChannelRefreshViewCallback callback =
-            new ChannelRefreshViewCallback(progressListener, this);
+            new ChannelRefreshViewCallback(channelsLoadedCallback, progressListener, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
-  public void loadDataFromItems() {
-    AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(progressListener, this);
+  public void loadDataFromItems(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback) {
+    AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(itemsLoadedCallback, progressListener, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), coreData.itemFilters);
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -232,6 +233,31 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     return activity;
   }
 
+  public boolean shouldForceRefresh() {
+    Calendar fiveMinutesAgo = Calendar.getInstance();
+    fiveMinutesAgo.add(Calendar.MINUTE, -5);
+    Date lastBuildDate = DateUtils.parseDBDate(getLastBuildDate(), fiveMinutesAgo.getTime());
+    return lastBuildDate.after(fiveMinutesAgo.getTime());
+  }
+
+  @Override
+  public void preRefreshData() {
+    if (new DefaultNetworkChecker().checkNetworkForRefresh(getContext(), false)) {
+      Iterator<RSSChannel> feedsIterator = coreData.feeds.iterator();
+      RSSChannel nextChannel = null;
+      Log.d("prerefresh", "feeds: " + coreData.feeds.size());
+      while (feedsIterator.hasNext() && !(nextChannel = feedsIterator.next()).shouldRefresh()) {
+      }
+
+      if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
+        Log.d("prerefresh", nextChannel.getUrl());
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+            nextChannel.getUrl());
+      }
+    }
+  }
+
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
@@ -244,13 +270,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         savingFeeds++;
       }
     }
-  }
-
-  public boolean shouldForceRefresh() {
-    Calendar fiveMinutesAgo = Calendar.getInstance();
-    fiveMinutesAgo.add(Calendar.MINUTE, -5);
-    Date lastBuildDate = DateUtils.parseDBDate(getLastBuildDate(), fiveMinutesAgo.getTime());
-    return lastBuildDate.after(fiveMinutesAgo.getTime());
   }
 
   @Override
@@ -391,7 +410,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public void filterData(List<SelectionFilter> filters) {
+  public void filterData(List<SelectionFilter> filters, AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
     boolean needsUnarchivedFilter = true;
     for (SelectionFilter filter : filters){
       if (filter instanceof ArchivedFilter){
@@ -405,7 +424,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     if (!filtersAreUpToDate) {
       coreData.itemFilters.clear();
       coreData.itemFilters.addAll(filters);
-      loadData();
+      loadData(itemsLoadedCallback, channelsLoadedCallback);
     } else {
       refreshView();
     }

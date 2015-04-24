@@ -17,8 +17,10 @@ public interface DataModel extends ContextualActions {
 
   /**
    * Loads the data and refreshes the view once data is retrieved.
+   * @param itemsLoadedCallback
+   * @param channelsLoadedCallback
    */
-  void loadData();
+  void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback);
 
   /**
    * Refreshes the view based on activityś data
@@ -30,6 +32,8 @@ public interface DataModel extends ContextualActions {
    * @return the Android Context
    */
   Context getContext();
+
+  void preRefreshData();
 
   void refreshData();
 
@@ -49,10 +53,11 @@ public interface DataModel extends ContextualActions {
 
   /**
    * Filters the elements based on passed filter and reloads the data from the DB
-   *
-   * @param filters the filter to apply on the DB query
+   *  @param filters the filter to apply on the DB query
+   * @param itemsLoadedCallback
+   * @param channelsLoadedCallback
    */
-  void filterData(List<SelectionFilter> filters);
+  void filterData(List<SelectionFilter> filters, AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback);
 
   /**
    * The number of elements in this structure

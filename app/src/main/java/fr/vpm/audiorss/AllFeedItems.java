@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,17 +20,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArrayAdapter> {
 
@@ -73,9 +78,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     networkChecker = new DefaultNetworkChecker();
     dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, rss_item_layout, true);
 
-    LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView) findViewById(R.id.latestupdate), dataModel, this);
-    progressBarListener.setDelegate(lastRefreshListener);
-
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
@@ -93,7 +95,19 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     if (filters == null) {
       filters = new ArrayList<>();
     }
-    dataModel.filterData(filters);
+    Log.d("prerefresh", "filtering");
+    dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+        new AsyncCallbackListener<List<RSSChannel>>() {
+      @Override
+      public void onPreExecute() {}
+
+      @Override
+      public void onPostExecute(List<RSSChannel> result) {
+        dataModel.preRefreshData();
+        String currentDate = DateUtils.getDisplayDate(dataModel.getLastBuildDate());
+        ((TextView) findViewById(R.id.latestupdate)).setText(getString(R.string.last_refresh) + " : " + currentDate);
+      }
+    });
 
     // Contextual actions
     setContextualListeners();
@@ -118,7 +132,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
         filters.clear();
         filters.add(navigationDrawerItem.getFilter());
         title = navigationDrawerItem.getTitle();
-        dataModel.filterData(filters);
+        dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+            new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
         drawerLayout.closeDrawer(drawerList);
       }
     });
@@ -232,7 +247,8 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
-      dataModel.loadData();
+      dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
     } else if (REQ_PREFS == requestCode){
       dataModel.refreshView();
     } else if (REQ_CATALOG == requestCode) {
