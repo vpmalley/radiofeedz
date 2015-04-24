@@ -45,7 +45,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   protected File doInBackground(File... params) {
 
     // introducing randomization in maintenance to improve performances
-    int randomMaintenance = new Random().nextInt(100);
+    int randomMaintenance = new Random().nextInt(30);
     if (randomMaintenance < 10) {
       Log.d("maintenance", "cleaning folders");
       cleanFolders(params);
