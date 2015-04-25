@@ -290,7 +290,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void onFeedFailureBeforeLoad() {
-    savingFeeds--;
+    loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
   }
 
   @Override

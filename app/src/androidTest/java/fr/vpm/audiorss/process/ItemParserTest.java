@@ -41,9 +41,9 @@ public class ItemParserTest extends TestCase {
     RSSChannel channel = new RSSChannel("", "Hello", "", "World", "", null);
     assertEquals(0, channel.getItems().size());
 
-    ItemParser parser = new ItemParser();
+    ItemParser parser = new ItemParser(channel, items);
     try {
-      parser.extractRSSItems("2000-01-01-01:00:00--05:00", items, channel);
+      parser.extractRSSItems("2000-01-01-01:00:00--05:00");
     } catch (XmlPullParserException e) {
       fail(e.toString());
     } catch (IOException e) {
@@ -83,10 +83,9 @@ public class ItemParserTest extends TestCase {
         "<podcastRF:originStation>1000</podcastRF:originStation>\n" +
         "</channel>";
 
-    ItemParser parser = new ItemParser();
     RSSChannel channel = null;
     try {
-      channel = parser.extractRSSChannel("http://myrssfeed", channelContent);
+      channel = ItemParser.extractRSSChannel("http://myrssfeed", channelContent);
     } catch (XmlPullParserException e) {
       fail(e.toString());
     } catch (IOException e) {

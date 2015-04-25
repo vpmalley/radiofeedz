@@ -27,6 +27,7 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
   @Override
   public void onPreExecute() {
     progressListener.startRefreshProgress();
+    itemsLoadedCallback.onPreExecute();
   }
 
   @Override

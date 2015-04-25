@@ -41,16 +41,18 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   @Override
   protected RSSChannel doInBackground(String... params) {
     String url = params[0];
-    RSSChannel newChannel = null;
+    RSSChannel rssChannel = null;
     try {
       Log.d("measures", "refresh start");
       long initRefresh = System.currentTimeMillis();
-      newChannel = new ItemParser().parseChannel(url, context);
+      ItemParser itemParser = ItemParser.retrieveFeedContent(url);
+      itemParser.extractRSSItems(itemParser.getThresholdDate(context));
+      rssChannel = itemParser.getRssChannel();
       Log.d("measures", "refresh -end- " + (System.currentTimeMillis() - initRefresh));
     } catch (XmlPullParserException | IOException | ParseException e) {
       mE = e;
     }
-    return newChannel;
+    return rssChannel;
   }
 
   @Override
@@ -60,6 +62,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
       Log.e("Exception", mE.toString());
       dataModel.onFeedFailureBeforeLoad();
     }
+    // always call callback, with null if nothing is worth returning
     asyncCallbackListener.onPostExecute(newChannel);
     super.onPostExecute(newChannel);
   }

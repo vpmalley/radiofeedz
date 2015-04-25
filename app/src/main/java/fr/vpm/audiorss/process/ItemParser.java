@@ -37,11 +37,23 @@ public class ItemParser {
   private static final String RSS_TAG = "rss";
   private static final String ITEM_TAG = "item";
 
-  public RSSChannel parseChannel(String rssUrl, Context context) throws XmlPullParserException,
+  private RSSChannel rssChannel;
+
+  private List<String> rssItems = new ArrayList<>();
+
+  public ItemParser(RSSChannel rssChannel, List<String> rssItems) {
+    this.rssChannel = rssChannel;
+    this.rssItems = rssItems;
+  }
+
+  public RSSChannel getRssChannel() {
+    return rssChannel;
+  }
+
+  public static ItemParser retrieveFeedContent(String rssUrl) throws XmlPullParserException,
       IOException, ParseException {
     String channel = "";
     List<String> items = new ArrayList<>();
-
     String feedContent = getFeedContent(rssUrl);
 
     for (String token : feedContent.split("<item>")) {
@@ -56,17 +68,24 @@ public class ItemParser {
       }
     }
     channel += "</channel>";
-
-
     RSSChannel rssChannel = extractRSSChannel(rssUrl, channel);
-
-    String thresholdDate = getThresholdDate(context);
-    extractRSSItems(thresholdDate, items, rssChannel);
-
-    return rssChannel;
+    return new ItemParser(rssChannel, items);
   }
 
-  private String getFeedContent(String rssUrl) throws IOException {
+  public static ItemParser retrieveFeedContent(RSSChannel rssChannel) throws XmlPullParserException,
+      IOException, ParseException {
+    List<String> items = new ArrayList<>();
+    String feedContent = getFeedContent(rssChannel.getUrl());
+
+    for (String token : feedContent.split("<item>")) {
+      if (token.contains("</item>")) {
+        items.add("<item>" + token);
+      }
+    }
+    return new ItemParser(rssChannel, items);
+  }
+
+  private static String getFeedContent(String rssUrl) throws IOException {
     InputStream in = null;
     HttpURLConnection urlConnection = null;
     String content;
@@ -74,7 +93,7 @@ public class ItemParser {
     try {
       URL formattedUrl = new URL(rssUrl);
       urlConnection = (HttpURLConnection) formattedUrl.openConnection();
-      urlConnection.setConnectTimeout(30000);
+      urlConnection.setConnectTimeout(10000);
       in = new BufferedInputStream(urlConnection.getInputStream());
 
       StringWriter sw = new StringWriter();
@@ -151,7 +170,7 @@ public class ItemParser {
    * @param context the current Android context
    * @return the threshold date
    */
-  private String getThresholdDate(Context context) {
+  public String getThresholdDate(Context context) {
     String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
         getString("pref_items_deletion", "30");
     if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
@@ -171,7 +190,7 @@ public class ItemParser {
    * @throws IOException
    * @throws ParseException
    */
-  RSSChannel extractRSSChannel(String rssUrl, String channel) throws XmlPullParserException, IOException, ParseException {
+  static RSSChannel extractRSSChannel(String rssUrl, String channel) throws XmlPullParserException, IOException, ParseException {
     RSSChannel rssChannel;
     InputStream channelStream = null;
     try {
@@ -190,18 +209,16 @@ public class ItemParser {
   }
 
   /**
-   * Extracts a RSSItem from a String containing its XML representation
+   * Extracts RSSItems from Strings containing their XML representation
    * @param thresholdDate the date before which no item should be kept
-   * @param items a list of XML content containing the channel description (root tag is "item")
-   * @param rssChannel the {@link RSSChannel} to which to add the extracted {@link RSSItem}
    * @throws XmlPullParserException
    * @throws IOException
    */
-  void extractRSSItems(String thresholdDate, List<String> items, RSSChannel rssChannel) throws XmlPullParserException, IOException {
+  public void extractRSSItems(String thresholdDate) throws XmlPullParserException, IOException {
     Map<String, RSSItem> allItems = new HashMap<>();
     List<String> itemDates = new ArrayList<>();
 
-    for (String item : items) {
+    for (String item : rssItems) {
       InputStream itemStream = null;
       try {
         itemStream = new ByteArrayInputStream(item.getBytes("UTF-8"));
@@ -232,7 +249,7 @@ public class ItemParser {
     rssChannel.setNextRefresh(whenToRefreshNext);
   }
 
-  private RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
+  private static RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
       IOException, ParseException {
     String title = "";
     String link = "";
@@ -274,7 +291,7 @@ public class ItemParser {
 
   }
 
-  private String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
+  private static String readImage(XmlPullParser parser) throws XmlPullParserException, IOException {
     String imageUrl = "";
     while (parser.next() != XmlPullParser.END_TAG) {
       if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -345,7 +362,7 @@ public class ItemParser {
     return item;
   }
 
-  private Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
+  private static Map<String, String> readTagAttribute(XmlPullParser parser, String tagName, String... attNames)
       throws XmlPullParserException, IOException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     Map<String, String> attributes = new HashMap<String, String>();
@@ -361,7 +378,7 @@ public class ItemParser {
     return attributes;
   }
 
-  private String readTagContent(XmlPullParser parser, String tagName) throws IOException,
+  private static String readTagContent(XmlPullParser parser, String tagName) throws IOException,
       XmlPullParserException {
     parser.require(XmlPullParser.START_TAG, null, tagName);
     String content = "";
@@ -373,7 +390,7 @@ public class ItemParser {
     return content;
   }
 
-  private void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
+  private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
     if (parser.getEventType() != XmlPullParser.START_TAG) {
       throw new IllegalStateException();
     }

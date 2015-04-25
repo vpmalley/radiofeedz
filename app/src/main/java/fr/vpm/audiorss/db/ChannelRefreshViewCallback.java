@@ -30,6 +30,7 @@ public class ChannelRefreshViewCallback implements AsyncCallbackListener<List<RS
   @Override
   public void onPreExecute() {
     progressListener.startRefreshProgress();
+    channelsLoadedCallback.onPreExecute();
   }
 
   @Override
