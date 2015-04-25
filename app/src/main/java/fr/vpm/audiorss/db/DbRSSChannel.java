@@ -95,7 +95,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   public List<RSSChannel> readAll(boolean readItems) throws ParseException {
     Cursor c = mDb.query(T_RSS_CHANNEL, COLS_RSS_CHANNEL, null, null, null, null,
-            RSSChannel.TITLE_TAG);
+        RSSChannel.TITLE_TAG);
     List<RSSChannel> channels = new ArrayList<RSSChannel>();
     c.moveToFirst();
     for (int i = 0; i < c.getCount(); i++) {
@@ -144,7 +144,10 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     try {
       mDb.beginTransaction();
       for (RSSItem item : channel.getItems()) {
-        addOrUpdate(item, channel.getId());
+        Log.d("item-persistence", item.getDbId() + " - " + item.getTitle());
+        if (item.getDbId() <= -1) {
+          addOrUpdate(item, channel.getId());
+        }
       }
       mDb.setTransactionSuccessful();
     } finally {
