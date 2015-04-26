@@ -41,6 +41,8 @@ public class ItemParser {
 
   private List<String> rssItems = new ArrayList<>();
 
+  private AsyncCallbackListener<RSSChannel> asyncCallbackListener;
+
   public ItemParser(RSSChannel rssChannel, List<String> rssItems) {
     this.rssChannel = rssChannel;
     this.rssItems = rssItems;
@@ -48,6 +50,16 @@ public class ItemParser {
 
   public RSSChannel getRssChannel() {
     return rssChannel;
+  }
+
+  public void setCallback(AsyncCallbackListener<RSSChannel> asyncCallbackListener) {
+    this.asyncCallbackListener = asyncCallbackListener;
+  }
+
+  public void callback() {
+    if (asyncCallbackListener != null) {
+      asyncCallbackListener.onPostExecute(getRssChannel());
+    }
   }
 
   public static ItemParser retrieveFeedContent(String rssUrl) throws XmlPullParserException,
@@ -215,10 +227,31 @@ public class ItemParser {
    * @throws IOException
    */
   public void extractRSSItems(String thresholdDate) throws XmlPullParserException, IOException {
+    extractRSSItems(thresholdDate, -1);
+  }
+
+  /**
+   * Extracts RSSItems from Strings containing their XML representation
+   * @param thresholdDate the date before which no item should be kept
+   * @param maxItems the number of items to extract, at most. If set to 0 or less, all items will be extracted
+   * @throws XmlPullParserException
+   * @throws IOException
+   */
+  public void extractRSSItems(String thresholdDate, int maxItems) throws XmlPullParserException, IOException {
     Map<String, RSSItem> allItems = new HashMap<>();
     List<String> itemDates = new ArrayList<>();
 
-    for (String item : rssItems) {
+
+    List<String> itemsToParse = new ArrayList<>();
+    if (maxItems > 0) {
+      itemsToParse.addAll(rssItems.subList(0, Math.min(rssItems.size(), maxItems)));
+    } else {
+      itemsToParse.addAll(rssItems);
+    }
+
+    while (!rssItems.isEmpty()) {
+    //for (String item : itemsToParse) {
+      String item = rssItems.get(0);
       InputStream itemStream = null;
       try {
         itemStream = new ByteArrayInputStream(item.getBytes("UTF-8"));
@@ -236,6 +269,10 @@ public class ItemParser {
           } else {
             allItems.put(rssItem.getLink(), rssItem);
           }
+          rssItems.remove(item);
+        } else {
+          // once one item is before threshold date, stop parsing them
+          rssItems.clear();
         }
       } finally {
         if (itemStream != null) {
@@ -247,6 +284,7 @@ public class ItemParser {
     rssChannel.update(DateUtils.formatDBDate(Calendar.getInstance().getTime()), allItems);
     String whenToRefreshNext = getWhenToRefreshNext(itemDates);
     rssChannel.setNextRefresh(whenToRefreshNext);
+
   }
 
   private static RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,

@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
@@ -69,7 +70,13 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
     if (savedInstanceState != null) {
       initialGuid = savedInstanceState.getString("initialPosition");
     }
-    new AsyncMaintenance(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    int randomTask = new Random().nextInt(20);
+    if (randomTask < 10) {
+      new AsyncMaintenance(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    } else {
+      dataModel.preRefreshData();
+    }
   }
 
   @Override

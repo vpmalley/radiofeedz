@@ -15,7 +15,7 @@ import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.ItemParser;
 import fr.vpm.audiorss.rss.RSSChannel;
 
-public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
+public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
 
   private final Context context;
 
@@ -39,32 +39,35 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, RSSChannel> {
   }
 
   @Override
-  protected RSSChannel doInBackground(String... params) {
+  protected ItemParser doInBackground(String... params) {
     String url = params[0];
-    RSSChannel rssChannel = null;
+    ItemParser itemParser = null;
     try {
       Log.d("measures", "refresh start");
       long initRefresh = System.currentTimeMillis();
-      ItemParser itemParser = ItemParser.retrieveFeedContent(url);
-      itemParser.extractRSSItems(itemParser.getThresholdDate(context));
-      rssChannel = itemParser.getRssChannel();
+      itemParser = ItemParser.retrieveFeedContent(url);
+      itemParser.extractRSSItems(itemParser.getThresholdDate(context), 5);
       Log.d("measures", "refresh -end- " + (System.currentTimeMillis() - initRefresh));
     } catch (XmlPullParserException | IOException | ParseException e) {
       mE = e;
     }
-    return rssChannel;
+    return itemParser;
   }
 
   @Override
-  protected void onPostExecute(RSSChannel newChannel) {
+  protected void onPostExecute(ItemParser itemParser) {
     if (mE != null) {
       Toast.makeText(context, "Could not refresh a feed", Toast.LENGTH_SHORT).show();
       Log.e("Exception", mE.toString());
       dataModel.onFeedFailureBeforeLoad();
     }
     // always call callback, with null if nothing is worth returning
-    asyncCallbackListener.onPostExecute(newChannel);
-    super.onPostExecute(newChannel);
+    asyncCallbackListener.onPostExecute(itemParser.getRssChannel());
+
+    itemParser.setCallback(asyncCallbackListener);
+    Log.d("postProcess", itemParser.getRssChannel().getTitle());
+    dataModel.dataToPostProcess(itemParser);
+    super.onPostExecute(itemParser);
   }
 
 }

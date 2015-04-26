@@ -10,9 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.vpm.audiorss.FeedItemReader;
 import fr.vpm.audiorss.FeedItemReaderActivity;
@@ -57,6 +62,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   private static final String PREF_DISP_MAX_ITEMS = "pref_disp_max_items";
 
   private static final int DEFAULT_MAX_ITEMS = 80;
+
+  private List<ItemParser> dataToPostProcess = new CopyOnWriteArrayList<>();
 
   private static class ItemsAndFeeds {
 
@@ -145,12 +152,13 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
-    Log.d("decrease", String.valueOf(savingFeeds));
+    Log.d("loadData", "decrease " + String.valueOf(savingFeeds));
     if (savingFeeds > 0) {
       savingFeeds--;
     }
     if (savingFeeds < 2) {
       loadDataFromChannels(false, channelsLoadedCallback);
+      Log.d("loadData", "load items");
       loadDataFromItems(itemsLoadedCallback);
     }
   }
@@ -164,6 +172,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   public void loadDataFromItems(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback) {
+    Log.d("", "");
     AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(itemsLoadedCallback, progressListener, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), coreData.itemFilters);
     // read all RSS items from DB and refresh views
@@ -193,7 +202,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     buildChannelsByItem();
     if (preloadPictures) {
       List<RSSItem> rssItemsSubset = coreData.items;
-      int MAX_CACHED = 20;
+      int MAX_CACHED = 10;
       if (coreData.items.size() > MAX_CACHED){
         rssItemsSubset = coreData.items.subList(6, Math.min(coreData.items.size(), MAX_CACHED));
       }
@@ -261,7 +270,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
-    for (RSSChannel feed : coreData.feeds) {
+    for (RSSChannel feed : coreData.feeds.subList(0, Math.max(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
@@ -323,6 +332,45 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       guid = coreData.items.get(position).getGuid();
     }
     return guid;
+  }
+
+  @Override
+  public void dataToPostProcess(ItemParser itemParser) {
+    dataToPostProcess.add(itemParser);
+  }
+
+  @Override
+  public void postProcessData() {
+    // dealing with them by groups of 5
+    if (!dataToPostProcess.isEmpty()) {
+      int subListSize = Math.min(4, dataToPostProcess.size());
+      Log.d("postProcess", "-start- " + subListSize + " - " + dataToPostProcess.size());
+      List<ItemParser> itemParsersSublist = dataToPostProcess.subList(0, subListSize);
+      ItemParser[] itemParsers = itemParsersSublist.toArray(new ItemParser[subListSize]);
+      dataToPostProcess.removeAll(itemParsersSublist);
+      new AsyncTask<ItemParser, Integer, ItemParser[]>() {
+        @Override
+        protected ItemParser[] doInBackground(ItemParser... itemParsers) {
+          for (ItemParser ip : itemParsers) {
+            try {
+              ip.extractRSSItems(ip.getThresholdDate(getContext()));
+            } catch (XmlPullParserException | IOException e) {
+              Log.w("extracting RSS items", e.toString());
+            }
+          }
+          return itemParsers;
+        }
+
+        @Override
+        protected void onPostExecute(ItemParser[] itemParsers) {
+          for (ItemParser ip : itemParsers) {
+            Log.d("postProcess", "callback: " + ip.getRssChannel().getTitle());
+            ip.callback();
+          }
+          super.onPostExecute(itemParsers);
+        }
+      }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemParsers);
+    }
   }
 
   @Override

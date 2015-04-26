@@ -173,10 +173,10 @@ public class RSSChannel implements Parcelable {
         Date whenToRefresh = DateUtils.parseDBDate(nextRefresh);
         shouldRefresh = whenToRefresh.before(Calendar.getInstance().getTime());
         if (shouldRefresh) {
-          Calendar fiveMinutesAgo = Calendar.getInstance();
-          fiveMinutesAgo.add(Calendar.MINUTE, -5);
-          Date lastBuildDate = DateUtils.parseDBDate(getLastBuildDate(), fiveMinutesAgo.getTime());
-          shouldRefresh = lastBuildDate.before(fiveMinutesAgo.getTime());
+          Calendar twentyMinutesAgo = Calendar.getInstance();
+          twentyMinutesAgo.add(Calendar.MINUTE, -20);
+          Date lastBuildDate = DateUtils.parseDBDate(getLastBuildDate(), twentyMinutesAgo.getTime());
+          shouldRefresh = lastBuildDate.before(twentyMinutesAgo.getTime());
         }
       }
     } catch (ParseException e) {

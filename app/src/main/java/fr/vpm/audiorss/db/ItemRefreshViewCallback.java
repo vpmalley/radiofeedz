@@ -38,5 +38,6 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
       dataModel.refreshView();
     }
     itemsLoadedCallback.onPostExecute(result);
+    dataModel.postProcessData();
   }
 }

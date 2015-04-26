@@ -51,7 +51,7 @@ public class ProgressBarListener implements ProgressListener {
   public void stopRefreshProgress() {
     ctrStop++;
     Log.d("progressCtr", ctrStart + " - " + ctrStop);
-    if (isVisible && (ctrStop == ctrStart)) {
+    if (isVisible && (ctrStop >= ctrStart)) {
       mRefreshProgress.setVisibility(View.GONE);
       isVisible = false;
       Log.d("measures", "progress -end- " + (System.currentTimeMillis() - initialTime));

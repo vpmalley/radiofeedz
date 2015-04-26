@@ -87,6 +87,10 @@ public interface DataModel extends ContextualActions {
    */
   String getItemGuidByPosition(int position);
 
+  void dataToPostProcess(ItemParser itemParser);
+
+  void postProcessData();
+
   interface RSSChannelInput {
 
     /**
