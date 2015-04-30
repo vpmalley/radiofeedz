@@ -48,7 +48,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
     } else {
       dataModel.onFeedFailureBeforeLoad();
     }
-    downloadImages(result);
+    //downloadImages(result);
   }
 
   private void downloadImages(RSSChannel result) {

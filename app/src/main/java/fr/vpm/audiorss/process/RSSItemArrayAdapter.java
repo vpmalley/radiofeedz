@@ -1,7 +1,6 @@
 package fr.vpm.audiorss.process;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,13 +10,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.media.Media;
-import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -35,6 +33,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private Map<RSSItem, RSSChannel> channelsByItem;
 
   private final int resource;
+
+  private static Picasso picasso;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
           RSSChannel> channelsByItem) {
@@ -111,18 +111,20 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   }
 
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
-    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
-    Bitmap bm = null;
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      bm = rssItem.getMedia().getAsBitmap(getContext(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
-    } else if (rssChannel != null){
-      bm = rssChannel.getBitmap(getContext(), listeners);
-    }
-    if (bm != null) {
-      itemHolder.pictureView.setImageBitmap(bm);
+      getPicasso().load(rssItem.getMedia().getDistantUrl()).into(itemHolder.pictureView);
+    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
+      getPicasso().load(rssChannel.getImage().getDistantUrl()).into(itemHolder.pictureView);
     } else {
-      itemHolder.pictureView.setImageResource(R.drawable.ic_action_picture);
+      getPicasso().load(R.drawable.ic_action_picture).into(itemHolder.pictureView);
     }
+  }
+
+  private Picasso getPicasso() {
+    if (picasso == null) {
+      picasso = Picasso.with(getContext());
+    }
+    return picasso;
   }
 
   private void printDate(ViewHolder itemHolder, RSSItem rssItem) {

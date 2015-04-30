@@ -147,7 +147,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    this.preloadPictures = preloadPictures;
+    //this.preloadPictures = preloadPictures;
+    this.preloadPictures = false;
     this.coreData = ItemsAndFeeds.getInstance();
   }
 
@@ -271,7 +272,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
-    for (RSSChannel feed : coreData.feeds.subList(0, Math.max(50, coreData.feeds.size()))) {
+    for (RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);

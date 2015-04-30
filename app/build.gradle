@@ -38,6 +38,7 @@ dependencies {
     compile 'commons-io:commons-io:2.4'
     compile 'com.android.support.test:testing-support-lib:0.1'
     compile 'com.android.support.test.espresso:espresso-core:2.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     repositories {
         mavenCentral()

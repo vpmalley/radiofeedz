@@ -62,11 +62,13 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
       dataModel.onFeedFailureBeforeLoad();
     }
     // always call callback, with null if nothing is worth returning
-    asyncCallbackListener.onPostExecute(itemParser.getRssChannel());
+    if (itemParser != null) {
+      asyncCallbackListener.onPostExecute(itemParser.getRssChannel());
 
-    itemParser.setCallback(asyncCallbackListener);
-    Log.d("postProcess", itemParser.getRssChannel().getTitle());
-    dataModel.dataToPostProcess(itemParser);
+      itemParser.setCallback(asyncCallbackListener);
+      Log.d("postProcess", itemParser.getRssChannel().getTitle());
+      dataModel.dataToPostProcess(itemParser);
+    }
     super.onPostExecute(itemParser);
   }
 
