@@ -28,7 +28,7 @@ public class AsyncDbReadRSSChannel extends AsyncTask<Long, Integer, List<RSSChan
     this.asyncCallbackListener = callbackListener;
     this.dbReader = new DbRSSChannel(context, false);
     this.readItems = readItems;
-    asyncCallbackListener.onPreExecute();
+    this.asyncCallbackListener.onPreExecute();
   }
 
   @Override
@@ -55,6 +55,6 @@ public class AsyncDbReadRSSChannel extends AsyncTask<Long, Integer, List<RSSChan
 
   @Override
   protected void onPostExecute(List<RSSChannel> rssChannels) {
-    asyncCallbackListener.onPostExecute(rssChannels);
+    this.asyncCallbackListener.onPostExecute(rssChannels);
   }
 }

@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -115,7 +116,7 @@ public class ItemParser {
       in = new BufferedInputStream(urlConnection.getInputStream());
 
       StringWriter sw = new StringWriter();
-      IOUtils.copy(in, sw, "UTF-8");
+      IOUtils.copy(in, sw, Charset.defaultCharset());
       content = sw.toString();
     } finally {
       if (in != null) {

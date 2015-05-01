@@ -12,10 +12,12 @@ import java.util.List;
 
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 29/10/14.
@@ -102,7 +104,9 @@ public class FeedAdder {
     if (exists) {
       Toast.makeText(dataModel.getContext(), R.string.cannot_add_feed, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetworkForRefresh(dataModel.getContext(), true)) {
-      SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel);
+      LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel,
+          new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+      SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel, rssChannelCallback);
       new AsyncFeedRefresh(dataModel.getContext(), callback, dataModel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
       Toast.makeText(dataModel.getContext(), R.string.added_feed, Toast.LENGTH_SHORT).show();
     }

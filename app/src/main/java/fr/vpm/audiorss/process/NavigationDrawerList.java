@@ -23,6 +23,7 @@ import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.TodayFilter;
 import fr.vpm.audiorss.db.filter.UnreadFilter;
 import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  *
@@ -66,7 +67,8 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
   public NavigationDrawerList(Context context, DataModel dataModel, ProgressListener progressListener) {
     this.context = context;
     this.dataModel = dataModel;
-    this.loadCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel);
+    this.loadCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel,
+        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
   }
 
   public void clear() {

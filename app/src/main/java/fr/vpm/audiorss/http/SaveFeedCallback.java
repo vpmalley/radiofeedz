@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.ProgressListener;
+import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
@@ -25,9 +26,12 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
 
   private final DataModel dataModel;
 
-  public SaveFeedCallback(ProgressListener progressListener, DataModel dataModel) {
+  private final AsyncCallbackListener<List<RSSChannel>> rssChannelCallback;
+
+  public SaveFeedCallback(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSChannel>> rssChannelCallback) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;
+    this.rssChannelCallback = rssChannelCallback;
   }
 
   @Override
@@ -40,7 +44,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
     progressListener.stopRefreshProgress();
     if (result != null) {
       try {
-        result.saveToDb(progressListener, dataModel);
+        result.saveToDb(progressListener, dataModel, rssChannelCallback);
       } catch (Exception e) {
         handleException(e);
         dataModel.onFeedFailureBeforeLoad();

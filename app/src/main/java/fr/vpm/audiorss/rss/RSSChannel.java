@@ -26,6 +26,7 @@ import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
+import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.DateUtils;
 
@@ -213,9 +214,8 @@ public class RSSChannel implements Parcelable {
     this.nextRefresh = nextRefresh;
   }
 
-  public void saveToDb(ProgressListener progressListener, DataModel dataModel) throws ParseException {
-    LoadDataRefreshViewCallback<RSSChannel> callback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel);
-    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(callback, dataModel.getContext());
+  public void saveToDb(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSChannel>> rssChannelCallback) throws ParseException {
+    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(rssChannelCallback, dataModel.getContext());
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
 

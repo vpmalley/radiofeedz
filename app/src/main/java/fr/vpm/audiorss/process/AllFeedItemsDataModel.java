@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -262,7 +261,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
       if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
         Log.d("prerefresh", nextChannel.getUrl());
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
+            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
         new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
             nextChannel.getUrl());
       }
@@ -275,7 +276,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     for (RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
+            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
         new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
             feed.getUrl());
         savingFeeds++;
@@ -294,7 +297,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     for (final RSSChannel feed : feedsToUpdate) {
       Log.d("refresh", feed.getTitle());
       delay += 400;
-      final SaveFeedCallback callback = new SaveFeedCallback(progressListener, this);
+      LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
+          new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+      final SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
       new Handler().postDelayed(new Runnable() {
         @Override
         public void run() {
@@ -458,7 +463,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   private void saveItems(RSSItem... itemsToSave) {
-    new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this),
+    new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this,
+        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>()),
         getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
 
