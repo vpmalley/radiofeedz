@@ -360,7 +360,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void dataToPostProcess(ItemParser itemParser) {
-    //dataToPostProcess.add(itemParser);
+    dataToPostProcess.add(itemParser);
   }
 
   @Override
@@ -369,9 +369,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     new Handler().postDelayed(new Runnable() {
       @Override
       public void run() {
-        // dealing with them by groups of 5
+        // dealing with them by groups of 3
         if (!dataToPostProcess.isEmpty()) {
-          int subListSize = Math.min(4, dataToPostProcess.size());
+          int subListSize = Math.min(3, dataToPostProcess.size());
           Log.d("postProcess", "-start- " + subListSize + " - " + dataToPostProcess.size());
           List<ItemParser> itemParsersSublist = dataToPostProcess.subList(0, subListSize);
           ItemParser[] itemParsers = itemParsersSublist.toArray(new ItemParser[subListSize]);

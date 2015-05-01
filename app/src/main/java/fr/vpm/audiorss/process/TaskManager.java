@@ -11,7 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class TaskManager implements AsyncCallbackListener {
 
-  private static final int MAX_TASKS = 3;
+  private static final int MAX_TASKS = 2;
 
   public interface Task {
     void execute();

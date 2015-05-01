@@ -256,9 +256,8 @@ public class ItemParser {
       itemsToParse.addAll(rssItems);
     }
 
-    while (!rssItems.isEmpty()) {
-    //for (String item : itemsToParse) {
-      String item = rssItems.get(0);
+    while (!itemsToParse.isEmpty()) {
+      String item = itemsToParse.get(0);
       InputStream itemStream = null;
       try {
         itemStream = new ByteArrayInputStream(item.getBytes("UTF-8"));
@@ -276,10 +275,10 @@ public class ItemParser {
           } else {
             allItems.put(rssItem.getLink(), rssItem);
           }
-          rssItems.remove(item);
+          itemsToParse.remove(item);
         } else {
           // once one item is before threshold date, stop parsing them
-          rssItems.clear();
+          itemsToParse.clear();
         }
       } finally {
         if (itemStream != null) {
