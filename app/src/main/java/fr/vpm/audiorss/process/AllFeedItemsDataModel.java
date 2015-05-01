@@ -258,17 +258,16 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       Iterator<RSSChannel> feedsIterator = coreData.feeds.iterator();
       RSSChannel nextChannel = null;
       Log.d("prerefresh", "feeds: " + coreData.feeds.size());
+      final TaskManager tm = TaskManager.getManager();
       while (feedsIterator.hasNext() && !(nextChannel = feedsIterator.next()).shouldRefresh()) {
       }
 
       if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
         Log.d("prerefresh", nextChannel.getUrl());
-        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
-            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
-        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-            nextChannel.getUrl());
+        queueFeedRefresh(tm, nextChannel);
+        savingFeeds++;
       }
+      tm.startTasks();
     }
   }
 
@@ -279,16 +278,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     for (final RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
-        tm.queueTask(new TaskManager.Task() {
-          @Override
-          public void execute() {
-            LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
-                AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
-            SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
-            new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                feed.getUrl());
-          }
-        });
+        queueFeedRefresh(tm, feed);
         savingFeeds++;
       }
     }
@@ -305,19 +295,28 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     final TaskManager tm = TaskManager.getManager();
     for (final RSSChannel feed : feedsToUpdate) {
       Log.d("refreshing", feed.getTitle());
-      tm.queueTask(new TaskManager.Task() {
-        @Override
-        public void execute() {
-          LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
-              AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
-          final SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
-          new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-              feed.getUrl());
-        }
-      });
+      queueFeedRefresh(tm, feed);
       savingFeeds++;
     }
     tm.startTasks();
+  }
+
+  /**
+   * Queues a task for feed refresh
+   * @param tm the task manager
+   * @param feed the feed to refresh
+   */
+  private void queueFeedRefresh(final TaskManager tm, final RSSChannel feed) {
+    tm.queueTask(new TaskManager.Task() {
+      @Override
+      public void execute() {
+        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
+            AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
+        SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
+        new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+            feed.getUrl());
+      }
+    });
   }
 
   @Override
