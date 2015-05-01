@@ -76,7 +76,13 @@ public class ItemParser {
           channel += token.substring(lastIndex, token.indexOf("</channel>"));
         }
       } else {
-        channel += token.substring(token.indexOf("<channel>"));
+
+        int start = token.indexOf("<channel>");
+        if (start < 0) {
+          Log.d("parsing", rssUrl + " - " + token);
+          start = 0;
+        }
+        channel += token.substring(start);
       }
     }
     channel += "</channel>";
