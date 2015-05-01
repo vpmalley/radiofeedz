@@ -105,7 +105,8 @@ public class FeedAdder {
       Toast.makeText(dataModel.getContext(), R.string.cannot_add_feed, Toast.LENGTH_SHORT).show();
     } else if (networkChecker.checkNetworkForRefresh(dataModel.getContext(), true)) {
       LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel,
-          new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+          new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(),
+          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
       SaveFeedCallback callback = new SaveFeedCallback(progressListener, dataModel, rssChannelCallback);
       new AsyncFeedRefresh(dataModel.getContext(), callback, dataModel).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, url);
       Toast.makeText(dataModel.getContext(), R.string.added_feed, Toast.LENGTH_SHORT).show();

@@ -21,11 +21,14 @@ public class LoadDataRefreshViewCallback<T> implements AsyncCallbackListener<Lis
 
   private final AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback;
 
-  public LoadDataRefreshViewCallback(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
+  private final AsyncCallbackListener<List<T>> loadCallback;
+
+  public LoadDataRefreshViewCallback(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback, AsyncCallbackListener<List<T>> loadCallback) {
     this.progressListener = progressListener;
     this.dataModel = dataModel;
     this.itemsLoadedCallback = itemsLoadedCallback;
     this.channelsLoadedCallback = channelsLoadedCallback;
+    this.loadCallback = loadCallback;
   }
 
   @Override
@@ -36,6 +39,6 @@ public class LoadDataRefreshViewCallback<T> implements AsyncCallbackListener<Lis
   @Override
   public void onPostExecute(List<T> result) {
     progressListener.stopRefreshProgress();
-    dataModel.loadData(itemsLoadedCallback, channelsLoadedCallback);
+    dataModel.loadData(itemsLoadedCallback, channelsLoadedCallback, loadCallback);
   }
 }

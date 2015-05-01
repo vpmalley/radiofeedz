@@ -19,8 +19,9 @@ public interface DataModel extends ContextualActions {
    * Loads the data and refreshes the view once data is retrieved.
    * @param itemsLoadedCallback
    * @param channelsLoadedCallback
+   * @param loadCallback
    */
-  void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback);
+  void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback, AsyncCallbackListener loadCallback);
 
   /**
    * Refreshes the view based on activityś data

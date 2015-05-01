@@ -248,7 +248,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     super.onActivityResult(requestCode, resultCode, data);
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
       dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
     } else if (REQ_PREFS == requestCode){
       dataModel.refreshView();
     } else if (REQ_CATALOG == requestCode) {

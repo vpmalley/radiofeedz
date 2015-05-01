@@ -68,7 +68,8 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     this.context = context;
     this.dataModel = dataModel;
     this.loadCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, dataModel,
-        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(),
+        new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
   }
 
   public void clear() {

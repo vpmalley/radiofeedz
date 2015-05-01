@@ -59,16 +59,16 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
     if (mE != null) {
       Toast.makeText(context, "Could not refresh a feed", Toast.LENGTH_SHORT).show();
       Log.e("Exception", mE.toString());
-      dataModel.onFeedFailureBeforeLoad();
     }
-    // always call callback, with null if nothing is worth returning
+    RSSChannel rssChannel = null;
     if (itemParser != null) {
-      asyncCallbackListener.onPostExecute(itemParser.getRssChannel());
-
+      rssChannel = itemParser.getRssChannel();
       itemParser.setCallback(asyncCallbackListener);
-      Log.d("postProcess", itemParser.getRssChannel().getTitle());
+      Log.d("postProcess", rssChannel.getTitle());
       dataModel.dataToPostProcess(itemParser);
     }
+    // always call callback, with null if nothing is worth returning
+    asyncCallbackListener.onPostExecute(rssChannel);
     super.onPostExecute(itemParser);
   }
 

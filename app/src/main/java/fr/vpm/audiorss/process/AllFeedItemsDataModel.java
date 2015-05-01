@@ -152,7 +152,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   @Override
-  public void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
+  public void loadData(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback, AsyncCallbackListener loadCallback) {
     Log.d("loadData", "decrease " + String.valueOf(savingFeeds));
     if (savingFeeds > 0) {
       savingFeeds--;
@@ -161,6 +161,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       loadDataFromChannels(false, channelsLoadedCallback);
       Log.d("loadData", "load items");
       loadDataFromItems(itemsLoadedCallback);
+    } else {
+      loadCallback.onPostExecute(null);
     }
   }
 
@@ -262,7 +264,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
         Log.d("prerefresh", nextChannel.getUrl());
         LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
-            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
         new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
             nextChannel.getUrl());
@@ -273,17 +275,24 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
-    for (RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
+    final TaskManager tm = TaskManager.getManager();
+    for (final RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
       if ((forceRefresh) || (feed.shouldRefresh())) {
-        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
-            new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
-        new AsyncFeedRefresh(getContext(), callback, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-            feed.getUrl());
+        tm.queueTask(new TaskManager.Task() {
+          @Override
+          public void execute() {
+            LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
+                AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
+            SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
+            new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+                feed.getUrl());
+          }
+        });
         savingFeeds++;
       }
     }
+    tm.startTasks();
   }
 
   @Override
@@ -293,27 +302,28 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void refreshData(List<RSSChannel> feedsToUpdate) {
-    long delay = 0;
+    final TaskManager tm = TaskManager.getManager();
     for (final RSSChannel feed : feedsToUpdate) {
-      Log.d("refresh", feed.getTitle());
-      delay += 400;
-      LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener, this,
-          new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
-      final SaveFeedCallback callback = new SaveFeedCallback(progressListener, this, rssChannelCallback);
-      new Handler().postDelayed(new Runnable() {
+      Log.d("refreshing", feed.getTitle());
+      tm.queueTask(new TaskManager.Task() {
         @Override
-        public void run() {
+        public void execute() {
+          LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
+              AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
+          final SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
           new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
               feed.getUrl());
         }
-      }, delay);
+      });
       savingFeeds++;
     }
+    tm.startTasks();
   }
 
   @Override
   public void onFeedFailureBeforeLoad() {
-    loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+    loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+        new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), TaskManager.getManager());
   }
 
   @Override
@@ -350,7 +360,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void dataToPostProcess(ItemParser itemParser) {
-    dataToPostProcess.add(itemParser);
+    //dataToPostProcess.add(itemParser);
   }
 
   @Override
@@ -464,7 +474,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private void saveItems(RSSItem... itemsToSave) {
     new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this,
-        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>()),
+        new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback<List<RSSItem>>()),
         getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
 
@@ -494,7 +504,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     if (!filtersAreUpToDate) {
       coreData.itemFilters.clear();
       coreData.itemFilters.addAll(filters);
-      loadData(itemsLoadedCallback, channelsLoadedCallback);
+      loadData(itemsLoadedCallback, channelsLoadedCallback, new AsyncCallbackListener.DummyCallback());
     } else {
       refreshView();
     }
