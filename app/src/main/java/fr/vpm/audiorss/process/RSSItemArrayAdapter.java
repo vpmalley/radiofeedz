@@ -113,8 +113,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
       getPicasso().load(rssItem.getMedia().getDistantUrl()).into(itemHolder.pictureView);
-    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
-      getPicasso().load(rssChannel.getImage().getDistantUrl()).into(itemHolder.pictureView);
+    } else if ((rssChannel != null) && (rssChannel.getImage() != null) && (!rssChannel.getImage().getInetUrl().isEmpty())) {
+      getPicasso().load(rssChannel.getImage().getInetUrl()).into(itemHolder.pictureView);
     } else {
       getPicasso().load(R.drawable.ic_action_picture).into(itemHolder.pictureView);
     }
