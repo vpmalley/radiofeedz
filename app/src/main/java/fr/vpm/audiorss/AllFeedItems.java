@@ -28,7 +28,6 @@ import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
-import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
@@ -85,6 +84,9 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     emptyView.setText(getString(R.string.emptynews));
     mFeedItems.setEmptyView(emptyView);
 
+    LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
+    progressBarListener.setDelegate(lastRefreshListener);
+
     // Navigation drawer
     setNavigationDrawer();
 
@@ -104,8 +106,6 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
       @Override
       public void onPostExecute(List<RSSChannel> result) {
         dataModel.preRefreshData();
-        String currentDate = DateUtils.getDisplayDate(dataModel.getLastBuildDate());
-        ((TextView) findViewById(R.id.latestupdate)).setText(getString(R.string.last_refresh) + " : " + currentDate);
       }
     });
 
