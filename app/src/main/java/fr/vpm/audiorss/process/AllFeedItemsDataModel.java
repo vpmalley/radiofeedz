@@ -223,6 +223,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           }
         }
       }
+      refreshView();
     }
   }
 
@@ -375,6 +376,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           List<ItemParser> itemParsersSublist = dataToPostProcess.subList(0, subListSize);
           ItemParser[] itemParsers = itemParsersSublist.toArray(new ItemParser[subListSize]);
           dataToPostProcess.removeAll(itemParsersSublist);
+          savingFeeds += subListSize;
           new AsyncTask<ItemParser, Integer, ItemParser[]>() {
             @Override
             protected ItemParser[] doInBackground(ItemParser... itemParsers) {

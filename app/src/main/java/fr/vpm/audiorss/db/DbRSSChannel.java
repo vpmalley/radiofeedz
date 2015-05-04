@@ -144,7 +144,6 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     try {
       mDb.beginTransaction();
       for (RSSItem item : channel.getItems()) {
-        Log.d("item-persistence", item.getDbId() + " - " + item.getTitle());
         if (item.getDbId() <= -1) {
           addOrUpdate(item, channel.getId());
         }

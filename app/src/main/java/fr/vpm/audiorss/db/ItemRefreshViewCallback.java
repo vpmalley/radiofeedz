@@ -34,9 +34,6 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
   public void onPostExecute(List<RSSItem> result) {
     progressListener.stopRefreshProgress();
     dataModel.setItemsAndBuildModel(result);
-    if (dataModel.isReady()) {
-      dataModel.refreshView();
-    }
     itemsLoadedCallback.onPostExecute(result);
     dataModel.postProcessData();
   }
