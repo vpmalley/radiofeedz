@@ -5,6 +5,7 @@ import java.util.List;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.process.TaskManager;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -35,6 +36,13 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
     progressListener.stopRefreshProgress();
     dataModel.setItemsAndBuildModel(result);
     itemsLoadedCallback.onPostExecute(result);
-    dataModel.postProcessData();
+    TaskManager manager = TaskManager.getManager();
+    manager.queueTask(new TaskManager.Task() {
+      @Override
+      public void execute() {
+        dataModel.postProcessData();
+      }
+    });
+    manager.onPostExecute(null);
   }
 }

@@ -13,6 +13,7 @@ import java.text.ParseException;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.ItemParser;
+import fr.vpm.audiorss.process.TaskManager;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
@@ -68,7 +69,14 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
       dataModel.dataToPostProcess(itemParser);
     }
     // always call callback, with null if nothing is worth returning
-    asyncCallbackListener.onPostExecute(rssChannel);
+    final RSSChannel finalRssChannel = rssChannel;
+    TaskManager.getManager().queueTask(new TaskManager.Task() {
+      @Override
+      public void execute() {
+        asyncCallbackListener.onPostExecute(finalRssChannel);
+      }
+    });
+    TaskManager.getManager().onPostExecute(null);
     super.onPostExecute(itemParser);
   }
 
