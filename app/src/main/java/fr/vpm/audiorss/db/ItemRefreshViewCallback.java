@@ -42,6 +42,11 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
       public void execute() {
         dataModel.postProcessData();
       }
+
+      @Override
+      public TaskManager.Priority getPriority() {
+        return TaskManager.Priority.LOW;
+      }
     });
     manager.onPostExecute(null);
   }

@@ -317,6 +317,11 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
             feed.getUrl());
       }
+
+      @Override
+      public TaskManager.Priority getPriority() {
+        return TaskManager.Priority.HIGH;
+      }
     });
   }
 

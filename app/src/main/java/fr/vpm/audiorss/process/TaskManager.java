@@ -1,7 +1,9 @@
 package fr.vpm.audiorss.process;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
+import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -13,8 +15,21 @@ public class TaskManager implements AsyncCallbackListener {
 
   private static final int MAX_TASKS = 2;
 
+  public enum Priority {
+    LOW, MEDIUM, HIGH
+  }
+
   public interface Task {
     void execute();
+
+    TaskManager.Priority getPriority();
+
+    class TaskComparator implements Comparator<Task> {
+      @Override
+      public int compare(Task task, Task otherTask) {
+        return task.getPriority().compareTo(otherTask.getPriority());
+      }
+    }
   }
 
   private final CopyOnWriteArrayList<Task> remainingTasks;
@@ -45,7 +60,7 @@ public class TaskManager implements AsyncCallbackListener {
   private void runNextTask() {
     Log.d("taskmanager", "remains " + remainingTasks.size());
     if (!remainingTasks.isEmpty()) {
-      remainingTasks.get(0).execute();
+      new AsyncExecution().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, remainingTasks.get(0));
       remainingTasks.remove(remainingTasks.get(0));
       Log.d("taskmanager", "starting a task");
     }
@@ -68,4 +83,26 @@ public class TaskManager implements AsyncCallbackListener {
     }
   }
 
+  public class AsyncExecution extends AsyncTask<Task, Integer, Task[]> {
+
+    @Override
+    protected void onPreExecute() {
+      TaskManager.getManager().onPreExecute();
+      super.onPreExecute();
+    }
+
+    @Override
+    protected Task[] doInBackground(Task... tasks) {
+      for (Task t : tasks) {
+        t.execute();
+      }
+      return tasks;
+    }
+
+    @Override
+    protected void onPostExecute(Task[] tasks) {
+      TaskManager.getManager().onPostExecute(tasks);
+      super.onPostExecute(tasks);
+    }
+  }
 }
