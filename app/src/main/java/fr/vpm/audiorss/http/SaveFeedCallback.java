@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.ProgressListener;
-import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.AsyncPictureLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.PictureLoadedListener;
@@ -44,7 +43,7 @@ public class SaveFeedCallback implements AsyncCallbackListener<RSSChannel> {
     progressListener.stopRefreshProgress();
     if (result != null) {
       try {
-        result.saveToDb(progressListener, dataModel, rssChannelCallback);
+        result.asyncSaveToDb(progressListener, dataModel, rssChannelCallback);
       } catch (Exception e) {
         handleException(e);
         dataModel.onFeedFailureBeforeLoad();

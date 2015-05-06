@@ -34,22 +34,10 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
     if (0 == rssChannels.length) {
       return null;
     }
-    RSSChannel persistedChannel = null;
     RSSChannel newChannel = rssChannels[0];
     Log.d("measures", "save start ch");
     long initSave = System.currentTimeMillis();
-    try {
-      RSSChannel existingChannel = dbUpdater.readByUrl(newChannel.getUrl(), true, true);
-      if (existingChannel != null) {
-        persistedChannel = dbUpdater.update(existingChannel, newChannel);
-      } else { // new channel
-        persistedChannel = dbUpdater.add(newChannel);
-      }
-    } catch (ParseException e) {
-      Log.e("DbIssue", "Could not add the feed to the DB");
-    } finally {
-      dbUpdater.closeDb();
-    }
+    RSSChannel persistedChannel = newChannel.saveToDb(context);
     Log.d("measures", "save ch -end- " + String.valueOf(System.currentTimeMillis() - initSave));
     return persistedChannel;
   }

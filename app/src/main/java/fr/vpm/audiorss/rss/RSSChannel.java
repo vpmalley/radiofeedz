@@ -22,7 +22,6 @@ import java.util.Map;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
-import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
@@ -77,8 +76,22 @@ public class RSSChannel implements Parcelable {
 
   private String nextRefresh;
 
+  /**
+   * incomplete if not constructed with all data
+   */
+  private final boolean incomplete;
+
+  public RSSChannel(String rssUrl) {
+    super();
+    this.incomplete = true;
+    this.latestItems = new HashMap<String, RSSItem>();
+    this.tags = new ArrayList<String>();
+    this.url = rssUrl;
+  }
+
   public RSSChannel(String rssUrl, String title, String link, String description, String category, Media image) {
     super();
+    this.incomplete = false;
     this.latestItems = new HashMap<String, RSSItem>();
     this.tags = new ArrayList<String>();
     this.url = rssUrl;
@@ -214,9 +227,27 @@ public class RSSChannel implements Parcelable {
     this.nextRefresh = nextRefresh;
   }
 
-  public void saveToDb(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSChannel>> rssChannelCallback) throws ParseException {
+  public void asyncSaveToDb(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSChannel>> rssChannelCallback) {
     AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(rssChannelCallback, dataModel.getContext());
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
+  }
+
+  public RSSChannel saveToDb(Context context) {
+    RSSChannel persistedChannel = null;
+    DbRSSChannel dbUpdater = new DbRSSChannel(context, true);
+    try {
+      RSSChannel existingChannel = dbUpdater.readByUrl(getUrl(), true, true);
+      if (existingChannel != null) {
+        persistedChannel = dbUpdater.update(existingChannel, this);
+      } else { // new channel
+        persistedChannel = dbUpdater.add(this);
+      }
+    } catch (ParseException e) {
+      Log.e("DbIssue", "Could not add the feed to the DB");
+    } finally {
+      dbUpdater.closeDb();
+    }
+    return persistedChannel;
   }
 
   public void setImage(Media image) {
@@ -275,8 +306,8 @@ public class RSSChannel implements Parcelable {
 
   private RSSChannel(Parcel in) {
     Bundle b = in.readBundle(RSSChannel.class.getClassLoader());
-      // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
-      // unmarshalling Media class
+    // without setting the classloader, it fails on BadParcelableException : ClassNotFoundException when
+    // unmarshalling Media class
     latestItems = new HashMap<String, RSSItem>();
     id = b.getLong("_ID");
     url = b.getString(URL_KEY);
@@ -288,6 +319,7 @@ public class RSSChannel implements Parcelable {
     image = b.getParcelable(IMAGE_TAG);
     tags = b.getStringArrayList(TAGS_KEY);
     nextRefresh = b.getString(NEXT_REFRESH_KEY);
+    incomplete = false;
   }
 
   public static final Parcelable.Creator<RSSChannel> CREATOR
