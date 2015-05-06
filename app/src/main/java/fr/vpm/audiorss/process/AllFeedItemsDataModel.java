@@ -287,7 +287,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
     tm.startTasks();
     */
-    CacheManager cm = CacheManager.createManager(coreData.feeds);
+    CacheManager cm = CacheManager.createManager(coreData.feeds, this);
     cm.updateCache(getContext());
   }
 

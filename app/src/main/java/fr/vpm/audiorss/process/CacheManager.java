@@ -8,6 +8,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import fr.vpm.audiorss.rss.CachableRSSChannel;
 import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 05/05/15.
@@ -16,7 +17,10 @@ public class CacheManager {
 
   private final CopyOnWriteArrayList<CachableRSSChannel> rssChannels;
 
-  private CacheManager(List<RSSChannel> rssChannels) {
+  private final DataModel dataModel;
+
+  private CacheManager(List<RSSChannel> rssChannels, DataModel dataModel) {
+    this.dataModel = dataModel;
     this.rssChannels = new CopyOnWriteArrayList<>();
     for (RSSChannel rssChannel : rssChannels) {
       this.rssChannels.add(new CachableRSSChannel(rssChannel));
@@ -25,9 +29,9 @@ public class CacheManager {
 
   private static CacheManager manager;
 
-  public static CacheManager createManager(List<RSSChannel> rssChannels) {
+  public static CacheManager createManager(List<RSSChannel> rssChannels, DataModel dataModel) {
     if (manager == null) {
-      manager = new CacheManager(rssChannels);
+      manager = new CacheManager(rssChannels, dataModel);
     }
     return manager;
   }
@@ -40,6 +44,7 @@ public class CacheManager {
     queueCacheQueries(context);
     queueCacheProcess(context);
     queueCachePersistence(context);
+    queueCacheLoading(context);
     TaskManager.getManager().startTasks();
   }
 
@@ -128,5 +133,31 @@ public class CacheManager {
         });
       }
     }
+  }
+
+  private void queueCacheLoading(Context context) {
+    TaskManager.getManager().queueTask(new TaskManager.Task() {
+
+      @Override
+      public boolean shouldExecute() {
+        return true;
+      }
+
+      @Override
+      public boolean canExecute() {
+        return true;
+      }
+
+      @Override
+      public void execute() {
+        dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+            new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
+      }
+
+      @Override
+      public TaskManager.Priority getPriority() {
+        return TaskManager.Priority.LOW;
+      }
+    });
   }
 }
