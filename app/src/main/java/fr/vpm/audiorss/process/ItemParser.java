@@ -42,6 +42,8 @@ public class ItemParser {
 
   private List<String> rssItems = new ArrayList<>();
 
+  private boolean extractedItems = false;
+
   private AsyncCallbackListener<RSSChannel> asyncCallbackListener;
 
   public ItemParser(RSSChannel rssChannel, List<String> rssItems) {
@@ -247,7 +249,7 @@ public class ItemParser {
   public void extractRSSItems(String thresholdDate, int maxItems) throws XmlPullParserException, IOException {
     Map<String, RSSItem> allItems = new HashMap<>();
     List<String> itemDates = new ArrayList<>();
-
+    extractedItems = false;
 
     List<String> itemsToParse = new ArrayList<>();
     if (maxItems > 0) {
@@ -276,6 +278,7 @@ public class ItemParser {
             allItems.put(rssItem.getLink(), rssItem);
           }
           itemsToParse.remove(item);
+          extractedItems = true;
         } else {
           // once one item is before threshold date, stop parsing them
           itemsToParse.clear();
@@ -287,10 +290,16 @@ public class ItemParser {
       }
     }
 
-    rssChannel.update(DateUtils.formatDBDate(Calendar.getInstance().getTime()), allItems);
-    String whenToRefreshNext = getWhenToRefreshNext(itemDates);
-    rssChannel.setNextRefresh(whenToRefreshNext);
+    if (extractedItems) {
+      rssChannel.update(DateUtils.formatDBDate(Calendar.getInstance().getTime()), allItems);
+      String whenToRefreshNext = getWhenToRefreshNext(itemDates);
+      rssChannel.setNextRefresh(whenToRefreshNext);
+    }
+    Log.d("itemparser", "extracted items : " + extractedItems);
+  }
 
+  public boolean extractedItems() {
+    return extractedItems;
   }
 
   private static RSSChannel readFeed(XmlPullParser parser, String rssUrl) throws XmlPullParserException,
@@ -392,10 +401,10 @@ public class ItemParser {
         // Wed, 29 Jan 2014 15:05:00 +0100
         // Wed, 29 Jan 2014 15:05:00 Z
         pubDate = readTagContent(parser, RSSItem.DATE_TAG);
-        Log.d("date before", pubDate);
+        //Log.d("date before", pubDate);
         Date date = DateUtils.parseDate(pubDate);
         pubDate = DateUtils.formatDBDate(date);
-        Log.d("date  after", pubDate);
+        //Log.d("date  after", pubDate);
       } else {
         skip(parser);
       }

@@ -36,6 +36,7 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
     progressListener.stopRefreshProgress();
     dataModel.setItemsAndBuildModel(result);
     itemsLoadedCallback.onPostExecute(result);
+    /*
     TaskManager manager = TaskManager.getManager();
     manager.queueTask(new TaskManager.Task() {
       @Override
@@ -49,5 +50,6 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
       }
     });
     manager.onPostExecute(null);
+    */
   }
 }

@@ -22,12 +22,18 @@ public class CachableRSSChannel implements Cachable {
 
   private String initialRSSUrl;
 
+  private boolean failed;
+
   public CachableRSSChannel(RSSChannel rssChannel) {
     this.initialRSSChannel = rssChannel;
   }
 
   public CachableRSSChannel(String rssUrl) {
     this.initialRSSUrl = rssUrl;
+  }
+
+  public boolean failed() {
+    return failed;
   }
 
   @Override
@@ -49,33 +55,43 @@ public class CachableRSSChannel implements Cachable {
       }
     } catch (XmlPullParserException | IOException | ParseException e) {
       Log.w("query", e.toString());
+      failed = true;
+    }
+    if (itemParser == null) {
+      failed = true;
     }
   }
 
   @Override
   public boolean isQueried() {
-    return false;
+    return itemParser != null;
   }
 
   @Override
   public void process(Context context) {
     try {
-      if (itemParser != null) {
+      if (isQueried()) {
         itemParser.extractRSSItems(itemParser.getThresholdDate(context));
       }
     } catch (XmlPullParserException | IOException e) {
       Log.w("query", e.toString());
+      failed = true;
+    }
+    if (!itemParser.extractedItems()) {
+      failed = true;
     }
   }
 
   @Override
   public boolean isProcessed() {
-    return false;
+    return (itemParser != null) && itemParser.extractedItems();
   }
 
   @Override
   public void persist(Context context) {
-    itemParser.getRssChannel().saveToDb(context);
+    if (isProcessed()) {
+      itemParser.getRssChannel().saveToDb(context);
+    }
   }
 
   @Override

@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.process;
 
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.Comparator;
@@ -20,8 +21,27 @@ public class TaskManager implements AsyncCallbackListener {
   }
 
   public interface Task {
+    /**
+     * Whether this task should be executed, now or later. If false, this task should never be executed
+     * @return whether this task should be executed
+     */
+    boolean shouldExecute();
+
+    /**
+     * Whether all conditions are met to execute this task now
+     * @return whether all conditions are met to execute this task now
+     */
+    boolean canExecute();
+
+    /**
+     * Runs the task
+     */
     void execute();
 
+    /**
+     * Returns the priority of the task
+     * @return
+     */
     TaskManager.Priority getPriority();
 
     class TaskComparator implements Comparator<Task> {
@@ -34,6 +54,8 @@ public class TaskManager implements AsyncCallbackListener {
 
   private final CopyOnWriteArrayList<Task> remainingTasks;
 
+  private final CopyOnWriteArrayList<AsyncTask> launchedTasks;
+
   private static TaskManager manager;
 
   public static TaskManager getManager() {
@@ -45,7 +67,12 @@ public class TaskManager implements AsyncCallbackListener {
 
   private TaskManager() {
     remainingTasks = new CopyOnWriteArrayList<>();
+    launchedTasks = new CopyOnWriteArrayList<>();
   }
+
+  /*
+   * async callback
+   */
 
   @Override
   public void onPreExecute() {
@@ -57,14 +84,6 @@ public class TaskManager implements AsyncCallbackListener {
     runNextTask();
   }
 
-  private void runNextTask() {
-    Log.d("taskmanager", "remains " + remainingTasks.size());
-    if (!remainingTasks.isEmpty()) {
-      new AsyncExecution().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, remainingTasks.get(0));
-      remainingTasks.remove(remainingTasks.get(0));
-      Log.d("taskmanager", "starting a task");
-    }
-  }
 
   /**
    * Queues a task for background execution
@@ -80,6 +99,42 @@ public class TaskManager implements AsyncCallbackListener {
   public void startTasks() {
     for (int i = 0; i < MAX_TASKS; i++) {
       runNextTask();
+    }
+  }
+
+  private void runNextTask() {
+    updateTasks();
+    if (!remainingTasks.isEmpty()) {
+      Task taskToRun = remainingTasks.get(0);
+      Log.d("taskmanager", "task to run should run : " + taskToRun.shouldExecute() + ", can run : " + taskToRun.canExecute());
+      if  ((launchedTasks.size() < MAX_TASKS) && (taskToRun.canExecute())) {
+        AsyncExecution asyncExecution = new AsyncExecution();
+        asyncExecution.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, taskToRun);
+        launchedTasks.add(asyncExecution);
+        remainingTasks.remove(taskToRun);
+        Log.d("taskmanager", "starting a task, remains " + remainingTasks.size() + " and running: " + launchedTasks.size());
+      } else {
+        Log.d("taskmanager", "postponing a task, remains " + remainingTasks.size() + " and running: " + launchedTasks.size());
+        new Handler().postDelayed(new Runnable() {
+          @Override
+          public void run() {
+            onPostExecute(null);
+          }
+        }, 1000);
+      }
+    }
+  }
+
+  private void updateTasks() {
+    for (AsyncTask at : launchedTasks) {
+      if (AsyncTask.Status.FINISHED == at.getStatus()) {
+        launchedTasks.remove(at);
+      }
+    }
+    for (Task t : remainingTasks) {
+      if (!t.shouldExecute()) {
+        remainingTasks.remove(t);
+      }
     }
   }
 

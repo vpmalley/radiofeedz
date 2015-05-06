@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -265,8 +266,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
       if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
         Log.d("prerefresh", nextChannel.getUrl());
-        queueFeedRefresh(tm, nextChannel);
-        savingFeeds++;
+        //queueFeedRefresh(tm, nextChannel);
+        //savingFeeds++;
       }
       tm.startTasks();
     }
@@ -275,6 +276,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
+    /*
     final TaskManager tm = TaskManager.getManager();
     for (final RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
       Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
@@ -284,6 +286,9 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       }
     }
     tm.startTasks();
+    */
+    CacheManager cm = CacheManager.createManager(coreData.feeds);
+    cm.updateCache(getContext());
   }
 
   @Override
@@ -309,6 +314,16 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
    */
   private void queueFeedRefresh(final TaskManager tm, final RSSChannel feed) {
     tm.queueTask(new TaskManager.Task() {
+      @Override
+      public boolean shouldExecute() {
+        return true;
+      }
+
+      @Override
+      public boolean canExecute() {
+        return true;
+      }
+
       @Override
       public void execute() {
         LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
@@ -370,7 +385,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void postProcessData() {
-
+    Looper.prepare();
     new Handler().postDelayed(new Runnable() {
       @Override
       public void run() {

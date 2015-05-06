@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.process;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -11,7 +12,7 @@ import fr.vpm.audiorss.rss.RSSChannel;
 /**
  * Created by vince on 05/05/15.
  */
-public class CacheManager implements AsyncCallbackListener {
+public class CacheManager {
 
   private final CopyOnWriteArrayList<CachableRSSChannel> rssChannels;
 
@@ -47,6 +48,17 @@ public class CacheManager implements AsyncCallbackListener {
       if (rssChannel.shouldRefresh()) {
         TaskManager.getManager().queueTask(new TaskManager.Task() {
           @Override
+          public boolean shouldExecute() {
+            return !rssChannel.failed();
+          }
+
+          @Override
+          public boolean canExecute() {
+            Log.d("cachablerss", "query: " + rssChannel.shouldRefresh());
+            return rssChannel.shouldRefresh();
+          }
+
+          @Override
           public void execute() {
             rssChannel.query(context);
           }
@@ -62,49 +74,59 @@ public class CacheManager implements AsyncCallbackListener {
 
   private void queueCacheProcess(final Context context) {
     for (final CachableRSSChannel rssChannel : rssChannels) {
-      TaskManager.getManager().queueTask(new TaskManager.Task() {
-        @Override
-        public void execute() {
-          if (rssChannel.isQueried()) {
+      if (rssChannel.shouldRefresh()) {
+        TaskManager.getManager().queueTask(new TaskManager.Task() {
+          @Override
+          public boolean shouldExecute() {
+            return !rssChannel.failed();
+          }
+
+          @Override
+          public boolean canExecute() {
+            Log.d("cachablerss", "process: " + rssChannel.isQueried());
+            return rssChannel.isQueried();
+          }
+
+          @Override
+          public void execute() {
             rssChannel.process(context);
           }
-        }
 
-        @Override
-        public TaskManager.Priority getPriority() {
-          return TaskManager.Priority.MEDIUM;
-        }
-      });
+          @Override
+          public TaskManager.Priority getPriority() {
+            return TaskManager.Priority.MEDIUM;
+          }
+        });
+      }
     }
   }
 
   private void queueCachePersistence(final Context context) {
     for (final CachableRSSChannel rssChannel : rssChannels) {
-      TaskManager.getManager().queueTask(new TaskManager.Task() {
-        @Override
-        public void execute() {
-          if (rssChannel.isProcessed()) {
+      if (rssChannel.shouldRefresh()) {
+        TaskManager.getManager().queueTask(new TaskManager.Task() {
+          @Override
+          public boolean shouldExecute() {
+            return !rssChannel.failed();
+          }
+
+          @Override
+          public boolean canExecute() {
+            Log.d("cachablerss", "persist: " + rssChannel.isProcessed());
+            return rssChannel.isProcessed();
+          }
+
+          @Override
+          public void execute() {
             rssChannel.persist(context);
           }
-        }
 
-        @Override
-        public TaskManager.Priority getPriority() {
-          return TaskManager.Priority.LOW;
-        }
-      });
+          @Override
+          public TaskManager.Priority getPriority() {
+            return TaskManager.Priority.LOW;
+          }
+        });
+      }
     }
   }
-
-  @Override
-  public void onPreExecute() {
-
-  }
-
-  @Override
-  public void onPostExecute(Object result) {
-
-  }
-
-
 }
