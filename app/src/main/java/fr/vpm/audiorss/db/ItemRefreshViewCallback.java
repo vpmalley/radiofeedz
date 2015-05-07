@@ -27,13 +27,13 @@ public class ItemRefreshViewCallback implements AsyncCallbackListener<List<RSSIt
 
   @Override
   public void onPreExecute() {
-    progressListener.startRefreshProgress();
+    //progressListener.startRefreshProgress();
     itemsLoadedCallback.onPreExecute();
   }
 
   @Override
   public void onPostExecute(List<RSSItem> result) {
-    progressListener.stopRefreshProgress();
+    //progressListener.stopRefreshProgress();
     dataModel.setItemsAndBuildModel(result);
     itemsLoadedCallback.onPostExecute(result);
     /*

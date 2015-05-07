@@ -14,7 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class TaskManager implements AsyncCallbackListener {
 
-  private static final int MAX_TASKS = 2;
+  private static final int MAX_TASKS = 3;
 
   public enum Priority {
     LOW, MEDIUM, HIGH
@@ -43,19 +43,6 @@ public class TaskManager implements AsyncCallbackListener {
      * @return whether the task should be run asynchronously
      */
     boolean isAsynch();
-
-    /**
-     * Returns the priority of the task
-     * @return
-     */
-    TaskManager.Priority getPriority();
-
-    class TaskComparator implements Comparator<Task> {
-      @Override
-      public int compare(Task task, Task otherTask) {
-        return task.getPriority().compareTo(otherTask.getPriority());
-      }
-    }
   }
 
   public abstract static class AsynchTask implements Task {

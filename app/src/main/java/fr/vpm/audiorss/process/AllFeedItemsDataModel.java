@@ -260,16 +260,20 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       Iterator<RSSChannel> feedsIterator = coreData.feeds.iterator();
       RSSChannel nextChannel = null;
       Log.d("prerefresh", "feeds: " + coreData.feeds.size());
-      final TaskManager tm = TaskManager.getManager();
       while (feedsIterator.hasNext() && !(nextChannel = feedsIterator.next()).shouldRefresh()) {
       }
-
+      List<RSSChannel> channelsToRefresh = new ArrayList<>();
+      channelsToRefresh.add(nextChannel);
+      CacheManager.createManager(channelsToRefresh, this, progressListener).updateCache(getContext());
+      /*
+      final TaskManager tm = TaskManager.getManager();
       if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
         Log.d("prerefresh", nextChannel.getUrl());
         //queueFeedRefresh(tm, nextChannel);
         //savingFeeds++;
       }
       tm.startTasks();
+      */
     }
   }
 
@@ -321,11 +325,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
         SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
         new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
             feed.getUrl());
-      }
-
-      @Override
-      public TaskManager.Priority getPriority() {
-        return TaskManager.Priority.HIGH;
       }
     });
   }

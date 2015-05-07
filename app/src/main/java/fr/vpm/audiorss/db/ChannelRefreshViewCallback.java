@@ -29,13 +29,13 @@ public class ChannelRefreshViewCallback implements AsyncCallbackListener<List<RS
 
   @Override
   public void onPreExecute() {
-    progressListener.startRefreshProgress();
+    //progressListener.startRefreshProgress();
     channelsLoadedCallback.onPreExecute();
   }
 
   @Override
   public void onPostExecute(List<RSSChannel> result) {
-    progressListener.stopRefreshProgress();
+    //progressListener.stopRefreshProgress();
     dataModel.setChannelsAndBuildModel(result);
     channelsLoadedCallback.onPostExecute(result);
   }

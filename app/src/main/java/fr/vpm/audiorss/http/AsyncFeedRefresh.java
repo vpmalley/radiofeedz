@@ -75,11 +75,6 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
       public void execute() {
         asyncCallbackListener.onPostExecute(finalRssChannel);
       }
-
-      @Override
-      public TaskManager.Priority getPriority() {
-        return TaskManager.Priority.MEDIUM;
-      }
     });
     TaskManager.getManager().onPostExecute(null);
     super.onPostExecute(itemParser);

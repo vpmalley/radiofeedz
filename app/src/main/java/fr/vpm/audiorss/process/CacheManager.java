@@ -34,13 +34,7 @@ public class CacheManager {
   private static CacheManager manager;
 
   public static CacheManager createManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
-    if (manager == null) {
-      manager = new CacheManager(rssChannels, dataModel, progressListener);
-    }
-    return manager;
-  }
-
-  public static CacheManager getManager() {
+    manager = new CacheManager(rssChannels, dataModel, progressListener);
     return manager;
   }
 
@@ -73,11 +67,6 @@ public class CacheManager {
           public void execute() {
             rssChannel.query(context);
           }
-
-          @Override
-          public TaskManager.Priority getPriority() {
-            return TaskManager.Priority.HIGH;
-          }
         });
       }
     }
@@ -101,11 +90,6 @@ public class CacheManager {
           @Override
           public void execute() {
             rssChannel.process(context);
-          }
-
-          @Override
-          public TaskManager.Priority getPriority() {
-            return TaskManager.Priority.MEDIUM;
           }
         });
       }
@@ -131,11 +115,6 @@ public class CacheManager {
           public void execute() {
             rssChannel.persist(context);
           }
-
-          @Override
-          public TaskManager.Priority getPriority() {
-            return TaskManager.Priority.LOW;
-          }
         });
       }
     }
@@ -147,11 +126,6 @@ public class CacheManager {
       public void execute() {
         dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
             new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
-      }
-
-      @Override
-      public TaskManager.Priority getPriority() {
-        return TaskManager.Priority.LOW;
       }
     });
   }
@@ -176,11 +150,6 @@ public class CacheManager {
       @Override
       public boolean isAsynch() {
         return false;
-      }
-
-      @Override
-      public TaskManager.Priority getPriority() {
-        return TaskManager.Priority.LOW;
       }
     });
   }
