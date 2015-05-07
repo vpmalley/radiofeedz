@@ -287,7 +287,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
     tm.startTasks();
     */
-    CacheManager cm = CacheManager.createManager(coreData.feeds, this);
+    CacheManager cm = CacheManager.createManager(coreData.feeds, this, progressListener);
     cm.updateCache(getContext());
   }
 
@@ -313,17 +313,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
    * @param feed the feed to refresh
    */
   private void queueFeedRefresh(final TaskManager tm, final RSSChannel feed) {
-    tm.queueTask(new TaskManager.Task() {
-      @Override
-      public boolean shouldExecute() {
-        return true;
-      }
-
-      @Override
-      public boolean canExecute() {
-        return true;
-      }
-
+    tm.queueTask(new TaskManager.AsynchTask() {
       @Override
       public void execute() {
         LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,

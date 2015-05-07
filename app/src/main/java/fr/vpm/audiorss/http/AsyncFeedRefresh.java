@@ -70,17 +70,7 @@ public class AsyncFeedRefresh extends AsyncTask<String, Integer, ItemParser> {
     }
     // always call callback, with null if nothing is worth returning
     final RSSChannel finalRssChannel = rssChannel;
-    TaskManager.getManager().queueTask(new TaskManager.Task() {
-      @Override
-      public boolean shouldExecute() {
-        return true;
-      }
-
-      @Override
-      public boolean canExecute() {
-        return true;
-      }
-
+    TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
       @Override
       public void execute() {
         asyncCallbackListener.onPostExecute(finalRssChannel);

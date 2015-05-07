@@ -6,6 +6,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.rss.CachableRSSChannel;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -19,8 +20,11 @@ public class CacheManager {
 
   private final DataModel dataModel;
 
-  private CacheManager(List<RSSChannel> rssChannels, DataModel dataModel) {
+  private final ProgressListener progressListener;
+
+  private CacheManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
     this.dataModel = dataModel;
+    this.progressListener = progressListener;
     this.rssChannels = new CopyOnWriteArrayList<>();
     for (RSSChannel rssChannel : rssChannels) {
       this.rssChannels.add(new CachableRSSChannel(rssChannel));
@@ -29,9 +33,9 @@ public class CacheManager {
 
   private static CacheManager manager;
 
-  public static CacheManager createManager(List<RSSChannel> rssChannels, DataModel dataModel) {
+  public static CacheManager createManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
     if (manager == null) {
-      manager = new CacheManager(rssChannels, dataModel);
+      manager = new CacheManager(rssChannels, dataModel, progressListener);
     }
     return manager;
   }
@@ -41,17 +45,19 @@ public class CacheManager {
   }
 
   public void updateCache(final Context context) {
+    progressListener.startRefreshProgress();
     queueCacheQueries(context);
     queueCacheProcess(context);
     queueCachePersistence(context);
     queueCacheLoading(context);
+    queueProgressListener();
     TaskManager.getManager().startTasks();
   }
 
   private void queueCacheQueries(final Context context) {
     for (final CachableRSSChannel rssChannel : rssChannels) {
       if (rssChannel.shouldRefresh()) {
-        TaskManager.getManager().queueTask(new TaskManager.Task() {
+        TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
           @Override
           public boolean shouldExecute() {
             return !rssChannel.failed();
@@ -80,7 +86,7 @@ public class CacheManager {
   private void queueCacheProcess(final Context context) {
     for (final CachableRSSChannel rssChannel : rssChannels) {
       if (rssChannel.shouldRefresh()) {
-        TaskManager.getManager().queueTask(new TaskManager.Task() {
+        TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
           @Override
           public boolean shouldExecute() {
             return !rssChannel.failed();
@@ -109,7 +115,7 @@ public class CacheManager {
   private void queueCachePersistence(final Context context) {
     for (final CachableRSSChannel rssChannel : rssChannels) {
       if (rssChannel.shouldRefresh()) {
-        TaskManager.getManager().queueTask(new TaskManager.Task() {
+        TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
           @Override
           public boolean shouldExecute() {
             return !rssChannel.failed();
@@ -136,8 +142,22 @@ public class CacheManager {
   }
 
   private void queueCacheLoading(Context context) {
-    TaskManager.getManager().queueTask(new TaskManager.Task() {
+    TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
+      @Override
+      public void execute() {
+        dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+            new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
+      }
 
+      @Override
+      public TaskManager.Priority getPriority() {
+        return TaskManager.Priority.LOW;
+      }
+    });
+  }
+
+  private void queueProgressListener() {
+    TaskManager.getManager().queueTask(new TaskManager.Task() {
       @Override
       public boolean shouldExecute() {
         return true;
@@ -150,8 +170,12 @@ public class CacheManager {
 
       @Override
       public void execute() {
-        dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-            new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
+        progressListener.stopRefreshProgress();
+      }
+
+      @Override
+      public boolean isAsynch() {
+        return false;
       }
 
       @Override

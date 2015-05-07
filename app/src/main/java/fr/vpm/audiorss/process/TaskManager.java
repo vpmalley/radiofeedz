@@ -39,6 +39,12 @@ public class TaskManager implements AsyncCallbackListener {
     void execute();
 
     /**
+     * Whether the task should be run asynchronously
+     * @return whether the task should be run asynchronously
+     */
+    boolean isAsynch();
+
+    /**
      * Returns the priority of the task
      * @return
      */
@@ -49,6 +55,23 @@ public class TaskManager implements AsyncCallbackListener {
       public int compare(Task task, Task otherTask) {
         return task.getPriority().compareTo(otherTask.getPriority());
       }
+    }
+  }
+
+  public abstract static class AsynchTask implements Task {
+    @Override
+    public boolean shouldExecute() {
+      return true;
+    }
+
+    @Override
+    public boolean canExecute() {
+      return true;
+    }
+
+    @Override
+    public boolean isAsynch() {
+      return true;
     }
   }
 
@@ -108,9 +131,13 @@ public class TaskManager implements AsyncCallbackListener {
       Task taskToRun = remainingTasks.get(0);
       Log.d("taskmanager", "task to run should run : " + taskToRun.shouldExecute() + ", can run : " + taskToRun.canExecute());
       if  ((launchedTasks.size() < MAX_TASKS) && (taskToRun.canExecute())) {
-        AsyncExecution asyncExecution = new AsyncExecution();
-        asyncExecution.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, taskToRun);
-        launchedTasks.add(asyncExecution);
+        if (taskToRun.isAsynch()) {
+          AsyncExecution asyncExecution = new AsyncExecution();
+          asyncExecution.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, taskToRun);
+          launchedTasks.add(asyncExecution);
+        } else {
+          taskToRun.execute();
+        }
         remainingTasks.remove(taskToRun);
         Log.d("taskmanager", "starting a task, remains " + remainingTasks.size() + " and running: " + launchedTasks.size());
       } else {
