@@ -41,9 +41,7 @@ import fr.vpm.audiorss.db.filter.ArchivedFilter;
 import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.UnArchivedFilter;
-import fr.vpm.audiorss.http.AsyncFeedRefresh;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.http.SaveFeedCallback;
 import fr.vpm.audiorss.media.AsyncBitmapLoader;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
@@ -169,7 +167,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromChannels(boolean readItems, AsyncCallbackListener<List<RSSChannel>> channelsLoadedCallback) {
     ChannelRefreshViewCallback callback =
-        new ChannelRefreshViewCallback(channelsLoadedCallback, progressListener, this);
+        new ChannelRefreshViewCallback(channelsLoadedCallback, this);
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, getContext(), readItems);
     // read all RSSChannel items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -177,7 +175,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   public void loadDataFromItems(AsyncCallbackListener<List<RSSItem>> itemsLoadedCallback) {
     Log.d("", "");
-    AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(itemsLoadedCallback, progressListener, this);
+    AsyncCallbackListener<List<RSSItem>> callback = new ItemRefreshViewCallback(itemsLoadedCallback, this);
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, getContext(), coreData.itemFilters);
     // read all RSS items from DB and refresh views
     asyncDbReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -264,34 +262,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
       }
       List<RSSChannel> channelsToRefresh = new ArrayList<>();
       channelsToRefresh.add(nextChannel);
-      CacheManager.createManager(channelsToRefresh, this, progressListener).updateCache(getContext());
-      /*
-      final TaskManager tm = TaskManager.getManager();
-      if ((nextChannel != null) && (nextChannel.shouldRefresh())) {
-        Log.d("prerefresh", nextChannel.getUrl());
-        //queueFeedRefresh(tm, nextChannel);
-        //savingFeeds++;
-      }
-      tm.startTasks();
-      */
+      new CacheManager(channelsToRefresh, this, progressListener).updateCache(getContext());
     }
   }
 
   @Override
   public void refreshData(){
     boolean forceRefresh = shouldForceRefresh();
-    /*
-    final TaskManager tm = TaskManager.getManager();
-    for (final RSSChannel feed : coreData.feeds.subList(0, Math.min(50, coreData.feeds.size()))) {
-      Log.d("refreshing", feed.getTitle() + " : " + forceRefresh + "/" + feed.shouldRefresh() + " : " + feed.getNextRefresh());
-      if ((forceRefresh) || (feed.shouldRefresh())) {
-        queueFeedRefresh(tm, feed);
-        savingFeeds++;
-      }
-    }
-    tm.startTasks();
-    */
-    CacheManager cm = CacheManager.createManager(coreData.feeds, this, progressListener);
+    CacheManager cm = new CacheManager(coreData.feeds, this, progressListener);
     cm.updateCache(getContext());
   }
 
@@ -302,31 +280,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void refreshData(List<RSSChannel> feedsToUpdate) {
-    final TaskManager tm = TaskManager.getManager();
-    for (final RSSChannel feed : feedsToUpdate) {
-      Log.d("refreshing", feed.getTitle());
-      queueFeedRefresh(tm, feed);
-      savingFeeds++;
-    }
-    tm.startTasks();
-  }
-
-  /**
-   * Queues a task for feed refresh
-   * @param tm the task manager
-   * @param feed the feed to refresh
-   */
-  private void queueFeedRefresh(final TaskManager tm, final RSSChannel feed) {
-    tm.queueTask(new TaskManager.AsynchTask() {
-      @Override
-      public void execute() {
-        LoadDataRefreshViewCallback<RSSChannel> rssChannelCallback = new LoadDataRefreshViewCallback<RSSChannel>(progressListener,
-            AllFeedItemsDataModel.this, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), tm);
-        SaveFeedCallback callback = new SaveFeedCallback(progressListener, AllFeedItemsDataModel.this, rssChannelCallback);
-        new AsyncFeedRefresh(getContext(), callback, AllFeedItemsDataModel.this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-            feed.getUrl());
-      }
-    });
+    CacheManager cm = new CacheManager(feedsToUpdate, this, progressListener);
+    cm.updateCache(getContext());
   }
 
   @Override

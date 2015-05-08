@@ -22,7 +22,7 @@ public class CacheManager {
 
   private final ProgressListener progressListener;
 
-  private CacheManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
+  public CacheManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
     this.dataModel = dataModel;
     this.progressListener = progressListener;
     this.rssChannels = new CopyOnWriteArrayList<>();
@@ -31,11 +31,11 @@ public class CacheManager {
     }
   }
 
-  private static CacheManager manager;
-
-  public static CacheManager createManager(List<RSSChannel> rssChannels, DataModel dataModel, ProgressListener progressListener) {
-    manager = new CacheManager(rssChannels, dataModel, progressListener);
-    return manager;
+  public CacheManager(String rssUrl, DataModel dataModel, ProgressListener progressListener) {
+    this.dataModel = dataModel;
+    this.progressListener = progressListener;
+    this.rssChannels = new CopyOnWriteArrayList<>();
+    this.rssChannels.add(new CachableRSSChannel(rssUrl));
   }
 
   public void updateCache(final Context context) {
