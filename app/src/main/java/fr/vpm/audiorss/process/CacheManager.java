@@ -45,6 +45,9 @@ public class CacheManager {
     queueCachePersistence(context);
     queueCacheLoading(context);
     queueProgressListener();
+    queueCachePostProcess(context);
+    queueCachePersistence(context);
+    queueCacheLoading(context);
     TaskManager.getManager().startTasks();
   }
 
@@ -152,5 +155,29 @@ public class CacheManager {
         return false;
       }
     });
+  }
+
+  private void queueCachePostProcess(final Context context) {
+    for (final CachableRSSChannel rssChannel : rssChannels) {
+      if (rssChannel.shouldRefresh()) {
+        TaskManager.getManager().queueTask(new TaskManager.AsynchTask() {
+          @Override
+          public boolean shouldExecute() {
+            return !rssChannel.failed();
+          }
+
+          @Override
+          public boolean canExecute() {
+            Log.d("cachablerss", "process: " + rssChannel.isQueried());
+            return rssChannel.isQueried();
+          }
+
+          @Override
+          public void execute() {
+            rssChannel.postProcess(context);
+          }
+        });
+      }
+    }
   }
 }

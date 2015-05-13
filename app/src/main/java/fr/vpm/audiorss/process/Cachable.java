@@ -48,6 +48,13 @@ public interface Cachable {
   void persist(Context context);
 
   /**
+   * Post-processes the retrieved resource, once the rest is done
+   * @param context
+   * @pre the resource should have been queried and retrieved
+   */
+  void postProcess(Context context);
+
+  /**
    * Stores the the resource in a non-persistent storage, typically in memory,
    * for fast storage and access
    * @pre the resource should have been queried, retrieved and processed

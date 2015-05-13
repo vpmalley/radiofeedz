@@ -16,6 +16,7 @@ import fr.vpm.audiorss.process.ItemParser;
  */
 public class CachableRSSChannel implements Cachable {
 
+  private static final int PROCESS_MAX_ITEMS = 3;
   private ItemParser itemParser;
 
   private RSSChannel initialRSSChannel;
@@ -71,7 +72,7 @@ public class CachableRSSChannel implements Cachable {
   public void process(Context context) {
     try {
       if (isQueried()) {
-        itemParser.extractRSSItems(itemParser.getThresholdDate(context));
+        itemParser.extractRSSItems(itemParser.getThresholdDate(context), PROCESS_MAX_ITEMS);
       }
     } catch (XmlPullParserException | IOException e) {
       Log.w("query", e.toString());
@@ -91,6 +92,21 @@ public class CachableRSSChannel implements Cachable {
   public void persist(Context context) {
     if (isProcessed()) {
       itemParser.getRssChannel().saveToDb(context);
+    }
+  }
+
+  @Override
+  public void postProcess(Context context) {
+    try {
+      if (isQueried()) {
+        itemParser.extractRSSItems(itemParser.getThresholdDate(context));
+      }
+    } catch (XmlPullParserException | IOException e) {
+      Log.w("query", e.toString());
+      failed = true;
+    }
+    if (!itemParser.extractedItems()) {
+      failed = true;
     }
   }
 
