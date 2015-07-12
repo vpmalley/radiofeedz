@@ -37,7 +37,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private static Picasso picasso;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
-          RSSChannel> channelsByItem) {
+      RSSChannel> channelsByItem) {
     super(activity, resource, items);
     this.activity = activity;
     this.items = items;
@@ -112,11 +112,20 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      getPicasso().load(rssItem.getMedia().getDistantUrl()).into(itemHolder.pictureView);
+      getPicasso().load(rssItem.getMedia().getDistantUrl())
+          .placeholder(R.drawable.ic_action_picture)
+          .error(R.drawable.ic_action_picture)
+          .into(itemHolder.pictureView);
     } else if ((rssChannel != null) && (rssChannel.getImage() != null) && (!rssChannel.getImage().getInetUrl().isEmpty())) {
-      getPicasso().load(rssChannel.getImage().getInetUrl()).into(itemHolder.pictureView);
+      getPicasso().load(rssChannel.getImage().getInetUrl())
+          .placeholder(R.drawable.ic_action_picture)
+          .error(R.drawable.ic_action_picture)
+          .into(itemHolder.pictureView);
     } else {
-      getPicasso().load(R.drawable.ic_action_picture).into(itemHolder.pictureView);
+      getPicasso().load(R.drawable.ic_action_picture)
+          .placeholder(R.drawable.ic_action_picture)
+          .error(R.drawable.ic_action_picture)
+          .into(itemHolder.pictureView);
     }
   }
 
