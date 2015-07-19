@@ -222,8 +222,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           }
         }
       }
-      refreshView();
     }
+    refreshView();
   }
 
   @Override
