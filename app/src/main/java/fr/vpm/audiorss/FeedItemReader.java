@@ -103,7 +103,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
   }
 
   private void setPicture(){
-    List<PictureLoadedListener> listeners = new ArrayList<PictureLoadedListener>();
+    List<PictureLoadedListener> listeners = new ArrayList<>();
     listeners.add(this);
 
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
@@ -168,7 +168,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         displayItem.setVisible(true);
       } else if ((podcastFile != null) && (podcastFile.exists())){
         playItem.setVisible(true);
-      } else if (!rssItem.getMedia().getInetUrl().isEmpty()) {
+      } else if (!rssItem.getMedia().getDistantUrl().isEmpty()) {
         downloadItem.setVisible(true);
       }
     }
@@ -185,7 +185,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    boolean result = false;
+    boolean result;
     switch (item.getItemId()) {
       case R.id.action_download:
         downloadMedia();
@@ -216,7 +216,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   /**
    * Deletes the file associated with the media
-   * @param rssItem
+   * @param rssItem The item from which the media will deleted
    */
   private void deleteMediaFile(RSSItem rssItem) {
     if ((rssItem.getMedia() != null) && (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()))){
@@ -245,7 +245,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
-        playIntent.setDataAndType(new Uri.Builder().path(m.getInetUrl()).build(), m.getMimeType());
+        playIntent.setDataAndType(new Uri.Builder().path(m.getDistantUrl()).build(), m.getMimeType());
       }
       startActivity(playIntent);
       // take advantage of media playing to do some maintenance

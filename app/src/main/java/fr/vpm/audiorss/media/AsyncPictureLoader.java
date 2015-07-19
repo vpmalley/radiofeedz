@@ -57,9 +57,9 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, List<Bitmap>> 
       throw new IllegalArgumentException("at least one picture url was expected.");
     }
     for (Media picture : media) {
-      Bitmap pictureBitmap = null;
+      Bitmap pictureBitmap;
       try {
-        String pictureUrl = picture.getInetUrl();
+        String pictureUrl = picture.getDistantUrl();
         pictureBitmap = downloadBitmap(pictureUrl);
         if (pictureBitmap != null) {
           persistBitmap(picture, pictureBitmap);
@@ -86,7 +86,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, List<Bitmap>> 
   /**
    * Downloads the picture to match the required dimensions.
    * @param pictureUrl the url (most likely with http scheme) where the picture is located
-   * @return
+   * @return the downloaded picture
    * @throws java.lang.IllegalArgumentException caused by a wrongly formatted url
    */
   private Bitmap downloadBitmap(String pictureUrl) throws IOException {

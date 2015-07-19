@@ -120,8 +120,8 @@ public class Media implements Downloadable, Parcelable {
   public static File getDownloadFolder(Context context, Folder folder) {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
     String storageMediaRoot = sharedPref.getString("pref_storage_root",
-            Environment.getExternalStorageDirectory().getPath());
-    if (storageMediaRoot.isEmpty()){
+        Environment.getExternalStorageDirectory().getPath());
+    if ((storageMediaRoot != null) && (storageMediaRoot.isEmpty())){
       storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
     }
     String storageMediaDir = sharedPref.getString("pref_download_podcasts_folder", "music/Podcasts");
@@ -163,7 +163,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public File getMediaFile(Context context, Folder folder) {
-    File dirFile = null;
+    File dirFile;
     switch(folder) {
       case INTERNAL_FEEDS_PICS:
         dirFile = getInternalFeedsPicsFolder();
@@ -194,7 +194,7 @@ public class Media implements Downloadable, Parcelable {
       }
       isDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
       new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).
-              executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
+          executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
     }
     return isDownloaded;
   }
@@ -203,10 +203,10 @@ public class Media implements Downloadable, Parcelable {
     // Start download
     if (0 == networkFlags) {
       Toast
-              .makeText(
-                      context,
-                      context.getResources().getString(R.string.disabled_download),
-                      Toast.LENGTH_LONG).show();
+          .makeText(
+              context,
+              context.getResources().getString(R.string.disabled_download),
+              Toast.LENGTH_LONG).show();
     }
     return (!(0 == networkFlags));
   }
@@ -249,7 +249,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   private boolean exists() {
-    return !getInetUrl().isEmpty();
+    return !getDistantUrl().isEmpty();
   }
 
   public boolean isPicture() {
@@ -282,10 +282,6 @@ public class Media implements Downloadable, Parcelable {
 
   @Override
   public String getDistantUrl() {
-    return inetUrl;
-  }
-
-  public String getInetUrl() {
     return inetUrl;
   }
 
@@ -338,7 +334,7 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public static final Parcelable.Creator<Media> CREATOR
-          = new Parcelable.Creator<Media>() {
+      = new Parcelable.Creator<Media>() {
     public Media createFromParcel(Parcel in) {
       return new Media(in);
     }

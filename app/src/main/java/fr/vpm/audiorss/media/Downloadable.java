@@ -4,12 +4,12 @@ import android.content.Context;
 
 public interface Downloadable {
 
-  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener);
+  void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener);
 
-  public long getDownloadId();
+  long getDownloadId();
 
-  public boolean isDownloaded();
+  boolean isDownloaded();
 
-  public String getDistantUrl();
+  String getDistantUrl();
 
 }

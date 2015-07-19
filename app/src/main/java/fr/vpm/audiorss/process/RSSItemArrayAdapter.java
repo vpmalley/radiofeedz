@@ -113,18 +113,16 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
     if ((rssItem != null) && (rssItem.getMedia().isPicture())){
       getPicasso().load(rssItem.getMedia().getDistantUrl())
-          .placeholder(R.drawable.ic_action_picture)
-          .error(R.drawable.ic_action_picture)
+          .placeholder(R.drawable.ic_article)
+          .error(R.drawable.ic_article)
           .into(itemHolder.pictureView);
-    } else if ((rssChannel != null) && (rssChannel.getImage() != null) && (!rssChannel.getImage().getInetUrl().isEmpty())) {
-      getPicasso().load(rssChannel.getImage().getInetUrl())
-          .placeholder(R.drawable.ic_action_picture)
-          .error(R.drawable.ic_action_picture)
+    } else if ((rssChannel != null) && (rssChannel.getImage() != null) && (!rssChannel.getImage().getDistantUrl().isEmpty())) {
+      getPicasso().load(rssChannel.getImage().getDistantUrl())
+          .placeholder(R.drawable.ic_article)
+          .error(R.drawable.ic_article)
           .into(itemHolder.pictureView);
     } else {
-      getPicasso().load(R.drawable.ic_action_picture)
-          .placeholder(R.drawable.ic_action_picture)
-          .error(R.drawable.ic_action_picture)
+      getPicasso().load(R.drawable.ic_article)
           .into(itemHolder.pictureView);
     }
   }

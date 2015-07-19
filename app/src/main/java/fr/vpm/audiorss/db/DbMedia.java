@@ -191,7 +191,7 @@ public class DbMedia {
     ContentValues channelValues = new ContentValues();
     channelValues.put(NAME_KEY, media.getName());
     channelValues.put(TITLE_KEY, media.getNotificationTitle());
-    channelValues.put(INET_URL_KEY, media.getInetUrl());
+    channelValues.put(INET_URL_KEY, media.getDistantUrl());
     channelValues.put(DEVICE_URI_KEY, media.getDeviceUri());
     channelValues.put(DL_ID_KEY, media.getDownloadId());
     channelValues.put(IS_DL_KEY, media.isDownloaded());
