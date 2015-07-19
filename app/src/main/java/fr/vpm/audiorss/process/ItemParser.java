@@ -181,8 +181,17 @@ public class ItemParser {
     // ending the other strategy
 
     long nextRefresh = latestPublished + (long)( newAverage / 1.2) ;
-    String formattedNextRefresh = DateUtils.formatDBDate(new Date(nextRefresh));
 
+    Calendar tenDaysAgo = Calendar.getInstance();
+    tenDaysAgo.add(Calendar.DAY_OF_YEAR, -10);
+    Calendar inThreeDays = Calendar.getInstance();
+    inThreeDays.add(Calendar.DAY_OF_YEAR, 3);
+    if ((latestPublished < tenDaysAgo.getTimeInMillis()) && (nextRefresh < inThreeDays.getTimeInMillis())) {
+      nextRefresh = inThreeDays.getTimeInMillis();
+      Log.d("improvement", "some feed that was inactive won't be refreshed for 3 days");
+    }
+
+    String formattedNextRefresh = DateUtils.formatDBDate(new Date(nextRefresh));
     return formattedNextRefresh;
   }
 
