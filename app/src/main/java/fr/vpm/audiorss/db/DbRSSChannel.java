@@ -127,12 +127,14 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     if (existingChannel.getImage() == null){
       existingChannel.setImage(channel.getImage());
     }
+    long start = System.currentTimeMillis();
     ContentValues channelValues = createContentValues(existingChannel);
     channelValues.put(DatabaseOpenHelper._ID, existingChannel.getId());
     mDb.update(T_RSS_CHANNEL, channelValues, DatabaseOpenHelper._ID + "=?",
-            new String[]{String.valueOf(existingChannel.getId())});
-
+        new String[]{String.valueOf(existingChannel.getId())});
+    Log.d("measures", "save -end- " + (System.currentTimeMillis() - start));
     bulkAddOrUpdateItems(existingChannel);
+
     return existingChannel;
   }
 
