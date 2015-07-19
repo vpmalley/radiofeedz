@@ -84,7 +84,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     emptyView.setText(getString(R.string.emptynews));
     mFeedItems.setEmptyView(emptyView);
 
-    LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
+    final LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
     progressBarListener.setDelegate(lastRefreshListener);
 
     // Navigation drawer
@@ -105,6 +105,7 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
 
       @Override
       public void onPostExecute(List<RSSChannel> result) {
+        lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
         dataModel.preRefreshData();
       }
     });
