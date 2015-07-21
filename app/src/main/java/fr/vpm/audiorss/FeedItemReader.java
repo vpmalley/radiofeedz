@@ -42,12 +42,12 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
 
   public static final String ITEM = "rssItem";
 
-  public static final String CHANNEL = "channel";
+  public static final String CHANNEL = "rssChannel";
   public static final String MIME_IMAGE = "image";
 
   private RSSItem rssItem = null;
 
-  private RSSChannel channel = null;
+  private RSSChannel rssChannel = null;
 
   private ImageView picView;
   private MenuItem downloadItem;
@@ -66,7 +66,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         rssItem = args.getParcelable(ITEM);
       }
       if (args.containsKey(CHANNEL)) {
-        channel = args.getParcelable(CHANNEL);
+        rssChannel = args.getParcelable(CHANNEL);
       }
     }
 
@@ -94,8 +94,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         rssItem.getMedia().isDownloaded(getActivity(), true);
       }
     }
-    if (channel != null) {
-      channelTitle.setText(channel.getTitle());
+    if (rssChannel != null) {
+      channelTitle.setText(rssChannel.getTitle());
     }
     setPicture();
 
@@ -111,11 +111,20 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       if (itemBitmap != null){
         picView.setImageBitmap(itemBitmap);
       }
-    } else if (channel != null){
-      Bitmap channelBitmap = channel.getBitmap(getActivity(), listeners);
+    } else if (rssChannel != null){
+      Bitmap channelBitmap = rssChannel.getBitmap(getActivity(), listeners);
       if (channelBitmap != null){
         picView.setImageBitmap(channelBitmap);
       }
+    }
+
+
+    if ((rssItem != null) && (rssItem.getMedia() != null) && (rssItem.getMedia().isPicture())){
+      rssItem.getMedia().loadPictureInViewWithMemoryCache(picView);
+    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
+      rssChannel.getImage().loadPictureInViewWithDiskCache(picView);
+    } else {
+      Media.loadBackupPictureInView(picView);
     }
   }
 

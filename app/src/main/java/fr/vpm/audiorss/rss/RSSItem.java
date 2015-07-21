@@ -170,7 +170,12 @@ public class RSSItem implements Parcelable {
       Log.w("media", "media is not expected to be null here");
       media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl, "");
     }
-    media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener);
+
+    Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
+    if (media.getMimeType().startsWith("image")){
+      externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
+    }
+    media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener, externalDownloadsFolder);
   }
 
   public Media getMedia() {

@@ -419,8 +419,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public void downloadMedia(Set<Integer> selection) {
     for (int position : selection){
       if (position > -1 && position < cache.items.size() && (cache.items.get(position).getMedia() != null)) {
-        cache.items.get(position).getMedia().download(getContext(), DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED,
-            new MediaDownloadListener.DummyMediaDownloadListener());
+        cache.items.get(position).downloadMedia(getContext(), new MediaDownloadListener.DummyMediaDownloadListener());
       }
     }
   }

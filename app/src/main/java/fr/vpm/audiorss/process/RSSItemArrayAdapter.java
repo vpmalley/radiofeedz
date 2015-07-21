@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -33,8 +34,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private Map<RSSItem, RSSChannel> channelsByItem;
 
   private final int resource;
-
-  private static Picasso picasso;
 
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
       RSSChannel> channelsByItem) {
@@ -111,27 +110,13 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   }
 
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
-    if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      getPicasso().load(rssItem.getMedia().getDistantUrl())
-          .placeholder(R.drawable.ic_article)
-          .error(R.drawable.ic_article)
-          .into(itemHolder.pictureView);
-    } else if ((rssChannel != null) && (rssChannel.getImage() != null) && (!rssChannel.getImage().getDistantUrl().isEmpty())) {
-      getPicasso().load(rssChannel.getImage().getDistantUrl())
-          .placeholder(R.drawable.ic_article)
-          .error(R.drawable.ic_article)
-          .into(itemHolder.pictureView);
+    if ((rssItem != null) && (rssItem.getMedia() != null) && (rssItem.getMedia().isPicture())){
+      rssItem.getMedia().loadPictureInViewWithMemoryCache(itemHolder.pictureView);
+    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
+      rssChannel.getImage().loadPictureInViewWithDiskCache(itemHolder.pictureView);
     } else {
-      getPicasso().load(R.drawable.ic_article)
-          .into(itemHolder.pictureView);
+      Media.loadBackupPictureInView(itemHolder.pictureView);
     }
-  }
-
-  private Picasso getPicasso() {
-    if (picasso == null) {
-      picasso = Picasso.with(getContext());
-    }
-    return picasso;
   }
 
   private void printDate(ViewHolder itemHolder, RSSItem rssItem) {

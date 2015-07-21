@@ -13,7 +13,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,6 +70,12 @@ public class Media implements Downloadable, Parcelable {
   private Bitmap preloadedBitmap = null;
   private boolean loadingBitmap = false;
 
+  private File deviceFile;
+
+  private boolean deviceFileExists;
+
+  private static Picasso picasso;
+
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
     this.name = name;
@@ -85,15 +94,11 @@ public class Media implements Downloadable, Parcelable {
   }
 
   @Override
-  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener) {
+  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener, Folder folder) {
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
-    Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
-    if (getMimeType().startsWith("image")){
-      externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
-    }
-    r.setDestinationUri(Uri.fromFile(getMediaFile(context, externalDownloadsFolder)));
+    r.setDestinationUri(Uri.fromFile(getMediaFile(context, folder)));
 
     // When downloading music and videos they will be listed in the player
     // (Seems to be available since Honeycomb only)
@@ -163,21 +168,79 @@ public class Media implements Downloadable, Parcelable {
   }
 
   public File getMediaFile(Context context, Folder folder) {
-    File dirFile;
-    switch(folder) {
-      case INTERNAL_FEEDS_PICS:
-        dirFile = getInternalFeedsPicsFolder();
-        break;
-      case INTERNAL_ITEMS_PICS:
-        dirFile = getInternalItemsPicsFolder();
-        break;
-      case EXTERNAL_DOWNLOADS_PODCASTS:
-      case EXTERNAL_DOWNLOADS_PICTURES:
-      default:
-        dirFile = getDownloadFolder(context, folder);
-        break;
+    if (deviceFile == null) {
+      File dirFile;
+      switch (folder) {
+        case INTERNAL_FEEDS_PICS:
+          dirFile = getInternalFeedsPicsFolder();
+          break;
+        case INTERNAL_ITEMS_PICS:
+          dirFile = getInternalItemsPicsFolder();
+          break;
+        case EXTERNAL_DOWNLOADS_PODCASTS:
+        case EXTERNAL_DOWNLOADS_PICTURES:
+        default:
+          dirFile = getDownloadFolder(context, folder);
+          break;
+      }
+      deviceFile = new File(dirFile, getFileName());
     }
-    return new File(dirFile, getFileName());
+    return deviceFile;
+  }
+
+  /**
+   * Determines if media exists locally on the device and caches the information in memory.
+   * Therefore it is made to be called multiple times without requiring to access the File system
+   * @param context the current Android context
+   * @param folder the Folder in which to search for the media file
+   * @return
+   */
+  public boolean mediaFileExists(Context context, Folder folder) {
+    if (deviceFile == null) {
+      deviceFileExists = (getMediaFile(context, folder) != null) && getMediaFile(context, folder).exists();
+    }
+    return deviceFileExists;
+  }
+
+  private static Picasso getPicasso(Context context) {
+    if (picasso == null) {
+      picasso = Picasso.with(context);
+    }
+    return picasso;
+  }
+
+  public void loadPictureInViewWithMemoryCache(ImageView pictureView) {
+    getPicasso(pictureView.getContext()).load(getDistantUrl())
+        .placeholder(R.drawable.ic_article)
+        .error(R.drawable.ic_article)
+        .into(pictureView);
+  }
+
+  public boolean loadPictureInViewWithDiskCache(ImageView pictureView) {
+    boolean hasPicture = !getDistantUrl().isEmpty();
+    if (hasPicture) {
+      if (mediaFileExists(pictureView.getContext(), Media.Folder.INTERNAL_FEEDS_PICS)) {
+        File channelPictureFile = getMediaFile(pictureView.getContext(), Media.Folder.INTERNAL_FEEDS_PICS);
+        getPicasso(pictureView.getContext()).load(channelPictureFile)
+            .placeholder(R.drawable.ic_article)
+            .error(R.drawable.ic_article)
+            .into(pictureView);
+      } else {
+        getPicasso(pictureView.getContext()).load(getDistantUrl())
+            .placeholder(R.drawable.ic_article)
+            .error(R.drawable.ic_article)
+            .into(pictureView);
+        // download the file locally
+        download(pictureView.getContext(), DownloadManager.Request.VISIBILITY_HIDDEN,
+            new MediaDownloadListener.DummyMediaDownloadListener(), Media.Folder.INTERNAL_FEEDS_PICS);
+      }
+    }
+    return hasPicture;
+  }
+
+  public static void loadBackupPictureInView(ImageView pictureView) {
+    getPicasso(pictureView.getContext()).load(R.drawable.ic_article)
+        .into(pictureView);
   }
 
   /**

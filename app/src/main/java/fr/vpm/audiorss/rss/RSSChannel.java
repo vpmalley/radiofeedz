@@ -258,10 +258,6 @@ public class RSSChannel implements Parcelable {
     return image;
   }
 
-  public void downloadImage(Context context) {
-    image.download(context, DownloadManager.Request.VISIBILITY_HIDDEN, new MediaDownloadListener.DummyMediaDownloadListener());
-  }
-
   public Collection<RSSItem> getItems() {
     return latestItems.values();
   }
