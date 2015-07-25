@@ -8,6 +8,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 
@@ -59,6 +60,8 @@ public class RSSItem implements Parcelable {
   private Media media = null;
 
   private long channelId = -1;
+
+  private IconDisplay iconDisplay;
 
   public String getId() {
     return guid;
@@ -184,6 +187,19 @@ public class RSSItem implements Parcelable {
 
   public void setMedia(Media media) {
     this.media = media;
+  }
+
+  public IconDisplay getIconDisplay(RSSChannel rssChannel) {
+    if (iconDisplay == null) {
+      if ((media != null) && (media.isPicture()) &&
+          (media.getDistantUrl() != null) && (!media.getDistantUrl().isEmpty())){
+        iconDisplay = new IconDisplay(media, false);
+      } else if ((rssChannel != null) && (rssChannel.getImage() != null) &&
+          (rssChannel.getImage().getDistantUrl() != null) && (!rssChannel.getImage().getDistantUrl().isEmpty())){
+        iconDisplay = new IconDisplay(rssChannel.getImage(), true);
+      }
+    }
+    return iconDisplay;
   }
 
   @Override

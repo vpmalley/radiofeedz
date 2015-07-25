@@ -10,13 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -110,12 +108,15 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   }
 
   private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
-    if ((rssItem != null) && (rssItem.getMedia() != null) && (rssItem.getMedia().isPicture())){
-      rssItem.getMedia().loadPictureInViewWithMemoryCache(itemHolder.pictureView);
-    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
-      rssChannel.getImage().loadPictureInViewWithDiskCache(itemHolder.pictureView);
+    if (rssItem != null) {
+      IconDisplay iconDisplay = rssItem.getIconDisplay(rssChannel);
+      if (iconDisplay != null) {
+        iconDisplay.loadInView(itemHolder.pictureView);
+      } else {
+        IconDisplay.loadBackupInView(itemHolder.pictureView);
+      }
     } else {
-      Media.loadBackupPictureInView(itemHolder.pictureView);
+      IconDisplay.loadBackupInView(itemHolder.pictureView);
     }
   }
 

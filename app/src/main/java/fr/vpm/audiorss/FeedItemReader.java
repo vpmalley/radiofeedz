@@ -23,12 +23,12 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
+import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.PictureLoadedListener;
@@ -103,28 +103,15 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
   }
 
   private void setPicture(){
-    List<PictureLoadedListener> listeners = new ArrayList<>();
-    listeners.add(this);
-
-    if ((rssItem != null) && (rssItem.getMedia().isPicture())){
-      Bitmap itemBitmap = rssItem.getMedia().getAsBitmap(getActivity(), listeners, Media.Folder.INTERNAL_ITEMS_PICS);
-      if (itemBitmap != null){
-        picView.setImageBitmap(itemBitmap);
+    if (rssItem != null) {
+      IconDisplay iconDisplay = rssItem.getIconDisplay(rssChannel);
+      if (iconDisplay != null) {
+        iconDisplay.loadInView(picView);
+      } else {
+        IconDisplay.loadBackupInView(picView);
       }
-    } else if (rssChannel != null){
-      Bitmap channelBitmap = rssChannel.getBitmap(getActivity(), listeners);
-      if (channelBitmap != null){
-        picView.setImageBitmap(channelBitmap);
-      }
-    }
-
-
-    if ((rssItem != null) && (rssItem.getMedia() != null) && (rssItem.getMedia().isPicture())){
-      rssItem.getMedia().loadPictureInViewWithMemoryCache(picView);
-    } else if ((rssChannel != null) && (rssChannel.getImage() != null)) {
-      rssChannel.getImage().loadPictureInViewWithDiskCache(picView);
     } else {
-      Media.loadBackupPictureInView(picView);
+      IconDisplay.loadBackupInView(picView);
     }
   }
 
@@ -171,8 +158,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     downloadItem.setVisible(false);
 
     if (rssItem.getMedia() != null){
-      File picFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PICTURES);
-      File podcastFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS);
+      File picFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PICTURES, true);
+      File podcastFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS, true);
       if ((picFile != null) && (picFile.exists())){
         displayItem.setVisible(true);
       } else if ((podcastFile != null) && (podcastFile.exists())){
@@ -233,7 +220,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       if (rssItem.getMedia().getMimeType().startsWith(MIME_IMAGE)){
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
-      File mediaFile = rssItem.getMedia().getMediaFile(getActivity(), externalDownloadsFolder);
+      File mediaFile = rssItem.getMedia().getMediaFile(getActivity(), externalDownloadsFolder, false);
       if (mediaFile.exists()){
         mediaFile.delete();
       }
@@ -250,7 +237,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       if (m.getMimeType().startsWith(MIME_IMAGE)){
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
-      File mediaFile = m.getMediaFile(getActivity(), externalDownloadsFolder);
+      File mediaFile = m.getMediaFile(getActivity(), externalDownloadsFolder, false);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {

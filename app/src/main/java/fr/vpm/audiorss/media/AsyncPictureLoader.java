@@ -80,7 +80,7 @@ public class AsyncPictureLoader extends AsyncTask<Media, Integer, List<Bitmap>> 
    */
   private void persistBitmap(Media picture, Bitmap picBitmap) throws IOException {
     PictureSaver persister = new FilePictureSaver(context);
-    persister.persist(picture.getMediaFile(context, folder), picBitmap);
+    persister.persist(picture.getMediaFile(context, folder, false), picBitmap);
   }
 
   /**

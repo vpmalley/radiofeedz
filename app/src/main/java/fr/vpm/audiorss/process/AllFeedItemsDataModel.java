@@ -1,7 +1,6 @@
 package fr.vpm.audiorss.process;
 
 import android.app.Activity;
-import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -42,7 +41,7 @@ import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.media.AsyncBitmapLoader;
+import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.media.Playlist;
@@ -145,8 +144,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    //this.preloadPictures = preloadPictures;
-    this.preloadPictures = false;
+    this.preloadPictures = true;
     this.cache = DisplayCache.getInstance();
   }
 
@@ -202,14 +200,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     }
     this.cache.items = items;
     buildChannelsByItem();
-    if (preloadPictures) {
-      List<RSSItem> rssItemsSubset = cache.items;
-      int MAX_CACHED = 10;
-      if (cache.items.size() > MAX_CACHED){
-        rssItemsSubset = cache.items.subList(6, Math.min(cache.items.size(), MAX_CACHED));
-      }
-      new AsyncBitmapLoader(getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, rssItemsSubset.toArray(new RSSItem[rssItemsSubset.size()]));
-    }
   }
 
   private void buildChannelsByItem(){
@@ -220,6 +210,14 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           if (channel.getId() == item.getChannelId()) {
             cache.channelsByItem.put(item, channel);
           }
+        }
+      }
+    }
+    if (preloadPictures) {
+      for (RSSItem rssItem : cache.items) {
+        IconDisplay id = rssItem.getIconDisplay(cache.channelsByItem.get(rssItem));
+        if (id != null) {
+          id.loadInDiskCache(getContext());
         }
       }
     }

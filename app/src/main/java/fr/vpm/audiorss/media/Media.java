@@ -13,7 +13,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -98,7 +97,7 @@ public class Media implements Downloadable, Parcelable {
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
-    r.setDestinationUri(Uri.fromFile(getMediaFile(context, folder)));
+    r.setDestinationUri(Uri.fromFile(getMediaFile(context, folder, false)));
 
     // When downloading music and videos they will be listed in the player
     // (Seems to be available since Honeycomb only)
@@ -167,25 +166,22 @@ public class Media implements Downloadable, Parcelable {
     return name.replace(' ', '_') + typeExtension;
   }
 
-  public File getMediaFile(Context context, Folder folder) {
-    if (deviceFile == null) {
-      File dirFile;
-      switch (folder) {
-        case INTERNAL_FEEDS_PICS:
-          dirFile = getInternalFeedsPicsFolder();
-          break;
-        case INTERNAL_ITEMS_PICS:
-          dirFile = getInternalItemsPicsFolder();
-          break;
-        case EXTERNAL_DOWNLOADS_PODCASTS:
-        case EXTERNAL_DOWNLOADS_PICTURES:
-        default:
-          dirFile = getDownloadFolder(context, folder);
-          break;
-      }
-      deviceFile = new File(dirFile, getFileName());
+  public File getMediaFile(Context context, Folder folder, boolean forceCheck) {
+    File dirFile;
+    switch (folder) {
+      case INTERNAL_FEEDS_PICS:
+        dirFile = getInternalFeedsPicsFolder();
+        break;
+      case INTERNAL_ITEMS_PICS:
+        dirFile = getInternalItemsPicsFolder();
+        break;
+      case EXTERNAL_DOWNLOADS_PODCASTS:
+      case EXTERNAL_DOWNLOADS_PICTURES:
+      default:
+        dirFile = getDownloadFolder(context, folder);
+        break;
     }
-    return deviceFile;
+    return new File(dirFile, getFileName());
   }
 
   /**
@@ -196,51 +192,7 @@ public class Media implements Downloadable, Parcelable {
    * @return
    */
   public boolean mediaFileExists(Context context, Folder folder) {
-    if (deviceFile == null) {
-      deviceFileExists = (getMediaFile(context, folder) != null) && getMediaFile(context, folder).exists();
-    }
-    return deviceFileExists;
-  }
-
-  private static Picasso getPicasso(Context context) {
-    if (picasso == null) {
-      picasso = Picasso.with(context);
-    }
-    return picasso;
-  }
-
-  public void loadPictureInViewWithMemoryCache(ImageView pictureView) {
-    getPicasso(pictureView.getContext()).load(getDistantUrl())
-        .placeholder(R.drawable.ic_article)
-        .error(R.drawable.ic_article)
-        .into(pictureView);
-  }
-
-  public boolean loadPictureInViewWithDiskCache(ImageView pictureView) {
-    boolean hasPicture = !getDistantUrl().isEmpty();
-    if (hasPicture) {
-      if (mediaFileExists(pictureView.getContext(), Media.Folder.INTERNAL_FEEDS_PICS)) {
-        File channelPictureFile = getMediaFile(pictureView.getContext(), Media.Folder.INTERNAL_FEEDS_PICS);
-        getPicasso(pictureView.getContext()).load(channelPictureFile)
-            .placeholder(R.drawable.ic_article)
-            .error(R.drawable.ic_article)
-            .into(pictureView);
-      } else {
-        getPicasso(pictureView.getContext()).load(getDistantUrl())
-            .placeholder(R.drawable.ic_article)
-            .error(R.drawable.ic_article)
-            .into(pictureView);
-        // download the file locally
-        download(pictureView.getContext(), DownloadManager.Request.VISIBILITY_HIDDEN,
-            new MediaDownloadListener.DummyMediaDownloadListener(), Media.Folder.INTERNAL_FEEDS_PICS);
-      }
-    }
-    return hasPicture;
-  }
-
-  public static void loadBackupPictureInView(ImageView pictureView) {
-    getPicasso(pictureView.getContext()).load(R.drawable.ic_article)
-        .into(pictureView);
+    return (getMediaFile(context, folder, false) != null) && getMediaFile(context, folder, false).exists();
   }
 
   /**
@@ -255,7 +207,7 @@ public class Media implements Downloadable, Parcelable {
       if (getMimeType().startsWith("image")){
         externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
       }
-      isDownloaded = getMediaFile(context, externalDownloadsFolder).exists();
+      isDownloaded = getMediaFile(context, externalDownloadsFolder, false).exists();
       new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).
           executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
     }
@@ -293,7 +245,7 @@ public class Media implements Downloadable, Parcelable {
     if ((preloadedBitmap == null) && (!loadingBitmap) && (exists())) {
       loadingBitmap = true;
       FilePictureSaver pictureRetriever = new FilePictureSaver(context);
-      File pictureFile = getMediaFile(context, folder);
+      File pictureFile = getMediaFile(context, folder, false);
       if (pictureFile.exists()) {
         try {
           preloadedBitmap = pictureRetriever.retrieve(pictureFile);

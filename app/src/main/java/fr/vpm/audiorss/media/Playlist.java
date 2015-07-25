@@ -30,7 +30,7 @@ public class Playlist {
 
     StringBuilder shows = new StringBuilder();
     for (Media media : medias) {
-      shows.append(media.getMediaFile(context, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS));
+      shows.append(media.getMediaFile(context, Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS, false));
       shows.append('\n');
     }
     String playlistName = "radiofeedz.m3u";
