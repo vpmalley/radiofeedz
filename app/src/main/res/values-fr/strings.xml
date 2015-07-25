@@ -38,5 +38,6 @@
     <string name="last_refresh">Dernière synchronisation</string>
     <string name="added_feed">Flux ajouté. Retrouvez-le dans le panneau latéral gauche</string>
     <string name="action_playlist">Créer une playlist</string>
+    <string name="press_back">Appuie sur Retour, une fois de plus.</string>
 
 </resources>

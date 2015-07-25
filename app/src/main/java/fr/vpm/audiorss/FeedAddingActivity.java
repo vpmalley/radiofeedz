@@ -3,6 +3,7 @@ package fr.vpm.audiorss;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 /**
  * Created by vince on 17/11/14.
@@ -23,6 +24,10 @@ public class FeedAddingActivity extends Activity {
     } else {
       intent.putExtra(CHANNEL_NEW_URL, i.getData().toString());
     }
+
+    TextView emptyView = new TextView(this);
+    emptyView.setText(R.string.press_back);
+    setContentView(emptyView);
 
     startActivity(intent);
   }

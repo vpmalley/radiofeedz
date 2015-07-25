@@ -31,5 +31,6 @@
     <string name="last_refresh">Last synchronisation</string>
     <string name="added_feed">Feed added. Find it in the left pane</string>
     <string name="action_playlist">Create a playlist</string>
+    <string name="press_back">Please press back, one more time.</string>
 
 </resources>
