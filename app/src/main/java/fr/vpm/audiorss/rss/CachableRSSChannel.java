@@ -7,8 +7,10 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Calendar;
 
 import fr.vpm.audiorss.process.Cachable;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.ItemParser;
 
 /**
@@ -91,7 +93,7 @@ public class CachableRSSChannel implements Cachable {
   @Override
   public void persist(Context context) {
     if (isProcessed()) {
-      itemParser.getRssChannel().saveToDb(context);
+      itemParser.persistRSSChannel(context);
     }
   }
 
@@ -99,7 +101,15 @@ public class CachableRSSChannel implements Cachable {
   public void postProcess(Context context) {
     try {
       if (isQueried()) {
-        itemParser.extractRSSItems(itemParser.getThresholdDate(context));
+        String thresholdDate = "";
+        if (initialRSSUrl != null) { // if this is a new feed
+          Calendar lastYear = Calendar.getInstance();
+          lastYear.add(Calendar.YEAR, -1);
+          thresholdDate = DateUtils.formatDBDate(lastYear.getTime());
+        } else {
+          thresholdDate = itemParser.getThresholdDate(context);
+        }
+        itemParser.extractRSSItems(thresholdDate);
       }
     } catch (XmlPullParserException | IOException e) {
       Log.w("query", e.toString());

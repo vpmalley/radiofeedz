@@ -468,4 +468,8 @@ public class ItemParser {
       }
     }
   }
+
+  public void persistRSSChannel(Context context) {
+    rssChannel = rssChannel.saveToDb(context);
+  }
 }
