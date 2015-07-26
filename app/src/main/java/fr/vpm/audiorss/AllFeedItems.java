@@ -1,20 +1,22 @@
 package fr.vpm.audiorss;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
+import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
@@ -35,7 +38,7 @@ import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArrayAdapter> {
+public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter> {
 
   public static final String CHANNEL_ID = "channelId";
   public static final String DISP_GRID = "disp_grid";
@@ -100,15 +103,15 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     Log.d("prerefresh", "filtering");
     dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
         new AsyncCallbackListener<List<RSSChannel>>() {
-      @Override
-      public void onPreExecute() {}
+          @Override
+          public void onPreExecute() {}
 
-      @Override
-      public void onPostExecute(List<RSSChannel> result) {
-        lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
-        dataModel.preRefreshData();
-      }
-    });
+          @Override
+          public void onPostExecute(List<RSSChannel> result) {
+            lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
+            dataModel.preRefreshData();
+          }
+        });
 
     // Contextual actions
     setContextualListeners();
@@ -116,6 +119,21 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
       dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
+    }
+
+    FrameLayout fl = (FrameLayout) findViewById(R.id.content_frame);
+
+    final FeedAdder feedAdder = new FeedAdder(dataModel, new DefaultNetworkChecker(), progressBarListener);
+    final String feedUrl = feedAdder.retrieveFeedFromClipboard();
+    if (feedUrl != null) {
+      Snackbar
+          .make(mFeedItems, R.string.ask_add_feed + feedUrl, Snackbar.LENGTH_LONG)
+          .setAction(R.string.action_add, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              dataModel.addData(feedUrl);
+            }
+          }).show();
     }
   }
 
@@ -140,21 +158,20 @@ public class AllFeedItems extends Activity implements FeedsActivity<RSSItemArray
     });
 
     // set up the app icon in the action to open/close the drawer
-    getActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     drawerToggle = new ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            R.drawable.ic_drawer,
-            R.string.drawer_open,
-            R.string.drawer_close
+        this,
+        drawerLayout,
+        R.string.drawer_open,
+        R.string.drawer_close
     ) {
       public void onDrawerClosed(View view) {
-        getActionBar().setTitle(title);
+        getSupportActionBar().setTitle(title);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
 
       public void onDrawerOpened(View drawerView) {
-        getActionBar().setTitle(R.string.drawer_opened_title);
+        getSupportActionBar().setTitle(R.string.drawer_opened_title);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
     };

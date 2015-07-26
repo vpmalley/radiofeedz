@@ -1,4 +1,5 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_play"
           android:icon="@drawable/ic_action_play"
@@ -26,11 +27,11 @@
           android:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_share"
-        android:showAsAction="always"
+        app:showAsAction="always"
         android:title="@string/action_share"
         android:orderInCategory="100"
-        android:actionProviderClass=
-            "android.widget.ShareActionProvider" />
+        app:actionProviderClass=
+            "android.support.v7.widget.ShareActionProvider" />
     <item android:id="@+id/action_archive"
           android:icon="@drawable/ic_action_accept"
           android:title="@string/action_archive"

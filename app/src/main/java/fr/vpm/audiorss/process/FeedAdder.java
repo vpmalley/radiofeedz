@@ -89,7 +89,7 @@ public class FeedAdder {
     confirmationBuilder.show();
   }
 
-  private void addFeed(List<RSSChannel> channels, final String url) {
+  public void addFeed(List<RSSChannel> channels, final String url) {
     boolean exists = false;
     for (RSSChannel channel : channels) {
       if (channel.getUrl().equals(url)) {

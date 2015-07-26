@@ -12,7 +12,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * Manages tasks to be executed in the background
  */
-public class TaskManager implements AsyncCallbackListener {
+public class TaskManager implements AsyncCallbackListener<AsyncTask> {
 
   private static final int MAX_TASKS = 3;
 
@@ -90,8 +90,8 @@ public class TaskManager implements AsyncCallbackListener {
   }
 
   @Override
-  public void onPostExecute(Object result) {
-    runNextTask();
+  public void onPostExecute(AsyncTask runningTask) {
+    runNextTask(runningTask);
   }
 
 
@@ -108,11 +108,11 @@ public class TaskManager implements AsyncCallbackListener {
    */
   public void startTasks() {
     for (int i = 0; i < MAX_TASKS; i++) {
-      runNextTask();
+      runNextTask(null);
     }
   }
 
-  private void runNextTask() {
+  private void runNextTask(AsyncTask runningTask) {
     updateTasks();
     if (!remainingTasks.isEmpty()) {
       Task taskToRun = remainingTasks.get(0);
@@ -128,13 +128,18 @@ public class TaskManager implements AsyncCallbackListener {
         remainingTasks.remove(taskToRun);
         Log.d("taskmanager", "starting a task, remains " + remainingTasks.size() + " and running: " + launchedTasks.size());
       } else {
+        if ((!launchedTasks.isEmpty()) && (runningTask != null) && (launchedTasks.get(0).equals(runningTask))) {
+          Log.d("taskmanager", "cancelling task " + runningTask.toString());
+          // it looks like it has been running for a long time
+          runningTask.cancel(true);
+        }
         Log.d("taskmanager", "postponing a task, remains " + remainingTasks.size() + " and running: " + launchedTasks.size());
         new Handler().postDelayed(new Runnable() {
           @Override
           public void run() {
-            onPostExecute(null);
+            onPostExecute(launchedTasks.get(0));
           }
-        }, 1000);
+        }, 3000);
       }
     }
   }
@@ -170,7 +175,7 @@ public class TaskManager implements AsyncCallbackListener {
 
     @Override
     protected void onPostExecute(Task[] tasks) {
-      TaskManager.getManager().onPostExecute(tasks);
+      TaskManager.getManager().onPostExecute(null);
       super.onPostExecute(tasks);
     }
   }

@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 import java.io.File;
@@ -175,7 +176,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     Intent shareIntent = new Intent(Intent.ACTION_SEND);
     shareIntent.putExtra(Intent.EXTRA_TEXT, this.rssItem.getLink());
     shareIntent.setType("text/plain");
-    ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
+    ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+    //ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
     shareActionProvider.setShareIntent(shareIntent);
   }
 

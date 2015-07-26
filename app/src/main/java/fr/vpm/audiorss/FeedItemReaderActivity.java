@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ProgressBar;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 20/11/14.
  */
-public class FeedItemReaderActivity extends FragmentActivity implements FeedsActivity<RSSItemArrayAdapter> {
+public class FeedItemReaderActivity extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter> {
 
   public static final String INITIAL_POSITION = "initial_position";
   public static final String ITEM_FILTER = "item_position";
@@ -46,7 +47,7 @@ public class FeedItemReaderActivity extends FragmentActivity implements FeedsAct
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_feed);
-    getActionBar().setDisplayHomeAsUpEnabled(true);
+    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     viewPager = (ViewPager) findViewById(R.id.pager);
 
