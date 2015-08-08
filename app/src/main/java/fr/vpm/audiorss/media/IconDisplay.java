@@ -2,7 +2,6 @@ package fr.vpm.audiorss.media;
 
 import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -75,7 +74,7 @@ public class IconDisplay {
    */
   public void loadInDiskCache(final Context context) {
     boolean hasPicture = !media.getDistantUrl().isEmpty();
-    if (hasPicture) {
+    if (hasPicture && isDiskCached) {
       if (media.mediaFileExists(context, Media.Folder.INTERNAL_FEEDS_PICS)) {
         cachedFile = media.getMediaFile(context, Media.Folder.INTERNAL_FEEDS_PICS, false);
       } else {

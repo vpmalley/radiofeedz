@@ -15,8 +15,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -69,11 +67,7 @@ public class Media implements Downloadable, Parcelable {
   private Bitmap preloadedBitmap = null;
   private boolean loadingBitmap = false;
 
-  private File deviceFile;
-
-  private boolean deviceFileExists;
-
-  private static Picasso picasso;
+  private boolean downloadRequested = false;
 
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
@@ -94,6 +88,10 @@ public class Media implements Downloadable, Parcelable {
 
   @Override
   public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener, Folder folder) {
+    if (downloadRequested) {
+      return;
+    }
+    downloadRequested = true;
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
@@ -192,7 +190,8 @@ public class Media implements Downloadable, Parcelable {
    * @return
    */
   public boolean mediaFileExists(Context context, Folder folder) {
-    return (getMediaFile(context, folder, false) != null) && getMediaFile(context, folder, false).exists();
+    File mediaFile = getMediaFile(context, folder, false);
+    return ((mediaFile != null) && (mediaFile.exists()));
   }
 
   /**
