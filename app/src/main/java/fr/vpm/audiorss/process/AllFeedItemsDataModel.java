@@ -144,7 +144,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    this.preloadPictures = true;
+    this.preloadPictures = preloadPictures;
     this.cache = DisplayCache.getInstance();
   }
 
