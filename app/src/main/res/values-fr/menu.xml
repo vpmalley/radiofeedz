@@ -3,9 +3,9 @@
     <string name="action_settings">Paramètres</string>
 
     <string name="action_add">Ajouter</string>
-    <string name="action_refresh">Rafrîchir</string>
+    <string name="action_refresh">Rafraîchir</string>
     <string name="action_search">Rechercher</string>
-    <string name="action_catalog">Catalog</string>
+    <string name="action_catalog">Catalogue</string>
 
     <string name="action_read">Marquer comme lu</string>
     <string name="action_unread">Marquer comme non-lu</string>
@@ -16,7 +16,7 @@
     <string name="action_download">Télécharger</string>
     <string name="action_web">Ouvrir site web</string>
     <string name="action_delete">Supprimer</string>
-    <string name="action_delete_media">Supprimer le media</string>
+    <string name="action_delete_media">Supprimer le média</string>
     <string name="action_share">Partager</string>
     <string name="action_archive">Archiver</string>
 </resources>
