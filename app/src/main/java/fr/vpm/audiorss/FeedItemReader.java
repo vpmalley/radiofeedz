@@ -54,6 +54,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
   private MenuItem downloadItem;
   private MenuItem playItem;
   private MenuItem displayItem;
+  private MenuItem deleteItem;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -143,6 +144,7 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     displayItem = menu.findItem(R.id.action_display);
     playItem = menu.findItem(R.id.action_play);
     downloadItem = menu.findItem(R.id.action_download);
+    deleteItem = menu.findItem(R.id.action_delete);
 
     updateActionMediaItems();
     MenuItem shareItem = menu.findItem(R.id.action_share);
@@ -163,8 +165,10 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       File podcastFile = rssItem.getMedia().getMediaFile(getActivity(), Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS, true);
       if ((picFile != null) && (picFile.exists())){
         displayItem.setVisible(true);
+        deleteItem.setVisible(true);
       } else if ((podcastFile != null) && (podcastFile.exists())){
         playItem.setVisible(true);
+        deleteItem.setVisible(true);
       } else if (!rssItem.getMedia().getDistantUrl().isEmpty()) {
         downloadItem.setVisible(true);
       }

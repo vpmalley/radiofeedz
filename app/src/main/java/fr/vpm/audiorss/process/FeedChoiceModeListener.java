@@ -38,6 +38,7 @@ public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeLis
   @Override
   public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
     actionMode.getMenuInflater().inflate(menuResource, menu);
+    menu.findItem(R.id.action_playlist).setVisible(false);
     return true;
   }
 
