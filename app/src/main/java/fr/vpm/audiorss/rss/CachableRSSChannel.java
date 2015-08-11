@@ -56,8 +56,8 @@ public class CachableRSSChannel implements Cachable {
       } else if (initialRSSUrl != null) {
         itemParser = ItemParser.retrieveFeedContent(initialRSSUrl);
       }
-    } catch (XmlPullParserException | IOException | ParseException e) {
-      Log.w("query", e.toString());
+    } catch (Exception e) {
+      Log.w("cache-query", e.toString());
       failed = true;
     }
     if (itemParser == null) {
@@ -76,8 +76,8 @@ public class CachableRSSChannel implements Cachable {
       if (isQueried()) {
         itemParser.extractRSSItems(itemParser.getThresholdDate(context), PROCESS_MAX_ITEMS);
       }
-    } catch (XmlPullParserException | IOException e) {
-      Log.w("query", e.toString());
+    } catch (Exception e) {
+      Log.w("cache-process", e.toString());
       failed = true;
     }
     if (!itemParser.extractedItems()) {
@@ -92,8 +92,13 @@ public class CachableRSSChannel implements Cachable {
 
   @Override
   public void persist(Context context) {
+    try {
     if (isProcessed()) {
       itemParser.persistRSSChannel(context);
+    }
+    } catch (Exception e) {
+      Log.w("cache-persist", e.toString());
+      failed = true;
     }
   }
 
@@ -111,8 +116,8 @@ public class CachableRSSChannel implements Cachable {
         }
         itemParser.extractRSSItems(thresholdDate);
       }
-    } catch (XmlPullParserException | IOException e) {
-      Log.w("query", e.toString());
+    } catch (Exception e) {
+      Log.w("cache-post-process", e.toString());
       failed = true;
     }
     if (!itemParser.extractedItems()) {
