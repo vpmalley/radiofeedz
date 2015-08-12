@@ -399,9 +399,8 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   @Override
   public void markDataRead(Set<Integer> selection, boolean isRead) {
     List<RSSItem> unreadItems = new ArrayList<>();
-    int i = 0;
     for (int position : selection){
-      if ((position > -1) && (position < cache.items.size()) && (!cache.items.get(position).isRead())) {
+      if ((position > -1) && (position < cache.items.size()) && (isRead != cache.items.get(position).isRead())) {
         cache.items.get(position).setRead(isRead);
         unreadItems.add(cache.items.get(position));
       }
