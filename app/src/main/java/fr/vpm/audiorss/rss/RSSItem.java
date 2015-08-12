@@ -178,7 +178,9 @@ public class RSSItem implements Parcelable {
     if (media.getMimeType().startsWith("image")){
       externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
     }
-    media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener, externalDownloadsFolder);
+    if ((media.getDistantUrl() != null) && (!media.getDistantUrl().isEmpty())) {
+      media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener, externalDownloadsFolder);
+    }
   }
 
   public Media getMedia() {
