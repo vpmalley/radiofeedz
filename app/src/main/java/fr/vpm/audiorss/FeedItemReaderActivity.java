@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +41,8 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
   private ViewPager viewPager;
 
   private String initialGuid;
+
+  private boolean firstRefresh = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,22 +83,22 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
 
   @Override
   public void refreshView(RSSItemArrayAdapter data, NavigationDrawerProvider navigationDrawer) {
-    int initialPosition = dataModel.getItemPositionByGuid(initialGuid);
+    if (!firstRefresh) {
+      int initialPosition = dataModel.getItemPositionByGuid(initialGuid);
 
-    FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
-    viewPager.setAdapter(rssItemAdapter);
-    viewPager.setCurrentItem(initialPosition);
+      FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
+      viewPager.setAdapter(rssItemAdapter);
+      viewPager.setCurrentItem(initialPosition);
 
-    // trick to mark the picked item as read at the right time
-    final Set<Integer> read = new HashSet<Integer>();
-    read.add(initialPosition);
+      // trick to mark the picked item as read at the right time
+      final Set<Integer> read = new HashSet<Integer>();
+      read.add(initialPosition);
 
-    new Handler().postDelayed(new Runnable() {
-      @Override
-      public void run() {
-        dataModel.markDataRead(read, true);
-      }
-    }, 300);
+      dataModel.markDataRead(read, true);
+      firstRefresh = true;
+    } else {
+      viewPager.getAdapter().notifyDataSetChanged();
+    }
   }
 
   @Override
