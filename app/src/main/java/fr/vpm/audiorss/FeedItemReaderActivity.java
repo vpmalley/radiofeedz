@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -89,9 +89,15 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
     viewPager.setCurrentItem(initialPosition);
 
     // trick to mark the picked item as read at the right time
-    Set<Integer> read = new HashSet<Integer>();
+    final Set<Integer> read = new HashSet<Integer>();
     read.add(initialPosition);
-    dataModel.markDataRead(read, true);
+
+    new Handler().postDelayed(new Runnable() {
+      @Override
+      public void run() {
+        dataModel.markDataRead(read, true);
+      }
+    }, 300);
   }
 
   @Override
