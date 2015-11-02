@@ -143,14 +143,16 @@ public class Media implements Downloadable, Parcelable {
     return dirFile;
   }
 
-  public static File getInternalFeedsPicsFolder(){
-    File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_FEEDS_PIC_DIR);
+  public static File getInternalFeedsPicsFolder(Context context){
+    File cacheDir = new File(context.getExternalCacheDir(), INTERNAL_APP_DIR);
+    File dir = new File(cacheDir, INTERNAL_FEEDS_PIC_DIR);
     dir.mkdirs();
     return dir;
   }
 
-  public static File getInternalItemsPicsFolder(){
-    File dir = new File(Environment.getExternalStoragePublicDirectory(INTERNAL_APP_DIR), INTERNAL_ITEMS_PIC_DIR);
+  public static File getInternalItemsPicsFolder(Context context){
+    File cacheDir = new File(context.getExternalCacheDir(), INTERNAL_APP_DIR);
+    File dir = new File(cacheDir, INTERNAL_ITEMS_PIC_DIR);
     dir.mkdirs();
     return dir;
   }
@@ -168,10 +170,10 @@ public class Media implements Downloadable, Parcelable {
     File dirFile;
     switch (folder) {
       case INTERNAL_FEEDS_PICS:
-        dirFile = getInternalFeedsPicsFolder();
+        dirFile = getInternalFeedsPicsFolder(context);
         break;
       case INTERNAL_ITEMS_PICS:
-        dirFile = getInternalItemsPicsFolder();
+        dirFile = getInternalItemsPicsFolder(context);
         break;
       case EXTERNAL_DOWNLOADS_PODCASTS:
       case EXTERNAL_DOWNLOADS_PICTURES:
