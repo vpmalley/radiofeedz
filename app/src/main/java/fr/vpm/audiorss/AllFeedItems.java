@@ -109,7 +109,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
           @Override
           public void onPostExecute(List<RSSChannel> result) {
             lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
-            dataModel.preRefreshData();
+            //dataModel.preRefreshData();
           }
         });
 

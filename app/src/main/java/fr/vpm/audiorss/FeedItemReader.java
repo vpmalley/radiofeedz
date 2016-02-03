@@ -171,6 +171,9 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
         deleteItem.setVisible(true);
       } else if (!rssItem.getMedia().getDistantUrl().isEmpty()) {
         downloadItem.setVisible(true);
+        if (rssItem.getMedia().isPicture()) {
+          downloadItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        }
       }
     }
   }
@@ -181,7 +184,6 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     shareIntent.putExtra(Intent.EXTRA_TEXT, this.rssItem.getLink());
     shareIntent.setType("text/plain");
     ShareActionProvider shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
-    //ShareActionProvider shareActionProvider = (ShareActionProvider) shareItem.getActionProvider();
     shareActionProvider.setShareIntent(shareIntent);
   }
 
@@ -251,7 +253,8 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
       }
       startActivity(playIntent);
       // take advantage of media playing to do some maintenance
-      new AsyncMaintenance(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, Media.getInternalItemsPicsFolder(), Media.getInternalFeedsPicsFolder());
+      new AsyncMaintenance(getActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
+              Media.getInternalItemsPicsFolder(getActivity()), Media.getInternalFeedsPicsFolder(getActivity()));
     }
   }
 

@@ -137,7 +137,9 @@ public class TaskManager implements AsyncCallbackListener<AsyncTask> {
         new Handler().postDelayed(new Runnable() {
           @Override
           public void run() {
-            onPostExecute(launchedTasks.get(0));
+            if (!launchedTasks.isEmpty()) {
+              onPostExecute(launchedTasks.get(0));
+            }
           }
         }, 3000);
       }
