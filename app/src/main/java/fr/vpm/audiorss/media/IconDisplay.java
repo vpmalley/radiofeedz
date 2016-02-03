@@ -4,7 +4,8 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.File;
 
@@ -23,8 +24,6 @@ public class IconDisplay {
 
   private File cachedFile;
 
-  private static Picasso picasso;
-
   public IconDisplay() {
     hasMedia = false;
     media = null;
@@ -37,24 +36,18 @@ public class IconDisplay {
     this.isDiskCached = isDiskCached;
   }
 
-  private static Picasso getPicasso(Context context) {
-    if (picasso == null) {
-      picasso = Picasso.with(context);
-    }
-    return picasso;
-  }
-
   public void loadInView(ImageView pictureView) {
     if (hasMedia) {
       if (isDiskCached && (cachedFile != null)) {
-        getPicasso(pictureView.getContext()).load(cachedFile)
+        Glide.with(pictureView.getContext()).load(cachedFile)
             .placeholder(R.drawable.ic_article)
             .error(R.drawable.ic_article)
             .into(pictureView);
       } else {
-        getPicasso(pictureView.getContext()).load(media.getDistantUrl())
+        Glide.with(pictureView.getContext()).load(media.getDistantUrl())
             .placeholder(R.drawable.ic_article)
             .error(R.drawable.ic_article)
+            .diskCacheStrategy(DiskCacheStrategy.RESULT)
             .into(pictureView);
       }
     } else {
@@ -63,7 +56,7 @@ public class IconDisplay {
   }
 
   public static void loadBackupInView(ImageView pictureView) {
-    getPicasso(pictureView.getContext()).load(R.drawable.ic_article)
+    Glide.with(pictureView.getContext()).load(R.drawable.ic_article)
         .into(pictureView);
   }
 
