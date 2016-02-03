@@ -78,7 +78,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     // services
     networkChecker = new DefaultNetworkChecker();
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, rss_item_layout, true);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, rss_item_layout);
 
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);

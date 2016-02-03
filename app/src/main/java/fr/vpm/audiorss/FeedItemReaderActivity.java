@@ -58,7 +58,7 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
     }
 
     ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, R.layout.list_rss_item, false);
+    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, R.layout.list_rss_item);
     List<SelectionFilter> selectionFilters = new ArrayList<SelectionFilter>();
     if (i.hasExtra(ITEM_FILTER)) {
       List<Parcelable> parcelledFilters = i.getParcelableArrayListExtra(ITEM_FILTER);

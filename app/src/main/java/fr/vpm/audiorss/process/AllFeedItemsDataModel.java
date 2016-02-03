@@ -136,15 +136,12 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   private NavigationDrawerList navigationDrawerList;
   private int savingFeeds = 0;
 
-  private final boolean preloadPictures;
-
   public AllFeedItemsDataModel(Activity activity, ProgressListener progressListener, FeedsActivity<RSSItemArrayAdapter>
-      feedsActivity, int resId, boolean preloadPictures) {
+      feedsActivity, int resId) {
     this.progressListener = progressListener;
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    this.preloadPictures = preloadPictures;
     this.cache = DisplayCache.getInstance();
   }
 
@@ -210,14 +207,6 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
           if (channel.getId() == item.getChannelId()) {
             cache.channelsByItem.put(item, channel);
           }
-        }
-      }
-    }
-    if (preloadPictures) {
-      for (RSSItem rssItem : cache.items) {
-        IconDisplay id = rssItem.getIconDisplay(cache.channelsByItem.get(rssItem));
-        if (id != null) {
-          id.loadInDiskCache(getContext());
         }
       }
     }

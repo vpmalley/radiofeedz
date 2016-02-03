@@ -1,7 +1,5 @@
 package fr.vpm.audiorss.media;
 
-import android.app.DownloadManager;
-import android.content.Context;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -38,18 +36,11 @@ public class IconDisplay {
 
   public void loadInView(ImageView pictureView) {
     if (hasMedia) {
-      if (isDiskCached && (cachedFile != null)) {
-        Glide.with(pictureView.getContext()).load(cachedFile)
-            .placeholder(R.drawable.ic_article)
-            .error(R.drawable.ic_article)
-            .into(pictureView);
-      } else {
-        Glide.with(pictureView.getContext()).load(media.getDistantUrl())
-            .placeholder(R.drawable.ic_article)
-            .error(R.drawable.ic_article)
-            .diskCacheStrategy(DiskCacheStrategy.RESULT)
-            .into(pictureView);
-      }
+      Glide.with(pictureView.getContext()).load(media.getDistantUrl())
+          .placeholder(R.drawable.ic_article)
+          .error(R.drawable.ic_article)
+          .diskCacheStrategy(DiskCacheStrategy.RESULT)
+          .into(pictureView);
     } else {
       loadBackupInView(pictureView);
     }
@@ -58,28 +49,5 @@ public class IconDisplay {
   public static void loadBackupInView(ImageView pictureView) {
     Glide.with(pictureView.getContext()).load(R.drawable.ic_article)
         .into(pictureView);
-  }
-
-  /**
-   * If the icon is to be cached to disk, caching verification happens when this is triggered.
-   * The File is also cached to memory for faster access
-   * @param context the Android context
-   */
-  public void loadInDiskCache(final Context context) {
-    boolean hasPicture = !media.getDistantUrl().isEmpty();
-    if (hasPicture && isDiskCached) {
-      if (media.mediaFileExists(context, Media.Folder.INTERNAL_FEEDS_PICS)) {
-        cachedFile = media.getMediaFile(context, Media.Folder.INTERNAL_FEEDS_PICS, false);
-      } else {
-        media.download(context, DownloadManager.Request.VISIBILITY_HIDDEN,
-            new MediaDownloadListener() {
-
-              @Override
-              public void onMediaDownloaded() {
-                cachedFile = media.getMediaFile(context, Media.Folder.INTERNAL_FEEDS_PICS, false);
-              }
-            }, Media.Folder.INTERNAL_FEEDS_PICS);
-      }
-    }
   }
 }
