@@ -20,6 +20,7 @@ public class StatProperties {
   public StatProperties getInstance() {
     if (instance == null) {
       instance = new StatProperties();
+      instance.load();
     }
     return instance;
   }
@@ -43,4 +44,10 @@ public class StatProperties {
       Log.e("stats", "failed storing stats");
     }
   }
+
+  public void increment(String tag) {
+    properties.put(tag, properties.get(tag) + 1);
+    save();
+  }
+  
 }
