@@ -426,7 +426,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   }
 
   private void saveItems(RSSItem... itemsToSave) {
-    new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(progressListener, this,
+    new AsyncDbSaveRSSItem(new LoadDataRefreshViewCallback<RSSItem>(new ProgressListener.DummyProgressListener(), this,
         new AsyncCallbackListener.DummyCallback<List<RSSItem>>(), new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback<List<RSSItem>>()),
         getContext()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }

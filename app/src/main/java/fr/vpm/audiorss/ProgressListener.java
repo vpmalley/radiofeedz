@@ -23,4 +23,22 @@ public interface ProgressListener {
    * Stops the progress bar
    */
   void stopRefreshProgress();
+
+  class DummyProgressListener implements ProgressListener {
+
+    @Override
+    public void startRefreshProgress() {
+
+    }
+
+    @Override
+    public void updateProgress(int progress) {
+
+    }
+
+    @Override
+    public void stopRefreshProgress() {
+
+    }
+  }
 }
