@@ -35,6 +35,7 @@ import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
+import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -148,6 +149,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+        Stats.get().increment(navigationDrawerItem.getStatTag());
         filters.clear();
         filters.add(navigationDrawerItem.getFilter());
         title = navigationDrawerItem.getTitle();
@@ -231,26 +233,26 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     }
     switch (item.getItemId()) {
       case R.id.action_search:
+        Stats.get().increment(Stats.ACTION_SEARCH);
         i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
         startActivity(i);
         result = true;
         break;
       case R.id.action_catalog:
+        Stats.get().increment(Stats.ACTION_CATALOG);
         i = new Intent(AllFeedItems.this, CatalogActivity.class);
         startActivityForResult(i, REQ_CATALOG);
         result = true;
         break;
-      case R.id.action_add:
-        dataModel.addData(null);
-        result = true;
-        break;
       case R.id.action_refresh:
+        Stats.get().increment(Stats.ACTION_REFRESH);
         if (networkChecker.checkNetworkForRefresh(this, true)) {
           dataModel.refreshData();
         }
         result = true;
         break;
       case R.id.action_settings:
+        Stats.get().increment(Stats.ACTION_SETTINGS);
         i = new Intent(AllFeedItems.this, AllPreferencesActivity.class);
         startActivityForResult(i, REQ_PREFS);
         result = true;

@@ -78,14 +78,14 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
   public void addStaticItems() {
     for (int i = 0; i < STATIC_ITEM_FILTERS.length; i++) {
-      NavigationDrawerItem drawerItem = new NavigationDrawerItem(STATIC_ITEM_FILTERS[i], context.getString(STATIC_ITEM_TITLES[i]), null);
+      NavigationDrawerItem drawerItem = new NavigationDrawerItem(STATIC_ITEM_FILTERS[i], context.getString(STATIC_ITEM_TITLES[i]), null, context.getString(STATIC_ITEM_TITLES[i]));
       items.add(i, drawerItem);
     }
   }
 
   public void addChannels(List<RSSChannel> channels) {
     for (RSSChannel channel : channels) {
-      items.add(new NavigationDrawerItem(new ChannelFilter(channel.getId()), channel.getTitle(), channel));
+      items.add(new NavigationDrawerItem(new ChannelFilter(channel.getId()), channel.getTitle(), channel, Stats.ACTION_FEED_FILTER));
     }
   }
 
@@ -100,6 +100,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     // first figure how many selected feeds are actually feeds
     for (int position : selection) {
       if (items.get(position).hasBoundChannel()) {
+        Stats.get().increment(Stats.ACTION_FEED_DELETE);
         i++;
       }
     }
@@ -132,6 +133,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
   @Override
   public void refreshData(Set<Integer> selection) {
+    Stats.get().increment(Stats.ACTION_REFRESH);
     List<RSSChannel> feeds = new ArrayList<>();
     for (int position : selection) {
       if (items.get(position).hasBoundChannel()) {
@@ -157,10 +159,13 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
     private final RSSChannel boundChannel;
 
-    public NavigationDrawerItem(SelectionFilter filter, String title, RSSChannel boundChannel) {
+    private String statTag;
+
+    public NavigationDrawerItem(SelectionFilter filter, String title, RSSChannel boundChannel, String statTag) {
       this.filter = filter;
       this.title = title;
       this.boundChannel = boundChannel;
+      this.statTag = statTag;
     }
 
     public String getTitle() {
@@ -179,10 +184,15 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
       return boundChannel;
     }
 
+    public String getStatTag() {
+      return statTag;
+    }
+
     @Override
     public String toString() {
       return title;
     }
+
   }
 
 }

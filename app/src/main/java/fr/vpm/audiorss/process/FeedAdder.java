@@ -90,6 +90,7 @@ public class FeedAdder {
   }
 
   public void addFeed(List<RSSChannel> channels, final String url) {
+    Stats.get().increment(Stats.ACTION_FEED_ADD);
     boolean exists = false;
     for (RSSChannel channel : channels) {
       if (channel.getUrl().equals(url)) {
