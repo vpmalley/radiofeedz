@@ -23,7 +23,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -196,8 +198,14 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   protected void onPause() {
     super.onPause();
-    String lastRequested = ((RSSItemArrayAdapter)mFeedItems.getAdapter()).getLastRequested();
+    int lastRequestedPos = ((RSSItemArrayAdapter)mFeedItems.getAdapter()).getLastRequested();
+    String lastRequested = dataModel.getItemGuidByPosition(lastRequestedPos);
     Toast.makeText(this, "read until " + lastRequested, Toast.LENGTH_SHORT).show();
+    Set<Integer> allRead = new HashSet<>(lastRequestedPos + 1);
+    for (int i = 0; i < lastRequestedPos; i++) {
+      allRead.add(i);
+    }
+    dataModel.markDataRead(allRead, true);
   }
 
   @Override

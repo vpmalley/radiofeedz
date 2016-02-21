@@ -136,8 +136,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     this.channelsByItem = channelsByItem;
   }
 
-  public String getLastRequested() {
-    return items.get(lastRequested - 5).getTitle();
+  public int getLastRequested() {
+    return lastRequested - 7;
   }
 
   /**
