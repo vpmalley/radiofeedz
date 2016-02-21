@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,6 +191,13 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener<RSSChannel> drawerModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel.getNavigationDrawer(), R.menu.feeds_context);
     drawerList.setMultiChoiceModeListener(drawerModeCallback);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    String lastRequested = ((RSSItemArrayAdapter)mFeedItems.getAdapter()).getLastRequested();
+    Toast.makeText(this, "read until " + lastRequested, Toast.LENGTH_SHORT).show();
   }
 
   @Override

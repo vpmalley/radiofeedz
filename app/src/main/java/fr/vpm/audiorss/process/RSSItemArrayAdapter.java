@@ -33,6 +33,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   private final int resource;
 
+  private int lastRequested = -1;
+
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
       RSSChannel> channelsByItem) {
     super(activity, resource, items);
@@ -44,6 +46,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
+    lastRequested = Math.max(position, lastRequested);
     ViewHolder itemHolder;
 
     // retrieving the view
@@ -131,6 +134,10 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   public void setChannelsByItem(Map<RSSItem, RSSChannel> channelsByItem) {
     this.channelsByItem = channelsByItem;
+  }
+
+  public String getLastRequested() {
+    return items.get(lastRequested - 5).getTitle();
   }
 
   /**
