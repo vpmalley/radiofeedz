@@ -199,13 +199,15 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   protected void onPause() {
     super.onPause();
     int lastRequestedPos = ((RSSItemArrayAdapter)mFeedItems.getAdapter()).getLastRequested();
-    String lastRequested = dataModel.getItemGuidByPosition(lastRequestedPos);
-    Toast.makeText(this, "read until " + lastRequested, Toast.LENGTH_SHORT).show();
-    Set<Integer> allRead = new HashSet<>(lastRequestedPos + 1);
-    for (int i = 0; i < lastRequestedPos; i++) {
-      allRead.add(i);
+    if (lastRequestedPos > -1) {
+      String lastRequested = dataModel.getItemGuidByPosition(lastRequestedPos);
+      Toast.makeText(this, "read until " + lastRequested, Toast.LENGTH_SHORT).show();
+      Set<Integer> allRead = new HashSet<>(lastRequestedPos + 1);
+      for (int i = 0; i < lastRequestedPos; i++) {
+        allRead.add(i);
+      }
+      dataModel.markDataRead(allRead, true);
     }
-    dataModel.markDataRead(allRead, true);
   }
 
   @Override
