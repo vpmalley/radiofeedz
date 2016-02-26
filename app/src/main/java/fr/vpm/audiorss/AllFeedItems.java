@@ -151,6 +151,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        markAllSeenAsRead();
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
         Stats.get().increment(navigationDrawerItem.getStatTag());
         filters.clear();
@@ -198,6 +199,10 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   protected void onPause() {
     super.onPause();
+    markAllSeenAsRead();
+  }
+
+  private void markAllSeenAsRead() {
     int lastRequestedPos = ((RSSItemArrayAdapter)mFeedItems.getAdapter()).getLastRequested();
     if (lastRequestedPos > -1) {
       String lastRequested = dataModel.getItemGuidByPosition(lastRequestedPos);

@@ -130,6 +130,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   public void setItems(List<RSSItem> items) {
     this.items = items;
+    this.lastRequested = -1;
   }
 
   public void setChannelsByItem(Map<RSSItem, RSSChannel> channelsByItem) {
