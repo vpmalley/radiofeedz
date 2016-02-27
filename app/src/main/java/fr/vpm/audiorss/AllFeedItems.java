@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -144,9 +146,19 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   }
 
   private void setEmptyView() {
-    TextView emptyView = (TextView) findViewById(R.id.emptyView);
-    emptyView.setText(getString(R.string.emptynews));
+    LinearLayout emptyView = (LinearLayout) findViewById(R.id.emptyView);
     mFeedItems.setEmptyView(emptyView);
+
+    ImageView emptyImageView = (ImageView) findViewById(R.id.emptyImageView);
+    emptyImageView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        Stats.get(AllFeedItems.this).increment(Stats.ACTION_CATALOG);
+        Intent i = new Intent(AllFeedItems.this, CatalogActivity.class);
+        startActivityForResult(i, REQ_CATALOG);
+      }
+    });
+
   }
 
   /**
