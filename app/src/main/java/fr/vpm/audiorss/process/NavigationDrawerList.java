@@ -100,7 +100,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     // first figure how many selected feeds are actually feeds
     for (int position : selection) {
       if (items.get(position).hasBoundChannel()) {
-        Stats.get().increment(Stats.ACTION_FEED_DELETE);
+        Stats.get(context).increment(Stats.ACTION_FEED_DELETE);
         i++;
       }
     }
@@ -133,7 +133,7 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
 
   @Override
   public void refreshData(Set<Integer> selection) {
-    Stats.get().increment(Stats.ACTION_REFRESH);
+    Stats.get(context).increment(Stats.ACTION_REFRESH);
     List<RSSChannel> feeds = new ArrayList<>();
     for (int position : selection) {
       if (items.get(position).hasBoundChannel()) {

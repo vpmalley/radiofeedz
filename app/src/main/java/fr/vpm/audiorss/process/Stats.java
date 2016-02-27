@@ -1,5 +1,6 @@
 package fr.vpm.audiorss.process;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -7,15 +8,9 @@ import com.cloudant.client.api.ClientBuilder;
 import com.cloudant.client.api.CloudantClient;
 import com.cloudant.client.api.Database;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.Properties;
-
-import fr.vpm.audiorss.media.Media;
-import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 16/02/16.
@@ -26,12 +21,14 @@ public class Stats {
   private static Stats instance;
 
   private Properties properties;
+  private Context context;
 
-  public static Stats get() {
+  public static Stats get(Context context) {
     if (instance == null) {
       instance = new Stats();
-      instance.load();
+      instance.load(context);
     }
+    instance.context = context;
     return instance;
   }
 
@@ -57,11 +54,9 @@ public class Stats {
     properties = new Properties();
   }
 
-  public void load() {
+  public void load(Context context) {
     try {
-
-
-      properties.load(new FileInputStream(STAT_PATH));
+      properties.load(context.openFileInput(STAT_PATH));
     } catch (IOException e) {
       Log.e("stats", "overriding stats");
     }
@@ -69,10 +64,11 @@ public class Stats {
 
   public void save() {
     try {
-      properties.store(new FileOutputStream(STAT_PATH), "stored updated props");
+      properties.store(context.openFileOutput(STAT_PATH, Context.MODE_PRIVATE), "stored updated props");
     } catch (IOException e) {
       Log.e("stats", "failed storing stats");
     }
+    context = null;
   }
 
   public void increment(String tag) {
@@ -91,7 +87,9 @@ public class Stats {
             .build();
 
         Database analyticsDB = client.database("rf_analytics", false);
-        analyticsDB.save(Stats.get());
+        Stats stats = Stats.get(context);
+        stats.context = null;
+        analyticsDB.save(stats);
         Log.i("analytics", "pushed a doc");
         return null;
       }
@@ -104,7 +102,6 @@ public class Stats {
     StringBuilder jsonStats =  new StringBuilder("{ \"version\" : \"1.1.7\",\n  \"date\" : \"");
     jsonStats.append(today.toString());
     jsonStats.append("\",\n  \"tags\" : {\n");
-    load();
     for (String propKey : properties.stringPropertyNames()) {
       String propValue = properties.getProperty(propKey, "");
       jsonStats.append("\"");

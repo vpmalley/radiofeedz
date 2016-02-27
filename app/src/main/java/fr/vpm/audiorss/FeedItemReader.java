@@ -193,28 +193,28 @@ public class FeedItemReader extends Fragment implements PictureLoadedListener, M
     boolean result;
     switch (item.getItemId()) {
       case R.id.action_download:
-        Stats.get().increment(Stats.ACTION_DOWNLOAD);
+        Stats.get(getActivity()).increment(Stats.ACTION_DOWNLOAD);
         downloadMedia();
         result = true;
         break;
       case R.id.action_web:
-        Stats.get().increment(Stats.ACTION_WEB);
+        Stats.get(getActivity()).increment(Stats.ACTION_WEB);
         openWebsite();
         result = true;
         break;
       case R.id.action_display:
       case R.id.action_play:
-        Stats.get().increment(Stats.ACTION_PLAY);
+        Stats.get(getActivity()).increment(Stats.ACTION_PLAY);
         playMedia();
         result = true;
         break;
       case R.id.action_delete:
-        Stats.get().increment(Stats.ACTION_DELETE);
+        Stats.get(getActivity()).increment(Stats.ACTION_DELETE);
         deleteMediaFile(rssItem);
         result = true;
         break;
       case R.id.action_archive:
-        Stats.get().increment(Stats.ACTION_ARCHIVE);
+        Stats.get(getActivity()).increment(Stats.ACTION_ARCHIVE);
         archiveItem(rssItem);
         result = true;
         break;

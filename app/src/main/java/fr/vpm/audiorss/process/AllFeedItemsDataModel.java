@@ -378,7 +378,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     RSSItem[] itemsToDelete = new RSSItem[selection.size()];
     int i = 0;
     for (int position : selection){
-      Stats.get().increment(Stats.ACTION_ARCHIVE);
+      Stats.get(getContext()).increment(Stats.ACTION_ARCHIVE);
       cache.items.get(position).setArchived(true);
       itemsToDelete[i++] = cache.items.get(position);
     }
@@ -390,7 +390,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     List<RSSItem> unreadItems = new ArrayList<>();
     for (int position : selection){
       if ((position > -1) && (position < cache.items.size()) && (isRead != cache.items.get(position).isRead())) {
-        Stats.get().increment(Stats.ACTION_MARK_READ);
+        Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
         cache.items.get(position).setRead(isRead);
         unreadItems.add(cache.items.get(position));
       }
@@ -406,7 +406,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public void downloadMedia(Set<Integer> selection) {
     for (int position : selection){
       if (position > -1 && position < cache.items.size() && (cache.items.get(position).getMedia() != null)) {
-        Stats.get().increment(Stats.ACTION_DOWNLOAD);
+        Stats.get(getContext()).increment(Stats.ACTION_DOWNLOAD);
         cache.items.get(position).downloadMedia(getContext(), new MediaDownloadListener.DummyMediaDownloadListener());
       }
     }
@@ -414,7 +414,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   @Override
   public void createPlaylist(Set<Integer> selection) {
-    Stats.get().increment(Stats.ACTION_PLAYLIST);
+    Stats.get(getContext()).increment(Stats.ACTION_PLAYLIST);
     Playlist playlist = new Playlist();
     for (int i : selection) {
       Media media = cache.items.get(i).getMedia();
@@ -482,7 +482,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
     @Override
     public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-      Stats.get().increment(Stats.ACTION_READ);
+      Stats.get(getContext()).increment(Stats.ACTION_READ);
       Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
       i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, cache.items.get(position).getGuid());
       i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, cache.itemFilters);

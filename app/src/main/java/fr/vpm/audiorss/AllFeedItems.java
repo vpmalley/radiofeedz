@@ -149,9 +149,9 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
-        Stats.get().increment(navigationDrawerItem.getStatTag());
+        Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
         if (4 == position) {
-          Stats.get().pushStats();
+          Stats.get(AllFeedItems.this).pushStats();
         }
         filters.clear();
         filters.add(navigationDrawerItem.getFilter());
@@ -236,26 +236,26 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     }
     switch (item.getItemId()) {
       case R.id.action_search:
-        Stats.get().increment(Stats.ACTION_SEARCH);
+        Stats.get(this).increment(Stats.ACTION_SEARCH);
         i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
         startActivity(i);
         result = true;
         break;
       case R.id.action_catalog:
-        Stats.get().increment(Stats.ACTION_CATALOG);
+        Stats.get(this).increment(Stats.ACTION_CATALOG);
         i = new Intent(AllFeedItems.this, CatalogActivity.class);
         startActivityForResult(i, REQ_CATALOG);
         result = true;
         break;
       case R.id.action_refresh:
-        Stats.get().increment(Stats.ACTION_REFRESH);
+        Stats.get(this).increment(Stats.ACTION_REFRESH);
         if (networkChecker.checkNetworkForRefresh(this, true)) {
           dataModel.refreshData();
         }
         result = true;
         break;
       case R.id.action_settings:
-        Stats.get().increment(Stats.ACTION_SETTINGS);
+        Stats.get(this).increment(Stats.ACTION_SETTINGS);
         i = new Intent(AllFeedItems.this, AllPreferencesActivity.class);
         startActivityForResult(i, REQ_PREFS);
         result = true;
