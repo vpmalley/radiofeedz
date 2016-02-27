@@ -150,6 +150,9 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
         Stats.get().increment(navigationDrawerItem.getStatTag());
+        if (4 == position) {
+          Stats.get().pushStats();
+        }
         filters.clear();
         filters.add(navigationDrawerItem.getFilter());
         title = navigationDrawerItem.getTitle();

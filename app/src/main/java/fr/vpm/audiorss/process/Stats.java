@@ -1,11 +1,21 @@
 package fr.vpm.audiorss.process;
 
+import android.os.AsyncTask;
 import android.util.Log;
+
+import com.cloudant.client.api.ClientBuilder;
+import com.cloudant.client.api.CloudantClient;
+import com.cloudant.client.api.Database;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+
+import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 16/02/16.
@@ -49,6 +59,8 @@ public class Stats {
 
   public void load() {
     try {
+
+
       properties.load(new FileInputStream(STAT_PATH));
     } catch (IOException e) {
       Log.e("stats", "overriding stats");
@@ -67,5 +79,43 @@ public class Stats {
     properties.setProperty(tag, String.valueOf(Integer.valueOf(properties.getProperty(tag, "0")) + 1));
     save();
   }
-  
+
+  public void pushStats() {
+    new AsyncTask<String, Integer, String>() {
+
+      @Override
+      protected String doInBackground(String... strings) {
+        CloudantClient client = ClientBuilder.account("radiofeedz")
+            .username("therippeceinguagaingives")
+            .password("c5b5215a47fe452dff234db9ffd755e59899a349")
+            .build();
+
+        Database analyticsDB = client.database("rf_analytics", false);
+        analyticsDB.save(Stats.get());
+        Log.i("analytics", "pushed a doc");
+        return null;
+      }
+    }.execute("");
+  }
+
+  @Override
+  public String toString() {
+    Date today = new Date();
+    StringBuilder jsonStats =  new StringBuilder("{ \"version\" : \"1.1.7\",\n  \"date\" : \"");
+    jsonStats.append(today.toString());
+    jsonStats.append("\",\n  \"tags\" : {\n");
+    load();
+    for (String propKey : properties.stringPropertyNames()) {
+      String propValue = properties.getProperty(propKey, "");
+      jsonStats.append("\"");
+      jsonStats.append(propKey);
+      jsonStats.append("\" : \"");
+      jsonStats.append(propValue);
+      jsonStats.append("\",\n");
+    }
+    jsonStats.append("\"lala\" : \"lolo\"\n");
+    jsonStats.append("}\n}");
+
+    return jsonStats.toString();
+  }
 }
