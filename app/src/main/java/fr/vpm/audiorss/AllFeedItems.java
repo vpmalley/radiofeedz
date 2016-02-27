@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -85,9 +84,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
-    TextView emptyView = (TextView) findViewById(R.id.emptyView);
-    emptyView.setText(getString(R.string.emptynews));
-    mFeedItems.setEmptyView(emptyView);
+    setEmptyView();
 
     final LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
     progressBarListener.setDelegate(lastRefreshListener);
@@ -99,21 +96,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     if (savedInstanceState != null) {
       filters = savedInstanceState.getParcelableArrayList(FILTERS_KEY);
     }
-    if (filters == null) {
-      filters = new ArrayList<>();
-    }
-    Log.d("prerefresh", "filtering");
-    dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-        new AsyncCallbackListener<List<RSSChannel>>() {
-          @Override
-          public void onPreExecute() {}
-
-          @Override
-          public void onPostExecute(List<RSSChannel> result) {
-            lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
-            //dataModel.preRefreshData();
-          }
-        });
+    filterData(lastRefreshListener);
 
     // Contextual actions
     setContextualListeners();
@@ -123,8 +106,12 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
 
-    FrameLayout fl = (FrameLayout) findViewById(R.id.content_frame);
+    setupSnackBarWithClipboardContent(progressBarListener);
 
+    new RecurrentTaskManager().performRecurrentTasks(this);
+  }
+
+  private void setupSnackBarWithClipboardContent(ProgressBarListener progressBarListener) {
     final FeedAdder feedAdder = new FeedAdder(dataModel, new DefaultNetworkChecker(), progressBarListener);
     final String feedUrl = feedAdder.retrieveFeedFromClipboard();
     if (feedUrl != null) {
@@ -137,8 +124,29 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
             }
           }).show();
     }
+  }
 
-    new RecurrentTaskManager().performRecurrentTasks(this);
+  private void filterData(final LastRefreshListener lastRefreshListener) {
+    if (filters == null) {
+      filters = new ArrayList<>();
+    }
+    Log.d("prerefresh", "filtering");
+    dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+        new AsyncCallbackListener<List<RSSChannel>>() {
+          @Override
+          public void onPreExecute() {}
+
+          @Override
+          public void onPostExecute(List<RSSChannel> result) {
+            lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
+          }
+        });
+  }
+
+  private void setEmptyView() {
+    TextView emptyView = (TextView) findViewById(R.id.emptyView);
+    emptyView.setText(getString(R.string.emptynews));
+    mFeedItems.setEmptyView(emptyView);
   }
 
   /**
@@ -148,21 +156,8 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     // the navigation drawer
     final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
     drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
-        Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
-        filters.clear();
-        filters.add(navigationDrawerItem.getFilter());
-        title = navigationDrawerItem.getTitle();
-        dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-            new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
-        drawerLayout.closeDrawer(drawerList);
-      }
-    });
+    drawerList.setOnItemClickListener(new NavigationDrawerClickListener(drawerLayout));
 
-    // set up the app icon in the action to open/close the drawer
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     drawerToggle = new ActionBarDrawerToggle(
         this,
@@ -286,5 +281,26 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   protected void onSaveInstanceState(Bundle outState) {
     outState.putParcelableArrayList(FILTERS_KEY, filters);
     super.onSaveInstanceState(outState);
+  }
+
+  private class NavigationDrawerClickListener implements AdapterView.OnItemClickListener {
+
+    DrawerLayout drawerLayout;
+
+    public NavigationDrawerClickListener(DrawerLayout drawerLayout) {
+      this.drawerLayout = drawerLayout;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+      Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
+      filters.clear();
+      filters.add(navigationDrawerItem.getFilter());
+      title = navigationDrawerItem.getTitle();
+      dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
+          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+      drawerLayout.closeDrawer(drawerList);
+    }
   }
 }
