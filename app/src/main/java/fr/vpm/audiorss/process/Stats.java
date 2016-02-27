@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
+import fr.vpm.audiorss.http.DefaultNetworkChecker;
+import fr.vpm.audiorss.http.NetworkChecker;
+
 /**
  * Created by vince on 16/02/16.
  */
@@ -71,6 +74,10 @@ public class Stats {
     context = null;
   }
 
+  /**
+   * Increments the value matching the tag key
+   * @param tag the key for which to increment the analytics counter
+   */
   public void increment(String tag) {
     properties.setProperty(tag, String.valueOf(Integer.valueOf(properties.getProperty(tag, "0")) + 1));
     save();
@@ -82,47 +89,34 @@ public class Stats {
   }
 
   public void pushStats(final Context context) {
-    new AsyncTask<String, Integer, String>() {
+    if (new DefaultNetworkChecker().checkNetworkForRefresh(context, false)) {
+      new AsyncTask<String, Integer, String>() {
 
-      @Override
-      protected String doInBackground(String... strings) {
-        CloudantClient client = ClientBuilder.account("radiofeedz")
-            .username("therippeceinguagaingives")
-            .password("c5b5215a47fe452dff234db9ffd755e59899a349")
-            .build();
+        @Override
+        protected String doInBackground(String... strings) {
+          Database analyticsDB = getDatabase();
+          Stats stats = Stats.get(null);
+          stats.properties.setProperty("date", new Date().toString());
+          analyticsDB.save(stats);
+          Log.i("analytics", "pushed a doc");
+          return null;
+        }
 
-        Database analyticsDB = client.database("rf_analytics", false);
-        Stats stats = Stats.get(null);
-        analyticsDB.save(stats);
-        Log.i("analytics", "pushed a doc");
-        return null;
-      }
-
-      @Override
-      protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-        Stats.get(context).empty();
-      }
-    }.execute("");
+        @Override
+        protected void onPostExecute(String s) {
+          super.onPostExecute(s);
+          Stats.get(context).empty();
+        }
+      }.execute("");
+    }
   }
 
-  @Override
-  public String toString() {
-    Date today = new Date();
-    StringBuilder jsonStats =  new StringBuilder("{ \"version\" : \"1.1.7\",\n  \"date\" : \"");
-    jsonStats.append(today.toString());
-    jsonStats.append("\",\n  \"tags\" : {\n");
-    for (String propKey : properties.stringPropertyNames()) {
-      String propValue = properties.getProperty(propKey, "");
-      jsonStats.append("\"");
-      jsonStats.append(propKey);
-      jsonStats.append("\" : \"");
-      jsonStats.append(propValue);
-      jsonStats.append("\",\n");
-    }
-    jsonStats.append("\"lala\" : \"lolo\"\n");
-    jsonStats.append("}\n}");
+  private Database getDatabase() {
+    CloudantClient client = ClientBuilder.account("radiofeedz")
+        .username("therippeceinguagaingives")
+        .password("c5b5215a47fe452dff234db9ffd755e59899a349")
+        .build();
 
-    return jsonStats.toString();
+    return client.database("rf_analytics", false);
   }
 }

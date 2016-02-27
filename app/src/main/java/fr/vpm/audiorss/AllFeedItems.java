@@ -35,6 +35,7 @@ import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
+import fr.vpm.audiorss.process.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -136,6 +137,8 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
             }
           }).show();
     }
+
+    new RecurrentTaskManager().performRecurrentTasks(this);
   }
 
   /**
@@ -150,9 +153,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
         Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
-        if (4 == position) {
-          Stats.get(AllFeedItems.this).pushStats(AllFeedItems.this);
-        }
         filters.clear();
         filters.add(navigationDrawerItem.getFilter());
         title = navigationDrawerItem.getTitle();
