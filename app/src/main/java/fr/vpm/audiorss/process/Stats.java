@@ -76,7 +76,12 @@ public class Stats {
     save();
   }
 
-  public void pushStats() {
+  public void empty() {
+    properties.clear();
+    save();
+  }
+
+  public void pushStats(final Context context) {
     new AsyncTask<String, Integer, String>() {
 
       @Override
@@ -87,11 +92,16 @@ public class Stats {
             .build();
 
         Database analyticsDB = client.database("rf_analytics", false);
-        Stats stats = Stats.get(context);
-        stats.context = null;
+        Stats stats = Stats.get(null);
         analyticsDB.save(stats);
         Log.i("analytics", "pushed a doc");
         return null;
+      }
+
+      @Override
+      protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        Stats.get(context).empty();
       }
     }.execute("");
   }
