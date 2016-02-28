@@ -66,8 +66,11 @@ I tried to test my app as much as I could, but I probably forgot some bugs. Do n
 [Iconography and icon pack for Android][android-icons]
 
 This application uses some third-party libraries that help build quality applications :
-- [Apache Commons Lang (Lang3.0)][lang3] for I/O manipulations
+- [Apache Commons Lang (Lang3.0)][lang3] and [Apache Commons IO][commons-io]
 - [Gson] for JSON deserialization
+- [Glide] for picture loading
+- [java-cloudant][cloudant] for server synchronisation (in particular Analytics to figure how to improve the app)
+- [Acra] for bug tracking
 
 [gh-issues]: https://github.com/vpmalley/radiofeedz/issues
 [rss-icon-wiki]: https://upload.wikimedia.org/wikipedia/en/thumb/4/43/Feed-icon.svg/128px-Feed-icon.svg.png
@@ -80,4 +83,8 @@ This application uses some third-party libraries that help build quality applica
 [twtw-rss]: http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml
 [android-icons]: https://developer.android.com/design/style/iconography.html
 [lang3]: https://commons.apache.org/proper/commons-lang/
-[Gson]: https://sites.google.com/site/gson/Home
+[commons-io]: https://commons.apache.org/proper/commons-io/
+[Gson]: https://github.com/google/gson
+[Glide]: https://github.com/bumptech/glide
+[cloudant]: https://github.com/cloudant/java-cloudant
+[Acra]: https://github.com/ACRA/acra
