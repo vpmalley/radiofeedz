@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="pref_lib_commons_lang"
+        android:title="@string/pref_items_lib_commons_lang"
+        android:summary="@string/summary_pref_items_lib_commons_lang" />
+    <Preference
+        android:key="pref_lib_commons_io"
+        android:title="@string/pref_items_lib_commons_io"
+        android:summary="@string/summary_pref_items_lib_commons_io" />
+    <Preference
+        android:key="pref_lib_gson"
+        android:title="@string/pref_items_lib_gson"
+        android:summary="@string/summary_pref_items_lib_gson" />
+    <Preference
+        android:key="pref_lib_glide"
+        android:title="@string/pref_items_lib_glide"
+        android:summary="@string/summary_pref_items_lib_glide" />
+    <Preference
+        android:key="pref_lib_acra"
+        android:title="@string/pref_items_lib_acra"
+        android:summary="@string/summary_pref_items_lib_acra" />
+    <Preference
+        android:key="pref_lib_cloudant"
+        android:title="@string/pref_items_lib_cloudant"
+        android:summary="@string/summary_pref_items_lib_cloudant" />
+
+</PreferenceScreen>

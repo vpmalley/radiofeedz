@@ -39,5 +39,7 @@
     <string name="added_feed">Flux ajouté. Retrouvez-le dans le panneau latéral gauche</string>
     <string name="action_playlist">Créer une playlist</string>
     <string name="press_back">Appuie sur Retour, une fois de plus.</string>
+    <string name="prefs_category_lib">Bibliothèques de développement</string>
+    <string name="prefs_summ_category_lib">Bibliothèques utilisées pour cette application</string>
 
 </resources>

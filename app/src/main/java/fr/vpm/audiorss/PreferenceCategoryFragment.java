@@ -19,6 +19,8 @@ public class PreferenceCategoryFragment extends PreferenceFragment {
       addPreferencesFromResource(R.xml.downloadpreferences);
     } else if ("network".equals(getArguments().getString(CATEGORY))) {
       addPreferencesFromResource(R.xml.networkpreferences);
+    } else if ("libraries".equals(getArguments().getString(CATEGORY))) {
+      addPreferencesFromResource(R.xml.libraries);
     }
   }
 
