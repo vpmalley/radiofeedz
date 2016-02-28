@@ -89,6 +89,7 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
       FragmentStatePagerAdapter rssItemAdapter = new FeedItemPagerAdapter(getSupportFragmentManager());
       viewPager.setAdapter(rssItemAdapter);
       viewPager.setCurrentItem(initialPosition);
+      viewPager.getAdapter().notifyDataSetChanged();
 
       // trick to mark the picked item as read at the right time
       final Set<Integer> read = new HashSet<Integer>();
