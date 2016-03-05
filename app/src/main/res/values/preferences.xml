@@ -47,5 +47,5 @@
 
     <string name="pref_items_deletion">Old items deletion</string>
     <string name="summary_pref_items_deletion">Automatically delete items to keep space</string>
-    <string name="dialog_pref_items_deletion">Delete items after N days</string>
+    <string name="dialog_pref_items_deletion">Delete items after at least N days</string>
 </resources>

@@ -47,5 +47,5 @@
 
     <string name="pref_items_deletion">Suppression des nouvelles anciennes</string>
     <string name="summary_pref_items_deletion">Automatiquement supprimer les nouvelles pour faire de la place</string>
-    <string name="dialog_pref_items_deletion">Supprimer les nouvelles après N jours</string>
+    <string name="dialog_pref_items_deletion">Supprimer les nouvelles après au moins N jours</string>
 </resources>

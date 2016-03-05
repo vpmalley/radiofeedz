@@ -23,24 +23,39 @@ public class MaintenanceFilter implements SelectionFilter {
   @Override
   public String getSelectionQuery() {
     StringBuilder selectionBuilder = new StringBuilder();
-    // date part of the query
-    selectionBuilder.append(RSSItem.DATE_TAG);
-    selectionBuilder.append("<'");
-    Calendar yesterday = Calendar.getInstance();
-    yesterday.add(Calendar.DAY_OF_YEAR, -1 * daysExpiry);
-    String yesterdayDate = DateUtils.formatDBDate(yesterday.getTime());
-    selectionBuilder.append(yesterdayDate);
-    selectionBuilder.append("'");
 
+    selectionBuilder.append("( ");
+    queryBeforeDate(selectionBuilder, daysExpiry);
+    selectionBuilder.append(" OR ");
+    queryBeforeDate(selectionBuilder, daysExpiry * 2);
     selectionBuilder.append(" AND ");
+    queryUnread(selectionBuilder);
+    selectionBuilder.append(") AND ");
+    queryUnDownloaded(selectionBuilder);
 
-    // download part (we do not delete the items that have been downloaded)
+    return selectionBuilder.toString();
+  }
+
+  private void queryUnread(StringBuilder selectionBuilder) {
+    selectionBuilder.append(RSSItem.READ_KEY);
+    selectionBuilder.append("=0");
+  }
+
+  private void queryUnDownloaded(StringBuilder selectionBuilder) {
     selectionBuilder.append(DbMedia.T_MEDIA);
     selectionBuilder.append(".");
     selectionBuilder.append(DbMedia.IS_DL_KEY);
     selectionBuilder.append("=0");
+  }
 
-    return selectionBuilder.toString();
+  private void queryBeforeDate(StringBuilder selectionBuilder, int nbDaysAgo) {
+    selectionBuilder.append(RSSItem.DATE_TAG);
+    selectionBuilder.append("<'");
+    Calendar filterDate = Calendar.getInstance();
+    filterDate.add(Calendar.DAY_OF_YEAR, -1 * nbDaysAgo);
+    String yesterdayDate = DateUtils.formatDBDate(filterDate.getTime());
+    selectionBuilder.append(yesterdayDate);
+    selectionBuilder.append("'");
   }
 
   @Override

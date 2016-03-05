@@ -65,9 +65,9 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
    */
   private void cleanItems() {
     String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
-            getString("pref_items_deletion", "30");
+            getString("pref_items_deletion", "4");
     if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
-      itemsExpiryTime = "30";
+      itemsExpiryTime = "4";
     }
     MaintenanceFilter maintenanceFilter = new MaintenanceFilter(Integer.valueOf(itemsExpiryTime));
     List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
