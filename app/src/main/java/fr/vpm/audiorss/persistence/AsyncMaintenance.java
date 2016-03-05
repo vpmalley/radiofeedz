@@ -1,6 +1,8 @@
 package fr.vpm.audiorss.persistence;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,6 +16,7 @@ import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
+import fr.vpm.audiorss.db.DatabaseOpenHelper;
 import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
@@ -43,6 +46,8 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
   @Override
   protected File doInBackground(File... params) {
+
+    analyzeData();
 
     // introducing randomization in maintenance to improve performances
     int randomMaintenance = new Random().nextInt(30);
@@ -119,5 +124,13 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
       }
     }
     dbUpdater.closeDb();
+  }
+
+  private void analyzeData() {
+    SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
+    Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + DatabaseOpenHelper.T_RSS_ITEM, null);
+    Log.d("items", String.valueOf(c.getCount()));
+    c.moveToFirst();
+    Log.d("items", String.valueOf(c.getInt(0)));
   }
 }

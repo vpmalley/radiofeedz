@@ -18,8 +18,8 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
 
   final static String _ID = "_id";
 
-  final static String T_RSS_ITEM = "rssitem";
-  final static String T_RSS_CHANNEL_ITEM = "rsschannelitem";
+  public final static String T_RSS_ITEM = "rssitem";
+  public final static String T_RSS_CHANNEL_ITEM = "rsschannelitem";
 
   static final String ITEM_ID_KEY = "item_id";
 
