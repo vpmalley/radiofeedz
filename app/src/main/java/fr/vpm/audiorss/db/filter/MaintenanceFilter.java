@@ -27,7 +27,7 @@ public class MaintenanceFilter implements SelectionFilter {
     selectionBuilder.append("( ");
     queryBeforeDate(selectionBuilder, daysExpiry);
     selectionBuilder.append(" OR ");
-    queryBeforeDate(selectionBuilder, daysExpiry * 2);
+    queryBeforeDate(selectionBuilder, daysExpiry * 4);
     selectionBuilder.append(" AND ");
     queryUnread(selectionBuilder);
     selectionBuilder.append(") AND ");

@@ -39,7 +39,6 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
   private static final int PICS_THRESHOLD = 500;
   private static final int ICONS_EXPIRY_TIME = 700000000; // icons older than this number of milliseconds are erased (about 8 days)
-  private static final int ITEMS_EXPIRY_TIME = 180;
 
   private final Context context;
 
@@ -73,9 +72,9 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
    */
   private void cleanItems() {
     String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
-            getString("pref_items_deletion", "4");
+            getString("pref_items_deletion", "2");
     if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
-      itemsExpiryTime = "4";
+      itemsExpiryTime = "2";
     }
     MaintenanceFilter maintenanceFilter = new MaintenanceFilter(Integer.valueOf(itemsExpiryTime));
     List<SelectionFilter> filters = new ArrayList<SelectionFilter>();
