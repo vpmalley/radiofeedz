@@ -28,7 +28,7 @@ import fr.vpm.audiorss.rss.RSSItem;
 public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private static final String COMMA = ",";
-  final static String T_RSS_CHANNEL = "rsschannel";
+  public final static String T_RSS_CHANNEL = "rsschannel";
   final static String[] COLS_RSS_CHANNEL = {DatabaseOpenHelper._ID, RSSChannel.CAT_TAG,
           RSSChannel.DATE_TAG, RSSChannel.DESC_TAG, RSSChannel.IMAGE_TAG, RSSChannel.LINK_TAG, RSSChannel.IMAGE_ID_TAG,
           RSSChannel.LOCAL_IMAGE_TAG, RSSChannel.TAGS_KEY, RSSChannel.TITLE_TAG, RSSChannel.URL_KEY, RSSChannel.NEXT_REFRESH_KEY};

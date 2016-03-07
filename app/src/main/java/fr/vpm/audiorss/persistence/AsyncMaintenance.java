@@ -10,6 +10,7 @@ import android.util.Log;
 import java.io.File;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -18,10 +19,12 @@ import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.DatabaseOpenHelper;
 import fr.vpm.audiorss.db.DbMedia;
+import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -47,7 +50,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   @Override
   protected File doInBackground(File... params) {
 
-    analyzeData();
+    //analyzeData();
 
     // introducing randomization in maintenance to improve performances
     int randomMaintenance = new Random().nextInt(30);
@@ -129,8 +132,26 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   private void analyzeData() {
     SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
     Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + DatabaseOpenHelper.T_RSS_ITEM, null);
-    Log.d("items", String.valueOf(c.getCount()));
     c.moveToFirst();
-    Log.d("items", String.valueOf(c.getInt(0)));
+    Log.d("maintenance", String.valueOf(c.getInt(0)) + " items");
+    c.close();
+
+    Calendar filterDate = Calendar.getInstance();
+    filterDate.add(Calendar.DAY_OF_YEAR, -2);
+    String twoDaysAgo = DateUtils.formatDBDate(filterDate.getTime());
+    c = db.rawQuery("SELECT COUNT(*) FROM " + DatabaseOpenHelper.T_RSS_ITEM + " WHERE " + RSSItem.DATE_TAG + "<'" +twoDaysAgo + "'", null);
+    c.moveToFirst();
+    Log.d("maintenance", String.valueOf(c.getInt(0)) + " items last 2 days");
+    c.close();
+
+    c = db.rawQuery("SELECT COUNT(*) FROM " + DbRSSChannel.T_RSS_CHANNEL, null);
+    c.moveToFirst();
+    Log.d("maintenance", String.valueOf(c.getInt(0)) + " channels");
+    c.close();
+    c = db.rawQuery("SELECT COUNT(*) FROM " + DbMedia.T_MEDIA, null);
+    c.moveToFirst();
+    Log.d("maintenance", String.valueOf(c.getInt(0)) + " medias");
+    c.close();
+    new DbMedia(db).deleteOrphans();
   }
 }

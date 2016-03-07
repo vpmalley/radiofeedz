@@ -19,13 +19,10 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
   final static String _ID = "_id";
 
   public final static String T_RSS_ITEM = "rssitem";
-  public final static String T_RSS_CHANNEL_ITEM = "rsschannelitem";
 
   static final String ITEM_ID_KEY = "item_id";
 
   public static final String CHANNEL_ID_KEY = "channel_id";
-
-  final static String[] COLS_RSS_CHANNEL_ITEM = {_ID, CHANNEL_ID_KEY, ITEM_ID_KEY};
 
   final static String[] COLS_RSS_ITEM = {T_RSS_ITEM + "." + _ID, CHANNEL_ID_KEY, RSSItem.AUTHOR_TAG, RSSItem.CAT_TAG,
       RSSItem.CHANNELTITLE_KEY, RSSItem.COMMENTS_TAG, RSSItem.DATE_TAG, RSSItem.DESC_TAG,
@@ -41,10 +38,6 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
       + SEP_COLUMN + RSSItem.LOCAL_MEDIA_KEY + TEXT_COLUMN + SEP_COLUMN + RSSItem.MEDIA_KEY
       + TEXT_COLUMN + SEP_COLUMN + RSSItem.TITLE_TAG + TEXT_COLUMN + SEP_COLUMN + RSSItem.MEDIA_ID_KEY + " INTEGER" +
       SEP_COLUMN + RSSItem.READ_KEY + " INTEGER" + SEP_COLUMN + RSSItem.ARCHIVED_KEY + " INTEGER )";
-
-  final private static String T_CREATE_RSS_CHANNEL_ITEM = "CREATE TABLE " + T_RSS_CHANNEL_ITEM
-      + " (" + _ID + INTEGER_PRIMARY_KEY_AUTO + CHANNEL_ID_KEY + TEXT_COLUMN + SEP_COLUMN
-      + ITEM_ID_KEY + TEXT_COLUMN + ")";
 
   final private static String I_CREATE_RSSITEM_RECENT = "CREATE INDEX IF NOT EXISTS rssitem_recent_index ON " + T_RSS_ITEM +
           " (" + RSSItem.ARCHIVED_KEY + ", " + RSSItem.DATE_TAG + " DESC);";
