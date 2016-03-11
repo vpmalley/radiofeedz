@@ -97,6 +97,7 @@ public class FilePictureSaver implements PictureSaver {
    */
   public void cleanFolder(File folder, int threshold, long expiryTime){
     File[] allFiles = folder.listFiles();
+    Log.d("maintenance", "there are " + allFiles.length + " files in " + folder.getName());
     if (allFiles.length > threshold) {
       for (File f : allFiles) {
         if ((System.currentTimeMillis() - f.lastModified()) > expiryTime) {

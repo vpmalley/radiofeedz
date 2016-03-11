@@ -37,10 +37,13 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
-  private static final int PICS_THRESHOLD = 500;
-  private static final int ICONS_EXPIRY_TIME = 700000000; // icons older than this number of milliseconds are erased (about 8 days)
+  private static final int PICS_THRESHOLD = 200;
+  private static final int ICONS_EXPIRY_TIME = 200000000; // icons older than this number of milliseconds are erased (about 2 days)
+  public static final String MAINTENANCE_TAG = "maintenance";
 
   private final Context context;
+
+  private int totalSize;
 
   public AsyncMaintenance(Context context) {
     this.context = context;
@@ -54,13 +57,13 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     // introducing randomization in maintenance to improve performances
     int randomMaintenance = new Random().nextInt(30);
     if (randomMaintenance < 10) {
-      Log.d("maintenance", "cleaning folders");
+      Log.d(MAINTENANCE_TAG, "cleaning folders");
       cleanFolders(params);
     } else if (randomMaintenance < 20) {
-      Log.d("maintenance", "cleaning items");
+      Log.d(MAINTENANCE_TAG, "cleaning items");
       cleanItems();
     } else if (randomMaintenance < 30) {
-      Log.d("maintenance", "refresh downloads");
+      Log.d(MAINTENANCE_TAG, "refresh downloads");
       refreshDownloadedPodcasts();
     }
 
@@ -130,9 +133,13 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
   private void analyzeData() {
     SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
+
+    long size = new File(db.getPath()).length();
+    Log.d(MAINTENANCE_TAG, String.valueOf(size) + " bytes");
+
     Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + DatabaseOpenHelper.T_RSS_ITEM, null);
     c.moveToFirst();
-    Log.d("maintenance", String.valueOf(c.getInt(0)) + " items");
+    Log.d(MAINTENANCE_TAG, String.valueOf(c.getInt(0)) + " items");
     c.close();
 
     Calendar filterDate = Calendar.getInstance();
@@ -140,17 +147,39 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     String twoDaysAgo = DateUtils.formatDBDate(filterDate.getTime());
     c = db.rawQuery("SELECT COUNT(*) FROM " + DatabaseOpenHelper.T_RSS_ITEM + " WHERE " + RSSItem.DATE_TAG + "<'" +twoDaysAgo + "'", null);
     c.moveToFirst();
-    Log.d("maintenance", String.valueOf(c.getInt(0)) + " items last 2 days");
+    Log.d(MAINTENANCE_TAG, String.valueOf(c.getInt(0)) + " items last 2 days");
     c.close();
 
     c = db.rawQuery("SELECT COUNT(*) FROM " + DbRSSChannel.T_RSS_CHANNEL, null);
     c.moveToFirst();
-    Log.d("maintenance", String.valueOf(c.getInt(0)) + " channels");
+    Log.d(MAINTENANCE_TAG, String.valueOf(c.getInt(0)) + " channels");
     c.close();
     c = db.rawQuery("SELECT COUNT(*) FROM " + DbMedia.T_MEDIA, null);
     c.moveToFirst();
-    Log.d("maintenance", String.valueOf(c.getInt(0)) + " medias");
+    Log.d(MAINTENANCE_TAG, String.valueOf(c.getInt(0)) + " medias");
     c.close();
     new DbMedia(db).deleteOrphans();
+
+
+    totalSize = 0;
+    browseFiles(context.getFilesDir());
+    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of regular files");
+    totalSize = 0;
+    browseFiles(context.getCacheDir());
+    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of cache files");
+    totalSize = 0;
+    browseFiles(context.getExternalCacheDir());
+    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of external cache files");
+  }
+
+  private void browseFiles(File dir) {
+    Log.d(MAINTENANCE_TAG, dir.getName() + " has " + dir.list().length + " files");
+    for (File f: dir.listFiles()) {
+      totalSize += f.length();
+      Log.d(MAINTENANCE_TAG, dir.getName() + "/" + f.getName() + " weighs " + f.length());
+      if (f.isDirectory()) {
+        browseFiles(f);
+      }
+    }
   }
 }
