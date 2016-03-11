@@ -133,6 +133,11 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     this.channelsByItem = channelsByItem;
   }
 
+  @Override
+  public int getCount() {
+    return items.size();
+  }
+
   /**
    * Keeps a reference to the views associated with a item. Only views should be stored there,
    * i.e. NO DATA should be linked to that object.
