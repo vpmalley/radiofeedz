@@ -18,11 +18,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -37,7 +34,6 @@ import fr.vpm.audiorss.db.ChannelRefreshViewCallback;
 import fr.vpm.audiorss.db.ItemRefreshViewCallback;
 import fr.vpm.audiorss.db.LoadDataRefreshViewCallback;
 import fr.vpm.audiorss.db.filter.ArchivedFilter;
-import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.UnArchivedFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
@@ -62,61 +58,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
 
   private List<ItemParser> dataToPostProcess = new CopyOnWriteArrayList<>();
 
-  private static class DisplayCache {
-
-    /**
-     * the items of feeds that are displayed
-     */
-    List<RSSItem> items;
-
-    List<RSSChannel> feeds;
-
-    ArrayList<SelectionFilter> itemFilters;
-
-    Map<RSSItem, RSSChannel> channelsByItem;
-
-    private static DisplayCache instance;
-
-    private DisplayCache() {
-      items = new ArrayList<>();
-      feeds = new ArrayList<>();
-      itemFilters = new ArrayList<>();
-      channelsByItem = new HashMap<>();
-    }
-
-    public static DisplayCache getInstance(){
-      if (instance == null) {
-        instance = new DisplayCache();
-      }
-      return instance;
-    }
-
-    /**
-     * Determines whether the other list of filters is similar to this instance's filters
-     * @param otherFilters other filters to compare with this instance's filters
-     * @return whether the filters are the same
-     */
-    public boolean hasSimilarFilters(List<SelectionFilter> otherFilters) {
-      Set<String> filterNames = getFilterNames(this.itemFilters);
-      Set<String> otherFilterNames = getFilterNames(otherFilters);
-      return filterNames.equals(otherFilterNames);
-    }
-
-    private Set<String> getFilterNames(List<SelectionFilter> filters){
-      Set<String> filterNames = new HashSet<>();
-      for (SelectionFilter filter : filters) {
-        if (filter instanceof ChannelFilter) {
-          filterNames.add(filter.getClass().getName() + ",id=" + filter.getSelectionValues()[0]);
-        } else {
-          filterNames.add(filter.getClass().getName());
-        }
-      }
-      return filterNames;
-    }
-
-  }
-
-  private final DisplayCache cache;
+  private final RSSCache cache;
 
   private final ProgressListener progressListener;
 
@@ -141,7 +83,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     this.feedsActivity = feedsActivity;
     this.activity = activity;
     this.resource = resId;
-    this.cache = DisplayCache.getInstance();
+    this.cache = RSSCache.getInstance();
   }
 
   @Override
