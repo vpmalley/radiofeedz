@@ -41,21 +41,4 @@ public class CatalogActivity extends Activity {
             Catalog.GROUP_KEYS, Catalog.GROUP_VIEWS, feedsCatalog.getChildren(), Catalog.CHILD_LAYOUT, Catalog.CHILD_KEYS, Catalog.CHILD_VIEWS);
     feedsView.setAdapter(feedsAdapter);
   }
-
-  @Override
-  public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.menu_catalog, menu);
-    return true;
-  }
-
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    int id = item.getItemId();
-
-    if (id == R.id.action_settings) {
-      return true;
-    }
-
-    return super.onOptionsItemSelected(item);
-  }
 }
