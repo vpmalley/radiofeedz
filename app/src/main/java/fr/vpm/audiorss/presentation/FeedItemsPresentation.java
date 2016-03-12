@@ -12,10 +12,10 @@ public interface FeedItemsPresentation {
 
 
   /**
-   * Sets the channels to the in-memory cache
+   * Sets the feeds to the in-memory cache
    * @param allFeeds feeds to cache
    */
-  void setChannelsAndBuildModel(List<RSSChannel> allFeeds);
+  void setFeedsAndBuildModel(List<RSSChannel> allFeeds);
 
 
   /**

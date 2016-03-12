@@ -65,7 +65,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
 
   @Override
-  public void setChannelsAndBuildModel(List<RSSChannel> feeds) {
+  public void setFeedsAndBuildModel(List<RSSChannel> feeds) {
     cache.invalidate();
     cache.setFeeds(feeds);
     cache.buildChannelsByItem();
