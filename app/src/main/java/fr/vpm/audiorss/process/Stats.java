@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.Properties;
 
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.http.NetworkChecker;
 
 /**
  * Created by vince on 16/02/16.

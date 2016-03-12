@@ -4,7 +4,6 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 
-import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**

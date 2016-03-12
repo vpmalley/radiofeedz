@@ -3,10 +3,6 @@ package fr.vpm.audiorss.rss;
 import android.content.Context;
 import android.util.Log;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Calendar;
 
 import fr.vpm.audiorss.process.Cachable;
