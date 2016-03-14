@@ -83,7 +83,7 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter data, NavigationDrawerProvider navigationDrawer) {
+  public void refreshView(RSSItemArrayAdapter data) {
     if (!firstRefresh) {
       final int initialPosition = dataModel.getItemPositionByGuid(initialGuid);
 
@@ -107,6 +107,11 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
     } else {
       viewPager.getAdapter().notifyDataSetChanged();
     }
+  }
+
+  @Override
+  public void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer) {
+
   }
 
   @Override

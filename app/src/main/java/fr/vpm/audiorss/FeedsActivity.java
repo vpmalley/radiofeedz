@@ -14,7 +14,12 @@ public interface FeedsActivity<T> {
   /**
    * Refreshes the view based on some data item
    */
-  void refreshView(T data, NavigationDrawerProvider navigationDrawer);
+  void refreshView(T data);
+
+  /**
+   * Refreshes the view based on some data item
+   */
+  void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer);
 
   /**
    * Retrieves the Context bound with this Activity

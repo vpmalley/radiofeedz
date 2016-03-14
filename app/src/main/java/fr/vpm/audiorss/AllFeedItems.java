@@ -215,8 +215,12 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter rssItemAdapter, NavigationDrawerProvider navigationDrawer) {
+  public void refreshView(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
+  }
+
+  @Override
+  public void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer) {
     drawerList.setAdapter(navigationDrawer.getAdapter(R.layout.list_item));
   }
 

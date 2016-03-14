@@ -105,7 +105,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   public synchronized void displayCachedFeedItems() {
     if (rssItemAdapter == null) {
       rssItemAdapter = new RSSItemArrayAdapter(feedItemsActivity, rssItemLayout, cache.getItems(), cache.getChannelsByItem());
-      feedItemsActivity.refreshView(rssItemAdapter, getNavigationDrawer());
+      feedItemsActivity.refreshView(rssItemAdapter);
     } else {
       rssItemAdapter.setItems(cache.getItems());
       rssItemAdapter.setChannelsByItem(cache.getChannelsByItem());
@@ -113,6 +113,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     }
   }
 
+  /*
   public NavigationDrawerProvider getNavigationDrawer() {
     if (navigationDrawerList == null) {
       navigationDrawerList = new NavigationDrawerList(feedItemsActivity, this, new ProgressListener.DummyProgressListener());
@@ -122,7 +123,6 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     navigationDrawerList.addChannels(cache.getFeeds());
     return navigationDrawerList;
   }
-
-
+  */
 
 }
