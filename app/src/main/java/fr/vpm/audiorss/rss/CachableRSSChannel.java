@@ -125,4 +125,8 @@ public class CachableRSSChannel implements Cachable {
   public void staleStore() {
 
   }
+
+  public RSSChannel getRSSChannel() {
+    return itemParser.getRssChannel();
+  }
 }

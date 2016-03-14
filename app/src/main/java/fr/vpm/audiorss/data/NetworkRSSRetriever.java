@@ -5,7 +5,8 @@ import android.content.Context;
 import java.util.List;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.process.CacheManager;
+import fr.vpm.audiorss.presentation.FeedItemsPresentation;
+import fr.vpm.audiorss.process.SequentialCacheManager;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
@@ -14,6 +15,12 @@ import fr.vpm.audiorss.rss.RSSChannel;
 public class NetworkRSSRetriever implements RSSRetriever {
 
   private Context context;
+  private FeedItemsPresentation feedsItemPresenter;
+
+  public NetworkRSSRetriever(Context context, FeedItemsPresentation feedsItemPresenter) {
+    this.context = context;
+    this.feedsItemPresenter = feedsItemPresenter;
+  }
 
   @Override
   public void retrieveFeedItems() {
@@ -27,12 +34,13 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
   @Override
   public void forceRetrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
-    CacheManager cm = new CacheManager(feedsToRetrieve, this);
-    cm.updateCache(context);
+    SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
+    cm.retrieveFeedItemsFromNetwork(feedsToRetrieve);
   }
 
   @Override
   public void addFeed(String feedUrl) {
-
+    SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
+    cm.addFeed(feedUrl);
   }
 }

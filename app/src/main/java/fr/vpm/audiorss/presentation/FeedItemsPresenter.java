@@ -1,10 +1,12 @@
 package fr.vpm.audiorss.presentation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.NavigationDrawerList;
@@ -30,6 +32,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   public FeedItemsPresenter(AllFeedItems feedItemsActivity, int rssItemLayout) {
     this.feedItemsActivity = feedItemsActivity;
     this.rssItemLayout = rssItemLayout;
+    this.rssRetriever = new NetworkRSSRetriever(feedItemsActivity, this);
   }
 
   @Override
@@ -44,7 +47,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void retrieveLatestFeedItems() {
-    rssRetriever.forceRetrieveFeedItemsFromNetwork();
+    rssRetriever.forceRetrieveFeedItemsFromNetwork(cache.getFeeds());
   }
 
   @Override
@@ -63,6 +66,21 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     return cache.getFeedItem(feedItemGuid);
   }
 
+
+  @Override
+  public void presentFeeds(List<RSSChannel> feeds) {
+    cache.invalidate();
+    cache.setFeeds(feeds);
+    List<RSSItem> rssItems = new ArrayList<>();
+    for (RSSChannel feed: feeds) {
+      rssItems.addAll(feed.getItems());
+    }
+    cache.buildChannelsByItem();
+    if (cache.isValid()) {
+      displayCachedFeedItems();
+    }
+
+  }
 
   @Override
   public void setFeedsAndBuildModel(List<RSSChannel> feeds) {

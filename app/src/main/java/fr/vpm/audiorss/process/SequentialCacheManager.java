@@ -16,6 +16,12 @@ public class SequentialCacheManager {
 
   private Context context;
   private FeedItemsPresentation feedItemsPresenter;
+  private List<RSSChannel> rssChannels = new ArrayList<>();
+
+  public SequentialCacheManager(Context context, FeedItemsPresentation feedItemsPresenter) {
+    this.context = context;
+    this.feedItemsPresenter = feedItemsPresenter;
+  }
 
   public void retrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
     List<CachableRSSChannel> feeds = new ArrayList<>();
@@ -57,10 +63,8 @@ public class SequentialCacheManager {
       if (cachableFeed.failed()) {
         break;
       }
-      //feedItemsPresenter.setItemsAndBuildModel(cachableFeed.);
-      //feedItemsPresenter.setFeedsAndBuildModel(cachableFeed.);
-
-
+      rssChannels.add(cachableFeed.getRSSChannel());
     }
+    feedItemsPresenter.presentFeeds(rssChannels);
   }
 }
