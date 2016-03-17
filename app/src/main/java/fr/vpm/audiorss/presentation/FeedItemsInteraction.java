@@ -19,7 +19,15 @@ public interface FeedItemsInteraction {
 
   void retrieveLatestFeedItems(List<RSSChannel> feedsToRetrieve);
 
-  void addData(String feedUrl);
+  void addFeed(String feedUrl);
+
+  void deleteFeeds(List<RSSChannel> feedsToRetrieve);
+
+  void markAsRead(List<RSSItem> feedItems, boolean isRead);
+
+  void archiveFeedItems(List<RSSItem> feedItems);
+
+  void downloadMedia(List<RSSItem> feedItems);
 
   RSSItem getFeedItem(String feedItemGuid);
 

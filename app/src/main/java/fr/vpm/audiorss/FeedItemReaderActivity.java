@@ -83,7 +83,7 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
   }
 
   @Override
-  public void refreshView(RSSItemArrayAdapter data) {
+  public void refreshFeedItems(RSSItemArrayAdapter data) {
     if (!firstRefresh) {
       final int initialPosition = dataModel.getItemPositionByGuid(initialGuid);
 

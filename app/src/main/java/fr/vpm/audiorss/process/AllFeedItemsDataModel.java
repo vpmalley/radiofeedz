@@ -158,7 +158,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
   public synchronized void refreshView() {
     if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, cache.items, cache.channelsByItem);
-      feedsActivity.refreshView(rssItemAdapter);
+      feedsActivity.refreshFeedItems(rssItemAdapter);
       feedsActivity.refreshNavigationDrawer(getNavigationDrawer());
       recreate = false;
     } else {

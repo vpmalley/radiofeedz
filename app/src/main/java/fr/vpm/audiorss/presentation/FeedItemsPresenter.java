@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
-import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.NavigationDrawerList;
-import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSCache;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -55,10 +53,29 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     rssRetriever.forceRetrieveFeedItemsFromNetwork(feedsToRetrieve);
   }
 
+  @Override
+  public void addFeed(String feedUrl) {
+    rssRetriever.addFeed(feedUrl);
+  }
 
   @Override
-  public void addData(String feedUrl) {
-    rssRetriever.addFeed(feedUrl);
+  public void deleteFeeds(List<RSSChannel> feedsToRetrieve) {
+  rssRetriever.deleteFeeds(feedsToRetrieve);
+  }
+
+  @Override
+  public void markAsRead(List<RSSItem> feedItems, boolean isRead) {
+    rssRetriever.markAsRead(feedItems, isRead);
+  }
+
+  @Override
+  public void archiveFeedItems(List<RSSItem> feedItems) {
+    rssRetriever.archiveFeedItems(feedItems);
+  }
+
+  @Override
+  public void downloadMedia(List<RSSItem> feedItems) {
+    rssRetriever.downloadMedia(feedItems);
   }
 
   @Override
@@ -105,7 +122,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   public synchronized void displayCachedFeedItems() {
     if (rssItemAdapter == null) {
       rssItemAdapter = new RSSItemArrayAdapter(feedItemsActivity, rssItemLayout, cache.getItems(), cache.getChannelsByItem());
-      feedItemsActivity.refreshView(rssItemAdapter);
+      feedItemsActivity.refreshFeedItems(rssItemAdapter);
     } else {
       rssItemAdapter.setItems(cache.getItems());
       rssItemAdapter.setChannelsByItem(cache.getChannelsByItem());

@@ -14,7 +14,7 @@ public interface FeedsActivity<T> {
   /**
    * Refreshes the view based on some data item
    */
-  void refreshView(T data);
+  void refreshFeedItems(T data);
 
   /**
    * Refreshes the view based on some data item

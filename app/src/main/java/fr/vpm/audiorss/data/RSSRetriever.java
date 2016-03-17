@@ -4,6 +4,7 @@ import java.util.List;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.rss.RSSItem;
 
 /**
  * Created by vince on 12/03/16.
@@ -27,4 +28,12 @@ public interface RSSRetriever {
   void forceRetrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve);
 
   void addFeed(String feedUrl);
+
+  void deleteFeeds(List<RSSChannel> feedsToRetrieve);
+
+  void markAsRead(List<RSSItem> feedItems, boolean isRead);
+
+  void archiveFeedItems(List<RSSItem> feedItems);
+
+  void downloadMedia(List<RSSItem> feedItems);
 }
