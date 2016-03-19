@@ -76,8 +76,14 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
   @Override
   public void forceRetrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
-    SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
-    cm.retrieveFeedItemsFromNetwork(feedsToRetrieve);
+    AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>>() {
+      @Override
+      protected List<RSSChannel> doInBackground(List<RSSChannel>... feeds) {
+        SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
+        cm.retrieveFeedItemsFromNetwork(feeds[0]);
+        return cm.getRssChannels();
+      }
+    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
   }
 
   @Override

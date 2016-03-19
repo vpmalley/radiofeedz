@@ -67,4 +67,8 @@ public class SequentialCacheManager {
     }
     feedItemsPresenter.presentFeeds(rssChannels);
   }
+
+  public List<RSSChannel> getRssChannels() {
+    return rssChannels;
+  }
 }
