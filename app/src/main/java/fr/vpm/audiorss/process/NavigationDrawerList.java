@@ -89,8 +89,8 @@ public class NavigationDrawerList implements NavigationDrawerProvider {
     }
   }
 
-  public ArrayAdapter<NavigationDrawerItem> getAdapter(int layout) {
-    return new ArrayAdapter<NavigationDrawerItem>(context, layout, items);
+  public ArrayAdapter<NavigationDrawer.NavigationDrawerItem> getAdapter(int layout) {
+    return null;
   }
 
   @Override

@@ -43,9 +43,11 @@ public class NavigationDrawer implements NavigationDrawerProvider {
 
   private final Context context;
 
-  private final List<NavigationDrawerList.NavigationDrawerItem> items = new ArrayList<NavigationDrawerList.NavigationDrawerItem>();
+  private final List<NavigationDrawerItem> items = new ArrayList<NavigationDrawerItem>();
 
   private FeedItemsInteraction interactor;
+
+  private ArrayAdapter<NavigationDrawerItem> adapter;
 
   public NavigationDrawer(Context context, FeedItemsInteraction interactor) {
     this.context = context;
@@ -58,14 +60,14 @@ public class NavigationDrawer implements NavigationDrawerProvider {
 
   public void addStaticItems() {
     for (int i = 0; i < STATIC_ITEM_FILTERS.length; i++) {
-      NavigationDrawerList.NavigationDrawerItem drawerItem = new NavigationDrawerList.NavigationDrawerItem(STATIC_ITEM_FILTERS[i], context.getString(STATIC_ITEM_TITLES[i]), null, context.getString(STATIC_ITEM_TITLES[i]));
+      NavigationDrawerItem drawerItem = new NavigationDrawerItem(STATIC_ITEM_FILTERS[i], context.getString(STATIC_ITEM_TITLES[i]), null, context.getString(STATIC_ITEM_TITLES[i]));
       items.add(i, drawerItem);
     }
   }
 
   public void addChannels(List<RSSChannel> channels) {
     for (RSSChannel channel : channels) {
-      items.add(new NavigationDrawerList.NavigationDrawerItem(new ChannelFilter(channel.getId()), channel.getTitle(), channel, Stats.ACTION_FEED_FILTER));
+      items.add(new NavigationDrawerItem(new ChannelFilter(channel.getId()), channel.getTitle(), channel, Stats.ACTION_FEED_FILTER));
     }
   }
 
@@ -81,8 +83,11 @@ public class NavigationDrawer implements NavigationDrawerProvider {
 
 
   @Override
-  public ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> getAdapter(int layout) {
-    return new ArrayAdapter<NavigationDrawerList.NavigationDrawerItem>(context, layout, items);
+  public ArrayAdapter<NavigationDrawerItem> getAdapter(int layout) {
+    if (adapter == null) {
+      adapter = new ArrayAdapter<NavigationDrawerItem>(context, layout, items);
+    }
+    return adapter;
   }
 
 
@@ -110,4 +115,60 @@ public class NavigationDrawer implements NavigationDrawerProvider {
   public void createPlaylist(Set<Integer> selection) {
     // do nothing
   }
+
+  public void setChannels(List<RSSChannel> allChannels) {
+    clear();
+    addStaticItems();
+    addChannels(allChannels);
+    adapter.clear();
+    adapter.addAll(items);
+  }
+
+  /**
+   * Simple data structure for any item to show up in the navigation drawer
+   */
+  public class NavigationDrawerItem {
+
+    private final SelectionFilter filter;
+
+    private final String title;
+
+    private final RSSChannel boundChannel;
+
+    private String statTag;
+
+    public NavigationDrawerItem(SelectionFilter filter, String title, RSSChannel boundChannel, String statTag) {
+      this.filter = filter;
+      this.title = title;
+      this.boundChannel = boundChannel;
+      this.statTag = statTag;
+    }
+
+    public String getTitle() {
+      return title;
+    }
+
+    public SelectionFilter getFilter(){
+      return filter;
+    }
+
+    public boolean hasBoundChannel(){
+      return boundChannel != null;
+    }
+
+    public RSSChannel getBoundChannel() {
+      return boundChannel;
+    }
+
+    public String getStatTag() {
+      return statTag;
+    }
+
+    @Override
+    public String toString() {
+      return title;
+    }
+
+  }
+
 }

@@ -12,5 +12,5 @@ public interface NavigationDrawerProvider extends ContextualActions {
    * @param layout the layout used for every item of the navigation drawer
    * @return the adapter containing the list of items for the navigation drawer
    */
-  public ArrayAdapter<NavigationDrawerList.NavigationDrawerItem> getAdapter(int layout);
+  public ArrayAdapter<NavigationDrawer.NavigationDrawerItem> getAdapter(int layout);
 }

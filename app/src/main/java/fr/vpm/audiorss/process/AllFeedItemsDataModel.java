@@ -159,7 +159,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     if (rssItemAdapter == null || recreate) {
       rssItemAdapter = new RSSItemArrayAdapter(activity, resource, cache.items, cache.channelsByItem);
       feedsActivity.refreshFeedItems(rssItemAdapter);
-      feedsActivity.refreshNavigationDrawer(getNavigationDrawer());
+      //feedsActivity.refreshNavigationDrawer(getNavigationDrawer());
       recreate = false;
     } else {
       rssItemAdapter.setItems(cache.items);

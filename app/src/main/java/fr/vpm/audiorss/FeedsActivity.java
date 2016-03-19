@@ -2,7 +2,9 @@ package fr.vpm.audiorss;
 
 import android.content.Context;
 
-import fr.vpm.audiorss.process.NavigationDrawerProvider;
+import java.util.List;
+
+import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
  * Created by vince on 03/11/14.
@@ -17,9 +19,9 @@ public interface FeedsActivity<T> {
   void refreshFeedItems(T data);
 
   /**
-   * Refreshes the view based on some data item
+   * Refreshes the view based on feeds
    */
-  void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer);
+  void refreshNavigationDrawer(List<RSSChannel> allChannels);
 
   /**
    * Retrieves the Context bound with this Activity

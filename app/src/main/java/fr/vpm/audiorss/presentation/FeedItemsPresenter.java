@@ -8,8 +8,6 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.process.NavigationDrawer;
-import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSCache;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -26,7 +24,6 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   private AllFeedItems feedItemsActivity;
   private RSSItemArrayAdapter rssItemAdapter;
   private int rssItemLayout = R.layout.list_rss_item;
-  private NavigationDrawer navigationDrawerList;
 
   public FeedItemsPresenter(AllFeedItems feedItemsActivity, int rssItemLayout) {
     this.feedItemsActivity = feedItemsActivity;
@@ -36,11 +33,13 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void loadFeedItems() {
+    cache.invalidate();
     rssRetriever.retrieveFeedItems();
   }
 
   @Override
   public void loadFeedItems(List<SelectionFilter> filters) {
+    cache.invalidate();
     rssRetriever.retrieveFeedItems(filters);
   }
 
@@ -102,7 +101,6 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void setFeedsAndBuildModel(List<RSSChannel> feeds) {
-    cache.invalidate();
     cache.setFeeds(feeds);
     cache.buildChannelsByItem();
     if (cache.isValid()) {
@@ -112,7 +110,6 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void setItemsAndBuildModel(List<RSSItem> items) {
-    cache.invalidate();
     cache.setItems(items);
     cache.buildChannelsByItem();
     if (cache.isValid()) {
@@ -129,15 +126,5 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
       rssItemAdapter.setChannelsByItem(cache.getChannelsByItem());
       rssItemAdapter.notifyDataSetChanged();
     }
-  }
-
-  public NavigationDrawerProvider getNavigationDrawer() {
-    if (navigationDrawerList == null) {
-      navigationDrawerList = new NavigationDrawer(feedItemsActivity, this);
-    }
-    navigationDrawerList.clear();
-    navigationDrawerList.addStaticItems();
-    navigationDrawerList.addChannels(cache.getFeeds());
-    return navigationDrawerList;
   }
 }

@@ -24,7 +24,6 @@ import fr.vpm.audiorss.persistence.AsyncMaintenance;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
-import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -110,9 +109,7 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
   }
 
   @Override
-  public void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer) {
-
-  }
+  public void refreshNavigationDrawer(List<RSSChannel> allChannels) {}
 
   @Override
   public Context getContext() {

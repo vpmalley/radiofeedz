@@ -1,5 +1,7 @@
 package fr.vpm.audiorss;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,24 +29,24 @@ import java.util.List;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
+import fr.vpm.audiorss.presentation.FeedItemsInteraction;
+import fr.vpm.audiorss.presentation.FeedItemsPresenter;
 import fr.vpm.audiorss.process.AllFeedItemsDataModel;
-import fr.vpm.audiorss.process.AsyncCallbackListener;
-import fr.vpm.audiorss.process.DataModel;
-import fr.vpm.audiorss.process.FeedAdder;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
+import fr.vpm.audiorss.process.FeedItemContextualActions;
+import fr.vpm.audiorss.process.NavigationDrawer;
 import fr.vpm.audiorss.process.NavigationDrawerList;
-import fr.vpm.audiorss.process.NavigationDrawerProvider;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.process.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter> {
+public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter>, AdapterView.OnItemClickListener {
 
-  public static final String CHANNEL_ID = "channelId";
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
+  public static final int REQ_ITEM_READ = 1;
   private static final int REQ_PREFS = 2;
   private static final int REQ_CATALOG = 3;
   private static final String FILTERS_KEY = "filters";
@@ -54,12 +55,12 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
   private NetworkChecker networkChecker;
 
-  private DataModel dataModel;
-  private ListView drawerList;
+  private NavigationDrawer navigationDrawerList;
   private ActionBarDrawerToggle drawerToggle;
 
   private String title = "Radiofeedz";
   private ArrayList<SelectionFilter> filters;
+  private FeedItemsInteraction interactor;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +82,15 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     // services
     networkChecker = new DefaultNetworkChecker();
-    dataModel = new AllFeedItemsDataModel(this, progressBarListener, this, rss_item_layout);
+    interactor = new FeedItemsPresenter(this, rss_item_layout);
 
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
-    mFeedItems.setOnItemClickListener(dataModel.getOnItemClickListener());
+    mFeedItems.setOnItemClickListener(this);
     setEmptyView();
 
-    final LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
-    progressBarListener.setDelegate(lastRefreshListener);
+    //final LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
+    //progressBarListener.setDelegate(lastRefreshListener);
 
     // Navigation drawer
     setNavigationDrawer();
@@ -98,14 +99,14 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     if (savedInstanceState != null) {
       filters = savedInstanceState.getParcelableArrayList(FILTERS_KEY);
     }
-    filterData(lastRefreshListener);
+    filterData();
 
     // Contextual actions
     setContextualListeners();
 
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
-      dataModel.addData(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
+      interactor.addFeed(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
 
     setupSnackBarWithClipboardContent(progressBarListener);
@@ -114,35 +115,40 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   }
 
   private void setupSnackBarWithClipboardContent(ProgressBarListener progressBarListener) {
-    final FeedAdder feedAdder = new FeedAdder(dataModel, new DefaultNetworkChecker(), progressBarListener);
-    final String feedUrl = feedAdder.retrieveFeedFromClipboard();
+    final String feedUrl = retrieveFeedUrlFromClipboard();
     if (feedUrl != null) {
       Snackbar
           .make(mFeedItems, R.string.ask_add_feed + feedUrl, Snackbar.LENGTH_LONG)
           .setAction(R.string.action_add, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              dataModel.addData(feedUrl);
+              interactor.addFeed(feedUrl);
             }
           }).show();
     }
   }
 
-  private void filterData(final LastRefreshListener lastRefreshListener) {
+  public String retrieveFeedUrlFromClipboard() {
+    String resultUrl = null;
+    ClipData data = ((ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE)).getPrimaryClip();
+    if (data != null) {
+      ClipData.Item cbItem = data.getItemAt(0);
+      if (cbItem != null) {
+        String url = cbItem.getText().toString();
+        if ((url != null) && (url.startsWith("http"))) {
+          resultUrl = url;
+        }
+      }
+    }
+    return resultUrl;
+  }
+
+  private void filterData() {
     if (filters == null) {
       filters = new ArrayList<>();
     }
     Log.d("prerefresh", "filtering");
-    dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-        new AsyncCallbackListener<List<RSSChannel>>() {
-          @Override
-          public void onPreExecute() {}
-
-          @Override
-          public void onPostExecute(List<RSSChannel> result) {
-            lastRefreshListener.stopRefreshProgress(); // updates the last synchro label
-          }
-        });
+    interactor.loadFeedItems(filters);
   }
 
   private void setEmptyView() {
@@ -167,8 +173,8 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   private void setNavigationDrawer() {
     // the navigation drawer
     final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setOnItemClickListener(new NavigationDrawerClickListener(drawerLayout));
+    ListView drawerList = (ListView) findViewById(R.id.left_drawer);
+    drawerList.setOnItemClickListener(new NavigationDrawerClickListener(drawerLayout, drawerList));
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     drawerToggle = new ActionBarDrawerToggle(
@@ -187,7 +193,16 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
     };
+    navigationDrawerList = new NavigationDrawer(this, interactor);
     drawerLayout.setDrawerListener(drawerToggle);
+    drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+    FeedChoiceModeListener drawerModeCallback = new FeedChoiceModeListener(navigationDrawerList, R.menu.feeds_context);
+    drawerList.setMultiChoiceModeListener(drawerModeCallback);
+  }
+
+  @Override
+  public void refreshNavigationDrawer(List<RSSChannel> allChannels) {
+    navigationDrawerList.setChannels(allChannels);
   }
 
   /**
@@ -195,11 +210,8 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
    */
   private void setContextualListeners() {
     mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener<RSSChannel> actionModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel, R.menu.items_context);
+    FeedChoiceModeListener actionModeCallback = new FeedChoiceModeListener(new FeedItemContextualActions((RSSItemArrayAdapter) mFeedItems.getAdapter(), interactor), R.menu.items_context);
     mFeedItems.setMultiChoiceModeListener(actionModeCallback);
-    drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener<RSSChannel> drawerModeCallback = new FeedChoiceModeListener<RSSChannel>(dataModel.getNavigationDrawer(), R.menu.feeds_context);
-    drawerList.setMultiChoiceModeListener(drawerModeCallback);
   }
 
   @Override
@@ -217,11 +229,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
-  }
-
-  @Override
-  public void refreshNavigationDrawer(NavigationDrawerProvider navigationDrawer) {
-    drawerList.setAdapter(navigationDrawer.getAdapter(R.layout.list_item));
+    // stop progress bar
   }
 
   @Override
@@ -261,7 +269,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       case R.id.action_refresh:
         Stats.get(this).increment(Stats.ACTION_REFRESH);
         if (networkChecker.checkNetworkForRefresh(this, true)) {
-          dataModel.refreshData();
+          interactor.retrieveLatestFeedItems();
         }
         result = true;
         break;
@@ -281,14 +289,13 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
-      dataModel.loadData(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), new AsyncCallbackListener.DummyCallback());
+      interactor.loadFeedItems();
     } else if (REQ_PREFS == requestCode){
-      dataModel.refreshView();
+      interactor.loadFeedItems();
     } else if (REQ_CATALOG == requestCode) {
       if (data != null) {
         String feedUrl = data.getStringExtra(CatalogActivity.FEED_URL_EXTRA);
-        dataModel.addData(feedUrl);
+        interactor.addFeed(feedUrl);
       }
     }
   }
@@ -299,12 +306,25 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     super.onSaveInstanceState(outState);
   }
 
+
+  @Override
+  public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+    Stats.get(getContext()).increment(Stats.ACTION_READ);
+    Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
+    i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, ((RSSItem) mFeedItems.getItemAtPosition(position)).getGuid());
+    i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, filters);
+    startActivityForResult(i, REQ_ITEM_READ);
+  }
+
   private class NavigationDrawerClickListener implements AdapterView.OnItemClickListener {
 
     DrawerLayout drawerLayout;
 
-    public NavigationDrawerClickListener(DrawerLayout drawerLayout) {
+    ListView drawerList;
+
+    public NavigationDrawerClickListener(DrawerLayout drawerLayout, ListView drawerView) {
       this.drawerLayout = drawerLayout;
+      this.drawerList = drawerView;
     }
 
     @Override
@@ -314,8 +334,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       filters.clear();
       filters.add(navigationDrawerItem.getFilter());
       title = navigationDrawerItem.getTitle();
-      dataModel.filterData(filters, new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-          new AsyncCallbackListener.DummyCallback<List<RSSChannel>>());
+      interactor.loadFeedItems(filters);
       drawerLayout.closeDrawer(drawerList);
     }
   }

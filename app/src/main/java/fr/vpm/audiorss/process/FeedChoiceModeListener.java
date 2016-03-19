@@ -13,7 +13,7 @@ import fr.vpm.audiorss.R;
 /**
  * Created by vince on 03/11/14.
  */
-public class FeedChoiceModeListener<T> implements AbsListView.MultiChoiceModeListener {
+public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListener {
 
   private final ContextualActions contextualActions;
 
