@@ -86,17 +86,28 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void presentFeeds(List<RSSChannel> feeds) {
+    //persist(feeds);
+    cache(feeds);
+    if (cache.isValid()) {
+      displayCachedFeedItems();
+    }
+  }
+
+  private void cache(List<RSSChannel> feeds) {
     cache.invalidate();
     cache.setFeeds(feeds);
     List<RSSItem> rssItems = new ArrayList<>();
     for (RSSChannel feed: feeds) {
       rssItems.addAll(feed.getItems());
     }
+    cache.setItems(rssItems);
     cache.buildChannelsByItem();
-    if (cache.isValid()) {
-      displayCachedFeedItems();
-    }
+  }
 
+  private void persist(List<RSSChannel> feeds) {
+    for (RSSChannel feed : feeds) {
+      feed.saveToDb(feedItemsActivity);
+    }
   }
 
   @Override

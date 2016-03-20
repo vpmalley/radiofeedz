@@ -83,7 +83,13 @@ public class NetworkRSSRetriever implements RSSRetriever {
         cm.retrieveFeedItemsFromNetwork(feeds[0]);
         return cm.getRssChannels();
       }
-    }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
+
+      @Override
+      protected void onPostExecute(List<RSSChannel> rssChannels) {
+        feedsItemPresenter.presentFeeds(rssChannels);
+      }
+    };
+    asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
   }
 
   @Override

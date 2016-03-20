@@ -38,34 +38,23 @@ public class SequentialCacheManager {
 
   private void retrieveFeeds(List<CachableRSSChannel> feedsToRetrieve) {
     for (CachableRSSChannel cachableFeed : feedsToRetrieve) {
-      if (cachableFeed.failed()) {
-        break;
-      }
-      if (cachableFeed.shouldRefresh()) {
+      if (!cachableFeed.failed() && cachableFeed.shouldRefresh()) {
         cachableFeed.query(context);
       }
 
-      if (cachableFeed.failed()) {
-        break;
-      }
-      if (cachableFeed.isQueried()) {
+      if (!cachableFeed.failed() && cachableFeed.isQueried()) {
         cachableFeed.process(context);
       }
 
-      if (cachableFeed.failed()) {
-        break;
-      }
-      if (cachableFeed.isProcessed()) {
+      if (!cachableFeed.failed() && cachableFeed.isProcessed()) {
         cachableFeed.persist(context);
-        // TODO call any delegate instead
+        // TODO remove
       }
 
-      if (cachableFeed.failed()) {
-        break;
+      if (!cachableFeed.failed() && cachableFeed.isProcessed()) {
+        rssChannels.add(cachableFeed.getRSSChannel());
       }
-      rssChannels.add(cachableFeed.getRSSChannel());
     }
-    feedItemsPresenter.presentFeeds(rssChannels);
   }
 
   public List<RSSChannel> getRssChannels() {
