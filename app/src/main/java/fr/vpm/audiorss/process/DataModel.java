@@ -110,9 +110,7 @@ public interface DataModel extends ContextualActions {
     void setItemsAndBuildModel(List<RSSItem> data);
   }
 
-  NavigationDrawerProvider getNavigationDrawer();
+  interface RSSChannelDataModel extends DataModel, RSSChannelInput {}
 
-  public interface RSSChannelDataModel extends DataModel, RSSChannelInput {}
-
-  public interface RSSItemDataModel extends DataModel, RSSItemInput {}
+  interface RSSItemDataModel extends DataModel, RSSItemInput {}
 }

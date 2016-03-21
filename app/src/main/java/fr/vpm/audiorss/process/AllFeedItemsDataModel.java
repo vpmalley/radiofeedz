@@ -411,7 +411,7 @@ public class AllFeedItemsDataModel implements DataModel.RSSChannelDataModel, Dat
     return cache.items.size();
   }
 
-  public NavigationDrawerProvider getNavigationDrawer() {
+  public ContextualActions getNavigationDrawer() {
     if (navigationDrawerList == null) {
       navigationDrawerList = new NavigationDrawerList(getContext(), this, progressListener);
     }

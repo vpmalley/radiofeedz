@@ -38,7 +38,7 @@ import fr.vpm.audiorss.rss.RSSItem;
  *
  * Created by vince on 12/12/14.
  */
-public class NavigationDrawerList implements NavigationDrawerProvider {
+public class NavigationDrawerList implements ContextualActions {
 
   /**
    * The filters for the first items of the list.

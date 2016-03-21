@@ -137,5 +137,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
       rssItemAdapter.setChannelsByItem(cache.getChannelsByItem());
       rssItemAdapter.notifyDataSetChanged();
     }
+
+    feedItemsActivity.refreshNavigationDrawer(cache.getFeeds());
   }
 }

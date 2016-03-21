@@ -23,7 +23,7 @@ import fr.vpm.audiorss.rss.RSSChannel;
 /**
  * Created by vince on 19/03/16.
  */
-public class NavigationDrawer implements NavigationDrawerProvider {
+public class NavigationDrawer implements ContextualActions {
 
   /**
    * The filters for the first items of the list.
@@ -81,16 +81,6 @@ public class NavigationDrawer implements NavigationDrawerProvider {
     return channels;
   }
 
-
-  @Override
-  public ArrayAdapter<NavigationDrawerItem> getAdapter(int layout) {
-    if (adapter == null) {
-      adapter = new ArrayAdapter<NavigationDrawerItem>(context, layout, items);
-    }
-    return adapter;
-  }
-
-
   @Override
   public void deleteData(Collection<Integer> selection) {
     interactor.deleteFeeds(getChannels(selection));
@@ -120,6 +110,9 @@ public class NavigationDrawer implements NavigationDrawerProvider {
     clear();
     addStaticItems();
     addChannels(allChannels);
+    if (adapter == null) {
+      adapter = new ArrayAdapter<>(context, R.layout.list_item, items);
+    }
     adapter.clear();
     adapter.addAll(items);
   }
