@@ -102,7 +102,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     filterData();
 
     // Contextual actions
-    setContextualListeners();
+    setFeedItemsContextualListener();
 
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
@@ -208,7 +208,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   /**
    * Defines the listener when long clicking on one or multiple items of the list
    */
-  private void setContextualListeners() {
+  private void setFeedItemsContextualListener() {
     mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener actionModeCallback = new FeedChoiceModeListener(new FeedItemContextualActions((RSSItemArrayAdapter) mFeedItems.getAdapter(), interactor), R.menu.items_context);
     mFeedItems.setMultiChoiceModeListener(actionModeCallback);
@@ -229,6 +229,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
+    setFeedItemsContextualListener();
     // stop progress bar
   }
 
