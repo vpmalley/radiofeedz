@@ -126,7 +126,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   }
 
   public void setItems(List<RSSItem> items) {
-    this.items = items;
+    this.items.clear();
+    this.items.addAll(items);
   }
 
   public void setChannelsByItem(Map<RSSItem, RSSChannel> channelsByItem) {

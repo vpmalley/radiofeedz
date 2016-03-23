@@ -47,7 +47,7 @@ public class NavigationDrawer implements ContextualActions {
 
   private FeedItemsInteraction interactor;
 
-  private ArrayAdapter<NavigationDrawerItem> adapter;
+  private ArrayAdapter<NavigationDrawerItem> rssChannelAdapter;
 
   public NavigationDrawer(Context context, FeedItemsInteraction interactor) {
     this.context = context;
@@ -106,15 +106,14 @@ public class NavigationDrawer implements ContextualActions {
     // do nothing
   }
 
-  public void setChannels(List<RSSChannel> allChannels) {
+  public ArrayAdapter<NavigationDrawerItem> setChannelsAndGetAdapter(List<RSSChannel> allChannels) {
     clear();
     addStaticItems();
     addChannels(allChannels);
-    if (adapter == null) {
-      adapter = new ArrayAdapter<>(context, R.layout.list_item, items);
+    if (rssChannelAdapter == null) {
+      rssChannelAdapter = new ArrayAdapter<>(context, R.layout.list_item, items);
     }
-    adapter.clear();
-    adapter.addAll(items);
+    return rssChannelAdapter;
   }
 
   /**

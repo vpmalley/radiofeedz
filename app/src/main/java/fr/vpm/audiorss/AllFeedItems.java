@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -167,14 +168,26 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
   }
 
+  @Override
+  protected void onPostCreate(Bundle savedInstanceState) {
+    super.onPostCreate(savedInstanceState);
+    drawerToggle.syncState();
+  }
+
+  @Override
+  public void onConfigurationChanged(Configuration newConfig) {
+    super.onConfigurationChanged(newConfig);
+    drawerToggle.onConfigurationChanged(newConfig);
+  }
+
   /**
    * Sets the navigation drawer and related elements
    */
   private void setNavigationDrawer() {
     // the navigation drawer
     final DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-    ListView drawerList = (ListView) findViewById(R.id.left_drawer);
-    drawerList.setOnItemClickListener(new NavigationDrawerClickListener(drawerLayout, drawerList));
+    ListView feedsList = (ListView) findViewById(R.id.left_drawer);
+    feedsList.setOnItemClickListener(new NavigationDrawerClickListener(drawerLayout, feedsList));
 
     getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     drawerToggle = new ActionBarDrawerToggle(
@@ -195,14 +208,28 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     };
     navigationDrawerList = new NavigationDrawer(this, interactor);
     drawerLayout.setDrawerListener(drawerToggle);
-    drawerList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener drawerModeCallback = new FeedChoiceModeListener(navigationDrawerList, R.menu.feeds_context);
-    drawerList.setMultiChoiceModeListener(drawerModeCallback);
+    setFeedsContextualListener(feedsList);
   }
 
   @Override
   public void refreshNavigationDrawer(List<RSSChannel> allChannels) {
-    navigationDrawerList.setChannels(allChannels);
+    ArrayAdapter<NavigationDrawer.NavigationDrawerItem> adapter = navigationDrawerList.setChannelsAndGetAdapter(allChannels);
+    ListView feedsList = (ListView) findViewById(R.id.left_drawer);
+    feedsList.setAdapter(adapter);
+    setFeedsContextualListener(feedsList);
+  }
+
+  public void setFeedsContextualListener(ListView feedsList) {
+    feedsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
+    FeedChoiceModeListener drawerModeCallback = new FeedChoiceModeListener(navigationDrawerList, R.menu.feeds_context);
+    feedsList.setMultiChoiceModeListener(drawerModeCallback);
+  }
+
+  @Override
+  public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
+    mFeedItems.setAdapter(rssItemAdapter);
+    setFeedItemsContextualListener();
+    // stop progress bar
   }
 
   /**
@@ -212,25 +239,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
     FeedChoiceModeListener actionModeCallback = new FeedChoiceModeListener(new FeedItemContextualActions((RSSItemArrayAdapter) mFeedItems.getAdapter(), interactor), R.menu.items_context);
     mFeedItems.setMultiChoiceModeListener(actionModeCallback);
-  }
-
-  @Override
-  protected void onPostCreate(Bundle savedInstanceState) {
-    super.onPostCreate(savedInstanceState);
-    drawerToggle.syncState();
-  }
-
-  @Override
-  public void onConfigurationChanged(Configuration newConfig) {
-    super.onConfigurationChanged(newConfig);
-    drawerToggle.onConfigurationChanged(newConfig);
-  }
-
-  @Override
-  public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
-    mFeedItems.setAdapter(rssItemAdapter);
-    setFeedItemsContextualListener();
-    // stop progress bar
   }
 
   @Override
@@ -330,7 +338,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      NavigationDrawerList.NavigationDrawerItem navigationDrawerItem = (NavigationDrawerList.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+      NavigationDrawer.NavigationDrawerItem navigationDrawerItem = (NavigationDrawer.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
       Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
       filters.clear();
       filters.add(navigationDrawerItem.getFilter());
