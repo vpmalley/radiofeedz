@@ -36,7 +36,6 @@ import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.FeedItemContextualActions;
 import fr.vpm.audiorss.process.NavigationDrawer;
-import fr.vpm.audiorss.process.NavigationDrawerList;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.process.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
@@ -62,6 +61,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   private String title = "Radiofeedz";
   private ArrayList<SelectionFilter> filters;
   private FeedItemsInteraction interactor;
+  private ProgressBarListener progressBarListener;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +79,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     setContentView(activity_layout);
 
-    ProgressBarListener progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
+    progressBarListener = new ProgressBarListener((ProgressBar) findViewById(R.id.refreshprogress));
 
     // services
     networkChecker = new DefaultNetworkChecker();
@@ -110,12 +110,12 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       interactor.addFeed(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
 
-    setupSnackBarWithClipboardContent(progressBarListener);
+    setupSnackBarWithClipboardContent();
 
     new RecurrentTaskManager().performRecurrentTasks(this);
   }
 
-  private void setupSnackBarWithClipboardContent(ProgressBarListener progressBarListener) {
+  private void setupSnackBarWithClipboardContent() {
     final String feedUrl = retrieveFeedUrlFromClipboard();
     if (feedUrl != null) {
       Snackbar
@@ -149,6 +149,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       filters = new ArrayList<>();
     }
     Log.d("prerefresh", "filtering");
+    progressBarListener.startRefreshProgress();
     interactor.loadFeedItems(filters);
   }
 
@@ -217,6 +218,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     ListView feedsList = (ListView) findViewById(R.id.left_drawer);
     feedsList.setAdapter(adapter);
     setFeedsContextualListener(feedsList);
+    progressBarListener.stopRefreshProgress();
   }
 
   public void setFeedsContextualListener(ListView feedsList) {
@@ -229,7 +231,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
     setFeedItemsContextualListener();
-    // stop progress bar
   }
 
   /**
@@ -278,6 +279,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       case R.id.action_refresh:
         Stats.get(this).increment(Stats.ACTION_REFRESH);
         if (networkChecker.checkNetworkForRefresh(this, true)) {
+          progressBarListener.startRefreshProgress();
           interactor.retrieveLatestFeedItems();
         }
         result = true;
@@ -298,8 +300,10 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
     if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
+      progressBarListener.startRefreshProgress();
       interactor.loadFeedItems();
     } else if (REQ_PREFS == requestCode){
+      progressBarListener.startRefreshProgress();
       interactor.loadFeedItems();
     } else if (REQ_CATALOG == requestCode) {
       if (data != null) {
@@ -343,6 +347,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       filters.clear();
       filters.add(navigationDrawerItem.getFilter());
       title = navigationDrawerItem.getTitle();
+      progressBarListener.startRefreshProgress();
       interactor.loadFeedItems(filters);
       drawerLayout.closeDrawer(drawerList);
     }
