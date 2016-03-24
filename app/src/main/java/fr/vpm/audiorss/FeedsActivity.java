@@ -24,6 +24,11 @@ public interface FeedsActivity<T> {
   void refreshNavigationDrawer(List<RSSChannel> allChannels);
 
   /**
+   * Refreshes the time when the feeds were last refreshed
+   */
+  void displayLastRefreshTime(String lastRefreshTime);
+
+  /**
    * Retrieves the Context bound with this Activity
    * @return the Android Context
    */

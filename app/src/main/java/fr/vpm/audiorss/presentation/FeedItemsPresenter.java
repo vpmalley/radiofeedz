@@ -8,6 +8,7 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
+import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.RSSCache;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -139,5 +140,17 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     }
 
     feedItemsActivity.refreshNavigationDrawer(cache.getFeeds());
+    presentLastRefreshTime();
+  }
+
+  private void presentLastRefreshTime() {
+    String lastRefreshTime = "";
+    for (RSSChannel feed : cache.getFeeds()) {
+      if (lastRefreshTime.compareTo(feed.getLastBuildDate()) < 0) {
+        lastRefreshTime = feed.getLastBuildDate();
+      }
+    }
+    String displayDate = DateUtils.getDisplayDate(lastRefreshTime);
+    feedItemsActivity.displayLastRefreshTime(displayDate);
   }
 }

@@ -112,6 +112,9 @@ public class FeedItemReaderActivity extends AppCompatActivity implements FeedsAc
   public void refreshNavigationDrawer(List<RSSChannel> allChannels) {}
 
   @Override
+  public void displayLastRefreshTime(String lastRefreshTime) {}
+
+  @Override
   public Context getContext() {
     return this;
   }

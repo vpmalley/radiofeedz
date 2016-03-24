@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   private ArrayList<SelectionFilter> filters;
   private FeedItemsInteraction interactor;
   private ProgressBarListener progressBarListener;
+  private TextView lastRefreshTimeView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -89,9 +91,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     mFeedItems.setTextFilterEnabled(true);
     mFeedItems.setOnItemClickListener(this);
     setEmptyView();
-
-    //final LastRefreshListener lastRefreshListener = new LastRefreshListener((TextView)findViewById(R.id.latestupdate), dataModel, this);
-    //progressBarListener.setDelegate(lastRefreshListener);
+    lastRefreshTimeView = (TextView)findViewById(R.id.latestupdate);
 
     // Navigation drawer
     setNavigationDrawer();
@@ -231,6 +231,13 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
     setFeedItemsContextualListener();
+  }
+
+  @Override
+  public void displayLastRefreshTime(String lastRefreshTime) {
+    if (lastRefreshTimeView != null) {
+      lastRefreshTimeView.setText(getString(R.string.last_refresh) + " : " + lastRefreshTime);
+    }
   }
 
   /**
