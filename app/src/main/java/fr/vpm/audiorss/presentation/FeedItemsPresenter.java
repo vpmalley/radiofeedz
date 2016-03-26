@@ -1,7 +1,14 @@
 package fr.vpm.audiorss.presentation;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.R;
@@ -9,6 +16,7 @@ import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.process.DateUtils;
+import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.process.RSSCache;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -35,12 +43,14 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   @Override
   public void loadFeedItems() {
     cache.invalidate();
+    cache.empty();
     rssRetriever.retrieveFeedItems();
   }
 
   @Override
   public void loadFeedItems(List<SelectionFilter> filters) {
     cache.invalidate();
+    cache.empty();
     rssRetriever.retrieveFeedItems(filters);
   }
 
@@ -88,21 +98,41 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   @Override
   public void presentFeeds(List<RSSChannel> feeds) {
     //persist(feeds);
-    cache(feeds);
+    addToCache(feeds);
     if (cache.isValid()) {
       displayCachedFeedItems();
     }
   }
 
-  private void cache(List<RSSChannel> feeds) {
+  private void addToCache(List<RSSChannel> feeds) {
     cache.invalidate();
-    cache.setFeeds(feeds);
-    List<RSSItem> rssItems = new ArrayList<>();
+    Set<RSSChannel> allChannels = new HashSet<>();
+    allChannels.addAll(feeds);
+    allChannels.addAll(cache.getFeeds());
+    cache.setFeeds(new ArrayList<RSSChannel>(allChannels));
+
+    Set<RSSItem> rssItems = new HashSet<>();
     for (RSSChannel feed: feeds) {
       rssItems.addAll(feed.getItems());
     }
-    cache.setItems(rssItems);
+    rssItems.addAll(cache.getItems());
+
+    List<RSSItem> sortedItems = sortAndCapItems(new ArrayList<RSSItem>(rssItems));
+    cache.setItems(sortedItems);
+
     cache.buildChannelsByItem();
+  }
+
+  public List<RSSItem> sortAndCapItems(List<RSSItem> rssItems) {
+    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(feedItemsActivity);
+    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
+    Collections.sort(rssItems, new ItemComparator(ordering));
+    String limit = sharedPrefs.getString("pref_disp_max_items", "80");
+    if (!Pattern.compile("\\d+").matcher(limit).matches()){
+      limit = "80";
+    }
+    int actualLimit = Math.min(rssItems.size(), Integer.valueOf(limit));
+    return rssItems.subList(0, actualLimit);
   }
 
   private void persist(List<RSSChannel> feeds) {

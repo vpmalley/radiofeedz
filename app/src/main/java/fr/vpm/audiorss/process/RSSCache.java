@@ -29,6 +29,8 @@ public class RSSCache {
   Map<RSSItem, RSSChannel> channelsByItem;
 
   private static RSSCache instance;
+  private boolean itemsAreSet;
+  private boolean feedsAreSet;
 
   public RSSCache() {
     items = new ArrayList<>();
@@ -79,21 +81,28 @@ public class RSSCache {
     return items.get(position);
   }
 
-  public void invalidate() {
+  public void empty() {
     this.feeds.clear();
     this.items.clear();
   }
 
+  public void invalidate() {
+    itemsAreSet = false;
+    feedsAreSet = false;
+  }
+
   public boolean isValid() {
-    return (items.size() > 0) && (feeds.size() > 0);
+    return itemsAreSet && feedsAreSet;
   }
 
   public void setFeeds(List<RSSChannel> feeds) {
     this.feeds = feeds;
+    feedsAreSet = true;
   }
 
   public void setItems(List<RSSItem> items) {
     this.items = items;
+    itemsAreSet = true;
   }
 
   public void buildChannelsByItem(){

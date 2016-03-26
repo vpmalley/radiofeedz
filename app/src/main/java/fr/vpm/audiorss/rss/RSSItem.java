@@ -8,6 +8,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadListener;
@@ -260,4 +263,24 @@ public class RSSItem implements Parcelable {
       return new RSSItem[size];
     }
   };
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    RSSItem rssItem = (RSSItem) o;
+
+    return new EqualsBuilder()
+        .append(guid, rssItem.guid)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(guid)
+        .toHashCode();
+  }
 }
