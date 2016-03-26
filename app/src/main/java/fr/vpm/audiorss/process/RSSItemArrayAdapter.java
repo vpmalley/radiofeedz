@@ -101,7 +101,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
     // Feed content
     if (itemHolder.contentView != null) {
-      itemHolder.contentView.setText(Html.fromHtml(rssItem.getDescription()));
+      String content = Html.fromHtml(rssItem.getDescription()).toString().replace((char) 65532, ' ').trim();
+      itemHolder.contentView.setText(content);
     }
 
     return convertView;
