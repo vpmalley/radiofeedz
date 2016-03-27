@@ -109,7 +109,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     Set<RSSChannel> allChannels = new HashSet<>();
     allChannels.addAll(feeds);
     allChannels.addAll(cache.getFeeds());
-    cache.setFeeds(new ArrayList<RSSChannel>(allChannels));
+    cache.setFeeds(new ArrayList<>(allChannels));
 
     Set<RSSItem> rssItems = new HashSet<>();
     for (RSSChannel feed: feeds) {
@@ -117,7 +117,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     }
     rssItems.addAll(cache.getItems());
 
-    List<RSSItem> sortedItems = sortAndCapItems(new ArrayList<RSSItem>(rssItems));
+    List<RSSItem> sortedItems = sortAndCapItems(new ArrayList<>(rssItems));
     cache.setItems(sortedItems);
 
     cache.buildChannelsByItem();
@@ -128,7 +128,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Collections.sort(rssItems, new ItemComparator(ordering));
     String limit = sharedPrefs.getString("pref_disp_max_items", "80");
-    if (!Pattern.compile("\\d+").matcher(limit).matches()){
+    if (limit == null || !Pattern.compile("\\d+").matcher(limit).matches()){
       limit = "80";
     }
     int actualLimit = Math.min(rssItems.size(), Integer.valueOf(limit));
@@ -161,7 +161,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   public synchronized void displayCachedFeedItems() {
     if (rssItemAdapter == null) {
-      rssItemAdapter = new RSSItemArrayAdapter(feedItemsActivity, rssItemLayout, cache.getItems(), cache.getChannelsByItem());
+      rssItemAdapter = new RSSItemArrayAdapter(feedItemsActivity, rssItemLayout, cache.getItems(), cache.getChannelsByItem(), this);
       feedItemsActivity.refreshFeedItems(rssItemAdapter);
     } else {
       rssItemAdapter.setItems(cache.getItems());

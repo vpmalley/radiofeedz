@@ -2,19 +2,23 @@ package fr.vpm.audiorss.process;
 
 import android.app.Activity;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.media.IconDisplay;
+import fr.vpm.audiorss.presentation.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -33,82 +37,68 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
   private final int resource;
 
+  private final FeedItemsInteraction feedItemsInteraction;
+
   public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
-      RSSChannel> channelsByItem) {
+      RSSChannel> channelsByItem, FeedItemsInteraction feedItemsInteraction) {
     super(activity, resource, items);
     this.activity = activity;
     this.items = items;
     this.channelsByItem = channelsByItem;
     this.resource = resource;
+    this.feedItemsInteraction = feedItemsInteraction;
   }
 
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
-    ViewHolder itemHolder;
+    RSSItemViewHolder itemHolder;
 
     // retrieving the view
     if (convertView == null) {
       LayoutInflater layoutInflater = activity.getLayoutInflater();
       convertView = layoutInflater.inflate(resource, parent, false);
-      ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
-      TextView itemTitle = (TextView) convertView.findViewById(R.id.item_title);
-      TextView feedTitle = (TextView) convertView.findViewById(R.id.feed_title);
-      TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
-      ImageView itemIcon1 = (ImageView) convertView.findViewById(R.id.item_icon_1);
-      ImageView itemIcon2 = (ImageView) convertView.findViewById(R.id.item_icon_2);
-      TextView itemContent = (TextView) convertView.findViewById(R.id.item_content);
-
-      itemHolder = new ViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent);
+      itemHolder = findAllViews(convertView);
       convertView.setTag(itemHolder);
     } else {
-      itemHolder = (ViewHolder) convertView.getTag();
+      itemHolder = (RSSItemViewHolder) convertView.getTag();
     }
     RSSItem rssItem = items.get(position);
-    //RSSChannel rssChannel = RSSChannel.fromDbById(rssItem.getChannelId(), getContext());
     RSSChannel rssChannel = channelsByItem.get(rssItem);
 
+    displayTitle(itemHolder, rssItem);
+    displayFeedTitle(itemHolder, rssChannel);
+    displayDate(itemHolder, rssItem);
+    displayPicture(rssItem, rssChannel, itemHolder);
+    displayRightIcons(itemHolder, rssItem);
+    displayContent(itemHolder, rssItem);
 
-    // Title
+    displayActions(itemHolder, rssItem);
+    setActionListeners(itemHolder);
+
+    return convertView;
+  }
+
+  private void displayTitle(RSSItemViewHolder itemHolder, RSSItem rssItem) {
     itemHolder.titleView.setText(rssItem.getTitle());
     if (!rssItem.isRead()) {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
     } else {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT);
     }
+  }
 
-    // Feed title
+  private void displayFeedTitle(RSSItemViewHolder itemHolder, RSSChannel rssChannel) {
     if ((itemHolder.feedTitleView != null) && (rssChannel != null)) {
       itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
     }
-
-    // Date
-    printDate(itemHolder, rssItem);
-
-    // Feed picture
-    setPicture(rssItem, rssChannel, itemHolder);
-
-    // Icons : unread / downloaded
-    if (!rssItem.isRead()) {
-      itemHolder.iconView1.setVisibility(View.VISIBLE);
-    } else {
-      itemHolder.iconView1.setVisibility(View.INVISIBLE);
-    }
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isDownloaded(getContext(), false))) {
-      itemHolder.iconView2.setVisibility(View.VISIBLE);
-    } else {
-      itemHolder.iconView2.setVisibility(View.INVISIBLE);
-    }
-
-    // Feed content
-    if (itemHolder.contentView != null) {
-      String content = Html.fromHtml(rssItem.getDescription()).toString().replace((char) 65532, ' ').trim();
-      itemHolder.contentView.setText(content);
-    }
-
-    return convertView;
   }
 
-  private void setPicture(RSSItem rssItem, RSSChannel rssChannel, ViewHolder itemHolder){
+  private void displayDate(RSSItemViewHolder itemHolder, RSSItem rssItem) {
+    String dateText = DateUtils.getDisplayDate(rssItem.getDate());
+    itemHolder.dateView.setText(dateText);
+  }
+
+  private void displayPicture(RSSItem rssItem, RSSChannel rssChannel, RSSItemViewHolder itemHolder){
     if (rssItem != null) {
       IconDisplay iconDisplay = rssItem.getIconDisplay(rssChannel);
       if (iconDisplay != null) {
@@ -121,9 +111,133 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     }
   }
 
-  private void printDate(ViewHolder itemHolder, RSSItem rssItem) {
-    String dateText = DateUtils.getDisplayDate(rssItem.getDate());
-    itemHolder.dateView.setText(dateText);
+  private void displayRightIcons(RSSItemViewHolder itemHolder, RSSItem rssItem) {
+    if (!rssItem.isRead()) {
+      itemHolder.iconView1.setVisibility(View.VISIBLE);
+    } else {
+      itemHolder.iconView1.setVisibility(View.INVISIBLE);
+    }
+    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isDownloaded(getContext(), false))) {
+      itemHolder.iconView2.setVisibility(View.VISIBLE);
+    } else {
+      itemHolder.iconView2.setVisibility(View.INVISIBLE);
+    }
+  }
+
+  private void displayContent(RSSItemViewHolder itemHolder, RSSItem rssItem) {
+    if (itemHolder.contentView != null) {
+      String content = Html.fromHtml(rssItem.getDescription()).toString().replace((char) 65532, ' ').trim();
+      itemHolder.contentView.setText(content);
+    }
+  }
+
+  private void displayActions(RSSItemViewHolder itemHolder, RSSItem rssItem) {
+    if (rssItem.isRead()) {
+      itemHolder.readIconView.setVisibility(View.GONE);
+      itemHolder.unreadIconView.setVisibility(View.VISIBLE);
+    } else {
+      itemHolder.readIconView.setVisibility(View.VISIBLE);
+      itemHolder.unreadIconView.setVisibility(View.GONE);
+    }
+
+    itemHolder.playIconView.setVisibility(View.GONE);
+    itemHolder.displayIconView.setVisibility(View.GONE);
+  }
+
+  @NonNull
+  private RSSItemViewHolder findAllViews(View convertView) {
+    RSSItemViewHolder itemHolder;ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
+    TextView itemTitle = (TextView) convertView.findViewById(R.id.item_title);
+    TextView feedTitle = (TextView) convertView.findViewById(R.id.feed_title);
+    TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
+    ImageView itemIcon1 = (ImageView) convertView.findViewById(R.id.item_icon_1);
+    ImageView itemIcon2 = (ImageView) convertView.findViewById(R.id.item_icon_2);
+    TextView itemContent = (TextView) convertView.findViewById(R.id.item_content);
+    ImageView webIconView = (ImageView) convertView.findViewById(R.id.action_web);
+    ImageView downloadIconView = (ImageView) convertView.findViewById(R.id.action_download);
+    ImageView playIconView = (ImageView) convertView.findViewById(R.id.action_play);
+    ImageView displayIconView = (ImageView) convertView.findViewById(R.id.action_display);
+    ImageView readIconView = (ImageView) convertView.findViewById(R.id.action_read);
+    ImageView unreadIconView = (ImageView) convertView.findViewById(R.id.action_unread);
+    ImageView shareIconView = (ImageView) convertView.findViewById(R.id.action_share);
+
+    itemHolder = new RSSItemViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent, webIconView, downloadIconView, playIconView, displayIconView, readIconView, unreadIconView, shareIconView);
+    return itemHolder;
+  }
+
+
+  // Actions
+
+  private void setActionListeners(RSSItemViewHolder itemHolder) {
+    itemHolder.webIconView.setOnClickListener(onOpenWeb);
+    itemHolder.downloadIconView.setOnClickListener(onDownload);
+    itemHolder.playIconView.setOnClickListener(onPlay);
+    itemHolder.displayIconView.setOnClickListener(onDisplay);
+    itemHolder.readIconView.setOnClickListener(onMarkAsRead);
+    itemHolder.unreadIconView.setOnClickListener(onMarkAsUnread);
+    itemHolder.shareIconView.setOnClickListener(onShare);
+  }
+
+  private View.OnClickListener onOpenWeb = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      // TODO
+    }
+  };
+
+  private View.OnClickListener onDownload = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      feedItemsInteraction.downloadMedia(Collections.singletonList(rssItem));
+    }
+  };
+
+  private View.OnClickListener onPlay = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      // TODO
+    }
+  };
+
+  private View.OnClickListener onDisplay = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      // TODO
+    }
+  };
+
+  private View.OnClickListener onMarkAsRead = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
+    }
+  };
+
+  private View.OnClickListener onMarkAsUnread = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), false);
+    }
+  };
+
+  private View.OnClickListener onShare = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      RSSItem rssItem = getFeedItemForButton(view);
+      // TODO
+    }
+  };
+
+  private RSSItem getFeedItemForButton(View view) {
+    View item = (View) view.getParent().getParent();
+    int position = ((ListView) item.getParent()).getPositionForView(item);
+    return items.get(position);
   }
 
   public void setItems(List<RSSItem> items) {
@@ -140,34 +254,4 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     return items.size();
   }
 
-  /**
-   * Keeps a reference to the views associated with a item. Only views should be stored there,
-   * i.e. NO DATA should be linked to that object.
-   */
-  public class ViewHolder {
-
-    private final TextView titleView;
-
-    private final TextView feedTitleView;
-
-    private final TextView dateView;
-
-    private final ImageView pictureView;
-
-    private final ImageView iconView1;
-
-    private final ImageView iconView2;
-
-    private final TextView contentView;
-
-    public ViewHolder(TextView titleView, TextView feedTitleView, TextView dateView, ImageView pictureView, ImageView iconView1, ImageView iconView2, TextView contentView) {
-      this.titleView = titleView;
-      this.feedTitleView = feedTitleView;
-      this.dateView = dateView;
-      this.pictureView = pictureView;
-      this.iconView1 = iconView1;
-      this.iconView2 = iconView2;
-      this.contentView = contentView;
-    }
-  }
 }
