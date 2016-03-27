@@ -1,7 +1,9 @@
 package fr.vpm.audiorss.process;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -12,12 +14,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.media.IconDisplay;
+import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.presentation.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -29,6 +33,7 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
 
+  private static final String MIME_IMAGE = "image";
   private final Activity activity;
 
   private List<RSSItem> items;
@@ -182,7 +187,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     @Override
     public void onClick(View view) {
       RSSItem rssItem = getFeedItemForButton(view);
-      // TODO
+      Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(rssItem.getLink()));
+      activity.startActivity(i);
     }
   };
 
@@ -198,7 +204,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     @Override
     public void onClick(View view) {
       RSSItem rssItem = getFeedItemForButton(view);
-      // TODO
+      playMedia(rssItem);
     }
   };
 
@@ -206,7 +212,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     @Override
     public void onClick(View view) {
       RSSItem rssItem = getFeedItemForButton(view);
-      // TODO
+      playMedia(rssItem);
     }
   };
 
@@ -230,7 +236,11 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     @Override
     public void onClick(View view) {
       RSSItem rssItem = getFeedItemForButton(view);
-      // TODO
+      Intent shareIntent = new Intent();
+      shareIntent.setAction(Intent.ACTION_SEND);
+      shareIntent.putExtra(Intent.EXTRA_TEXT, rssItem.getLink());
+      shareIntent.setType("text/plain");
+      activity.startActivity(shareIntent);
     }
   };
 
@@ -238,6 +248,24 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     View item = (View) view.getParent().getParent();
     int position = ((ListView) item.getParent()).getPositionForView(item);
     return items.get(position);
+  }
+
+  private void playMedia(RSSItem rssItem) {
+    Intent playIntent = new Intent(Intent.ACTION_VIEW);
+    Media m = rssItem.getMedia();
+    if (m != null) {
+      Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
+      if (m.getMimeType().startsWith(MIME_IMAGE)){
+        externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
+      }
+      File mediaFile = m.getMediaFile(activity, externalDownloadsFolder, false);
+      if (mediaFile.exists()){
+        playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
+      } else {
+        playIntent.setDataAndType(new Uri.Builder().path(m.getDistantUrl()).build(), m.getMimeType());
+      }
+      activity.startActivity(playIntent);
+    }
   }
 
   public void setItems(List<RSSItem> items) {
