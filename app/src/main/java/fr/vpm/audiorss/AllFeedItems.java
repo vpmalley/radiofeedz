@@ -33,17 +33,14 @@ import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
 import fr.vpm.audiorss.presentation.FeedItemsInteraction;
 import fr.vpm.audiorss.presentation.FeedItemsPresenter;
-import fr.vpm.audiorss.process.AllFeedItemsDataModel;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
-import fr.vpm.audiorss.process.FeedItemContextualActions;
 import fr.vpm.audiorss.process.NavigationDrawer;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.process.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
-import fr.vpm.audiorss.rss.RSSItem;
 
-public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter>, AdapterView.OnItemClickListener {
+public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter> {
 
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
@@ -89,7 +86,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
-    mFeedItems.setOnItemClickListener(this);
     setEmptyView();
     lastRefreshTimeView = (TextView)findViewById(R.id.latestupdate);
 
@@ -101,9 +97,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       filters = savedInstanceState.getParcelableArrayList(FILTERS_KEY);
     }
     filterData();
-
-    // Contextual actions
-    setFeedItemsContextualListener();
 
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
@@ -230,7 +223,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
-    setFeedItemsContextualListener();
   }
 
   @Override
@@ -238,15 +230,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
     if (lastRefreshTimeView != null) {
       lastRefreshTimeView.setText(getString(R.string.last_refresh) + " : " + lastRefreshTime);
     }
-  }
-
-  /**
-   * Defines the listener when long clicking on one or multiple items of the list
-   */
-  private void setFeedItemsContextualListener() {
-    mFeedItems.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedChoiceModeListener actionModeCallback = new FeedChoiceModeListener(new FeedItemContextualActions((RSSItemArrayAdapter) mFeedItems.getAdapter(), interactor), R.menu.items_context);
-    mFeedItems.setMultiChoiceModeListener(actionModeCallback);
   }
 
   @Override
@@ -306,7 +289,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (AllFeedItemsDataModel.REQ_ITEM_READ == requestCode){
+    if (REQ_ITEM_READ == requestCode){
       progressBarListener.startRefreshProgress();
       interactor.loadFeedItems();
     } else if (REQ_PREFS == requestCode){
@@ -324,16 +307,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   protected void onSaveInstanceState(Bundle outState) {
     outState.putParcelableArrayList(FILTERS_KEY, filters);
     super.onSaveInstanceState(outState);
-  }
-
-
-  @Override
-  public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-    Stats.get(getContext()).increment(Stats.ACTION_READ);
-    Intent i = new Intent(getContext(), FeedItemReaderActivity.class);
-    i.putExtra(FeedItemReaderActivity.INITIAL_POSITION, ((RSSItem) mFeedItems.getItemAtPosition(position)).getGuid());
-    i.putParcelableArrayListExtra(FeedItemReaderActivity.ITEM_FILTER, filters);
-    startActivityForResult(i, REQ_ITEM_READ);
   }
 
   private class NavigationDrawerClickListener implements AdapterView.OnItemClickListener {
