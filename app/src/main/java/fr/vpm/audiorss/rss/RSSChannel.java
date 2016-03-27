@@ -8,6 +8,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -125,20 +128,6 @@ public class RSSChannel implements Parcelable {
 
   public void addTag(String tag) {
     tags.add(tag);
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    boolean result = true;
-    if (o instanceof RSSChannel) {
-      RSSChannel channel = (RSSChannel) o;
-      result = this.title.equals(channel.title);
-      result &= this.link.equals(channel.link);
-      result &= this.description.equals(channel.description);
-    } else {
-      result = super.equals(o);
-    }
-    return result;
   }
 
   public long getId() {
@@ -326,4 +315,28 @@ public class RSSChannel implements Parcelable {
       return new RSSChannel[size];
     }
   };
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+
+    if (o == null || getClass() != o.getClass()) return false;
+
+    RSSChannel that = (RSSChannel) o;
+
+    return new EqualsBuilder()
+        .append(title, that.title)
+        .append(link, that.link)
+        .append(description, that.description)
+        .isEquals();
+  }
+
+  @Override
+  public int hashCode() {
+    return new HashCodeBuilder(17, 37)
+        .append(title)
+        .append(link)
+        .append(description)
+        .toHashCode();
+  }
 }
