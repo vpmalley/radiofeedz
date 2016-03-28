@@ -19,11 +19,8 @@ public class AsyncDbSaveRSSChannel extends AsyncTask<RSSChannel, Integer, RSSCha
 
   private final AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener;
 
-  private final DbRSSChannel dbUpdater;
-
   public AsyncDbSaveRSSChannel(AsyncCallbackListener<List<RSSChannel>> asyncCallbackListener, Context context) {
     this.context = context;
-    this.dbUpdater = new DbRSSChannel(context, true);
     this.asyncCallbackListener = asyncCallbackListener;
     asyncCallbackListener.onPreExecute();
   }

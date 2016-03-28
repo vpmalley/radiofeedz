@@ -20,12 +20,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
-import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.DateUtils;
 
 /**
@@ -212,8 +210,8 @@ public class RSSChannel implements Parcelable {
     this.nextRefresh = nextRefresh;
   }
 
-  public void asyncSaveToDb(ProgressListener progressListener, DataModel dataModel, AsyncCallbackListener<List<RSSChannel>> rssChannelCallback) {
-    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(rssChannelCallback, dataModel.getContext());
+  public void asyncSaveToDb(Context context) {
+    AsyncDbSaveRSSChannel asyncDbUpdater = new AsyncDbSaveRSSChannel(new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(), context);
     asyncDbUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
   }
 

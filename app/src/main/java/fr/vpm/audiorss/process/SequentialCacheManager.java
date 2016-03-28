@@ -45,11 +45,6 @@ public class SequentialCacheManager {
       }
 
       if (!cachableFeed.failed() && cachableFeed.isProcessed()) {
-        cachableFeed.persist(context);
-        // TODO remove
-      }
-
-      if (!cachableFeed.failed() && cachableFeed.isProcessed()) {
         rssChannels.add(cachableFeed.getRSSChannel());
       }
     }

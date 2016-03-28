@@ -97,7 +97,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   @Override
   public void presentFeeds(List<RSSChannel> feeds) {
-    //persist(feeds);
+    persist(feeds);
     addToCache(feeds);
     if (cache.isValid()) {
       displayCachedFeedItems();
@@ -137,7 +137,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
   private void persist(List<RSSChannel> feeds) {
     for (RSSChannel feed : feeds) {
-      feed.saveToDb(feedItemsActivity);
+      feed.asyncSaveToDb(feedItemsActivity);
     }
   }
 
