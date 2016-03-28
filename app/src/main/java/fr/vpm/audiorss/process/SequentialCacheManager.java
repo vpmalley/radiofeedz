@@ -5,7 +5,6 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.vpm.audiorss.presentation.FeedItemsPresentation;
 import fr.vpm.audiorss.rss.CachableRSSChannel;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -15,12 +14,10 @@ import fr.vpm.audiorss.rss.RSSChannel;
 public class SequentialCacheManager {
 
   private Context context;
-  private FeedItemsPresentation feedItemsPresenter;
   private List<RSSChannel> rssChannels = new ArrayList<>();
 
-  public SequentialCacheManager(Context context, FeedItemsPresentation feedItemsPresenter) {
+  public SequentialCacheManager(Context context) {
     this.context = context;
-    this.feedItemsPresenter = feedItemsPresenter;
   }
 
   public void retrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
@@ -34,6 +31,7 @@ public class SequentialCacheManager {
   public void addFeed(String feedUrl) {
     List<CachableRSSChannel> feeds = new ArrayList<>();
     feeds.add(new CachableRSSChannel(feedUrl));
+    retrieveFeeds(feeds);
   }
 
   private void retrieveFeeds(List<CachableRSSChannel> feedsToRetrieve) {

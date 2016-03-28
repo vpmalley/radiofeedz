@@ -297,6 +297,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
       interactor.loadFeedItems();
     } else if (REQ_CATALOG == requestCode) {
       if (data != null) {
+        progressBarListener.startRefreshProgress();
         String feedUrl = data.getStringExtra(CatalogActivity.FEED_URL_EXTRA);
         interactor.addFeed(feedUrl);
       }

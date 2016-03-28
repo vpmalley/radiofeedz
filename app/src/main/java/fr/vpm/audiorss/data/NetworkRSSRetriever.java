@@ -79,7 +79,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
     AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>>() {
       @Override
       protected List<RSSChannel> doInBackground(List<RSSChannel>... feeds) {
-        SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
+        SequentialCacheManager cm = new SequentialCacheManager(context);
         cm.retrieveFeedItemsFromNetwork(feeds[0]);
         return cm.getRssChannels();
       }
@@ -93,9 +93,21 @@ public class NetworkRSSRetriever implements RSSRetriever {
   }
 
   @Override
-  public void addFeed(String feedUrl) {
-    SequentialCacheManager cm = new SequentialCacheManager(context, feedsItemPresenter);
-    cm.addFeed(feedUrl);
+  public void addFeed(final String feedUrl) {
+    AsyncTask<String, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<String, Integer, List<RSSChannel>>() {
+      @Override
+      protected List<RSSChannel> doInBackground(String... feedUrls) {
+        SequentialCacheManager cm = new SequentialCacheManager(context);
+        cm.addFeed(feedUrls[0]);
+        return cm.getRssChannels();
+      }
+
+      @Override
+      protected void onPostExecute(List<RSSChannel> rssChannels) {
+        feedsItemPresenter.presentFeeds(rssChannels);
+      }
+    };
+    asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedUrl);
   }
 
   @Override
