@@ -52,7 +52,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.setFeedsAndBuildModel(rssChannels);
+        feedsItemPresenter.presentFeeds(rssChannels);
       }
     };
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, context, false);
@@ -67,7 +67,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSItem> rssItems) {
-        feedsItemPresenter.setItemsAndBuildModel(rssItems);
+        feedsItemPresenter.presentItems(rssItems);
       }
     };
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, context, filters);
@@ -86,7 +86,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.presentFeeds(rssChannels);
+        feedsItemPresenter.presentNewFeeds(rssChannels);
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
@@ -104,7 +104,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.presentFeeds(rssChannels);
+        feedsItemPresenter.presentNewFeeds(rssChannels);
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedUrl);

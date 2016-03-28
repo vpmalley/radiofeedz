@@ -10,19 +10,19 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public interface FeedItemsPresentation {
 
-  void presentFeeds(List<RSSChannel> allFeeds);
+  void presentNewFeeds(List<RSSChannel> newFeeds);
 
   /**
    * Sets the feeds to the in-memory cache
    * @param allFeeds feeds to cache
    */
-  void setFeedsAndBuildModel(List<RSSChannel> allFeeds);
+  void presentFeeds(List<RSSChannel> allFeeds);
 
 
   /**
    * Sets the items to the in-memory cache
    * @param allItems items to cache
    */
-  void setItemsAndBuildModel(List<RSSItem> allItems);
+  void presentItems(List<RSSItem> allItems);
 
 }

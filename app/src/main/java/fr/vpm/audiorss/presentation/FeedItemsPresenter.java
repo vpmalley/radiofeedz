@@ -96,9 +96,9 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
 
 
   @Override
-  public void presentFeeds(List<RSSChannel> feeds) {
-    persist(feeds);
-    addToCache(feeds);
+  public void presentNewFeeds(List<RSSChannel> newFeeds) {
+    persist(newFeeds);
+    addToCache(newFeeds);
     if (cache.isValid()) {
       displayCachedFeedItems();
     }
@@ -142,7 +142,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   }
 
   @Override
-  public void setFeedsAndBuildModel(List<RSSChannel> feeds) {
+  public void presentFeeds(List<RSSChannel> feeds) {
     cache.setFeeds(feeds);
     cache.buildChannelsByItem();
     if (cache.isValid()) {
@@ -151,7 +151,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   }
 
   @Override
-  public void setItemsAndBuildModel(List<RSSItem> items) {
+  public void presentItems(List<RSSItem> items) {
     cache.setItems(items);
     cache.buildChannelsByItem();
     if (cache.isValid()) {
