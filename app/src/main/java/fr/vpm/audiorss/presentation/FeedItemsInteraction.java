@@ -29,6 +29,4 @@ public interface FeedItemsInteraction {
 
   void downloadMedia(List<RSSItem> feedItems);
 
-  RSSItem getFeedItem(String feedItemGuid);
-
 }

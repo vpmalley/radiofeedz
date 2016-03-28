@@ -17,13 +17,12 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.presentation.DisplayedRSSItem;
 import fr.vpm.audiorss.presentation.FeedItemsInteraction;
-import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -31,25 +30,18 @@ import fr.vpm.audiorss.rss.RSSItem;
  *
  * An Adapter to convert a RSSItem to a view, displayed for each item in a list.
  */
-public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
+public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
 
   private static final String MIME_IMAGE = "image";
   private final Activity activity;
-
-  private List<RSSItem> items;
-
-  private Map<RSSItem, RSSChannel> channelsByItem;
 
   private final int resource;
 
   private final FeedItemsInteraction feedItemsInteraction;
 
-  public RSSItemArrayAdapter(Activity activity, int resource, List<RSSItem> items, Map<RSSItem,
-      RSSChannel> channelsByItem, FeedItemsInteraction feedItemsInteraction) {
+  public RSSItemArrayAdapter(Activity activity, int resource, List<DisplayedRSSItem> items, FeedItemsInteraction feedItemsInteraction) {
     super(activity, resource, items);
     this.activity = activity;
-    this.items = items;
-    this.channelsByItem = channelsByItem;
     this.resource = resource;
     this.feedItemsInteraction = feedItemsInteraction;
   }
@@ -67,13 +59,12 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     } else {
       itemHolder = (RSSItemViewHolder) convertView.getTag();
     }
-    RSSItem rssItem = items.get(position);
-    RSSChannel rssChannel = channelsByItem.get(rssItem);
+    DisplayedRSSItem rssItem = getItem(position);
 
     displayTitle(itemHolder, rssItem);
-    displayFeedTitle(itemHolder, rssChannel);
+    displayFeedTitle(itemHolder, rssItem);
     displayDate(itemHolder, rssItem);
-    displayPicture(rssItem, rssChannel, itemHolder);
+    displayPicture(itemHolder, rssItem);
     displayRightIcons(itemHolder, rssItem);
     displayContent(itemHolder, rssItem);
 
@@ -83,61 +74,55 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
     return convertView;
   }
 
-  private void displayTitle(RSSItemViewHolder itemHolder, RSSItem rssItem) {
-    itemHolder.titleView.setText(rssItem.getTitle());
-    if (!rssItem.isRead()) {
+  private void displayTitle(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
+    itemHolder.titleView.setText(rssItem.getRssItem().getTitle());
+    if (!rssItem.getRssItem().isRead()) {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT_BOLD);
     } else {
       itemHolder.titleView.setTypeface(Typeface.DEFAULT);
     }
   }
 
-  private void displayFeedTitle(RSSItemViewHolder itemHolder, RSSChannel rssChannel) {
-    if ((itemHolder.feedTitleView != null) && (rssChannel != null)) {
-      itemHolder.feedTitleView.setText(rssChannel.getShortenedTitle());
-    }
+  private void displayFeedTitle(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
+    itemHolder.feedTitleView.setText(rssItem.getFeedTitle());
   }
 
-  private void displayDate(RSSItemViewHolder itemHolder, RSSItem rssItem) {
-    String dateText = DateUtils.getDisplayDate(rssItem.getDate());
+  private void displayDate(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
+    String dateText = DateUtils.getDisplayDate(rssItem.getRssItem().getDate());
     itemHolder.dateView.setText(dateText);
   }
 
-  private void displayPicture(RSSItem rssItem, RSSChannel rssChannel, RSSItemViewHolder itemHolder){
-    if (rssItem != null) {
-      IconDisplay iconDisplay = rssItem.getIconDisplay(rssChannel);
-      if (iconDisplay != null) {
-        iconDisplay.loadInView(itemHolder.pictureView);
-      } else {
-        IconDisplay.loadBackupInView(itemHolder.pictureView);
-      }
+  private void displayPicture(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem){
+    if (rssItem.getIconDisplay() != null) {
+      rssItem.getIconDisplay().loadInView(itemHolder.pictureView);
     } else {
       IconDisplay.loadBackupInView(itemHolder.pictureView);
     }
   }
 
-  private void displayRightIcons(RSSItemViewHolder itemHolder, RSSItem rssItem) {
-    if (!rssItem.isRead()) {
+  private void displayRightIcons(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
+    if (!rssItem.getRssItem().isRead()) {
       itemHolder.iconView1.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView1.setVisibility(View.INVISIBLE);
     }
-    if ((rssItem.getMedia() != null) && (rssItem.getMedia().isDownloaded(getContext(), false))) {
+    if (DisplayedRSSItem.Media.DOWNLOADED_AUDIO.equals(rssItem.getMediaStatus()) ||
+        DisplayedRSSItem.Media.DOWNLOADED_PICTURE.equals(rssItem.getMediaStatus())) {
       itemHolder.iconView2.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);
     }
   }
 
-  private void displayContent(RSSItemViewHolder itemHolder, RSSItem rssItem) {
+  private void displayContent(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
     if (itemHolder.contentView != null) {
-      String content = Html.fromHtml(rssItem.getDescription()).toString().replace((char) 65532, ' ').trim();
+      String content = Html.fromHtml(rssItem.getRssItem().getDescription()).toString().replace((char) 65532, ' ').trim();
       itemHolder.contentView.setText(content);
     }
   }
 
-  private void displayActions(RSSItemViewHolder itemHolder, RSSItem rssItem) {
-    if (rssItem.isRead()) {
+  private void displayActions(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
+    if (rssItem.getRssItem().isRead()) {
       itemHolder.readIconView.setVisibility(View.GONE);
       itemHolder.unreadIconView.setVisibility(View.VISIBLE);
     } else {
@@ -145,6 +130,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       itemHolder.unreadIconView.setVisibility(View.GONE);
     }
 
+    // TODO
     itemHolder.playIconView.setVisibility(View.GONE);
     itemHolder.displayIconView.setVisibility(View.GONE);
   }
@@ -247,7 +233,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
   private RSSItem getFeedItemForButton(View view) {
     View item = (View) view.getParent().getParent();
     int position = ((ListView) item.getParent()).getPositionForView(item);
-    return items.get(position);
+    return getItem(position).getRssItem();
   }
 
   private void playMedia(RSSItem rssItem) {
@@ -266,20 +252,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<RSSItem> {
       }
       activity.startActivity(playIntent);
     }
-  }
-
-  public void setItems(List<RSSItem> items) {
-    this.items.clear();
-    this.items.addAll(items);
-  }
-
-  public void setChannelsByItem(Map<RSSItem, RSSChannel> channelsByItem) {
-    this.channelsByItem = channelsByItem;
-  }
-
-  @Override
-  public int getCount() {
-    return items.size();
   }
 
 }

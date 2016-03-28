@@ -2,14 +2,14 @@ package fr.vpm.audiorss.process;
 
 import java.util.Comparator;
 
-import fr.vpm.audiorss.rss.RSSItem;
+import fr.vpm.audiorss.presentation.DisplayedRSSItem;
 
 /**
  * Created by vince on 27/10/14.
  *
  * Compares multiple RSSItem instances based on the ordering set in the preferences.
  */
-public class ItemComparator implements Comparator<RSSItem> {
+public class ItemComparator implements Comparator<DisplayedRSSItem> {
 
   public enum ItemComparison {
     TIME("pubDate ASC"),
@@ -44,13 +44,13 @@ public class ItemComparator implements Comparator<RSSItem> {
   }
 
   @Override
-  public int compare(RSSItem rssItem, RSSItem otherRssItem) {
+  public int compare(DisplayedRSSItem rssItem, DisplayedRSSItem otherRssItem) {
     int comparison = 0;
 
     if (ItemComparison.ALPHA.equals(itemComparison) || ItemComparison.REVERSE_ALPHA.equals(itemComparison)) {
-      comparison = rssItem.getTitle().compareTo(otherRssItem.getTitle());
+      comparison = rssItem.getRssItem().getTitle().compareTo(otherRssItem.getRssItem().getTitle());
     } else {
-      comparison = rssItem.getDate().compareTo(otherRssItem.getDate());
+      comparison = rssItem.getRssItem().getDate().compareTo(otherRssItem.getRssItem().getDate());
     }
 
     int factor = 1;
