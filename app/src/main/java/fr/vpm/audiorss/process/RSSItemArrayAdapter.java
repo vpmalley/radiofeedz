@@ -130,9 +130,29 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       itemHolder.unreadIconView.setVisibility(View.GONE);
     }
 
-    // TODO
-    itemHolder.playIconView.setVisibility(View.GONE);
-    itemHolder.displayIconView.setVisibility(View.GONE);
+    switch(rssItem.getMediaStatus()) {
+      case DOWNLOADABLE:
+        itemHolder.playIconView.setVisibility(View.GONE);
+        itemHolder.displayIconView.setVisibility(View.GONE);
+        itemHolder.downloadIconView.setVisibility(View.VISIBLE);
+        break;
+      case DOWNLOADED_AUDIO:
+        itemHolder.playIconView.setVisibility(View.VISIBLE);
+        itemHolder.displayIconView.setVisibility(View.GONE);
+        itemHolder.downloadIconView.setVisibility(View.GONE);
+        break;
+      case DOWNLOADED_PICTURE:
+        itemHolder.playIconView.setVisibility(View.GONE);
+        itemHolder.displayIconView.setVisibility(View.VISIBLE);
+        itemHolder.downloadIconView.setVisibility(View.GONE);
+        break;
+      case NONE:
+      default:
+        itemHolder.playIconView.setVisibility(View.GONE);
+        itemHolder.displayIconView.setVisibility(View.GONE);
+        itemHolder.downloadIconView.setVisibility(View.GONE);
+        break;
+    }
   }
 
   @NonNull
