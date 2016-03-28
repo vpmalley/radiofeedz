@@ -198,10 +198,10 @@ public class RSSItem implements Parcelable {
     if (iconDisplay == null) {
       if ((media != null) && (media.isPicture()) &&
           (media.getDistantUrl() != null) && (!media.getDistantUrl().isEmpty())){
-        iconDisplay = new IconDisplay(media, false);
+        iconDisplay = new IconDisplay(media);
       } else if ((rssChannel != null) && (rssChannel.getImage() != null) &&
           (rssChannel.getImage().getDistantUrl() != null) && (!rssChannel.getImage().getDistantUrl().isEmpty())){
-        iconDisplay = new IconDisplay(rssChannel.getImage(), true);
+        iconDisplay = new IconDisplay(rssChannel.getImage());
       }
     }
     return iconDisplay;

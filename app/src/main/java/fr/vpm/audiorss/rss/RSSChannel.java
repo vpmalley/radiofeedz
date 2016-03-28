@@ -1,7 +1,6 @@
 package fr.vpm.audiorss.rss;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -25,7 +24,6 @@ import fr.vpm.audiorss.ProgressListener;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSChannel;
 import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.media.Media;
-import fr.vpm.audiorss.media.PictureLoadedListener;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DataModel;
 import fr.vpm.audiorss.process.DateUtils;
@@ -251,14 +249,6 @@ public class RSSChannel implements Parcelable {
 
   public Map<String, RSSItem> getMappedItems() {
     return Collections.unmodifiableMap(latestItems);
-  }
-
-  public Bitmap getBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners){
-    Bitmap b = null;
-    if (getImage() != null){
-      b = getImage().getAsBitmap(context, pictureLoadedListeners, Media.Folder.INTERNAL_FEEDS_PICS);
-    }
-    return b;
   }
 
   @Override

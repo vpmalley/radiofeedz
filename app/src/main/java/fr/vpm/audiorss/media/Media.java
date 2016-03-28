@@ -12,11 +12,9 @@ import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
@@ -24,7 +22,6 @@ import fr.vpm.audiorss.db.AsyncDbSaveMedia;
 import fr.vpm.audiorss.db.DbMedia;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.persistence.FilePictureSaver;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 
 public class Media implements Downloadable, Parcelable {
@@ -237,31 +234,6 @@ public class Media implements Downloadable, Parcelable {
       networkFlags += DownloadManager.Request.NETWORK_MOBILE;
     }
     return networkFlags;
-  }
-
-  public Bitmap getAsBitmap(Context context, List<PictureLoadedListener> pictureLoadedListeners, Folder folder){
-    if (!isPicture()){
-      return null;
-    }
-    if ((preloadedBitmap == null) && (!loadingBitmap) && (exists())) {
-      loadingBitmap = true;
-      FilePictureSaver pictureRetriever = new FilePictureSaver(context);
-      File pictureFile = getMediaFile(context, folder, false);
-      if (pictureFile.exists()) {
-        try {
-          preloadedBitmap = pictureRetriever.retrieve(pictureFile);
-        } catch (FileNotFoundException e) {
-          if (Folder.EXTERNAL_DOWNLOADS_PICTURES.equals(folder)) {
-            //Toast.makeText(context, context.getResources().getString(R.string.cannot_get_picture), Toast.LENGTH_SHORT).show();
-          }
-          Log.w("file", e.toString());
-        }
-      } else if (new DefaultNetworkChecker().checkNetworkForDownload(context, false)) {
-        AsyncPictureLoader pictureLoader = new AsyncPictureLoader(pictureLoadedListeners, 300, 300, context, folder);
-        pictureLoader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, this);
-      }
-    }
-    return preloadedBitmap;
   }
 
   private boolean exists() {

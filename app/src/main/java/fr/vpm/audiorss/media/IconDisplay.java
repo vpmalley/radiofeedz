@@ -5,8 +5,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.io.File;
-
 import fr.vpm.audiorss.R;
 
 /**
@@ -18,20 +16,9 @@ public class IconDisplay {
 
   private final Media media;
 
-  private final boolean isDiskCached;
-
-  private File cachedFile;
-
-  public IconDisplay() {
-    hasMedia = false;
-    media = null;
-    isDiskCached = false;
-  }
-
-  public IconDisplay(Media media, boolean isDiskCached) {
+  public IconDisplay(Media media) {
     this.hasMedia = true;
     this.media = media;
-    this.isDiskCached = isDiskCached;
   }
 
   public void loadInView(ImageView pictureView) {

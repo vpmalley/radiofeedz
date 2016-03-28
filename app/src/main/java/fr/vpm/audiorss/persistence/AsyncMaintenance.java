@@ -56,10 +56,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
 
     // introducing randomization in maintenance to improve performances
     int randomMaintenance = new Random().nextInt(30);
-    if (randomMaintenance < 10) {
-      Log.d(MAINTENANCE_TAG, "cleaning folders");
-      cleanFolders(params);
-    } else if (randomMaintenance < 20) {
+    if (randomMaintenance < 20) {
       Log.d(MAINTENANCE_TAG, "cleaning items");
       cleanItems();
     } else if (randomMaintenance < 30) {
@@ -97,17 +94,6 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     }, context, filters);
     asyncReader.forceReadAll();
     asyncReader.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-  }
-
-  /**
-   * Cleans the folders specified as params according to the thresholds defined as constants
-   * @param params the folders to clean
-   */
-  private void cleanFolders(File[] params) {
-    FilePictureSaver fileSaver = new FilePictureSaver(context);
-    for (File folder : params) {
-      fileSaver.cleanFolder(folder, PICS_THRESHOLD, ICONS_EXPIRY_TIME);
-    }
   }
 
   /**
