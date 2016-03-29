@@ -108,7 +108,9 @@ public class RSSCache {
       limit = "80";
     }
     int actualLimit = Math.min(displayedRSSItems.size(), Integer.valueOf(limit));
-    displayedRSSItems.retainAll(displayedRSSItems.subList(0, actualLimit));
+    List<DisplayedRSSItem> cappedItems = new ArrayList<>(displayedRSSItems.subList(0, actualLimit));
+    displayedRSSItems.clear();
+    displayedRSSItems.addAll(cappedItems);
   }
 
 }
