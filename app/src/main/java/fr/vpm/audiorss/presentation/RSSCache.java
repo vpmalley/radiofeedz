@@ -70,7 +70,7 @@ public class RSSCache {
   }
 
   private DisplayedRSSItem.Media getMediaStatus(RSSItem item) {
-    DisplayedRSSItem.Media status;
+    DisplayedRSSItem.Media status = DisplayedRSSItem.Media.NONE;
     if (item.getMedia() != null) {
       if (item.getMedia().isDownloaded()) {
         if (item.getMedia().isPicture()) {
@@ -78,11 +78,9 @@ public class RSSCache {
         } else {
           status = DisplayedRSSItem.Media.DOWNLOADED_AUDIO;
         }
-      } else {
+      } else if (!item.getMedia().getMimeType().isEmpty()) {
         status = DisplayedRSSItem.Media.DOWNLOADABLE;
       }
-    } else {
-      status = DisplayedRSSItem.Media.NONE;
     }
     return status;
   }
