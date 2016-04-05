@@ -192,6 +192,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onOpenWeb = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_WEB);
       RSSItem rssItem = getFeedItemForButton(view);
       Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(rssItem.getLink()));
       activity.startActivity(i);
@@ -201,6 +202,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onDownload = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_DOWNLOAD);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.downloadMedia(Collections.singletonList(rssItem));
     }
@@ -209,6 +211,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onPlay = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_PLAY);
       RSSItem rssItem = getFeedItemForButton(view);
       playMedia(rssItem);
     }
@@ -217,6 +220,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onDisplay = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_PLAY);
       RSSItem rssItem = getFeedItemForButton(view);
       playMedia(rssItem);
     }
@@ -225,6 +229,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onMarkAsRead = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
     }
@@ -233,6 +238,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onMarkAsUnread = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), false);
     }
@@ -241,6 +247,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   private View.OnClickListener onShare = new View.OnClickListener() {
     @Override
     public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_SHARE);
       RSSItem rssItem = getFeedItemForButton(view);
       Intent shareIntent = new Intent();
       shareIntent.setAction(Intent.ACTION_SEND);

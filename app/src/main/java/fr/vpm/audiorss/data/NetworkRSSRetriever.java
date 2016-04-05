@@ -128,8 +128,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
   public void markAsRead(List<RSSItem> feedItems, boolean isRead) {
     RSSItem[] itemsToSave = new RSSItem[feedItems.size()];
     for (int j = 0; j < feedItems.size(); j++) {
-      Stats.get(context).increment(Stats.ACTION_MARK_READ);
-    feedItems.get(j).setRead(isRead);
+      feedItems.get(j).setRead(isRead);
       itemsToSave[j] = feedItems.get(j);
     }
     saveItems(itemsToSave);
@@ -150,7 +149,6 @@ public class NetworkRSSRetriever implements RSSRetriever {
   public void downloadMedia(List<RSSItem> feedItems) {
     for (RSSItem feedItem: feedItems) {
       if (feedItem.getMedia() != null) {
-        Stats.get(context).increment(Stats.ACTION_DOWNLOAD);
         feedItem.downloadMedia(context, new MediaDownloadListener.DummyMediaDownloadListener());
       }
     }

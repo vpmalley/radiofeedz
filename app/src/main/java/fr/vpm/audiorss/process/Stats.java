@@ -44,13 +44,13 @@ public class Stats {
   public static final String ACTION_SETTINGS = "ACTION_SETTINGS";
   public static final String ACTION_PLAYLIST = "ACTION_PLAYLIST";
 
-  public static final String ACTION_READ = "ACTION_ITEM_READ";
   public static final String ACTION_MARK_READ = "ACTION_ITEM_MARK_READ";
   public static final String ACTION_DOWNLOAD = "ACTION_ITEM_DOWNLOAD";
   public static final String ACTION_WEB = "ACTION_ITEM_WEB";
   public static final String ACTION_PLAY = "ACTION_ITEM_PLAY";
   public static final String ACTION_DELETE = "ACTION_ITEM_DELETE";
   public static final String ACTION_ARCHIVE = "ACTION_ITEM_ARCHIVE";
+  public static final String ACTION_SHARE = "ACTION_ITEM_SHARE";
 
   public Stats() {
     properties = new Properties();
