@@ -67,7 +67,7 @@ public class MediaBroadcastReceiver extends BroadcastReceiver {
 
         if (DownloadManager.STATUS_SUCCESSFUL == status) {
           media.setDeviceUri(c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-          media.isDownloaded(context, true);
+          new MediaDownloadManager(context).checkMediaIsDownloaded(media);
 
           new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, media);
           for (MediaDownloadListener listener : getListeners()) {

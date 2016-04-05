@@ -1,18 +1,14 @@
 package fr.vpm.audiorss.rss;
 
 
-import android.app.DownloadManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import fr.vpm.audiorss.media.Media;
-import fr.vpm.audiorss.media.MediaDownloadListener;
 
 public class RSSItem implements Parcelable {
 
@@ -166,21 +162,6 @@ public class RSSItem implements Parcelable {
 
   public long getChannelId() {
     return channelId;
-  }
-
-  public void downloadMedia(Context context, MediaDownloadListener mediaDownloadListener) {
-    if (media == null) {
-      Log.w("media", "media is not expected to be null here");
-      media = new Media("emission " + channelTitle + "-" + title, channelTitle, mediaUrl, "");
-    }
-
-    Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
-    if (media.getMimeType().startsWith("image")){
-      externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
-    }
-    if ((media.getDistantUrl() != null) && (!media.getDistantUrl().isEmpty())) {
-      media.download(context, DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED, mediaDownloadListener, externalDownloadsFolder);
-    }
   }
 
   public Media getMedia() {

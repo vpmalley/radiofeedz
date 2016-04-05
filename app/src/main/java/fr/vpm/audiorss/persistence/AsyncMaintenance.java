@@ -23,6 +23,7 @@ import fr.vpm.audiorss.db.DbRSSChannel;
 import fr.vpm.audiorss.db.filter.MaintenanceFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -110,7 +111,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     }
     for (Media media : medias) {
       boolean beforeUpdate = media.isDownloaded();
-      if (beforeUpdate != media.isDownloaded(context, true)) {
+      if (beforeUpdate != new MediaDownloadManager(context).checkMediaIsDownloaded(media)) {
         dbUpdater.update(media);
       }
     }

@@ -1,39 +1,16 @@
 package fr.vpm.audiorss.media;
 
-import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
 
-import java.io.File;
-import java.util.List;
-
-import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.db.AsyncDbSaveMedia;
 import fr.vpm.audiorss.db.DbMedia;
-import fr.vpm.audiorss.http.DefaultNetworkChecker;
-import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.process.AsyncCallbackListener;
 
-public class Media implements Downloadable, Parcelable {
+public class Media implements Parcelable {
 
-  public static final String INTERNAL_ITEMS_PIC_DIR = "items-icons";
-  public static final String INTERNAL_FEEDS_PIC_DIR = "feeds-icons";
-  public static final String INTERNAL_APP_DIR = "RadioFeedz";
   public static final String MIME_IMAGE = "image";
 
   public enum Folder {
-    INTERNAL_FEEDS_PICS,
-    INTERNAL_ITEMS_PICS,
     EXTERNAL_DOWNLOADS_PODCASTS,
     EXTERNAL_DOWNLOADS_PICTURES
   }
@@ -61,11 +38,6 @@ public class Media implements Downloadable, Parcelable {
 
   private boolean isDownloaded;
 
-  private Bitmap preloadedBitmap = null;
-  private boolean loadingBitmap = false;
-
-  private boolean downloadRequested = false;
-
   public Media(String name, String title, String url, String mimeType) {
     this.id = -1;
     this.name = name;
@@ -83,77 +55,6 @@ public class Media implements Downloadable, Parcelable {
     this.isDownloaded = isDownloaded;
   }
 
-  @Override
-  public void download(final Context context, int visibility, MediaDownloadListener mediaDownloadListener, Folder folder) {
-    if (downloadRequested) {
-      return;
-    }
-    downloadRequested = true;
-
-    DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
-
-    r.setDestinationUri(Uri.fromFile(getMediaFile(context)));
-
-    // When downloading music and videos they will be listed in the player
-    // (Seems to be available since Honeycomb only)
-    r.allowScanningByMediaScanner();
-
-    r.setNotificationVisibility(visibility);
-
-    int networkFlags = retrieveNetworkFlags(context);
-    r.setAllowedNetworkTypes(networkFlags);
-
-    if (checkNetwork(networkFlags, context)) {
-      r.setTitle(notificationTitle);
-      r.setDescription(name);
-
-      DownloadManager dm = (DownloadManager) context.getSystemService(Activity.DOWNLOAD_SERVICE);
-
-      downloadId = dm.enqueue(r);
-    }
-
-    MediaBroadcastReceiver.addMedia(this);
-    MediaBroadcastReceiver.addListener(mediaDownloadListener);
-  }
-
-  public static File getDownloadFolder(Context context, Folder folder) {
-    SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-    String storageMediaRoot = sharedPref.getString("pref_storage_root",
-        Environment.getExternalStorageDirectory().getPath());
-    if ((storageMediaRoot != null) && (storageMediaRoot.isEmpty())){
-      storageMediaRoot = Environment.getExternalStorageDirectory().getPath();
-    }
-    String storageMediaDir = sharedPref.getString("pref_download_podcasts_folder", "music/Podcasts");
-    if (folder.equals(Folder.EXTERNAL_DOWNLOADS_PICTURES)){
-      storageMediaDir = sharedPref.getString("pref_download_pictures_folder", "Pictures/RadioFeedz");
-    }
-
-    StringBuilder dirPathBuilder = new StringBuilder();
-    dirPathBuilder.append('/');
-    dirPathBuilder.append(storageMediaRoot);
-    dirPathBuilder.append('/');
-    dirPathBuilder.append(storageMediaDir);
-    dirPathBuilder.append('/');
-    String dirPath = dirPathBuilder.toString().replace("//", "/");
-    File dirFile = new File(dirPath);
-    dirFile.mkdirs();
-    return dirFile;
-  }
-
-  public static File getInternalFeedsPicsFolder(Context context){
-    File cacheDir = new File(context.getExternalCacheDir(), INTERNAL_APP_DIR);
-    File dir = new File(cacheDir, INTERNAL_FEEDS_PIC_DIR);
-    dir.mkdirs();
-    return dir;
-  }
-
-  public static File getInternalItemsPicsFolder(Context context){
-    File cacheDir = new File(context.getExternalCacheDir(), INTERNAL_APP_DIR);
-    File dir = new File(cacheDir, INTERNAL_ITEMS_PIC_DIR);
-    dir.mkdirs();
-    return dir;
-  }
-
   public String getFileName() {
     String typeExtension = "";
     int extensionStart = inetUrl.lastIndexOf('.');
@@ -163,59 +64,12 @@ public class Media implements Downloadable, Parcelable {
     return name.replace(' ', '_') + typeExtension;
   }
 
-  public File getMediaFile(Context context) {
-    File dirFile;
+  public Folder getDownloadFolder() {
     Media.Folder folder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
-    if (getMimeType().startsWith("image")){
+    if (getMimeType().startsWith(MIME_IMAGE)){
       folder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
     }
-    switch (folder) {
-      case EXTERNAL_DOWNLOADS_PODCASTS:
-      case EXTERNAL_DOWNLOADS_PICTURES:
-      default:
-        dirFile = getDownloadFolder(context, folder);
-        break;
-    }
-    return new File(dirFile, getFileName());
-  }
-
-  /**
-   * Determines whether the media is downloaded and available for play/display on the device
-   * @param context the current Android context
-   * @param forceCheck whether to actually check for the file existence (set to true when state is expected to change)
-   * @return whether the file is downloaded
-   */
-  public boolean isDownloaded(Context context, boolean forceCheck){
-    if (forceCheck) {
-      isDownloaded = getMediaFile(context).exists();
-      new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).
-          executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
-    }
-    return isDownloaded;
-  }
-
-  private boolean checkNetwork(int networkFlags, Context context) {
-    // Start download
-    if (0 == networkFlags) {
-      Toast
-          .makeText(
-              context,
-              context.getResources().getString(R.string.disabled_download),
-              Toast.LENGTH_LONG).show();
-    }
-    return (!(0 == networkFlags));
-  }
-
-  private int retrieveNetworkFlags(Context context) {
-    int networkFlags = 0;
-    NetworkChecker networkChecker = new DefaultNetworkChecker();
-    if (networkChecker.isDownloadOverWifiAllowed(context)) {
-      networkFlags += DownloadManager.Request.NETWORK_WIFI;
-    }
-    if (networkChecker.isDownloadOverMobileAllowed(context)) {
-      networkFlags += DownloadManager.Request.NETWORK_MOBILE;
-    }
-    return networkFlags;
+    return folder;
   }
 
   private boolean exists() {
@@ -237,9 +91,12 @@ public class Media implements Downloadable, Parcelable {
   /**
    * Whether the media is downloaded
    */
-  @Override
   public boolean isDownloaded() {
     return isDownloaded;
+  }
+
+  public void setIsDownloaded(boolean isDownloaded) {
+    this.isDownloaded = isDownloaded;
   }
 
   public String getName() {
@@ -250,7 +107,6 @@ public class Media implements Downloadable, Parcelable {
     return notificationTitle;
   }
 
-  @Override
   public String getDistantUrl() {
     return inetUrl;
   }
@@ -263,9 +119,12 @@ public class Media implements Downloadable, Parcelable {
     this.deviceUri = deviceUri;
   }
 
-  @Override
   public long getDownloadId() {
     return downloadId;
+  }
+
+  public void setDownloadId(long downloadId) {
+    this.downloadId = downloadId;
   }
 
   public String getMimeType() {

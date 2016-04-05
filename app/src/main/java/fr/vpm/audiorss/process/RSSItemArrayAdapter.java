@@ -21,6 +21,7 @@ import java.util.List;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.presentation.DisplayedRSSItem;
 import fr.vpm.audiorss.presentation.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -32,7 +33,6 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
 
-  private static final String MIME_IMAGE = "image";
   private final Activity activity;
 
   private final int resource;
@@ -282,7 +282,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = rssItem.getMedia();
     if (m != null) {
-      File mediaFile = m.getMediaFile(activity);
+      File mediaFile = new MediaDownloadManager(activity).getDownloadFile(m);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
