@@ -7,6 +7,7 @@ import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.data.NetworkRSSRetriever;
 import fr.vpm.audiorss.data.RSSRetriever;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
+import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -20,6 +21,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   private DBCache dbCache = new DBCache();
   private RSSCache rssCache = new RSSCache();
   private RSSRetriever rssRetriever;
+  private MediaDownloadManager mediaDownloadManager;
 
   private AllFeedItems feedItemsActivity;
   private RSSItemArrayAdapter rssItemAdapter;
@@ -29,6 +31,7 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
     this.feedItemsActivity = feedItemsActivity;
     this.rssItemLayout = rssItemLayout;
     this.rssRetriever = new NetworkRSSRetriever(feedItemsActivity, this);
+    this.mediaDownloadManager = new MediaDownloadManager(feedItemsActivity);
   }
 
   @Override
@@ -76,8 +79,13 @@ public class FeedItemsPresenter implements FeedItemsInteraction, FeedItemsPresen
   }
 
   @Override
-  public void downloadMedia(List<RSSItem> feedItems) {
-    rssRetriever.downloadMedia(feedItems);
+  public void downloadMedia(RSSItem feedItem) {
+    mediaDownloadManager.downloadMedia(feedItem);
+  }
+
+  @Override
+  public void deleteMedia(RSSItem feedItem) {
+    mediaDownloadManager.deleteMedia(feedItem);
   }
 
   @Override

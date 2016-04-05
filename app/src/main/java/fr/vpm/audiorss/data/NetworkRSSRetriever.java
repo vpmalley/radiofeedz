@@ -11,7 +11,6 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.media.MediaDownloadListener;
 import fr.vpm.audiorss.presentation.FeedItemsPresentation;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.SequentialCacheManager;
@@ -143,15 +142,6 @@ public class NetworkRSSRetriever implements RSSRetriever {
       itemsToSave[j] = feedItems.get(j);
     }
     saveItems(itemsToSave);
-  }
-
-  @Override
-  public void downloadMedia(List<RSSItem> feedItems) {
-    for (RSSItem feedItem: feedItems) {
-      if (feedItem.getMedia() != null) {
-        feedItem.downloadMedia(context, new MediaDownloadListener.DummyMediaDownloadListener());
-      }
-    }
   }
 
   private void saveItems(RSSItem... itemsToSave) {

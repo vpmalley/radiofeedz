@@ -27,6 +27,8 @@ public interface FeedItemsInteraction {
 
   void archiveFeedItems(List<RSSItem> feedItems);
 
-  void downloadMedia(List<RSSItem> feedItems);
+  void downloadMedia(RSSItem feedItem);
+
+  void deleteMedia(RSSItem feedItem);
 
 }

@@ -186,6 +186,19 @@
             android:clickable="true"
             />
         <ImageButton
+            android:id="@+id/action_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/circled_icon_selector"
+            android:src="@drawable/ic_action_discard"
+            android:padding="10dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="true"
+            />
+        <ImageButton
             android:id="@+id/action_read"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

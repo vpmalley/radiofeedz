@@ -34,6 +34,4 @@ public interface RSSRetriever {
   void markAsRead(List<RSSItem> feedItems, boolean isRead);
 
   void archiveFeedItems(List<RSSItem> feedItems);
-
-  void downloadMedia(List<RSSItem> feedItems);
 }

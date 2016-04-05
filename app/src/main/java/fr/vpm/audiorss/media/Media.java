@@ -92,7 +92,7 @@ public class Media implements Downloadable, Parcelable {
 
     DownloadManager.Request r = new DownloadManager.Request(Uri.parse(inetUrl));
 
-    r.setDestinationUri(Uri.fromFile(getMediaFile(context, folder, false)));
+    r.setDestinationUri(Uri.fromFile(getMediaFile(context)));
 
     // When downloading music and videos they will be listed in the player
     // (Seems to be available since Honeycomb only)
@@ -163,15 +163,13 @@ public class Media implements Downloadable, Parcelable {
     return name.replace(' ', '_') + typeExtension;
   }
 
-  public File getMediaFile(Context context, Folder folder, boolean forceCheck) {
+  public File getMediaFile(Context context) {
     File dirFile;
+    Media.Folder folder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
+    if (getMimeType().startsWith("image")){
+      folder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
+    }
     switch (folder) {
-      case INTERNAL_FEEDS_PICS:
-        dirFile = getInternalFeedsPicsFolder(context);
-        break;
-      case INTERNAL_ITEMS_PICS:
-        dirFile = getInternalItemsPicsFolder(context);
-        break;
       case EXTERNAL_DOWNLOADS_PODCASTS:
       case EXTERNAL_DOWNLOADS_PICTURES:
       default:
@@ -182,18 +180,6 @@ public class Media implements Downloadable, Parcelable {
   }
 
   /**
-   * Determines if media exists locally on the device and caches the information in memory.
-   * Therefore it is made to be called multiple times without requiring to access the File system
-   * @param context the current Android context
-   * @param folder the Folder in which to search for the media file
-   * @return
-   */
-  public boolean mediaFileExists(Context context, Folder folder) {
-    File mediaFile = getMediaFile(context, folder, false);
-    return ((mediaFile != null) && (mediaFile.exists()));
-  }
-
-  /**
    * Determines whether the media is downloaded and available for play/display on the device
    * @param context the current Android context
    * @param forceCheck whether to actually check for the file existence (set to true when state is expected to change)
@@ -201,11 +187,7 @@ public class Media implements Downloadable, Parcelable {
    */
   public boolean isDownloaded(Context context, boolean forceCheck){
     if (forceCheck) {
-      Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
-      if (getMimeType().startsWith("image")){
-        externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
-      }
-      isDownloaded = getMediaFile(context, externalDownloadsFolder, false).exists();
+      isDownloaded = getMediaFile(context).exists();
       new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback<List<Media>>(), context).
           executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, this);
     }

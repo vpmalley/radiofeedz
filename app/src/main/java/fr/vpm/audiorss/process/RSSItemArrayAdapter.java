@@ -135,22 +135,26 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
         itemHolder.playIconView.setVisibility(View.GONE);
         itemHolder.displayIconView.setVisibility(View.GONE);
         itemHolder.downloadIconView.setVisibility(View.VISIBLE);
+        itemHolder.deleteIconView.setVisibility(View.GONE);
         break;
       case DOWNLOADED_AUDIO:
         itemHolder.playIconView.setVisibility(View.VISIBLE);
         itemHolder.displayIconView.setVisibility(View.GONE);
         itemHolder.downloadIconView.setVisibility(View.GONE);
+        itemHolder.deleteIconView.setVisibility(View.VISIBLE);
         break;
       case DOWNLOADED_PICTURE:
         itemHolder.playIconView.setVisibility(View.GONE);
         itemHolder.displayIconView.setVisibility(View.VISIBLE);
         itemHolder.downloadIconView.setVisibility(View.GONE);
+        itemHolder.deleteIconView.setVisibility(View.VISIBLE);
         break;
       case NONE:
       default:
         itemHolder.playIconView.setVisibility(View.GONE);
         itemHolder.displayIconView.setVisibility(View.GONE);
         itemHolder.downloadIconView.setVisibility(View.GONE);
+        itemHolder.deleteIconView.setVisibility(View.GONE);
         break;
     }
   }
@@ -168,11 +172,12 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     ImageView downloadIconView = (ImageView) convertView.findViewById(R.id.action_download);
     ImageView playIconView = (ImageView) convertView.findViewById(R.id.action_play);
     ImageView displayIconView = (ImageView) convertView.findViewById(R.id.action_display);
+    ImageView deleteIconView = (ImageView) convertView.findViewById(R.id.action_delete);
     ImageView readIconView = (ImageView) convertView.findViewById(R.id.action_read);
     ImageView unreadIconView = (ImageView) convertView.findViewById(R.id.action_unread);
     ImageView shareIconView = (ImageView) convertView.findViewById(R.id.action_share);
 
-    itemHolder = new RSSItemViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent, webIconView, downloadIconView, playIconView, displayIconView, readIconView, unreadIconView, shareIconView);
+    itemHolder = new RSSItemViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent, webIconView, downloadIconView, playIconView, displayIconView, deleteIconView, readIconView, unreadIconView, shareIconView);
     return itemHolder;
   }
 
@@ -184,6 +189,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     itemHolder.downloadIconView.setOnClickListener(onDownload);
     itemHolder.playIconView.setOnClickListener(onPlay);
     itemHolder.displayIconView.setOnClickListener(onDisplay);
+    itemHolder.deleteIconView.setOnClickListener(onDeleteMedia);
     itemHolder.readIconView.setOnClickListener(onMarkAsRead);
     itemHolder.unreadIconView.setOnClickListener(onMarkAsUnread);
     itemHolder.shareIconView.setOnClickListener(onShare);
@@ -204,7 +210,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     public void onClick(View view) {
       Stats.get(getContext()).increment(Stats.ACTION_DOWNLOAD);
       RSSItem rssItem = getFeedItemForButton(view);
-      feedItemsInteraction.downloadMedia(Collections.singletonList(rssItem));
+      feedItemsInteraction.downloadMedia(rssItem);
     }
   };
 
@@ -223,6 +229,15 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       Stats.get(getContext()).increment(Stats.ACTION_PLAY);
       RSSItem rssItem = getFeedItemForButton(view);
       playMedia(rssItem);
+    }
+  };
+
+  private View.OnClickListener onDeleteMedia = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+      Stats.get(getContext()).increment(Stats.ACTION_DELETE);
+      RSSItem rssItem = getFeedItemForButton(view);
+      feedItemsInteraction.deleteMedia(rssItem);
     }
   };
 
@@ -267,11 +282,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     Intent playIntent = new Intent(Intent.ACTION_VIEW);
     Media m = rssItem.getMedia();
     if (m != null) {
-      Media.Folder externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PODCASTS;
-      if (m.getMimeType().startsWith(MIME_IMAGE)){
-        externalDownloadsFolder = Media.Folder.EXTERNAL_DOWNLOADS_PICTURES;
-      }
-      File mediaFile = m.getMediaFile(activity, externalDownloadsFolder, false);
+      File mediaFile = m.getMediaFile(activity);
       if (mediaFile.exists()){
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
