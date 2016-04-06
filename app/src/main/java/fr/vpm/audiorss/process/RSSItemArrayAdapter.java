@@ -1,6 +1,7 @@
 package fr.vpm.audiorss.process;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.Collections;
@@ -283,12 +285,16 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     Media m = rssItem.getMedia();
     if (m != null) {
       File mediaFile = new MediaDownloadManager(activity).getDownloadFile(m);
-      if (mediaFile.exists()){
+      if (mediaFile.exists()) {
         playIntent.setDataAndType(Uri.fromFile(mediaFile), m.getMimeType());
       } else {
         playIntent.setDataAndType(new Uri.Builder().path(m.getDistantUrl()).build(), m.getMimeType());
       }
-      activity.startActivity(playIntent);
+      try {
+        activity.startActivity(playIntent);
+      } catch (ActivityNotFoundException e) {
+        Toast.makeText(activity, R.string.error_no_app_for_media, Toast.LENGTH_SHORT).show();
+      }
     }
   }
 

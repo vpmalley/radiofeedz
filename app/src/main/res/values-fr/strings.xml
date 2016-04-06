@@ -41,5 +41,6 @@
     <string name="press_back">Appuie sur Retour, une fois de plus.</string>
     <string name="prefs_category_lib">Bibliothèques de développement</string>
     <string name="prefs_summ_category_lib">Bibliothèques utilisées pour cette application</string>
+    <string name="error_no_app_for_media">Aucune application ne peut lire ce media</string>
 
 </resources>
