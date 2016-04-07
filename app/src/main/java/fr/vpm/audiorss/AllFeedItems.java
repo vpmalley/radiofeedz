@@ -100,6 +100,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     Intent i = getIntent();
     if (i.hasExtra(FeedAddingActivity.CHANNEL_NEW_URL)) {
+      progressBarListener.startRefreshProgress();
       interactor.addFeed(i.getStringExtra(FeedAddingActivity.CHANNEL_NEW_URL));
     }
 

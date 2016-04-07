@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.AsyncDbDeleteRSSItem;
@@ -36,10 +35,8 @@ import fr.vpm.audiorss.rss.RSSItem;
  *
  * Created by vince on 10/12/14.
  */
-public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
+public class AsyncMaintenance {
 
-  private static final int PICS_THRESHOLD = 200;
-  private static final int ICONS_EXPIRY_TIME = 200000000; // icons older than this number of milliseconds are erased (about 2 days)
   public static final String MAINTENANCE_TAG = "maintenance";
 
   private final Context context;
@@ -50,28 +47,10 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
     this.context = context;
   }
 
-  @Override
-  protected File doInBackground(File... params) {
-
-    //analyzeData();
-
-    // introducing randomization in maintenance to improve performances
-    int randomMaintenance = new Random().nextInt(30);
-    if (randomMaintenance < 20) {
-      Log.d(MAINTENANCE_TAG, "cleaning items");
-      cleanItems();
-    } else if (randomMaintenance < 30) {
-      Log.d(MAINTENANCE_TAG, "refresh downloads");
-      refreshDownloadedPodcasts();
-    }
-
-    return null;
-  }
-
   /**
    * Cleans the items in the Db after N days
    */
-  private void cleanItems() {
+  public void cleanItems() {
     String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
             getString("pref_items_deletion", "2");
     if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
@@ -100,7 +79,7 @@ public class AsyncMaintenance extends AsyncTask<File, Integer, File> {
   /**
    * Refreshes all the media items for which a file exists on the filesystem
    */
-  private void refreshDownloadedPodcasts() {
+  public void refreshDownloadedPodcasts() {
     DbMedia dbUpdater = new DbMedia(context, true);
     List<Media> medias = new ArrayList<>();
     try {
