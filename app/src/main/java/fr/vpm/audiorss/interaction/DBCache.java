@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.presentation;
+package fr.vpm.audiorss.interaction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,13 @@ public class DBCache {
   public void setItems(List<RSSItem> items) {
     this.items = items;
     itemsAreSet = true;
+  }
+
+  public void addNewFeeds(List<RSSChannel> newFeeds) {
+    this.feeds.addAll(newFeeds);
+    for (RSSChannel feed : newFeeds) {
+      this.items.addAll(feed.getItems());
+    }
   }
 
   public List<RSSItem> getItems() {

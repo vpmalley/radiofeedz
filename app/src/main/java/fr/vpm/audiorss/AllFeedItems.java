@@ -31,13 +31,13 @@ import java.util.List;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 import fr.vpm.audiorss.http.NetworkChecker;
-import fr.vpm.audiorss.presentation.FeedItemsInteraction;
-import fr.vpm.audiorss.presentation.FeedItemsPresenter;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
+import fr.vpm.audiorss.interaction.FeedItemsInteractor;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawer;
 import fr.vpm.audiorss.process.NavigationDrawerItem;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
-import fr.vpm.audiorss.process.RecurrentTaskManager;
+import fr.vpm.audiorss.maintenance.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
 
@@ -83,7 +83,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     // services
     networkChecker = new DefaultNetworkChecker();
-    interactor = new FeedItemsPresenter(this, rss_item_layout);
+    interactor = new FeedItemsInteractor(this, rss_item_layout);
 
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);

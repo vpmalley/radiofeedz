@@ -19,9 +19,15 @@ import fr.vpm.audiorss.rss.RSSItem;
  */
 public class RSSCache {
 
+  private Context context;
+
   List<DisplayedRSSItem> displayedRSSItems = new ArrayList<>();
 
   String lastBuildDate = "";
+
+  public RSSCache(Context context) {
+    this.context = context;
+  }
 
   public List<DisplayedRSSItem> getDisplayedRSSItems() {
     return displayedRSSItems;
@@ -31,10 +37,10 @@ public class RSSCache {
     return lastBuildDate;
   }
 
-  public void buildFromDBCache(DBCache dbCache) {
+  public void build(List<RSSChannel> feeds, List<RSSItem> feedItems) {
     displayedRSSItems.clear();
-    for (RSSItem item : dbCache.getItems()) {
-      for (RSSChannel feed : dbCache.getFeeds()) {
+    for (RSSItem item : feedItems) {
+      for (RSSChannel feed : feeds) {
         if (feed.getId() == item.getChannelId()) {
           DisplayedRSSItem displayedRSSItem = new DisplayedRSSItem();
           displayedRSSItem.setRssItem(item);
@@ -45,28 +51,12 @@ public class RSSCache {
         }
       }
     }
-    for (RSSChannel feed : dbCache.getFeeds()) {
+    for (RSSChannel feed : feeds) {
       if (lastBuildDate.compareTo(feed.getLastBuildDate()) < 0) {
         lastBuildDate = feed.getLastBuildDate();
       }
     }
-  }
-
-  public void buildFromFeeds(List<RSSChannel> newFeeds, Context context) {
-    for (RSSChannel feed: newFeeds) {
-      for (RSSItem item : feed.getItems()) {
-        DisplayedRSSItem displayedRSSItem = new DisplayedRSSItem();
-        displayedRSSItem.setRssItem(item);
-        displayedRSSItem.setFeedTitle(feed.getShortenedTitle());
-        displayedRSSItem.setIconDisplay(getIconDisplay(item, feed));
-        displayedRSSItem.setMediaStatus(getMediaStatus(item));
-        displayedRSSItems.add(displayedRSSItem);
-      }
-      if (lastBuildDate.compareTo(feed.getLastBuildDate()) < 0) {
-        lastBuildDate = feed.getLastBuildDate();
-      }
-    }
-    sortAndCapItems(context);
+    sortAndCapItems();
   }
 
   private DisplayedRSSItem.Media getMediaStatus(RSSItem item) {
@@ -97,7 +87,7 @@ public class RSSCache {
     return iconDisplay;
   }
 
-  void sortAndCapItems(Context context) {
+  void sortAndCapItems() {
     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
     Collections.sort(displayedRSSItems, new ItemComparator(ordering));

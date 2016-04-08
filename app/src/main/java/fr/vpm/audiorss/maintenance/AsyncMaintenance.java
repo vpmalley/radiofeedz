@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.persistence;
+package fr.vpm.audiorss.maintenance;
 
 import android.content.Context;
 import android.database.Cursor;

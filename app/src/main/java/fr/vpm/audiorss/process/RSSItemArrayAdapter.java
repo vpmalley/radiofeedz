@@ -25,7 +25,7 @@ import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.presentation.DisplayedRSSItem;
-import fr.vpm.audiorss.presentation.FeedItemsInteraction;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**

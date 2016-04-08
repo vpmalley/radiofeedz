@@ -17,7 +17,7 @@ import fr.vpm.audiorss.db.filter.EmptyFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.TodayFilter;
 import fr.vpm.audiorss.db.filter.UnreadFilter;
-import fr.vpm.audiorss.presentation.FeedItemsInteraction;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**

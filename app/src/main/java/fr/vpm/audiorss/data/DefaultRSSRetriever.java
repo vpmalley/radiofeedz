@@ -11,7 +11,7 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.presentation.FeedItemsPresentation;
+import fr.vpm.audiorss.interaction.FeedItemsCache;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.SequentialCacheManager;
 import fr.vpm.audiorss.process.Stats;
@@ -21,12 +21,12 @@ import fr.vpm.audiorss.rss.RSSItem;
 /**
  * Created by vince on 12/03/16.
  */
-public class NetworkRSSRetriever implements RSSRetriever {
+public class DefaultRSSRetriever implements RSSRetriever {
 
   private Context context;
-  private FeedItemsPresentation feedsItemPresenter;
+  private FeedItemsCache feedsItemPresenter;
 
-  public NetworkRSSRetriever(Context context, FeedItemsPresentation feedsItemPresenter) {
+  public DefaultRSSRetriever(Context context, FeedItemsCache feedsItemPresenter) {
     this.context = context;
     this.feedsItemPresenter = feedsItemPresenter;
   }
@@ -51,7 +51,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.presentFeeds(rssChannels);
+        feedsItemPresenter.cacheFeeds(rssChannels);
       }
     };
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, context, false);
@@ -66,7 +66,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSItem> rssItems) {
-        feedsItemPresenter.presentItems(rssItems);
+        feedsItemPresenter.cacheFeedItems(rssItems);
       }
     };
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, context, filters);
@@ -85,7 +85,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.presentNewFeeds(rssChannels);
+        feedsItemPresenter.cacheNewFeeds(rssChannels);
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
@@ -103,7 +103,7 @@ public class NetworkRSSRetriever implements RSSRetriever {
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.presentNewFeeds(rssChannels);
+        feedsItemPresenter.cacheNewFeeds(rssChannels);
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedUrl);

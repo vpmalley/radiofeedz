@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.maintenance;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import fr.vpm.audiorss.persistence.AsyncMaintenance;
+import fr.vpm.audiorss.process.Stats;
 
 /**
  * Created by vince on 27/02/16.

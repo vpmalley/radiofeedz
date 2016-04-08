@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.presentation;
+package fr.vpm.audiorss.interaction;
 
 import java.util.List;
 

@@ -52,29 +52,12 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
 
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-    if (R.id.action_download == menuItem.getItemId()) {
-      contextualActions.downloadMedia(selection);
-      actionMode.finish();
-      return true;
-    } else if ((R.id.action_delete == menuItem.getItemId()) ||
-            (R.id.action_archive == menuItem.getItemId())) {
+    if (R.id.action_delete == menuItem.getItemId()) {
       contextualActions.deleteFeeds(selection);
-      actionMode.finish();
-      return true;
-    } else if (R.id.action_read == menuItem.getItemId()) {
-      contextualActions.markDataRead(selection, true);
-      actionMode.finish();
-      return true;
-    } else if (R.id.action_unread == menuItem.getItemId()) {
-      contextualActions.markDataRead(selection, false);
       actionMode.finish();
       return true;
     } else if (R.id.action_refresh == menuItem.getItemId()) {
       contextualActions.refreshFeeds(selection);
-      actionMode.finish();
-      return true;
-    } else if (R.id.action_playlist == menuItem.getItemId()) {
-      contextualActions.createPlaylist(selection);
       actionMode.finish();
       return true;
     }
