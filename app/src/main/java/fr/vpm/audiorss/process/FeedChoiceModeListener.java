@@ -58,7 +58,7 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
       return true;
     } else if ((R.id.action_delete == menuItem.getItemId()) ||
             (R.id.action_archive == menuItem.getItemId())) {
-      contextualActions.deleteData(selection);
+      contextualActions.deleteFeeds(selection);
       actionMode.finish();
       return true;
     } else if (R.id.action_read == menuItem.getItemId()) {
@@ -70,7 +70,7 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
       actionMode.finish();
       return true;
     } else if (R.id.action_refresh == menuItem.getItemId()) {
-      contextualActions.refreshData(selection);
+      contextualActions.refreshFeeds(selection);
       actionMode.finish();
       return true;
     } else if (R.id.action_playlist == menuItem.getItemId()) {

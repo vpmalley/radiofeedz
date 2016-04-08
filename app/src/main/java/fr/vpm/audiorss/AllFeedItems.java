@@ -35,6 +35,7 @@ import fr.vpm.audiorss.presentation.FeedItemsInteraction;
 import fr.vpm.audiorss.presentation.FeedItemsPresenter;
 import fr.vpm.audiorss.process.FeedChoiceModeListener;
 import fr.vpm.audiorss.process.NavigationDrawer;
+import fr.vpm.audiorss.process.NavigationDrawerItem;
 import fr.vpm.audiorss.process.RSSItemArrayAdapter;
 import fr.vpm.audiorss.process.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
@@ -208,7 +209,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
   @Override
   public void refreshNavigationDrawer(List<RSSChannel> allChannels) {
-    ArrayAdapter<NavigationDrawer.NavigationDrawerItem> adapter = navigationDrawerList.setChannelsAndGetAdapter(allChannels);
+    ArrayAdapter<NavigationDrawerItem> adapter = navigationDrawerList.setChannelsAndGetAdapter(allChannels);
     ListView feedsList = (ListView) findViewById(R.id.left_drawer);
     feedsList.setAdapter(adapter);
     setFeedsContextualListener(feedsList);
@@ -324,7 +325,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-      NavigationDrawer.NavigationDrawerItem navigationDrawerItem = (NavigationDrawer.NavigationDrawerItem) drawerList.getAdapter().getItem(position);
+      NavigationDrawerItem navigationDrawerItem = (NavigationDrawerItem) drawerList.getAdapter().getItem(position);
       Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
       filters.clear();
       filters.add(navigationDrawerItem.getFilter());

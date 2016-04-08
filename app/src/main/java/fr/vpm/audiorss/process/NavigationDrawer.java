@@ -82,28 +82,13 @@ public class NavigationDrawer implements ContextualActions {
   }
 
   @Override
-  public void deleteData(Collection<Integer> selection) {
+  public void deleteFeeds(Collection<Integer> selection) {
     interactor.deleteFeeds(getChannels(selection));
   }
 
   @Override
-  public void markDataRead(Set<Integer> selection, boolean isRead) {
-    // do nothing
-  }
-
-  @Override
-  public void downloadMedia(Set<Integer> selection) {
-    // do nothing
-  }
-
-  @Override
-  public void refreshData(Set<Integer> selection) {
+  public void refreshFeeds(Set<Integer> selection) {
     interactor.retrieveLatestFeedItems(getChannels(selection));
-  }
-
-  @Override
-  public void createPlaylist(Set<Integer> selection) {
-    // do nothing
   }
 
   public ArrayAdapter<NavigationDrawerItem> setChannelsAndGetAdapter(List<RSSChannel> allChannels) {
@@ -114,53 +99,6 @@ public class NavigationDrawer implements ContextualActions {
       rssChannelAdapter = new ArrayAdapter<>(context, R.layout.list_item, items);
     }
     return rssChannelAdapter;
-  }
-
-  /**
-   * Simple data structure for any item to show up in the navigation drawer
-   */
-  public class NavigationDrawerItem {
-
-    private final SelectionFilter filter;
-
-    private final String title;
-
-    private final RSSChannel boundChannel;
-
-    private String statTag;
-
-    public NavigationDrawerItem(SelectionFilter filter, String title, RSSChannel boundChannel, String statTag) {
-      this.filter = filter;
-      this.title = title;
-      this.boundChannel = boundChannel;
-      this.statTag = statTag;
-    }
-
-    public String getTitle() {
-      return title;
-    }
-
-    public SelectionFilter getFilter(){
-      return filter;
-    }
-
-    public boolean hasBoundChannel(){
-      return boundChannel != null;
-    }
-
-    public RSSChannel getBoundChannel() {
-      return boundChannel;
-    }
-
-    public String getStatTag() {
-      return statTag;
-    }
-
-    @Override
-    public String toString() {
-      return title;
-    }
-
   }
 
 }
