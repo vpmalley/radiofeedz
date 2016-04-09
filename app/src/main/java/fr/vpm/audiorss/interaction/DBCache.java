@@ -53,14 +53,14 @@ public class DBCache {
   }
 
   public void addNewFeeds(List<RSSChannel> newFeeds) {
-    Set<RSSItem> uniqueItems = new HashSet<>();
     this.feeds.addAll(newFeeds);
+    Set<RSSItem> uniqueItems = new HashSet<>();
+    uniqueItems.addAll(this.items);
     for (RSSChannel feed : newFeeds) {
-      uniqueItems.addAll(this.items);
       uniqueItems.addAll(feed.getItems());
-      this.items.clear();
-      this.items.addAll(uniqueItems);
     }
+    this.items.clear();
+    this.items.addAll(uniqueItems);
   }
 
   public List<RSSItem> getItems() {
