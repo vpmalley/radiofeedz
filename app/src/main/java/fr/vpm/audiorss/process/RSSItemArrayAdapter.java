@@ -240,6 +240,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       Stats.get(getContext()).increment(Stats.ACTION_DELETE);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.deleteMedia(rssItem);
+      Toast.makeText(getContext(), R.string.media_deleted, Toast.LENGTH_SHORT).show();
     }
   };
 
@@ -249,6 +250,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
+      rssItem.setRead(true);
+      notifyDataSetChanged();
     }
   };
 
@@ -258,6 +261,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), false);
+      rssItem.setRead(false);
+      notifyDataSetChanged();
     }
   };
 

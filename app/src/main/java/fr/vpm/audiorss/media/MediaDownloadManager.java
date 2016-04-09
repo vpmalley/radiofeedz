@@ -39,7 +39,11 @@ public class MediaDownloadManager {
 
   public void deleteMedia(RSSItem rssItem) {
     if (rssItem.getMedia() != null) {
-      getDownloadFile(rssItem.getMedia()).delete();
+      boolean deleted = getDownloadFile(rssItem.getMedia()).delete();
+      if (deleted) {
+        rssItem.getMedia().setIsDownloaded(false);
+        new AsyncDbSaveMedia(new AsyncCallbackListener.DummyCallback(), context).execute(rssItem.getMedia());
+      }
     }
   }
 
