@@ -70,7 +70,11 @@ public class CachableRSSChannel implements Cachable {
   public void process(Context context) {
     try {
       if (isQueried()) {
-        itemParser.extractRSSItems(itemParser.getThresholdDate(context), PROCESS_MAX_ITEMS);
+        if (initialRSSUrl != null) {
+          itemParser.extractRSSItems(itemParser.getThresholdDate(context, true), 0);
+        } else {
+          itemParser.extractRSSItems(itemParser.getThresholdDate(context, false), PROCESS_MAX_ITEMS);
+        }
       }
     } catch (Exception e) {
       Log.w("cache-process", e.toString());
@@ -103,12 +107,10 @@ public class CachableRSSChannel implements Cachable {
     try {
       if (isQueried()) {
         String thresholdDate = "";
-        if (initialRSSUrl != null) { // if this is a new feed
-          Calendar lastYear = Calendar.getInstance();
-          lastYear.add(Calendar.YEAR, -1);
-          thresholdDate = DateUtils.formatDBDate(lastYear.getTime());
+        if (initialRSSUrl != null) {
+          thresholdDate = itemParser.getThresholdDate(context, true);
         } else {
-          thresholdDate = itemParser.getThresholdDate(context);
+          thresholdDate = itemParser.getThresholdDate(context, false);
         }
         itemParser.extractRSSItems(thresholdDate);
       }

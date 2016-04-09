@@ -198,13 +198,17 @@ public class ItemParser {
   /**
    * Retrieves from preferences the threshold date before which no item should be kept.
    * @param context the current Android context
+   * @param isNew whether this is a new feed to add
    * @return the threshold date
    */
-  public String getThresholdDate(Context context) {
-    String itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
-        getString("pref_items_deletion", "30");
-    if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()){
-      itemsExpiryTime = "30";
+  public String getThresholdDate(Context context, boolean isNew) {
+    String itemsExpiryTime = "800";
+    if (!isNew) {
+      itemsExpiryTime = PreferenceManager.getDefaultSharedPreferences(context).
+          getString("pref_items_deletion", "30");
+      if (!Pattern.compile("\\d+").matcher(itemsExpiryTime).matches()) {
+        itemsExpiryTime = "30";
+      }
     }
     Calendar yesterday = Calendar.getInstance();
     yesterday.add(Calendar.DAY_OF_YEAR, -1 * Integer.valueOf(itemsExpiryTime));
