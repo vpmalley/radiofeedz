@@ -1,7 +1,9 @@
 package fr.vpm.audiorss.interaction;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -51,9 +53,13 @@ public class DBCache {
   }
 
   public void addNewFeeds(List<RSSChannel> newFeeds) {
+    Set<RSSItem> uniqueItems = new HashSet<>();
     this.feeds.addAll(newFeeds);
     for (RSSChannel feed : newFeeds) {
-      this.items.addAll(feed.getItems());
+      uniqueItems.addAll(this.items);
+      uniqueItems.addAll(feed.getItems());
+      this.items.clear();
+      this.items.addAll(uniqueItems);
     }
   }
 
