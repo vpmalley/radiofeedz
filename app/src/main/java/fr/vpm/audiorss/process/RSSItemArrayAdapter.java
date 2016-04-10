@@ -21,11 +21,11 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.presentation.DisplayedRSSItem;
-import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**
@@ -240,7 +240,10 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       Stats.get(getContext()).increment(Stats.ACTION_DELETE);
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.deleteMedia(rssItem);
-      Toast.makeText(getContext(), R.string.media_deleted, Toast.LENGTH_SHORT).show();
+      View item = (View) view.getParent().getParent();
+      int position = ((ListView) item.getParent()).getPositionForView(item);
+      getItem(position).setMediaStatus(DisplayedRSSItem.Media.NONE);
+      notifyDataSetChanged();
     }
   };
 

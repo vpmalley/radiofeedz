@@ -47,6 +47,5 @@
     <string name="pref_items_lib_cloudant">Cloudant client</string>
     <string name="summary_pref_items_lib_cloudant">Apache License, Version 2.0</string>
     <string name="error_no_app_for_media">No app found to read this media</string>
-    <string name="media_deleted">Media deleted</string>
 
 </resources>
