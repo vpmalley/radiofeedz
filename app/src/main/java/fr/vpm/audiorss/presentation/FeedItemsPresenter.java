@@ -1,5 +1,6 @@
 package fr.vpm.audiorss.presentation;
 
+import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
@@ -33,6 +34,7 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
   public void presentFeeds(List<RSSChannel> feeds, List<RSSItem> feedItems) {
     rssCache.build(feeds, feedItems);
     displayCachedFeedItems();
+    Collections.sort(feeds, new ChannelComparator());
     feedItemsActivity.refreshNavigationDrawer(feeds);
     presentLastRefreshTime();
   }

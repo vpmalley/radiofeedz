@@ -1,8 +1,6 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.presentation;
 
 import java.util.Comparator;
-
-import fr.vpm.audiorss.presentation.DisplayedRSSItem;
 
 /**
  * Created by vince on 27/10/14.

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.media.IconDisplay;
-import fr.vpm.audiorss.process.ItemComparator;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
