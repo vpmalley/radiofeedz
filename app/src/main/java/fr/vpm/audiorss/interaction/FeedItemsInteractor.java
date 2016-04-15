@@ -2,6 +2,7 @@ package fr.vpm.audiorss.interaction;
 
 import android.content.Context;
 
+import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.audiorss.AllFeedItems;
@@ -24,7 +25,7 @@ public class FeedItemsInteractor implements FeedItemsInteraction, FeedItemsCache
   private MediaDownloadManager mediaDownloadManager;
   private Context feedItemsActivity;
   private FeedItemsPresentation feedItemsPresentation;
-
+  private SelectionFilter filter;
 
   public FeedItemsInteractor(AllFeedItems feedItemsActivity, int rssItemLayout) {
     this.feedItemsActivity = feedItemsActivity;
@@ -37,14 +38,19 @@ public class FeedItemsInteractor implements FeedItemsInteraction, FeedItemsCache
   public void loadFeedItems() {
     dbCache.invalidate();
     dbCache.empty();
-    rssRetriever.retrieveFeedItems();
+    if (this.filter != null) {
+      rssRetriever.retrieveFeedItems(Collections.singletonList(this.filter));
+    } else {
+      rssRetriever.retrieveFeedItems();
+    }
   }
 
   @Override
-  public void loadFeedItems(List<SelectionFilter> filters) {
+  public void loadFeedItems(SelectionFilter filter) {
     dbCache.invalidate();
     dbCache.empty();
-    rssRetriever.retrieveFeedItems(filters);
+    this.filter = filter;
+    rssRetriever.retrieveFeedItems(Collections.singletonList(this.filter));
   }
 
   @Override

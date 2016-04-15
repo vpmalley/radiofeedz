@@ -1,28 +1,37 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.adapter;
 
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import fr.vpm.audiorss.R;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
+import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
  * Created by vince on 03/11/14.
  */
-public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListener {
+public class FeedContextualActionListener implements AbsListView.MultiChoiceModeListener {
 
-  private final ContextualActions contextualActions;
+  private final FeedItemsInteraction interactor;
+
+  private final ArrayAdapter<NavigationDrawerItem> navigationDrawerItemArrayAdapter;
 
   private final Set<Integer> selection = new HashSet<Integer>();
 
   private final int menuResource;
 
-  public FeedChoiceModeListener(ContextualActions contextualActions, int menuResource) {
-    this.contextualActions = contextualActions;
+  public FeedContextualActionListener(FeedItemsInteraction interactor, ArrayAdapter<NavigationDrawerItem> navigationDrawerItemArrayAdapter, int menuResource) {
+    this.interactor = interactor;
+    this.navigationDrawerItemArrayAdapter = navigationDrawerItemArrayAdapter;
     this.menuResource = menuResource;
   }
 
@@ -53,15 +62,25 @@ public class FeedChoiceModeListener implements AbsListView.MultiChoiceModeListen
   @Override
   public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
     if (R.id.action_delete == menuItem.getItemId()) {
-      contextualActions.deleteFeeds(selection);
+      interactor.deleteFeeds(getChannels(selection));
       actionMode.finish();
       return true;
     } else if (R.id.action_refresh == menuItem.getItemId()) {
-      contextualActions.refreshFeeds(selection);
+      interactor.deleteFeeds(getChannels(selection));
       actionMode.finish();
       return true;
     }
     return false;
+  }
+
+  private List<RSSChannel> getChannels(Collection<Integer> selection) {
+    List<RSSChannel> channels = new ArrayList<>();
+    for (int position : selection) {
+      if (navigationDrawerItemArrayAdapter.getItem(position).hasBoundChannel()) {
+        channels.add(navigationDrawerItemArrayAdapter.getItem(position).getBoundChannel());
+      }
+    }
+    return channels;
   }
 
   @Override

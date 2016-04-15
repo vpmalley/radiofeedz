@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.adapter;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -26,6 +26,8 @@ import fr.vpm.audiorss.media.IconDisplay;
 import fr.vpm.audiorss.media.Media;
 import fr.vpm.audiorss.media.MediaDownloadManager;
 import fr.vpm.audiorss.presentation.DisplayedRSSItem;
+import fr.vpm.audiorss.process.DateUtils;
+import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSItem;
 
 /**

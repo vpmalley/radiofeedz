@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.adapter;
 
 import android.widget.ImageView;
 import android.widget.TextView;

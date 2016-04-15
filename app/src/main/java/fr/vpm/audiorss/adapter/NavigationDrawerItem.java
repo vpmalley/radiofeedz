@@ -1,4 +1,4 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.adapter;
 
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.rss.RSSChannel;

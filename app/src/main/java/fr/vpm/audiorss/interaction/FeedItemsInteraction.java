@@ -13,7 +13,7 @@ public interface FeedItemsInteraction {
 
   void loadFeedItems();
 
-  void loadFeedItems(List<SelectionFilter> filters);
+  void loadFeedItems(SelectionFilter filter);
 
   void retrieveLatestFeedItems();
 

@@ -1,12 +1,11 @@
-package fr.vpm.audiorss.process;
+package fr.vpm.audiorss.adapter;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.db.filter.ArchivedFilter;
@@ -18,12 +17,14 @@ import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.db.filter.TodayFilter;
 import fr.vpm.audiorss.db.filter.UnreadFilter;
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
+import fr.vpm.audiorss.presentation.ChannelComparator;
+import fr.vpm.audiorss.process.Stats;
 import fr.vpm.audiorss.rss.RSSChannel;
 
 /**
  * Created by vince on 19/03/16.
  */
-public class NavigationDrawer implements ContextualActions {
+public class NavigationDrawer {
 
   /**
    * The filters for the first items of the list.
@@ -71,32 +72,15 @@ public class NavigationDrawer implements ContextualActions {
     }
   }
 
-  private List<RSSChannel> getChannels(Collection<Integer> selection) {
-    List<RSSChannel> channels = new ArrayList<>();
-    for (int position : selection) {
-      if (items.get(position).hasBoundChannel()) {
-        channels.add(items.get(position).getBoundChannel());
-      }
-    }
-    return channels;
-  }
-
-  @Override
-  public void deleteFeeds(Collection<Integer> selection) {
-    interactor.deleteFeeds(getChannels(selection));
-  }
-
-  @Override
-  public void refreshFeeds(Set<Integer> selection) {
-    interactor.retrieveLatestFeedItems(getChannels(selection));
-  }
-
   public ArrayAdapter<NavigationDrawerItem> setChannelsAndGetAdapter(List<RSSChannel> allChannels) {
+    Collections.sort(allChannels, new ChannelComparator());
     clear();
     addStaticItems();
     addChannels(allChannels);
     if (rssChannelAdapter == null) {
       rssChannelAdapter = new ArrayAdapter<>(context, R.layout.list_item, items);
+    } else {
+      rssChannelAdapter.notifyDataSetChanged();
     }
     return rssChannelAdapter;
   }
