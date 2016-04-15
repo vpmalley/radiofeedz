@@ -3,17 +3,15 @@ package fr.vpm.audiorss;
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
-import java.util.List;
-
 import fr.vpm.audiorss.adapter.NavigationDrawerItem;
-import fr.vpm.audiorss.rss.RSSChannel;
+import fr.vpm.audiorss.adapter.RSSItemArrayAdapter;
 
 /**
  * Created by vince on 03/11/14.
  *
  * Offer interaction with views and data for feeds manipulation.
  */
-public interface FeedsActivity<T> {
+public interface FeedsActivity {
 
   void refreshTitle(String title);
 
@@ -21,10 +19,12 @@ public interface FeedsActivity<T> {
 
   void stopRefreshProgress();
 
+  void resetFeedItemsListSelection();
+
   /**
    * Refreshes the view based on some data item
    */
-  void refreshFeedItems(T data);
+  void refreshFeedItems(RSSItemArrayAdapter itemAdapter);
 
   /**
    * Refreshes the view based on the adapter

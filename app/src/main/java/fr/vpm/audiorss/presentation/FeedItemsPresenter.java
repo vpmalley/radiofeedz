@@ -59,6 +59,7 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
       feedItemsActivity.refreshFeedItems(rssItemAdapter);
     } else {
       rssItemAdapter.notifyDataSetChanged();
+      feedItemsActivity.resetFeedItemsListSelection();
     }
   }
 

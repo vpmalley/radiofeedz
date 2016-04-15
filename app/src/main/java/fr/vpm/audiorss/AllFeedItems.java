@@ -34,7 +34,7 @@ import fr.vpm.audiorss.interaction.FeedItemsInteractor;
 import fr.vpm.audiorss.maintenance.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 
-public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSSItemArrayAdapter> {
+public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
 
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
@@ -193,6 +193,11 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
   @Override
   public void stopRefreshProgress() {
     progressBarListener.stopRefreshProgress();
+  }
+
+  @Override
+  public void resetFeedItemsListSelection() {
+    mFeedItems.setSelection(0);
   }
 
   @Override

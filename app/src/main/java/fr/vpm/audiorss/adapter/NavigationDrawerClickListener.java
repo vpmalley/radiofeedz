@@ -30,6 +30,7 @@ public class NavigationDrawerClickListener implements AdapterView.OnItemClickLis
   public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
     NavigationDrawerItem navigationDrawerItem = (NavigationDrawerItem) drawerList.getAdapter().getItem(position);
     Stats.get(feedsActivity.getContext()).increment(navigationDrawerItem.getStatTag());
+    feedsActivity.resetFeedItemsListSelection();
     feedsActivity.refreshTitle(navigationDrawerItem.getTitle());
     feedsActivity.startRefreshProgress();
     interaction.loadFeedItems(navigationDrawerItem.getFilter());
