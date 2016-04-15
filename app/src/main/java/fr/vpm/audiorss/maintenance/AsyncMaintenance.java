@@ -97,7 +97,7 @@ public class AsyncMaintenance {
     dbUpdater.closeDb();
   }
 
-  private void analyzeData() {
+  public void analyzeData() {
     SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
 
     long size = new File(db.getPath()).length();
@@ -142,7 +142,7 @@ public class AsyncMaintenance {
     Log.d(MAINTENANCE_TAG, dir.getName() + " has " + dir.list().length + " files");
     for (File f: dir.listFiles()) {
       totalSize += f.length();
-      Log.d(MAINTENANCE_TAG, dir.getName() + "/" + f.getName() + " weighs " + f.length());
+      Log.d(MAINTENANCE_TAG, dir.getAbsolutePath() + "/" + f.getName() + " weighs " + f.length());
       if (f.isDirectory()) {
         browseFiles(f);
       }
