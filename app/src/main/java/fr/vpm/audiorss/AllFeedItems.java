@@ -325,6 +325,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity<RSS
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+      mFeedItems.setSelection(0);
       NavigationDrawerItem navigationDrawerItem = (NavigationDrawerItem) drawerList.getAdapter().getItem(position);
       Stats.get(AllFeedItems.this).increment(navigationDrawerItem.getStatTag());
       filters.clear();
