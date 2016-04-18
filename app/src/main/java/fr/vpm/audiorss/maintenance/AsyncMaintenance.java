@@ -1,9 +1,11 @@
 package fr.vpm.audiorss.maintenance;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -97,6 +99,7 @@ public class AsyncMaintenance {
     dbUpdater.closeDb();
   }
 
+  @TargetApi(Build.VERSION_CODES.KITKAT)
   public void analyzeData() {
     SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
 
@@ -136,6 +139,14 @@ public class AsyncMaintenance {
     totalSize = 0;
     browseFiles(context.getExternalCacheDir());
     Log.d(MAINTENANCE_TAG, totalSize + " total bytes of external cache files");
+    totalSize = 0;
+    browseFiles(context.getObbDir());
+    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of obb files");
+    totalSize = 0;
+    for (File obbDir : context.getObbDirs()) {
+      browseFiles(obbDir);
+      Log.d(MAINTENANCE_TAG, totalSize + " total bytes of more obb files");
+    }
   }
 
   private void browseFiles(File dir) {
