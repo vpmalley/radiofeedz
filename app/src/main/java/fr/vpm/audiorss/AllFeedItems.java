@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import fr.vpm.audiorss.adapter.FeedContextualActionListener;
+import fr.vpm.audiorss.adapter.FeedItemsListRecyclerListener;
 import fr.vpm.audiorss.adapter.NavigationDrawerClickListener;
 import fr.vpm.audiorss.adapter.NavigationDrawerItem;
 import fr.vpm.audiorss.adapter.RSSItemArrayAdapter;
@@ -216,6 +217,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
   @Override
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
     mFeedItems.setAdapter(rssItemAdapter);
+    mFeedItems.setRecyclerListener(new FeedItemsListRecyclerListener(interactor, rssItemAdapter));
   }
 
   @Override

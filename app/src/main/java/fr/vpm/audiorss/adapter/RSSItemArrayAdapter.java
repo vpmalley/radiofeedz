@@ -256,7 +256,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
       rssItem.setRead(true);
-      notifyDataSetChanged();
     }
   };
 
@@ -267,7 +266,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       RSSItem rssItem = getFeedItemForButton(view);
       feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), false);
       rssItem.setRead(false);
-      notifyDataSetChanged();
     }
   };
 
