@@ -129,6 +129,13 @@ public class AsyncMaintenance {
     c.close();
     new DbMedia(db).deleteOrphans();
 
+    c = db.rawQuery("SELECT inet_url, name FROM " + DbMedia.T_MEDIA + " ORDER BY inet_url", null);
+    c.moveToFirst();
+    while (c.moveToNext()) { // listing all medias
+      Log.d(MAINTENANCE_TAG, c.getString(0) + " / " + c.getString(1));
+    }
+    c.close();
+
 
     totalSize = 0;
     browseFiles(context.getFilesDir());
