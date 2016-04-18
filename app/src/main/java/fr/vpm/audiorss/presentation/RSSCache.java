@@ -40,7 +40,7 @@ public class RSSCache {
     displayedRSSItems.clear();
     for (RSSItem item : feedItems) {
       for (RSSChannel feed : feeds) {
-        if (feed.getId() == item.getChannelId()) {
+        if (feed.getTitle().equals(item.getChannelTitle())) {
           DisplayedRSSItem displayedRSSItem = new DisplayedRSSItem();
           displayedRSSItem.setRssItem(item);
           displayedRSSItem.setFeedTitle(feed.getShortenedTitle());
