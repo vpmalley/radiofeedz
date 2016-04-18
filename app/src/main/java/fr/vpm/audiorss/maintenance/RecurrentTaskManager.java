@@ -24,6 +24,7 @@ public class RecurrentTaskManager {
   public static final int REFRESH_DL_DAYS_AGO = 1;
 
   public void performRecurrentTasks(Context context) {
+    new AsyncMaintenance(context).analyzeData();
     if (shouldPerformTask(context, "pushAnalytics", ANALYTICS_DAYS_AGO)) {
       Stats.get(context).pushStats(context);
     }
