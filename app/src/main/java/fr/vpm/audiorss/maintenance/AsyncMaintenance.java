@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -133,6 +134,9 @@ public class AsyncMaintenance {
     c.moveToFirst();
     while (c.moveToNext()) { // listing all medias
       Log.d(MAINTENANCE_TAG, c.getString(0) + " / " + c.getString(1) + " / " + c.getString(2));
+      if (c.getString(1) != null) {
+        Log.d(MAINTENANCE_TAG, c.getString(1) + " weighs " + new File(Uri.parse(c.getString(1)).getPath()).length());
+      }
     }
     c.close();
 
