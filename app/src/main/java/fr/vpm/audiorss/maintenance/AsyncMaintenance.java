@@ -1,12 +1,10 @@
 package fr.vpm.audiorss.maintenance;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -43,8 +41,6 @@ public class AsyncMaintenance {
   public static final String MAINTENANCE_TAG = "maintenance";
 
   private final Context context;
-
-  private int totalSize;
 
   public AsyncMaintenance(Context context) {
     this.context = context;
@@ -100,7 +96,6 @@ public class AsyncMaintenance {
     dbUpdater.closeDb();
   }
 
-  @TargetApi(Build.VERSION_CODES.KITKAT)
   public void analyzeData() {
     SQLiteDatabase db = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
 
@@ -139,35 +134,5 @@ public class AsyncMaintenance {
       }
     }
     c.close();
-
-
-    totalSize = 0;
-    browseFiles(context.getFilesDir());
-    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of regular files");
-    totalSize = 0;
-    browseFiles(context.getCacheDir());
-    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of cache files");
-    totalSize = 0;
-    browseFiles(context.getExternalCacheDir());
-    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of external cache files");
-    totalSize = 0;
-    browseFiles(context.getObbDir());
-    Log.d(MAINTENANCE_TAG, totalSize + " total bytes of obb files");
-    totalSize = 0;
-    for (File obbDir : context.getObbDirs()) {
-      browseFiles(obbDir);
-      Log.d(MAINTENANCE_TAG, totalSize + " total bytes of more obb files");
-    }
-  }
-
-  private void browseFiles(File dir) {
-    Log.d(MAINTENANCE_TAG, dir.getName() + " has " + dir.list().length + " files");
-    for (File f: dir.listFiles()) {
-      totalSize += f.length();
-      Log.d(MAINTENANCE_TAG, dir.getAbsolutePath() + "/" + f.getName() + " weighs " + f.length());
-      if (f.isDirectory()) {
-        browseFiles(f);
-      }
-    }
   }
 }
