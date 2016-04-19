@@ -25,10 +25,13 @@ public class FeedItemsListRecyclerListener implements AbsListView.RecyclerListen
 
   @Override
   public void onMovedToScrapHeap(View view) {
-    int position = getListView(view).getPositionForView(view);
-    RSSItem rssItem = rssItemArrayAdapter.getItem(position).getRssItem();
-    feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
-    rssItem.setRead(true);
+    ListView listView = getListView(view);
+    if (listView != null) {
+      int position = listView.getPositionForView(view);
+      RSSItem rssItem = rssItemArrayAdapter.getItem(position).getRssItem();
+      feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
+      rssItem.setRead(true);
+    }
   }
 
   private ListView getListView(View view) {

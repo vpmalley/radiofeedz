@@ -142,8 +142,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -155,8 +155,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -168,8 +168,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -181,8 +181,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -194,8 +194,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -207,8 +207,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -220,8 +220,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
         <ImageButton
@@ -233,8 +233,8 @@
             android:padding="10dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:clickable="true"
             />
     </LinearLayout>
