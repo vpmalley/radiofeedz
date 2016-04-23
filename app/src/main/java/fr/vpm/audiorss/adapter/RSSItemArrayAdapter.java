@@ -43,6 +43,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
 
   private final FeedItemsInteraction feedItemsInteraction;
 
+  private FeedItemsListRecyclerListener recyclerListener;
+
   public RSSItemArrayAdapter(Activity activity, int resource, List<DisplayedRSSItem> items, FeedItemsInteraction feedItemsInteraction) {
     super(activity, resource, items);
     this.activity = activity;
@@ -75,6 +77,9 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     displayActions(itemHolder, rssItem);
     setActionListeners(itemHolder);
 
+    if (recyclerListener != null) {
+      recyclerListener.onAppear(position, rssItem.getRssItem());
+    }
     return convertView;
   }
 
@@ -306,4 +311,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     }
   }
 
+  public void setRecyclerListener(FeedItemsListRecyclerListener recyclerListener) {
+    this.recyclerListener = recyclerListener;
+  }
 }

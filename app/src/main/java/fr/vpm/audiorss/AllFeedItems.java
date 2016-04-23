@@ -216,8 +216,10 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
 
   @Override
   public void refreshFeedItems(RSSItemArrayAdapter rssItemAdapter) {
+    FeedItemsListRecyclerListener recyclerListener = new FeedItemsListRecyclerListener(interactor);
+    mFeedItems.setRecyclerListener(recyclerListener);
+    rssItemAdapter.setRecyclerListener(recyclerListener);
     mFeedItems.setAdapter(rssItemAdapter);
-    mFeedItems.setRecyclerListener(new FeedItemsListRecyclerListener(interactor, rssItemAdapter));
   }
 
   @Override
