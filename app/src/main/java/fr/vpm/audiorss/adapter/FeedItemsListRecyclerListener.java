@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSItem;
@@ -19,7 +19,7 @@ public class FeedItemsListRecyclerListener implements AbsListView.RecyclerListen
 
   private FeedItemsInteraction feedItemsInteraction;
 
-  private List<RSSItem> visibleItems = new ArrayList<>();
+  private Map<Integer, RSSItem> visibleItems = new HashMap<>();
 
   public FeedItemsListRecyclerListener(FeedItemsInteraction feedItemsInteraction) {
     this.feedItemsInteraction = feedItemsInteraction;
@@ -27,11 +27,12 @@ public class FeedItemsListRecyclerListener implements AbsListView.RecyclerListen
 
   public void onAppear(int position, RSSItem rssItem) {
     Log.d("recycling", "APP: item " + position + ", " + rssItem.getTitle() + " appeared.");
-    visibleItems.add(position, rssItem);
+    visibleItems.put(position, rssItem);
   }
 
   public void onDisappear(int position, RSSItem rssItem) {
     Log.d("recycling", "DIS: item " + position + ", " + rssItem.getTitle() + " disappeared.");
+    rssItem.setRead(true);
     feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
   }
 
