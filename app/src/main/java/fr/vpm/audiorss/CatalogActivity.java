@@ -9,6 +9,8 @@ import android.widget.ExpandableListView;
 import android.widget.SimpleExpandableListAdapter;
 
 import fr.vpm.audiorss.catalog.Catalog;
+import fr.vpm.audiorss.catalog.CatalogFileLoader;
+import fr.vpm.audiorss.catalog.CatalogLoader;
 
 
 public class CatalogActivity extends Activity {
@@ -33,8 +35,8 @@ public class CatalogActivity extends Activity {
       }
     });
 
-    feedsCatalog = new Catalog();
-    feedsCatalog.loadData(this);
+    CatalogLoader catalogLoader = new CatalogFileLoader();
+    feedsCatalog = new Catalog(catalogLoader.loadData(this));
     ExpandableListAdapter feedsAdapter = new SimpleExpandableListAdapter(this, feedsCatalog.getGroups(), Catalog.GROUP_LAYOUT,
             Catalog.GROUP_KEYS, Catalog.GROUP_VIEWS, feedsCatalog.getChildren(), Catalog.CHILD_LAYOUT, Catalog.CHILD_KEYS, Catalog.CHILD_VIEWS);
     feedsView.setAdapter(feedsAdapter);
