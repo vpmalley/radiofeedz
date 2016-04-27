@@ -1,526 +1,535 @@
 [
   {
-    name : "BBC World Service Podcasts (UK)",
-    feeds : [
+    "name" : "BBC World Service Podcasts (UK)",
+    "feeds" : [
       {
-        name : "Global News",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/rss.xml"
+        "name" : "Global News",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/globalnews/rss.xml"
       },
       {
-        name : "Newshour",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/newshour/rss.xml"
+        "name" : "Newshour",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/newshour/rss.xml"
       },
       {
-        name : "Discovery",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/discovery/rss.xml"
+        "name" : "Discovery",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/discovery/rss.xml"
       },
       {
-        name : "Science Hour",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/science/rss.xml"
+        "name" : "Science Hour",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/science/rss.xml"
       },
       {
-        name : "World Update: Daily Commute",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/worldupmc/rss.xml"
+        "name" : "World Update: Daily Commute",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/worldupmc/rss.xml"
       },
       {
-        name : "The world this week",
-        url : "http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml"
+        "name" : "The world this week",
+        "url" : "http://downloads.bbc.co.uk/podcasts/worldservice/twtw/rss.xml"
       },
       {
-        name : "From our own correspondent",
-        url : "http://downloads.bbc.co.uk/podcasts/radio4/fooc/rss.xml"
+        "name" : "From our own correspondent",
+        "url" : "http://downloads.bbc.co.uk/podcasts/radio4/fooc/rss.xml"
       }
     ]
   },
   {
-    name : "France Inter - semaine (France)",
-    feeds : [
+    "name" : "France Inter - semaine (France)",
+    "feeds" : [
       {
-        name : "Géopolitique",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10009.xml"
+        "name" : "Géopolitique",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10009.xml"
       },
       {
-        name : "l'édito éco",
-        url : "http://radiofrance-podcast.net/podcast09/rss_18770.xml"
+        "name" : "l'édito éco",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_18770.xml"
       },
       {
-        name : "l'édito politique",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10217.xml"
+        "name" : "l'édito politique",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10217.xml"
       },
       {
-        name : "Boomerang",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13937.xml"
+        "name" : "Boomerang",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13937.xml"
       },
       {
-        name : "L'instant M",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13938.xml"
+        "name" : "L'instant M",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13938.xml"
       },
       {
-        name : "Service public",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10207.xml"
+        "name" : "Service public",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10207.xml"
       },
       {
-        name : "La bande originale",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13939.xml"
+        "name" : "La bande originale",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13939.xml"
       },
       {
-        name : "Carnets de campagne",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10205.xml"
+        "name" : "Carnets de campagne",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10205.xml"
       },
       {
-        name : "Le jeu des 1000 euros",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10206.xml"
+        "name" : "Le jeu des 1000 euros",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10206.xml"
       },
       {
-        name : "Journal de 13H",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11673.xml"
+        "name" : "Journal de 13H",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11673.xml"
       },
       {
-        name : "La marche de l'histoire",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11739.xml"
+        "name" : "La marche de l'histoire",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11739.xml"
       },
       {
-        name : "La tête au carré",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10212.xml"
+        "name" : "La tête au carré",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10212.xml"
       },
       {
-        name : "Affaires sensibles",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13940.xml"
+        "name" : "Affaires sensibles",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13940.xml"
       },
       {
-        name : "Classic avec Dessay",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13941.xml"
+        "name" : "Classic avec Dessay",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13941.xml"
       },
       {
-        name : "Un temps de Pauchon",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10616.xml"
+        "name" : "Un temps de Pauchon",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10616.xml"
       },
       {
-        name : "Si tu écoutes, j'annule tout",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13942.xml"
+        "name" : "Si tu écoutes, j'annule tout",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13942.xml"
       },
       {
-        name : "Un jour dans le monde",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13958.xml"
+        "name" : "Un jour dans le monde",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13958.xml"
       },
       {
-        name : "Partout ailleurs",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11483.xml"
+        "name" : "Partout ailleurs",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11483.xml"
       },
       {
-        name : "La fabrique du nouveau monde",
-        url : "http://radiofrance-podcast.net/podcast09/rss_14023.xml"
+        "name" : "La fabrique du nouveau monde",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14023.xml"
       },
       {
-        name : "Une histoire dans le monde",
-        url : "http://radiofrance-podcast.net/podcast09/rss_14157.xml"
+        "name" : "Une histoire dans le monde",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14157.xml"
       },
       {
-        name : "Journal de 19H",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11736.xml"
+        "name" : "Journal de 19H",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11736.xml"
       },
       {
-        name : "Le téléphone sonne",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11176.xml"
+        "name" : "Le téléphone sonne",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11176.xml"
       },
       {
-        name : "Secrets d'info",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13944.xml"
+        "name" : "Secrets d'info",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13944.xml"
       },
       {
-        name : "L'humeur vagabonde",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10054.xml"
+        "name" : "L'humeur vagabonde",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10054.xml"
       },
       {
-        name : "L'heure des rêveurs",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13106.xml"
+        "name" : "L'heure des rêveurs",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13106.xml"
       },
       {
-        name : "Il existe un endroit",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13284.xml"
+        "name" : "Il existe un endroit",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13284.xml"
       },
       {
-        name : "L'album de minuit",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13936.xml"
+        "name" : "L'album de minuit",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13936.xml"
       },
       {
-        name : "Nuits noires",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11709.xml"
+        "name" : "Nuits noires",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11709.xml"
       }
     ]
   },
   {
-    name : "France Inter - week-end (France)",
-    feeds : [
+    "name" : "France Inter - week-end (France)",
+    "feeds" : [
       {
-        name : "On n'arrête pas l'éco",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11548.xml"
+        "name" : "On n'arrête pas l'éco",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11548.xml"
       },
       {
-        name : "On aura tout vu",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10617.xml"
+        "name" : "On aura tout vu",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10617.xml"
       },
       {
-        name : "Sur les épaules de Darwin",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11549.xml"
+        "name" : "Sur les épaules de Darwin",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11549.xml"
       },
       {
-        name : "La prochaine fois je vous le chanterai",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10387.xml"
+        "name" : "La prochaine fois je vous le chanterai",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10387.xml"
       },
       {
-        name : "Rendez-vous avec X",
-        url : "http://radiofrance-podcast.net/podcast09/rss_14726.xml"
+        "name" : "Rendez-vous avec X",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14726.xml"
       },
       {
-        name : "CO2 mon amour",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10006.xml"
+        "name" : "CO2 mon amour",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10006.xml"
       },
       {
-        name : "La librairie francophone",
-        url : "http://radiofrance-podcast.net/podcast09/rss_18647.xml"
+        "name" : "La librairie francophone",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_18647.xml"
       },
       {
-        name : "Comme un bruit qui court",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13947.xml"
+        "name" : "Comme un bruit qui court",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13947.xml"
       },
       {
-        name : "Si l'Amérique m'était contée",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13343.xml"
+        "name" : "Si l'Amérique m'était contée",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13343.xml"
       },
       {
-        name : "Ça peut pas faire de mal",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11262.xml"
+        "name" : "Ça peut pas faire de mal",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11262.xml"
       },
       {
-        name : "La vie est un je",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13945.xml"
+        "name" : "La vie est un je",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13945.xml"
       },
       {
-        name : "Pop Fiction",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13948.xml"
+        "name" : "Pop Fiction",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13948.xml"
       },
       {
-        name : "Coming up !",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13960.xml"
+        "name" : "Coming up !",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13960.xml"
       },
       {
-        name : "Les savanturiers",
-        url : "http://radiofrance-podcast.net/podcast09/rss_12097.xml"
+        "name" : "Les savanturiers",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12097.xml"
       },
       {
-        name : "Les récits d'Isabelle Autissier",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11484.xml"
+        "name" : "Les récits d'Isabelle Autissier",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11484.xml"
       },
       {
-        name : "Dans tes rêves",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13949.xml"
+        "name" : "Dans tes rêves",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13949.xml"
       },
       {
-        name : "Interception",
-        url : "http://radiofrance-podcast.net/podcast09/rss_14934.xml"
+        "name" : "Interception",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14934.xml"
       },
       {
-        name : "Remède à la mélancolie",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13022.xml"
+        "name" : "Remède à la mélancolie",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13022.xml"
       },
       {
-        name : "On va déguster",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11370.xml"
+        "name" : "On va déguster",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11370.xml"
       },
       {
-        name : "3D le journal",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11558.xml"
+        "name" : "3D le journal",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11558.xml"
       },
       {
-        name : "Périphéries",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10040.xml"
+        "name" : "Périphéries",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10040.xml"
       },
       {
-        name : "Cosmopolitaine",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10051.xml"
+        "name" : "Cosmopolitaine",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10051.xml"
       },
       {
-        name : "Les femmes, toute une histoire",
-        url : "http://radiofrance-podcast.net/podcast09/rss_12155.xml"
+        "name" : "Les femmes, toute une histoire",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12155.xml"
       },
       {
-        name : "116 rue Albert-Londres",
-        url : "http://radiofrance-podcast.net/podcast09/rss_13950.xml"
+        "name" : "116 rue Albert-Londres",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13950.xml"
       },
       {
-        name : "L'Afrique enchantée",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10804.xml"
+        "name" : "L'Afrique enchantée",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10804.xml"
       },
       {
-        name : "Tous politiques",
-        url : "http://radiofrance-podcast.net/podcast09/rss_12688.xml"
+        "name" : "Tous politiques",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12688.xml"
       },
       {
-        name : "Les p'tits bateaux",
-        url : "http://radiofrance-podcast.net/podcast09/rss_10137.xml"
+        "name" : "Les p'tits bateaux",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10137.xml"
       },
       {
-        name : "Le masque et la plume",
-        url : "http://radiofrance-podcast.net/podcast09/rss_14007.xml"
+        "name" : "Le masque et la plume",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14007.xml"
       },
       {
-        name : "Summertime",
-        url : "http://radiofrance-podcast.net/podcast09/rss_12309.xml"
+        "name" : "Summertime",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12309.xml"
       },
       {
-        name : "Partir avec...",
-        url : "http://radiofrance-podcast.net/podcast09/rss_11538.xml"
+        "name" : "Partir avec...",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11538.xml"
       }
     ]
   },
   {
-    name : "The Guardian (UK)",
-    feeds : [
+    "name" : "The Guardian (UK)",
+    "feeds" : [
       {
-        name : "World news",
-        url : "http://www.theguardian.com/world/rss"
+        "name" : "World news",
+        "url" : "http://www.theguardian.com/world/rss"
       },
       {
-        name : "UK",
-        url : "http://www.theguardian.com/uk/rss"
+        "name" : "UK",
+        "url" : "http://www.theguardian.com/uk/rss"
       },
       {
-        name : "US",
-        url : "http://www.theguardian.com/us/rss"
+        "name" : "US",
+        "url" : "http://www.theguardian.com/us/rss"
       },
       {
-        name : "Economics",
-        url : "http://www.theguardian.com/business/economics/rss"
+        "name" : "Economics",
+        "url" : "http://www.theguardian.com/business/economics/rss"
       },
       {
-        name : "Technology",
-        url : "http://www.theguardian.com/technology/rss"
+        "name" : "Technology",
+        "url" : "http://www.theguardian.com/technology/rss"
       },
       {
-        name : "Culture",
-        url : "http://www.theguardian.com/uk/culture/rss"
+        "name" : "Culture",
+        "url" : "http://www.theguardian.com/uk/culture/rss"
       }
     ]
   },
   {
-    name : "Huffington Post (US)",
-    feeds : [
+    "name" : "Huffington Post (US)",
+    "feeds" : [
       {
-        name : "All news and blog articles",
-        url : "http://www.huffingtonpost.com/feeds/index.xml"
+        "name" : "All news and blog articles",
+        "url" : "http://www.huffingtonpost.com/feeds/index.xml"
       },
       {
-        name : "Business",
-        url : "http://www.huffingtonpost.com/feeds/verticals/business/index.xml"
+        "name" : "Business",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/business/index.xml"
       },
       {
-        name : "Education",
-        url : "http://www.huffingtonpost.com/feeds/verticals/education/index.xml"
+        "name" : "Education",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/education/index.xml"
       },
       {
-        name : "Politics",
-        url : "http://www.huffingtonpost.com/feeds/verticals/politics/index.xml"
+        "name" : "Politics",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/politics/index.xml"
       },
       {
-        name : "Religion",
-        url : "http://www.huffingtonpost.com/feeds/verticals/religion/index.xml"
+        "name" : "Religion",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/religion/index.xml"
       },
       {
-        name : "Science",
-        url : "http://www.huffingtonpost.com/feeds/verticals/science/index.xml"
+        "name" : "Science",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/science/index.xml"
       },
       {
-        name : "Sports",
-        url : "http://www.huffingtonpost.com/feeds/verticals/sports/index.xml"
+        "name" : "Sports",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/sports/index.xml"
       },
       {
-        name : "Technology",
-        url : "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml"
+        "name" : "Technology",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/technology/index.xml"
       },
       {
-        name : "Travel",
-        url : "http://www.huffingtonpost.com/feeds/verticals/travel/index.xml"
+        "name" : "Travel",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/travel/index.xml"
       },
       {
-        name : "Weird news",
-        url : "http://www.huffingtonpost.com/feeds/verticals/weird-news/index.xml"
+        "name" : "Weird news",
+        "url" : "http://www.huffingtonpost.com/feeds/verticals/weird-news/index.xml"
       }
     ]
   },
     {
-    name : "The New York Times (US)",
-    feeds : [
+    "name" : "The New York Times (US)",
+    "feeds" : [
       {
-        name : "World",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/World.xml"
+        "name" : "World",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/World.xml"
       },
       {
-        name : "US",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/US.xml"
+        "name" : "US",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/US.xml"
       },
       {
-        name : "US Politics",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/Politics.xml"
+        "name" : "US Politics",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/Politics.xml"
       },
       {
-        name : "Business",
-        url : "http://feeds.nytimes.com/nyt/rss/Business"
+        "name" : "Business",
+        "url" : "http://feeds.nytimes.com/nyt/rss/Business"
       },
       {
-        name : "Technology",
-        url : "http://feeds.nytimes.com/nyt/rss/Technology"
+        "name" : "Technology",
+        "url" : "http://feeds.nytimes.com/nyt/rss/Technology"
       },
       {
-        name : "Sports",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/Sports.xml"
+        "name" : "Sports",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/Sports.xml"
       },
       {
-        name : "Science",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/Science.xml"
+        "name" : "Science",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/Science.xml"
       },
       {
-        name : "Arts",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/Arts.xml"
+        "name" : "Arts",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/Arts.xml"
       },
       {
-        name : "Style",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml"
+        "name" : "Style",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/FashionandStyle.xml"
       },
       {
-        name : "Travel",
-        url : "http://www.nytimes.com/services/xml/rss/nyt/Travel.xml"
+        "name" : "Travel",
+        "url" : "http://www.nytimes.com/services/xml/rss/nyt/Travel.xml"
       },
       {
-        name : "Editorials",
-        url : "http://topics.nytimes.com/top/opinion/editorialsandoped/editorials/index.html?rss=1"
+        "name" : "Editorials",
+        "url" : "http://topics.nytimes.com/top/opinion/editorialsandoped/editorials/index.html?rss=1"
       }
     ]
   },
   {
-    name : "Reuters (UK)",
-    feeds : [
+    "name" : "Reuters (UK)",
+    "feeds" : [
       {
-        name : "World",
-        url : "http://feeds.reuters.com/Reuters/worldNews"
+        "name" : "World",
+        "url" : "http://feeds.reuters.com/Reuters/worldNews"
       },
       {
-        name : "US news",
-        url : "http://feeds.reuters.com/Reuters/domesticNews"
+        "name" : "US news",
+        "url" : "http://feeds.reuters.com/Reuters/domesticNews"
       },
       {
-        name : "Arts",
-        url : "http://feeds.reuters.com/news/artsculture"
+        "name" : "Arts",
+        "url" : "http://feeds.reuters.com/news/artsculture"
       },
       {
-        name : "Business",
-        url : "http://feeds.reuters.com/reuters/businessNews"
+        "name" : "Business",
+        "url" : "http://feeds.reuters.com/reuters/businessNews"
       },
       {
-        name : "Environment",
-        url : "http://feeds.reuters.com/reuters/environment"
+        "name" : "Environment",
+        "url" : "http://feeds.reuters.com/reuters/environment"
       },
       {
-        name : "Lifestyle",
-        url : "http://feeds.reuters.com/reuters/lifestyle"
+        "name" : "Lifestyle",
+        "url" : "http://feeds.reuters.com/reuters/lifestyle"
       },
       {
-        name : "Politics",
-        url : "http://feeds.reuters.com/Reuters/PoliticsNews"
+        "name" : "Politics",
+        "url" : "http://feeds.reuters.com/Reuters/PoliticsNews"
       },
       {
-        name : "Science",
-        url : "http://feeds.reuters.com/reuters/scienceNews"
+        "name" : "Science",
+        "url" : "http://feeds.reuters.com/reuters/scienceNews"
       },
       {
-        name : "Sports",
-        url : "http://feeds.reuters.com/reuters/sportsNews"
+        "name" : "Sports",
+        "url" : "http://feeds.reuters.com/reuters/sportsNews"
       },
       {
-        name : "Technology",
-        url : "http://feeds.reuters.com/reuters/technologyNews"
+        "name" : "Technology",
+        "url" : "http://feeds.reuters.com/reuters/technologyNews"
       }
     ]
   },
   {
-    name : "The Globe and Mail (Canada)",
-    feeds : [
+    "name" : "The Globe and Mail (Canada)",
+    "feeds" : [
       {
-        name : "News",
-        url : "http://www.theglobeandmail.com/news/?service=rss"
+        "name" : "News",
+        "url" : "http://www.theglobeandmail.com/news/?service=rss"
       },
       {
-        name : "Sports",
-        url : "http://www.theglobeandmail.com/sports/?service=rss"
+        "name" : "Sports",
+        "url" : "http://www.theglobeandmail.com/sports/?service=rss"
       },
       {
-        name : "Technology",
-        url : "http://www.theglobeandmail.com/technology/?service=rss"
+        "name" : "Technology",
+        "url" : "http://www.theglobeandmail.com/technology/?service=rss"
       },
       {
-        name : "Arts",
-        url : "http://www.theglobeandmail.com/arts/?service=rss"
+        "name" : "Arts",
+        "url" : "http://www.theglobeandmail.com/arts/?service=rss"
       },
       {
-        name : "Canadian Business News",
-        url : "http://www.theglobeandmail.com/report-on-business/?service=rss"
+        "name" : "Canadian Business News",
+        "url" : "http://www.theglobeandmail.com/report-on-business/?service=rss"
       },
       {
-        name : "Globe Investor",
-        url : "http://www.theglobeandmail.com/globe-investor/?service=rss"
+        "name" : "Globe Investor",
+        "url" : "http://www.theglobeandmail.com/globe-investor/?service=rss"
       }
     ]
   },
   {
-    name : "Le Monde (France)",
-    feeds : [
+    "name" : "Le Monde (France)",
+    "feeds" : [
       {
-        name : "A la une",
-        url : "http://www.lemonde.fr/rss/une.xml"
+        "name" : "A la une",
+        "url" : "http://www.lemonde.fr/rss/une.xml"
       },
       {
-        name : "Économie",
-        url : "http://www.lemonde.fr/economie/rss_full.xml"
+        "name" : "Économie",
+        "url" : "http://www.lemonde.fr/economie/rss_full.xml"
       },
       {
-        name : "Idées",
-        url : "http://www.lemonde.fr/idees/rss_full.xml"
+        "name" : "Idées",
+        "url" : "http://www.lemonde.fr/idees/rss_full.xml"
       },
       {
-        name : "International",
-        url : "http://www.lemonde.fr/international/rss_full.xml"
+        "name" : "International",
+        "url" : "http://www.lemonde.fr/international/rss_full.xml"
       },
       {
-        name : "Pixels",
-        url : "http://www.lemonde.fr/pixels/rss_full.xml"
+        "name" : "Pixels",
+        "url" : "http://www.lemonde.fr/pixels/rss_full.xml"
       },
       {
-        name : "Planète",
-        url : "http://www.lemonde.fr/planete/rss_full.xml"
+        "name" : "Planète",
+        "url" : "http://www.lemonde.fr/planete/rss_full.xml"
       },
       {
-        name : "Politique",
-        url : "http://www.lemonde.fr/politique/rss_full.xml"
+        "name" : "Politique",
+        "url" : "http://www.lemonde.fr/politique/rss_full.xml"
       },
       {
-        name : "Santé",
-        url : "http://www.lemonde.fr/sante/rss_full.xml"
+        "name" : "Santé",
+        "url" : "http://www.lemonde.fr/sante/rss_full.xml"
       },
       {
-        name : "Sciences",
-        url : "http://www.lemonde.fr/sciences/rss_full.xml"
+        "name" : "Sciences",
+        "url" : "http://www.lemonde.fr/sciences/rss_full.xml"
       },
       {
-        name : "Société",
-        url : "http://www.lemonde.fr/societe/rss_full.xml"
+        "name" : "Société",
+        "url" : "http://www.lemonde.fr/societe/rss_full.xml"
       },
       {
-        name : "Sport",
-        url : "http://www.lemonde.fr/sport/rss_full.xml"
+        "name" : "Sport",
+        "url" : "http://www.lemonde.fr/sport/rss_full.xml"
       },
       {
-        name : "Technologies",
-        url : "http://www.lemonde.fr/technologies/rss_full.xml"
+        "name" : "Technologies",
+        "url" : "http://www.lemonde.fr/technologies/rss_full.xml"
+      }
+    ]
+  },
+  {
+    "name" :  "Serial",
+    "feeds" : [
+      {
+        "name" : "Serial",
+        "url" : "http://feeds.serialpodcast.org/serialpodcast"
       }
     ]
   }
