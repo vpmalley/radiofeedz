@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
+import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.http.DefaultNetworkChecker;
 
 /**
@@ -112,8 +113,8 @@ public class Stats {
 
   private Database getDatabase() {
     CloudantClient client = ClientBuilder.account("radiofeedz")
-        .username("therippeceinguagaingives")
-        .password("c5b5215a47fe452dff234db9ffd755e59899a349")
+        .username(context.getString(R.string.rf_analytics_username))
+        .password(context.getString(R.string.rf_analytics_pwd))
         .build();
 
     return client.database("rf_analytics", false);
