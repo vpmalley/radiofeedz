@@ -251,12 +251,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
       return true;
     }
     switch (item.getItemId()) {
-      case R.id.action_search:
-        Stats.get(this).increment(Stats.ACTION_SEARCH);
-        i = new Intent(AllFeedItems.this, SearchFeedActivity.class);
-        startActivity(i);
-        result = true;
-        break;
       case R.id.action_catalog:
         Stats.get(this).increment(Stats.ACTION_CATALOG);
         i = new Intent(AllFeedItems.this, CatalogActivity.class);
