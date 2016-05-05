@@ -16,9 +16,9 @@
     <string name="no">No</string>
     <string name="today">Today</string>
     <string name="ui_sep">-</string>
-    <string name="drawer_latest">Latest</string>
+    <string name="drawer_all">All</string>
     <string name="drawer_today">Today</string>
-    <string name="drawer_unread">Unread</string>
+    <string name="drawer_new">New</string>
     <string name="drawer_downloaded">Downloaded</string>
     <string name="drawer_archived">Archived</string>
     <string name="drawer_audio">Audio podcasts</string>

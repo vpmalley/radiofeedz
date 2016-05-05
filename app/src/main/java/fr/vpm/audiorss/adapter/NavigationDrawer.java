@@ -8,13 +8,11 @@ import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
-import fr.vpm.audiorss.db.filter.ArchivedFilter;
 import fr.vpm.audiorss.db.filter.AudioFilter;
 import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.DownloadedFilter;
 import fr.vpm.audiorss.db.filter.EmptyFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.db.filter.TodayFilter;
 import fr.vpm.audiorss.db.filter.UnreadFilter;
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.presentation.ChannelComparator;
@@ -31,7 +29,7 @@ public class NavigationDrawer {
    * Must have the same length as STATIC_ITEM_TITLES
    */
   private static final SelectionFilter[] STATIC_ITEM_FILTERS = new SelectionFilter[] {
-      new EmptyFilter(), new TodayFilter(), new UnreadFilter(), new DownloadedFilter(), new ArchivedFilter(), new AudioFilter()
+      new UnreadFilter(), new EmptyFilter(), new AudioFilter(), new DownloadedFilter()
   };
 
   /**
@@ -39,7 +37,7 @@ public class NavigationDrawer {
    * Must have the same length as STATIC_ITEM_FILTERS
    */
   private static final int[] STATIC_ITEM_TITLES = new int[] {
-      R.string.drawer_latest, R.string.drawer_today, R.string.drawer_unread, R.string.drawer_downloaded, R.string.drawer_archived, R.string.drawer_audio
+      R.string.drawer_new, R.string.drawer_all, R.string.drawer_audio, R.string.drawer_downloaded
   };
 
   private final Context context;

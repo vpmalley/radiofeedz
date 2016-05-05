@@ -24,12 +24,4 @@
         <item>disp_list</item>
         <item>disp_grid</item>
     </array>
-
-    <string-array name="item_filters">
-        <item>@string/drawer_latest</item>
-        <item>@string/drawer_today</item>
-        <item>@string/drawer_unread</item>
-        <item>@string/drawer_downloaded</item>
-        <item>@string/drawer_archived</item>
-    </string-array>
 </resources>
