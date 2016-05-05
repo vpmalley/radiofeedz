@@ -13,7 +13,6 @@ public interface CatalogLoader {
 
   /**
    * Loads the catalog from file. To be done before any other action.
-   * @param context the current Android context
    */
-  List<FeedGroup> loadData(Context context);
+  void loadData();
 }

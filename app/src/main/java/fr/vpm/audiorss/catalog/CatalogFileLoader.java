@@ -22,7 +22,16 @@ import fr.vpm.audiorss.catalog.json.FeedGroup;
  */
 public class CatalogFileLoader implements CatalogLoader {
 
-  public List<FeedGroup> loadData(Context context) {
+  private final CatalogDisplay catalogDisplay;
+
+  private final Context context;
+
+  public CatalogFileLoader(CatalogDisplay catalogDisplay, Context context) {
+    this.catalogDisplay = catalogDisplay;
+    this.context = context;
+  }
+
+  public void loadData() {
     List<FeedGroup> feeds = new ArrayList<>();
     InputStream catalogStream = null;
     try {
@@ -40,6 +49,7 @@ public class CatalogFileLoader implements CatalogLoader {
         }
       }
     }
-    return feeds;
+    Catalog catalog = new Catalog(feeds);
+    catalogDisplay.displayCatalog(catalog);
   }
 }
