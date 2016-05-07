@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -35,7 +36,7 @@ import fr.vpm.audiorss.interaction.FeedItemsInteractor;
 import fr.vpm.audiorss.maintenance.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
 
-public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
+public class AllFeedItems extends AppCompatActivity implements FeedsActivity, SwipeRefreshLayout.OnRefreshListener {
 
   public static final String DISP_GRID = "disp_grid";
   public static final String DISP_LIST = "disp_list";
@@ -52,6 +53,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
   private FeedItemsInteraction interactor;
   private ProgressBarListener progressBarListener;
   private TextView lastRefreshTimeView;
+  private SwipeRefreshLayout itemsRefresher;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,9 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     setEmptyView();
-    lastRefreshTimeView = (TextView)findViewById(R.id.latestupdate);
+    lastRefreshTimeView = (TextView) findViewById(R.id.latestupdate);
+    itemsRefresher = (SwipeRefreshLayout) findViewById(R.id.itemsrefresher);
+    itemsRefresher.setOnRefreshListener(this);
 
     setNavigationDrawer();
 
@@ -182,6 +186,16 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
   }
 
   @Override
+  public void onRefresh() {
+    Stats.get(this).increment(Stats.ACTION_REFRESH);
+    if (networkChecker.checkNetworkForRefresh(this, true)) {
+      interactor.retrieveLatestFeedItems();
+    } else {
+      itemsRefresher.setRefreshing(false);
+    }
+  }
+
+  @Override
   public void refreshTitle(String title) {
     this.title = title;
   }
@@ -194,6 +208,9 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity {
   @Override
   public void stopRefreshProgress() {
     progressBarListener.stopRefreshProgress();
+    if (itemsRefresher.isRefreshing()) {
+      itemsRefresher.setRefreshing(false);
+    }
   }
 
   @Override

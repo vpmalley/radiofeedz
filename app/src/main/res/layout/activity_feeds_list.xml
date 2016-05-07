@@ -30,15 +30,19 @@
             android:gravity="center_horizontal"
             />
 
-        <ListView
-            android:id="@+id/allitems"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/itemsrefresher"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:divider="@drawable/gradient_separator"
-            android:dividerHeight="1dp"
-            android:paddingTop="30dp" >
-        </ListView>
+            android:layout_height="match_parent">
+            <ListView
+                android:id="@+id/allitems"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:divider="@drawable/gradient_separator"
+                android:dividerHeight="1dp"
+                android:paddingTop="30dp" />
+        </android.support.v4.widget.SwipeRefreshLayout>
         <LinearLayout
             android:id="@+id/emptyView"
             android:layout_width="match_parent"
