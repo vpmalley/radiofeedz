@@ -65,11 +65,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="15dp"
-                android:padding="15dp"
                 android:layout_gravity="center"
+                android:background="@drawable/circled_icon_selector"
                 android:src="@drawable/ic_action_new"
+                android:padding="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
                 android:clickable="true"
-                android:background="@android:color/holo_blue_bright"
                 />
         </LinearLayout>
 

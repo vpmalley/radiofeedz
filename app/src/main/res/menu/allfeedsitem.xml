@@ -7,14 +7,14 @@
           app:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_catalog"
-          android:icon="@drawable/ic_action_add_to_queue"
+          android:icon="@drawable/ic_action_new"
           android:title="@string/action_catalog"
-          app:showAsAction="never" />
+          app:showAsAction="ifRoom" />
     
     <item android:id="@+id/action_refresh"
           android:icon="@drawable/ic_action_refresh"
           android:title="@string/action_refresh"
-          app:showAsAction="always" />
+          app:showAsAction="never" />
     
     <item
         android:id="@+id/action_settings"
