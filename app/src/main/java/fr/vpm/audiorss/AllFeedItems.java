@@ -81,6 +81,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     setEmptyView();
     itemsRefresher = (SwipeRefreshLayout) findViewById(R.id.itemsrefresher);
     itemsRefresher.setOnRefreshListener(this);
+    itemsRefresher.setColorSchemeResources(R.color.holo_blue_light_comp);
 
     setNavigationDrawer();
 
