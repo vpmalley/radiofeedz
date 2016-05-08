@@ -52,7 +52,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   private String title = "Radiofeedz";
   private FeedItemsInteraction interactor;
   private ProgressBarListener progressBarListener;
-  private TextView lastRefreshTimeView;
   private SwipeRefreshLayout itemsRefresher;
 
   @Override
@@ -80,7 +79,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     setEmptyView();
-    lastRefreshTimeView = (TextView) findViewById(R.id.latestupdate);
     itemsRefresher = (SwipeRefreshLayout) findViewById(R.id.itemsrefresher);
     itemsRefresher.setOnRefreshListener(this);
 
@@ -241,8 +239,8 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
 
   @Override
   public void displayLastRefreshTime(String lastRefreshTime) {
-    if (lastRefreshTimeView != null) {
-      lastRefreshTimeView.setText(getString(R.string.last_refresh) + " : " + lastRefreshTime);
+    if (getSupportActionBar() != null) {
+      getSupportActionBar().setSubtitle(getString(R.string.last_refresh) + " : " + lastRefreshTime);
     }
   }
 

@@ -20,16 +20,6 @@
             android:max="100"
             />
 
-        <TextView
-            android:id="@+id/latestupdate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:fontFamily="sans-serif-light"
-            android:padding="6dp"
-            android:gravity="center_horizontal"
-            />
-
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/itemsrefresher"
             android:layout_width="match_parent"
@@ -40,8 +30,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:divider="@drawable/gradient_separator"
-                android:dividerHeight="1dp"
-                android:paddingTop="30dp" />
+                android:dividerHeight="1dp" />
         </android.support.v4.widget.SwipeRefreshLayout>
         <LinearLayout
             android:id="@+id/emptyView"
