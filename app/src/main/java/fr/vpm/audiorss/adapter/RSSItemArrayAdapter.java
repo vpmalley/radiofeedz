@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 
 import fr.vpm.audiorss.R;
@@ -131,14 +130,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
   }
 
   private void displayActions(RSSItemViewHolder itemHolder, DisplayedRSSItem rssItem) {
-    if (rssItem.getRssItem().isRead()) {
-      itemHolder.readIconView.setVisibility(View.GONE);
-      itemHolder.unreadIconView.setVisibility(View.VISIBLE);
-    } else {
-      itemHolder.readIconView.setVisibility(View.VISIBLE);
-      itemHolder.unreadIconView.setVisibility(View.GONE);
-    }
-
     switch(rssItem.getMediaStatus()) {
       case DOWNLOADABLE:
         itemHolder.playIconView.setVisibility(View.GONE);
@@ -170,7 +161,8 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
 
   @NonNull
   private RSSItemViewHolder findAllViews(View convertView) {
-    RSSItemViewHolder itemHolder;ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
+    RSSItemViewHolder itemHolder;
+    ImageView feedImage = (ImageView) convertView.findViewById(R.id.feed_pic);
     TextView itemTitle = (TextView) convertView.findViewById(R.id.item_title);
     TextView feedTitle = (TextView) convertView.findViewById(R.id.feed_title);
     TextView itemDate = (TextView) convertView.findViewById(R.id.item_date);
@@ -182,11 +174,9 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     ImageView playIconView = (ImageView) convertView.findViewById(R.id.action_play);
     ImageView displayIconView = (ImageView) convertView.findViewById(R.id.action_display);
     ImageView deleteIconView = (ImageView) convertView.findViewById(R.id.action_delete);
-    ImageView readIconView = (ImageView) convertView.findViewById(R.id.action_read);
-    ImageView unreadIconView = (ImageView) convertView.findViewById(R.id.action_unread);
     ImageView shareIconView = (ImageView) convertView.findViewById(R.id.action_share);
 
-    itemHolder = new RSSItemViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent, webIconView, downloadIconView, playIconView, displayIconView, deleteIconView, readIconView, unreadIconView, shareIconView);
+    itemHolder = new RSSItemViewHolder(itemTitle, feedTitle, itemDate, feedImage, itemIcon1, itemIcon2, itemContent, webIconView, downloadIconView, playIconView, displayIconView, deleteIconView, shareIconView);
     return itemHolder;
   }
 
@@ -199,8 +189,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     itemHolder.playIconView.setOnClickListener(onPlay);
     itemHolder.displayIconView.setOnClickListener(onDisplay);
     itemHolder.deleteIconView.setOnClickListener(onDeleteMedia);
-    itemHolder.readIconView.setOnClickListener(onMarkAsRead);
-    itemHolder.unreadIconView.setOnClickListener(onMarkAsUnread);
     itemHolder.shareIconView.setOnClickListener(onShare);
   }
 
@@ -251,26 +239,6 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       int position = ((ListView) item.getParent()).getPositionForView(item);
       getItem(position).setMediaStatus(DisplayedRSSItem.Media.NONE);
       notifyDataSetChanged();
-    }
-  };
-
-  private View.OnClickListener onMarkAsRead = new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-      Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
-      RSSItem rssItem = getFeedItemForButton(view);
-      feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), true);
-      rssItem.setRead(true);
-    }
-  };
-
-  private View.OnClickListener onMarkAsUnread = new View.OnClickListener() {
-    @Override
-    public void onClick(View view) {
-      Stats.get(getContext()).increment(Stats.ACTION_MARK_READ);
-      RSSItem rssItem = getFeedItemForButton(view);
-      feedItemsInteraction.markAsRead(Collections.singletonList(rssItem), false);
-      rssItem.setRead(false);
     }
   };
 

@@ -21,14 +21,12 @@ public class RSSItemViewHolder {
   final ImageView playIconView;
   final ImageView displayIconView;
   final ImageView deleteIconView;
-  final ImageView readIconView;
-  final ImageView unreadIconView;
   final ImageView shareIconView;
 
   public RSSItemViewHolder(TextView titleView, TextView feedTitleView, TextView dateView, ImageView pictureView,
                            ImageView iconView1, ImageView iconView2, TextView contentView, ImageView webIconView,
                            ImageView downloadIconView, ImageView playIconView, ImageView displayIconView, ImageView deleteIconView,
-                           ImageView readIconView, ImageView unreadIconView, ImageView shareIconView) {
+                           ImageView shareIconView) {
     this.titleView = titleView;
     this.feedTitleView = feedTitleView;
     this.dateView = dateView;
@@ -41,8 +39,6 @@ public class RSSItemViewHolder {
     this.playIconView = playIconView;
     this.displayIconView = displayIconView;
     this.deleteIconView = deleteIconView;
-    this.readIconView = readIconView;
-    this.unreadIconView = unreadIconView;
     this.shareIconView = shareIconView;
   }
 }
