@@ -27,7 +27,7 @@
     <string name="drawer_closed_title">Your news</string>
     <string name="drawer_opened_title">Filter your news</string>
     <string name="title_activity_catalog">Catalog</string>
-    <string name="emptynews">Welcome to Radiofeedz! \nIt looks like you have no news. \n\nYou can add some more content from the catalog the \'+\' icon in the action bar, up there. \n\nOnce you have some news, you can filter it by using the left panel, click the top-left icon to access it!\n\nI hope you will enjoy it!</string>
+    <string name="emptynews">It looks like you have no news to read!</string>
     <string name="last_refresh">Last update</string>
     <string name="added_feed">Feed added. Find it in the left pane</string>
     <string name="action_playlist">Create a playlist</string>
@@ -47,5 +47,6 @@
     <string name="pref_items_lib_cloudant">Cloudant client</string>
     <string name="summary_pref_items_lib_cloudant">Apache License, Version 2.0</string>
     <string name="error_no_app_for_media">No app found to read this media</string>
+    <string name="no_feed">You have no feed. Add some from the catalog by clicking this + button</string>
 
 </resources>

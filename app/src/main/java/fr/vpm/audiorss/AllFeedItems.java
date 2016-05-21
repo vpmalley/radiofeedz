@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,13 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
-import com.github.amlcurran.showcaseview.targets.Target;
+import com.github.amlcurran.showcaseview.targets.ViewTarget;
 
 import fr.vpm.audiorss.adapter.FeedContextualActionListener;
 import fr.vpm.audiorss.adapter.FeedItemsListRecyclerListener;
@@ -38,8 +38,6 @@ import fr.vpm.audiorss.process.Stats;
 
 public class AllFeedItems extends AppCompatActivity implements FeedsActivity, SwipeRefreshLayout.OnRefreshListener {
 
-  public static final String DISP_GRID = "disp_grid";
-  public static final String DISP_LIST = "disp_list";
   private static final int REQ_PREFS = 2;
   private static final int REQ_CATALOG = 3;
 
@@ -73,6 +71,10 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     mFeedItems = (AbsListView) findViewById(R.id.allitems);
     mFeedItems.setTextFilterEnabled(true);
     setEmptyView();
+
+    FloatingActionButton catalogFab = (FloatingActionButton) findViewById(R.id.fab);
+    catalogFab.setOnClickListener(new OnCatalogFabClickListener());
+
     itemsRefresher = (SwipeRefreshLayout) findViewById(R.id.itemsrefresher);
     itemsRefresher.setOnRefreshListener(this);
     itemsRefresher.setColorSchemeResources(R.color.holo_blue_light_comp);
@@ -124,17 +126,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   private void setEmptyView() {
     LinearLayout emptyView = (LinearLayout) findViewById(R.id.emptyView);
     mFeedItems.setEmptyView(emptyView);
-
-    ImageView emptyImageView = (ImageView) findViewById(R.id.emptyImageView);
-    emptyImageView.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View view) {
-        Stats.get(AllFeedItems.this).increment(Stats.ACTION_CATALOG);
-        Intent i = new Intent(AllFeedItems.this, CatalogActivity.class);
-        startActivityForResult(i, REQ_CATALOG);
-      }
-    });
-
   }
 
   @Override
@@ -237,14 +228,14 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   }
 
   public void displayShowcase() {
-    new ShowcaseView.Builder(this)
-        //.setStyle(R.style.CustomShowcaseTheme)
-        .setTarget(Target.NONE)
-        .setContentTitle("The catalog")
-        .setContentText("This is highlighting the catalog button")
+    ShowcaseView sv = new ShowcaseView.Builder(this)
+        .setStyle(R.style.CustomShowcaseTheme)
+        .setTarget(new ViewTarget(R.id.fab, this))
+        .setContentText(getResources().getText(R.string.no_feed))
         .hideOnTouchOutside()
-        .build()
-        .show();
+        .build();
+    sv.hideButton();
+    sv.show();
   }
 
   @Override
@@ -276,12 +267,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
       return true;
     }
     switch (item.getItemId()) {
-      case R.id.action_catalog:
-        Stats.get(this).increment(Stats.ACTION_CATALOG);
-        i = new Intent(AllFeedItems.this, CatalogActivity.class);
-        startActivityForResult(i, REQ_CATALOG);
-        result = true;
-        break;
       case R.id.action_refresh:
         Stats.get(this).increment(Stats.ACTION_REFRESH);
         if (networkChecker.checkNetworkForRefresh(this, true)) {
@@ -317,4 +302,12 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     }
   }
 
+  private class OnCatalogFabClickListener implements View.OnClickListener {
+    @Override
+    public void onClick(View view) {
+      Stats.get(AllFeedItems.this).increment(Stats.ACTION_CATALOG);
+      Intent i = new Intent(AllFeedItems.this, CatalogActivity.class);
+      startActivityForResult(i, REQ_CATALOG);
+    }
+  }
 }
