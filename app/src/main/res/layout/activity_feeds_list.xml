@@ -74,6 +74,7 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:src="@drawable/ic_action_new"
+            app:backgroundTint="@color/holo_blue_light_comp"
             app:layout_anchor="@id/allitems"
             app:layout_anchorGravity="bottom|right|end"/>
 
