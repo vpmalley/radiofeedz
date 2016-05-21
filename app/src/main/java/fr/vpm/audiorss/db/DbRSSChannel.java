@@ -2,10 +2,8 @@ package fr.vpm.audiorss.db;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,12 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import fr.vpm.audiorss.db.filter.ChannelFilter;
 import fr.vpm.audiorss.db.filter.ConjunctionFilter;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
 import fr.vpm.audiorss.media.Media;
+import fr.vpm.audiorss.preferences.MaxItemsPreference;
 import fr.vpm.audiorss.rss.RSSChannel;
 import fr.vpm.audiorss.rss.RSSItem;
 
@@ -49,7 +47,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
 
   private SQLiteDatabase mDb;
 
-  private final SharedPreferences sharedPrefs;
+  private final Context context;
 
   public DbRSSChannel(Context context, boolean writable) {
     if (writable){
@@ -57,7 +55,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     } else {
       mDb = DatabaseOpenHelper.getInstance(context).getReadableDatabase();
     }
-    sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+    this.context = context;
   }
 
   @Override
@@ -285,10 +283,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
     ConjunctionFilter filter = new ConjunctionFilter(filters);
     String limit = "10000"; // this is a high limit to avoid OutOfMemoryError
     if (!readAll) {
-      limit = sharedPrefs.getString("pref_disp_max_items", "80");
-      if (!Pattern.compile("\\d+").matcher(limit).matches()){
-        limit = "80";
-      }
+      limit = String.valueOf(new MaxItemsPreference().get(context));
     }
     return queryItems(filter, limit, "pubDate DESC");
   }
