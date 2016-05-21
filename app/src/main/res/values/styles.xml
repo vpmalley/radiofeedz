@@ -18,4 +18,13 @@
         <item name="android:windowBackground">@drawable/gradient_selector</item>
     </style>
 
+
+    <style name="CustomShowcaseTheme" parent="ShowcaseView.Light">
+        <item name="sv_backgroundColor">#3300A621</item>
+        <item name="sv_showcaseColor">#00801A</item>
+        <item name="sv_buttonText">Hide</item>
+        <item name="sv_tintButtonColor">false</item>
+        <item name="sv_titleTextAppearance">@style/AppTheme</item>
+    </style>
+
 </resources>

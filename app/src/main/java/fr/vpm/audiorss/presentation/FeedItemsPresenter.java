@@ -61,6 +61,9 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
       rssItemAdapter.notifyDataSetChanged();
       feedItemsActivity.resetFeedItemsListSelection();
     }
+    if (rssCache.getDisplayedRSSItems().isEmpty()) {
+      feedItemsActivity.displayShowcase();
+    }
   }
 
   private void displayLastRefreshTime() {

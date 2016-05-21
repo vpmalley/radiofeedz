@@ -4,10 +4,8 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,7 +20,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+
+import com.github.amlcurran.showcaseview.ShowcaseView;
+import com.github.amlcurran.showcaseview.targets.Target;
 
 import fr.vpm.audiorss.adapter.FeedContextualActionListener;
 import fr.vpm.audiorss.adapter.FeedItemsListRecyclerListener;
@@ -61,12 +61,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     // list layouts
     int activity_layout = R.layout.activity_feeds_list;
     int rss_item_layout = R.layout.list_rss_item;
-    SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-    if (DISP_GRID.equals(sharedPrefs.getString("pref_disp_items_layout", DISP_LIST))){
-      // grid layouts
-      activity_layout = R.layout.activity_feeds_grid;
-      rss_item_layout = R.layout.grid_rss_item;
-    }
 
     setContentView(activity_layout);
 
@@ -222,6 +216,10 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     ListView feedsList = (ListView) findViewById(R.id.left_drawer);
     feedsList.setAdapter(feedAdapter);
     setFeedsContextualListener(feedsList);
+
+    if (feedAdapter.getCount() == 0) {
+      displayShowcase();
+    }
   }
 
   public void setFeedsContextualListener(ListView feedsList) {
@@ -236,6 +234,17 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     mFeedItems.setRecyclerListener(recyclerListener);
     rssItemAdapter.setRecyclerListener(recyclerListener);
     mFeedItems.setAdapter(rssItemAdapter);
+  }
+
+  public void displayShowcase() {
+    new ShowcaseView.Builder(this)
+        //.setStyle(R.style.CustomShowcaseTheme)
+        .setTarget(Target.NONE)
+        .setContentTitle("The catalog")
+        .setContentText("This is highlighting the catalog button")
+        .hideOnTouchOutside()
+        .build()
+        .show();
   }
 
   @Override

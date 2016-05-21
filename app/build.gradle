@@ -43,6 +43,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'ch.acra:acra:4.8.2'
     compile 'com.cloudant:cloudant-client:2.3.0'
+    compile 'com.github.amlcurran.showcaseview:library:5.4.3'
 
     repositories {
         mavenCentral()
