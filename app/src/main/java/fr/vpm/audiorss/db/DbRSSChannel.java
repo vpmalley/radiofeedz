@@ -290,8 +290,7 @@ public class DbRSSChannel implements DbItem<RSSChannel> {
         limit = "80";
       }
     }
-    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
-    return queryItems(filter, limit, ordering);
+    return queryItems(filter, limit, "pubDate DESC");
   }
 
   private Cursor queryItems(ConjunctionFilter filter, String limit, String ordering) {

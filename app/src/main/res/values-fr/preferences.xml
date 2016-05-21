@@ -8,14 +8,6 @@
     <string name="prefs_summ_category_download">Paramètres de téléchargement des médias</string>
     <string name="prefs_summ_category_network">Paramètres de réseaux</string>
 
-    <string name="pref_feed_ordering">Ordre d\'affichage des flux</string>
-    <string name="pref_feed_ordering_summary">Choisissez dans quel ordre les flux sont affichés</string>
-    <string name="pref_feed_ordering_default">pubDate DESC</string>
-    <string name="pref_feed_ordering_latest_first">Le plus récent d\'abord</string>
-    <string name="pref_feed_ordering_oldest_first">Le plus ancien d\'abord</string>
-    <string name="pref_feed_ordering_alpha_first">Ordre alphabétique</string>
-    <string name="pref_feed_ordering_alpha_last">Ordre alphabétique inversé</string>
-
     <string name="pref_network_refresh">Rafraîchissement des flux</string>
     <string name="pref_network_download">Téléchargement des médias</string>
 
@@ -29,6 +21,8 @@
     <string name="summary_pref_download_podcasts_folder">les podcasts seront téléchargés ici</string>
     <string name="dialog_pref_download_podcasts_folder">Choisissez le dossier où les podcasts seront téléchargés</string>
 
+    <string name="pref_download_pictures_category">Téléchargement d\'images</string>
+    <string name="pref_download_pictures">Proposer de télécharger les images</string>
     <string name="pref_download_pictures_folder">Dossier des images</string>
     <string name="summary_pref_download_pictures_folder">les images seront téléchargés ici</string>
     <string name="dialog_pref_download_pictures_folder">Choisissez le dossier où les images seront téléchargés</string>
@@ -36,10 +30,6 @@
     <string name="pref_disp_max_items">Maximum de nouvelles à afficher</string>
     <string name="summary_pref_disp_max_items">Seulement ce nombre de nouvelles sera affiché</string>
     <string name="dialog_pref_disp_max_items">Choisissez le nombre maximum de nouvelles à afficher</string>
-
-    <string name="pref_disp_items_layout">Afficher les nouvelles en tant que …</string>
-    <string name="pref_disp_items_layout_list">Liste</string>
-    <string name="pref_disp_items_layout_grid">Grille</string>
 
     <string name="pref_storage_root">Racine du stockage (avancé)</string>
     <string name="summary_pref_storage_root">Le chemin vers la racine du stockage</string>

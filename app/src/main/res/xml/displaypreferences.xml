@@ -1,21 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:key="pref_feed_ordering"
-        android:title="@string/pref_feed_ordering"
-        android:dialogTitle="@string/pref_feed_ordering"
-        android:entries="@array/pref_feed_ordering_entries"
-        android:entryValues="@array/pref_feed_ordering_values"
-        android:defaultValue="@string/pref_feed_ordering_default" />
-
-    <ListPreference
-        android:key="pref_disp_items_layout"
-        android:title="@string/pref_disp_items_layout"
-        android:dialogTitle="@string/pref_disp_items_layout"
-        android:entries="@array/pref_disp_items_layout_entries"
-        android:entryValues="@array/pref_disp_items_layout_values"
-        android:defaultValue="disp_list" />
-
     <EditTextPreference
         android:key="pref_disp_max_items"
         android:title="@string/pref_disp_max_items"

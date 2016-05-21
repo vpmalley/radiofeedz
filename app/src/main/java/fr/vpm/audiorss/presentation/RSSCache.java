@@ -3,6 +3,7 @@ package fr.vpm.audiorss.presentation;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,16 +89,21 @@ public class RSSCache {
 
   void sortAndCapItems() {
     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-    String ordering = sharedPrefs.getString("pref_feed_ordering", "pubDate DESC");
-    Collections.sort(displayedRSSItems, new ItemComparator(ordering));
-    String limit = sharedPrefs.getString("pref_disp_max_items", "80");
-    if (limit == null || !Pattern.compile("\\d+").matcher(limit).matches()){
-      limit = "80";
-    }
+    Collections.sort(displayedRSSItems, new ItemComparator("pubDate DESC"));
+    String limit = getFeedItemsLimit(sharedPrefs);
     int actualLimit = Math.min(displayedRSSItems.size(), Integer.valueOf(limit));
     List<DisplayedRSSItem> cappedItems = new ArrayList<>(displayedRSSItems.subList(0, actualLimit));
     displayedRSSItems.clear();
     displayedRSSItems.addAll(cappedItems);
+  }
+
+  @NonNull
+  private String getFeedItemsLimit(SharedPreferences sharedPrefs) {
+    String limit = sharedPrefs.getString("pref_disp_max_items", "80");
+    if (limit == null || !Pattern.compile("\\d+").matcher(limit).matches()){
+      limit = "80";
+    }
+    return limit;
   }
 
 }

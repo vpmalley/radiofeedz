@@ -8,14 +8,6 @@
     <string name="prefs_summ_category_download">Media downloads settings</string>
     <string name="prefs_summ_category_network">Network settings</string>
 
-    <string name="pref_feed_ordering">Feeds order</string>
-    <string name="pref_feed_ordering_summary">Choose how to order your feeds</string>
-    <string name="pref_feed_ordering_default">pubDate DESC</string>
-    <string name="pref_feed_ordering_latest_first">Latest first</string>
-    <string name="pref_feed_ordering_oldest_first">Oldest first</string>
-    <string name="pref_feed_ordering_alpha_first">Alphabetical order</string>
-    <string name="pref_feed_ordering_alpha_last">Reversed alphabetical order</string>
-
     <string name="pref_network_refresh">Network settings to refresh feeds</string>
     <string name="pref_network_download">Network settings to download media</string>
 
@@ -29,6 +21,8 @@
     <string name="summary_pref_download_podcasts_folder">Podcasts will be dowloaded there</string>
     <string name="dialog_pref_download_podcasts_folder">Set the folder to which podcasts will be downloaded</string>
 
+    <string name="pref_download_pictures_category">Pictures downloads</string>
+    <string name="pref_download_pictures">Offer to download pictures</string>
     <string name="pref_download_pictures_folder">Pictures folder</string>
     <string name="summary_pref_download_pictures_folder">Pictures will be dowloaded there</string>
     <string name="dialog_pref_download_pictures_folder">Set the folder to which pictures will be downloaded</string>
@@ -36,10 +30,6 @@
     <string name="pref_disp_max_items">Maximum RSS items to display</string>
     <string name="summary_pref_disp_max_items">Display only this number of items</string>
     <string name="dialog_pref_disp_max_items">Maximum RSS items to display</string>
-
-    <string name="pref_disp_items_layout">Display items as …</string>
-    <string name="pref_disp_items_layout_list">List</string>
-    <string name="pref_disp_items_layout_grid">Grid</string>
 
     <string name="pref_storage_root">Storage unit root (advanced)</string>
     <string name="summary_pref_storage_root">The path to the root of the storage unit</string>
