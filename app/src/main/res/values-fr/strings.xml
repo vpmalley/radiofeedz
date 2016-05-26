@@ -43,5 +43,6 @@
     <string name="prefs_summ_category_lib">Bibliothèques utilisées pour cette application</string>
     <string name="error_no_app_for_media">Aucune application ne peut lire ce media</string>
     <string name="no_feed">Tu n\'as aucun flux. Tu peux en ajouter en cliquant sur le bouton +</string>
+    <string name="cannot_retrieve_feed">Oops! Nous n\'avons pas pu récupérer tes nouvelles. Réessaye plus tard</string>
 
 </resources>

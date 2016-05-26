@@ -30,7 +30,7 @@ public class FeedItemsInteractor implements FeedItemsInteraction, FeedItemsCache
   public FeedItemsInteractor(AllFeedItems feedItemsActivity, int rssItemLayout) {
     this.feedItemsActivity = feedItemsActivity;
     this.feedItemsPresentation = new FeedItemsPresenter(feedItemsActivity, this, rssItemLayout);
-    this.rssRetriever = new DefaultRSSRetriever(feedItemsActivity, this);
+    this.rssRetriever = new DefaultRSSRetriever(feedItemsActivity, this, this);
     this.mediaDownloadManager = new MediaDownloadManager(feedItemsActivity);
   }
 
@@ -120,5 +120,10 @@ public class FeedItemsInteractor implements FeedItemsInteraction, FeedItemsCache
     if (dbCache.isValid()) {
       feedItemsPresentation.presentFeeds(dbCache.getFeeds(), dbCache.getItems());
     }
+  }
+
+  @Override
+  public void reportFeedRetrieveError() {
+    feedItemsPresentation.presentFeedRetrieveError();
   }
 }

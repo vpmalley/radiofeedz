@@ -51,6 +51,9 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
     if (refreshNavigationDrawer) {
       feedItemsActivity.refreshNavigationDrawer(rssChannelAdapter);
     }
+    if (feeds.isEmpty()) {
+      feedItemsActivity.displayShowcase();
+    }
   }
 
   private synchronized void displayCachedFeedItems() {
@@ -61,9 +64,6 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
       rssItemAdapter.notifyDataSetChanged();
       feedItemsActivity.resetFeedItemsListSelection();
     }
-    if (rssCache.getDisplayedRSSItems().isEmpty()) {
-      feedItemsActivity.displayShowcase();
-    }
   }
 
   private void displayLastRefreshTime() {
@@ -71,4 +71,9 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
     feedItemsActivity.displayLastRefreshTime(displayDate);
   }
 
+  @Override
+  public void presentFeedRetrieveError() {
+    feedItemsActivity.displayFeedRetrieveError();
+    feedItemsActivity.stopRefreshProgress();
+  }
 }

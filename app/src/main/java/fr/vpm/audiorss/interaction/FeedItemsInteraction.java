@@ -31,4 +31,6 @@ public interface FeedItemsInteraction {
 
   void deleteMedia(RSSItem feedItem);
 
+  void reportFeedRetrieveError();
+
 }

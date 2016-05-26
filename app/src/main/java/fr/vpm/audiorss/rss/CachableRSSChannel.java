@@ -1,12 +1,14 @@
 package fr.vpm.audiorss.rss;
 
 import android.content.Context;
-import android.util.Log;
 
-import java.util.Calendar;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.text.ParseException;
+
+import fr.vpm.audiorss.exception.RetrieveException;
 import fr.vpm.audiorss.process.Cachable;
-import fr.vpm.audiorss.process.DateUtils;
 import fr.vpm.audiorss.process.ItemParser;
 
 /**
@@ -21,18 +23,12 @@ public class CachableRSSChannel implements Cachable {
 
   private String initialRSSUrl;
 
-  private boolean failed;
-
   public CachableRSSChannel(RSSChannel rssChannel) {
     this.initialRSSChannel = rssChannel;
   }
 
   public CachableRSSChannel(String rssUrl) {
     this.initialRSSUrl = rssUrl;
-  }
-
-  public boolean failed() {
-    return failed;
   }
 
   @Override
@@ -45,19 +41,14 @@ public class CachableRSSChannel implements Cachable {
   }
 
   @Override
-  public void query(Context context) {
-    try {
-      if (initialRSSChannel != null) {
-        itemParser = ItemParser.retrieveFeedContent(initialRSSChannel);
-      } else if (initialRSSUrl != null) {
-        itemParser = ItemParser.retrieveFeedContent(initialRSSUrl);
-      }
-    } catch (Exception e) {
-      Log.w("cache-query", e.toString());
-      failed = true;
+  public void query(Context context) throws RetrieveException, ParseException, XmlPullParserException, IOException {
+    if (initialRSSChannel != null) {
+      itemParser = ItemParser.retrieveFeedContent(initialRSSChannel);
+    } else if (initialRSSUrl != null) {
+      itemParser = ItemParser.retrieveFeedContent(initialRSSUrl);
     }
     if (itemParser == null) {
-      failed = true;
+      throw new RetrieveException();
     }
   }
 
@@ -67,21 +58,16 @@ public class CachableRSSChannel implements Cachable {
   }
 
   @Override
-  public void process(Context context) {
-    try {
-      if (isQueried()) {
-        if (initialRSSUrl != null) {
-          itemParser.extractRSSItems(itemParser.getThresholdDate(context, true), 0);
-        } else {
-          itemParser.extractRSSItems(itemParser.getThresholdDate(context, false), PROCESS_MAX_ITEMS);
-        }
+  public void process(Context context) throws IOException, XmlPullParserException, RetrieveException {
+    if (isQueried()) {
+      if (initialRSSUrl != null) {
+        itemParser.extractRSSItems(itemParser.getThresholdDate(context, true), 0);
+      } else {
+        itemParser.extractRSSItems(itemParser.getThresholdDate(context, false), PROCESS_MAX_ITEMS);
       }
-    } catch (Exception e) {
-      Log.w("cache-process", e.toString());
-      failed = true;
     }
     if (!itemParser.extractedItems()) {
-      failed = true;
+      throw new RetrieveException();
     }
   }
 
@@ -92,40 +78,22 @@ public class CachableRSSChannel implements Cachable {
 
   @Override
   public void persist(Context context) {
-    try {
     if (isProcessed()) {
       itemParser.persistRSSChannel(context);
     }
-    } catch (Exception e) {
-      Log.w("cache-persist", e.toString());
-      failed = true;
-    }
   }
 
   @Override
-  public void postProcess(Context context) {
-    try {
-      if (isQueried()) {
-        String thresholdDate = "";
-        if (initialRSSUrl != null) {
-          thresholdDate = itemParser.getThresholdDate(context, true);
-        } else {
-          thresholdDate = itemParser.getThresholdDate(context, false);
-        }
-        itemParser.extractRSSItems(thresholdDate);
+  public void postProcess(Context context) throws IOException, XmlPullParserException {
+    if (isQueried()) {
+      String thresholdDate = "";
+      if (initialRSSUrl != null) {
+        thresholdDate = itemParser.getThresholdDate(context, true);
+      } else {
+        thresholdDate = itemParser.getThresholdDate(context, false);
       }
-    } catch (Exception e) {
-      Log.w("cache-post-process", e.toString());
-      failed = true;
+      itemParser.extractRSSItems(thresholdDate);
     }
-    if (!itemParser.extractedItems()) {
-      failed = true;
-    }
-  }
-
-  @Override
-  public void staleStore() {
-
   }
 
   public RSSChannel getRSSChannel() {

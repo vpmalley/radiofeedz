@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.github.amlcurran.showcaseview.ShowcaseView;
 import com.github.amlcurran.showcaseview.targets.ViewTarget;
@@ -248,6 +249,11 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   @Override
   public Context getContext() {
     return this;
+  }
+
+  @Override
+  public void displayFeedRetrieveError() {
+    Toast.makeText(this, R.string.cannot_retrieve_feed, Toast.LENGTH_LONG).show();
   }
 
   @Override

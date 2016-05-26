@@ -2,7 +2,12 @@ package fr.vpm.audiorss.data;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +16,9 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
+import fr.vpm.audiorss.exception.RetrieveException;
 import fr.vpm.audiorss.interaction.FeedItemsCache;
+import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
 import fr.vpm.audiorss.process.SequentialCacheManager;
 import fr.vpm.audiorss.process.Stats;
@@ -24,11 +31,13 @@ import fr.vpm.audiorss.rss.RSSItem;
 public class DefaultRSSRetriever implements RSSRetriever {
 
   private Context context;
-  private FeedItemsCache feedsItemPresenter;
+  private FeedItemsCache feedItemsCache;
+  private FeedItemsInteraction feedItemsInteractor;
 
-  public DefaultRSSRetriever(Context context, FeedItemsCache feedsItemPresenter) {
+  public DefaultRSSRetriever(Context context, FeedItemsCache feedItemsCache, FeedItemsInteraction feedItemsInteractor) {
     this.context = context;
-    this.feedsItemPresenter = feedsItemPresenter;
+    this.feedItemsCache = feedItemsCache;
+    this.feedItemsInteractor = feedItemsInteractor;
   }
 
   @Override
@@ -51,7 +60,7 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.cacheFeeds(rssChannels);
+        feedItemsCache.cacheFeeds(rssChannels);
       }
     };
     AsyncDbReadRSSChannel asyncDbReader = new AsyncDbReadRSSChannel(callback, context, false);
@@ -66,7 +75,7 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
       @Override
       public void onPostExecute(List<RSSItem> rssItems) {
-        feedsItemPresenter.cacheFeedItems(rssItems);
+        feedItemsCache.cacheFeedItems(rssItems);
       }
     };
     AsyncDbReadRSSItems asyncDbReader = new AsyncDbReadRSSItems(callback, context, filters);
@@ -76,16 +85,28 @@ public class DefaultRSSRetriever implements RSSRetriever {
   @Override
   public void forceRetrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
     AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>>() {
+
+      private boolean failed = false;
+
       @Override
       protected List<RSSChannel> doInBackground(List<RSSChannel>... feeds) {
         SequentialCacheManager cm = new SequentialCacheManager(context);
-        cm.retrieveFeedItemsFromNetwork(feeds[0]);
+        try {
+          cm.retrieveFeedItemsFromNetwork(feeds[0]);
+        } catch (RetrieveException | XmlPullParserException | ParseException | IOException e) {
+          Log.e("feed-retrieval", e.toString());
+          failed = true;
+        }
         return cm.getRssChannels();
       }
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.cacheNewFeeds(rssChannels);
+        if (!failed) {
+          feedItemsCache.cacheNewFeeds(rssChannels);
+        } else {
+          feedItemsInteractor.reportFeedRetrieveError();
+        }
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);
@@ -94,16 +115,28 @@ public class DefaultRSSRetriever implements RSSRetriever {
   @Override
   public void addFeed(final String feedUrl) {
     AsyncTask<String, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<String, Integer, List<RSSChannel>>() {
+
+      private boolean failed = false;
+
       @Override
       protected List<RSSChannel> doInBackground(String... feedUrls) {
         SequentialCacheManager cm = new SequentialCacheManager(context);
-        cm.addFeed(feedUrls[0]);
+        try {
+          cm.addFeed(feedUrls[0]);
+        } catch (RetrieveException | XmlPullParserException | ParseException | IOException e) {
+          Log.e("feed-retrieval", e.toString());
+          failed = true;
+        }
         return cm.getRssChannels();
       }
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        feedsItemPresenter.cacheNewFeeds(rssChannels);
+        if (!failed) {
+          feedItemsCache.cacheNewFeeds(rssChannels);
+        } else {
+          feedItemsInteractor.reportFeedRetrieveError();
+        }
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedUrl);
@@ -119,7 +152,7 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
     if (feedsToDelete.length > 0) {
       new AsyncDbDeleteRSSChannel(new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(),
-              context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToDelete);
+          context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToDelete);
     }
   }
 
@@ -146,6 +179,6 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
   private void saveItems(RSSItem... itemsToSave) {
     new AsyncDbSaveRSSItem(new AsyncCallbackListener.DummyCallback<List<RSSItem>>(),
-            context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
+        context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, itemsToSave);
   }
 }

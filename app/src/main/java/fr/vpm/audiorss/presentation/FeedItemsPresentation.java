@@ -11,4 +11,6 @@ import fr.vpm.audiorss.rss.RSSItem;
 public interface FeedItemsPresentation {
 
   void presentFeeds(List<RSSChannel> feeds, List<RSSItem> feedItems);
+
+  void presentFeedRetrieveError();
 }

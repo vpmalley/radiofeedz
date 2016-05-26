@@ -41,4 +41,6 @@ public interface FeedsActivity {
    * @return the Android Context
    */
   Context getContext();
+
+  void displayFeedRetrieveError();
 }
