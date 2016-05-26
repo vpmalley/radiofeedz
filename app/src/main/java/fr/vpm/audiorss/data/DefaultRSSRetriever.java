@@ -152,7 +152,12 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
     if (feedsToDelete.length > 0) {
       new AsyncDbDeleteRSSChannel(new AsyncCallbackListener.DummyCallback<List<RSSChannel>>(),
-          context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToDelete);
+          context) {
+        @Override
+        protected void onPostExecute(List<RSSChannel> rssChannels) {
+          retrieveFeedItems();
+        }
+      }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToDelete);
     }
   }
 
