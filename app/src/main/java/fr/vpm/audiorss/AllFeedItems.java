@@ -52,6 +52,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   private FeedItemsInteraction interactor;
   private ProgressBarListener progressBarListener;
   private SwipeRefreshLayout itemsRefresher;
+  private ShowcaseView showcaseView;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +163,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
       }
 
       public void onDrawerOpened(View drawerView) {
+        hideShowcase();
         getSupportActionBar().setTitle(R.string.drawer_opened_title);
         invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
       }
@@ -208,10 +210,6 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
     ListView feedsList = (ListView) findViewById(R.id.left_drawer);
     feedsList.setAdapter(feedAdapter);
     setFeedsContextualListener(feedsList);
-
-    if (feedAdapter.getCount() == 0) {
-      displayShowcase();
-    }
   }
 
   public void setFeedsContextualListener(ListView feedsList) {
@@ -229,14 +227,24 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   }
 
   public void displayShowcase() {
-    ShowcaseView sv = new ShowcaseView.Builder(this)
-        .setStyle(R.style.CustomShowcaseTheme)
-        .setTarget(new ViewTarget(R.id.fab, this))
-        .setContentText(getResources().getText(R.string.no_feed))
-        .hideOnTouchOutside()
-        .build();
-    sv.hideButton();
-    sv.show();
+    if (showcaseView == null) {
+      showcaseView = new ShowcaseView.Builder(this)
+          .setStyle(R.style.CustomShowcaseTheme)
+          .setTarget(new ViewTarget(R.id.fab, this))
+          .setContentText(getResources().getText(R.string.no_feed))
+          .hideOnTouchOutside()
+          .build();
+      showcaseView.hideButton();
+      showcaseView.show();
+    }
+  }
+
+  @Override
+  public void hideShowcase() {
+    if (showcaseView != null) {
+      showcaseView.hide();
+      showcaseView = null;
+    }
   }
 
   @Override
@@ -285,6 +293,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
         Stats.get(this).increment(Stats.ACTION_SETTINGS);
         i = new Intent(AllFeedItems.this, AllPreferencesActivity.class);
         startActivityForResult(i, REQ_PREFS);
+        hideShowcase();
         result = true;
         break;
       default:

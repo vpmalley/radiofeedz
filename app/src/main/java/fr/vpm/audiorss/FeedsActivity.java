@@ -31,6 +31,8 @@ public interface FeedsActivity {
    */
   void refreshNavigationDrawer(ArrayAdapter<NavigationDrawerItem> feedAdapter);
 
+  void hideShowcase();
+
   /**
    * Refreshes the time when the feeds were last refreshed
    */

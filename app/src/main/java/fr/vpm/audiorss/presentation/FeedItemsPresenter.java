@@ -53,6 +53,8 @@ public class FeedItemsPresenter implements FeedItemsPresentation {
     }
     if (feeds.isEmpty()) {
       feedItemsActivity.displayShowcase();
+    } else {
+      feedItemsActivity.hideShowcase();
     }
   }
 
