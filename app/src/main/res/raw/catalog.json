@@ -36,8 +36,12 @@
     "name" : "France Inter - semaine (France)",
     "feeds" : [
       {
-        "name" : "Géopolitique",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_10009.xml"
+        "name" : "Le 5/7",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13100.xml"
+      },
+      {
+        "name" : "Le 7/9",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10241.xml"
       },
       {
         "name" : "l'édito éco",
@@ -48,6 +52,22 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_10217.xml"
       },
       {
+        "name" : "L'invité de 7h50",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11710.xml"
+      },
+      {
+        "name" : "Géopolitique",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10009.xml"
+      },
+      {
+        "name" : "La revue de presse",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_18780.xml"
+      },
+      {
+        "name" : "Le billet de Sophia Aram",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11665.xml"
+      },
+      {
         "name" : "Boomerang",
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13937.xml"
       },
@@ -56,12 +76,16 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13938.xml"
       },
       {
-        "name" : "Service public",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_10207.xml"
+        "name" : "Un jour en France",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14426.xml"
       },
       {
         "name" : "La bande originale",
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13939.xml"
+      },
+      {
+        "name" : "Daniel Morin, l'humeur originale",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10906.xml"
       },
       {
         "name" : "Carnets de campagne",
@@ -88,12 +112,8 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13940.xml"
       },
       {
-        "name" : "Classic avec Dessay",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13941.xml"
-      },
-      {
-        "name" : "Un temps de Pauchon",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_10616.xml"
+        "name" : "Vous avez dit Classique?",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14427.xml"
       },
       {
         "name" : "Si tu écoutes, j'annule tout",
@@ -104,16 +124,12 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13958.xml"
       },
       {
-        "name" : "Partout ailleurs",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_11483.xml"
+        "name" : "Le monde de",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14525.xml"
       },
       {
-        "name" : "La fabrique du nouveau monde",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_14023.xml"
-      },
-      {
-        "name" : "Une histoire dans le monde",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_14157.xml"
+        "name" : "L'édito'",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14024.xml"
       },
       {
         "name" : "Journal de 19H",
@@ -132,26 +148,34 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_10054.xml"
       },
       {
-        "name" : "L'heure des rêveurs",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13106.xml"
+        "name" : "Le nouveau rendez-vous",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14428.xml"
       },
       {
-        "name" : "Il existe un endroit",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13284.xml"
+        "name" : "La nuit est à vous",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14425.xml"
       },
       {
-        "name" : "L'album de minuit",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13936.xml"
-      },
-      {
-        "name" : "Nuits noires",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_11709.xml"
+        "name" : "Partons en live",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13946.xml"
       }
     ]
   },
   {
     "name" : "France Inter - week-end (France)",
     "feeds" : [
+      {
+        "name" : "Le 5/7 du week-end",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11255.xml"
+      },
+      {
+        "name" : "Le matin du départ",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13034.xml"
+      },
+      {
+        "name" : "Le 7/9 du week-end",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_10981.xml"
+      },
       {
         "name" : "On n'arrête pas l'éco",
         "url" : "http://radiofrance-podcast.net/podcast09/rss_11548.xml"
@@ -169,8 +193,8 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_10387.xml"
       },
       {
-        "name" : "Rendez-vous avec X",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_14726.xml"
+        "name" : "Permis de penser",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14429.xml"
       },
       {
         "name" : "CO2 mon amour",
@@ -185,32 +209,28 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13947.xml"
       },
       {
-        "name" : "Si l'Amérique m'était contée",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13343.xml"
+        "name" : "L'esprit Inter",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_15445.xml"
       },
       {
         "name" : "Ça peut pas faire de mal",
         "url" : "http://radiofrance-podcast.net/podcast09/rss_11262.xml"
       },
       {
-        "name" : "La vie est un je",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13945.xml"
+        "name" : "La prevue par Z",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14430.xml"
       },
       {
-        "name" : "Pop Fiction",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13948.xml"
+        "name" : "Carte blancheà Barbara Carlotti",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14623.xml"
       },
       {
         "name" : "Coming up !",
         "url" : "http://radiofrance-podcast.net/podcast09/rss_13960.xml"
       },
       {
-        "name" : "Les savanturiers",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_12097.xml"
-      },
-      {
-        "name" : "Les récits d'Isabelle Autissier",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_11484.xml"
+        "name" : "Making of",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14431.xml"
       },
       {
         "name" : "Dans tes rêves",
@@ -229,8 +249,8 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_11370.xml"
       },
       {
-        "name" : "3D le journal",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_11558.xml"
+        "name" : "Agora",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14432.xml"
       },
       {
         "name" : "Périphéries",
@@ -241,20 +261,24 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_10051.xml"
       },
       {
-        "name" : "Les femmes, toute une histoire",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_12155.xml"
+        "name" : "Les savanturiers",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12097.xml"
       },
       {
-        "name" : "116 rue Albert-Londres",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_13950.xml"
+        "name" : "Les récits d'Isabelle Autissier",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_11484.xml"
       },
       {
-        "name" : "L'Afrique enchantée",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_10804.xml"
+        "name" : "Very good trip",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14322.xml"
       },
       {
-        "name" : "Tous politiques",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_12688.xml"
+        "name" : "Pop Fiction",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_13948.xml"
+      },
+      {
+        "name" : "L'oeil du tigre",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14433.xml"
       },
       {
         "name" : "Les p'tits bateaux",
@@ -265,12 +289,16 @@
         "url" : "http://radiofrance-podcast.net/podcast09/rss_14007.xml"
       },
       {
-        "name" : "Summertime",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_12309.xml"
+        "name" : "Autant en emporte l'histoire",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14435.xml"
       },
       {
-        "name" : "Partir avec...",
-        "url" : "http://radiofrance-podcast.net/podcast09/rss_11538.xml"
+        "name" : "L'Afrique en solo",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_14434.xml"
+      },
+      {
+        "name" : "Regardez-voir",
+        "url" : "http://radiofrance-podcast.net/podcast09/rss_12689.xml"
       }
     ]
   },
