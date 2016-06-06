@@ -83,19 +83,31 @@ public class DefaultRSSRetriever implements RSSRetriever {
   }
 
   @Override
-  public void forceRetrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) {
+  public void forceRetrieveFeedItemsFromNetwork(final List<RSSChannel> feedsToRetrieve) {
     AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>> asyncSequentialCacheManager = new AsyncTask<List<RSSChannel>, Integer, List<RSSChannel>>() {
 
       private boolean failed = false;
 
       @Override
       protected List<RSSChannel> doInBackground(List<RSSChannel>... feeds) {
+        return retrieveFeedsFromNetwork(feeds[0]);
+      }
+
+      private List<RSSChannel> retrieveFeedsFromNetwork(List<RSSChannel> feeds) {
         SequentialCacheManager cm = new SequentialCacheManager(context);
         try {
-          cm.retrieveFeedItemsFromNetwork(feeds[0]);
-        } catch (RetrieveException | XmlPullParserException | ParseException | IOException e) {
+          cm.retrieveFeedItemsFromNetwork(feeds);
+        } catch (XmlPullParserException | ParseException | IOException e) {
           Log.e("feed-retrieval", e.toString());
           failed = true;
+        } catch (RetrieveException e) {
+          Log.e("feed-retrieval", e.toString());
+          failed = true;
+          RSSChannel failingRSSChannel = e.getFailingRSSChannel();
+          if (failingRSSChannel != null) {
+            feeds.remove(failingRSSChannel);
+            return retrieveFeedsFromNetwork(feeds);
+          }
         }
         return cm.getRssChannels();
       }

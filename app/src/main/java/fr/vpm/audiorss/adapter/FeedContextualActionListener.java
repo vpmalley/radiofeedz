@@ -66,7 +66,7 @@ public class FeedContextualActionListener implements AbsListView.MultiChoiceMode
       actionMode.finish();
       return true;
     } else if (R.id.action_refresh == menuItem.getItemId()) {
-      interactor.deleteFeeds(getChannels(selection));
+      interactor.retrieveLatestFeedItems(getChannels(selection));
       actionMode.finish();
       return true;
     }

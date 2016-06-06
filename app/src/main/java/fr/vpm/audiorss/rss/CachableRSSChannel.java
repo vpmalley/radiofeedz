@@ -48,7 +48,7 @@ public class CachableRSSChannel implements Cachable {
       itemParser = ItemParser.retrieveFeedContent(initialRSSUrl);
     }
     if (itemParser == null) {
-      throw new RetrieveException();
+      throw new RetrieveException(initialRSSChannel);
     }
   }
 
@@ -67,7 +67,11 @@ public class CachableRSSChannel implements Cachable {
       }
     }
     if (!itemParser.extractedItems()) {
-      throw new RetrieveException();
+      if (initialRSSChannel != null) {
+        throw new RetrieveException(initialRSSChannel);
+      } else {
+        throw new RetrieveException(itemParser.getRssChannel());
+      }
     }
   }
 
