@@ -101,7 +101,7 @@ public class DefaultRSSRetriever implements RSSRetriever {
           Log.e("feed-retrieval", e.toString());
           failed = true;
         } catch (RetrieveException e) {
-          Log.e("feed-retrieval", e.toString());
+          Log.e("feed-retrieval", e.toString() + " - failed with " + e.getFailingRSSChannel().getTitle());
           failed = true;
           RSSChannel failingRSSChannel = e.getFailingRSSChannel();
           if (failingRSSChannel != null) {
@@ -114,11 +114,10 @@ public class DefaultRSSRetriever implements RSSRetriever {
 
       @Override
       protected void onPostExecute(List<RSSChannel> rssChannels) {
-        if (!failed) {
-          feedItemsCache.cacheNewFeeds(rssChannels);
-        } else {
+        if (failed) {
           feedItemsInteractor.reportFeedRetrieveError();
         }
+        feedItemsCache.cacheNewFeeds(rssChannels);
       }
     };
     asyncSequentialCacheManager.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feedsToRetrieve);

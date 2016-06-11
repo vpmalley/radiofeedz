@@ -48,6 +48,6 @@
     <string translatable="false" name="summary_pref_items_lib_cloudant">Apache License, Version 2.0</string>
     <string name="error_no_app_for_media">No app found to read this media</string>
     <string name="no_feed">You have no feed. Add some from the catalog by clicking this + button</string>
-    <string name="cannot_retrieve_feed">Oops! Something went wrong when retrieving your news. Try again later</string>
+    <string name="cannot_retrieve_feed">Oops! Something went wrong when retrieving some of your news. Try again later</string>
 
 </resources>
