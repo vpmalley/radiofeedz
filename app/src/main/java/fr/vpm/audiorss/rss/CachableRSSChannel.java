@@ -16,7 +16,7 @@ import fr.vpm.audiorss.process.ItemParser;
  */
 public class CachableRSSChannel implements Cachable {
 
-  private static final int PROCESS_MAX_ITEMS = 4;
+  private static final int PROCESS_MAX_ITEMS = 7;
   private ItemParser itemParser;
 
   private RSSChannel initialRSSChannel;
