@@ -16,7 +16,6 @@ import fr.vpm.audiorss.db.AsyncDbReadRSSChannel;
 import fr.vpm.audiorss.db.AsyncDbReadRSSItems;
 import fr.vpm.audiorss.db.AsyncDbSaveRSSItem;
 import fr.vpm.audiorss.db.filter.SelectionFilter;
-import fr.vpm.audiorss.exception.RetrieveException;
 import fr.vpm.audiorss.interaction.FeedItemsCache;
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.process.AsyncCallbackListener;
@@ -56,7 +55,8 @@ public class DefaultRSSRetriever implements RSSRetriever {
     AsyncCallbackListener<List<RSSChannel>> callback = new AsyncCallbackListener<List<RSSChannel>>() {
 
       @Override
-      public void onPreExecute() {}
+      public void onPreExecute() {
+      }
 
       @Override
       public void onPostExecute(List<RSSChannel> rssChannels) {
@@ -71,7 +71,8 @@ public class DefaultRSSRetriever implements RSSRetriever {
     AsyncCallbackListener<List<RSSItem>> callback = new AsyncCallbackListener<List<RSSItem>>() {
 
       @Override
-      public void onPreExecute() {}
+      public void onPreExecute() {
+      }
 
       @Override
       public void onPostExecute(List<RSSItem> rssItems) {
@@ -96,18 +97,10 @@ public class DefaultRSSRetriever implements RSSRetriever {
       private List<RSSChannel> retrieveFeedsFromNetwork(List<RSSChannel> feeds) {
         SequentialCacheManager cm = new SequentialCacheManager(context);
         try {
-          cm.retrieveFeedItemsFromNetwork(feeds);
+          failed |= cm.retrieveFeedItemsFromNetwork(feeds);
         } catch (XmlPullParserException | ParseException | IOException e) {
           Log.e("feed-retrieval", e.toString());
           failed = true;
-        } catch (RetrieveException e) {
-          Log.e("feed-retrieval", e.toString() + " - failed with " + e.getFailingRSSChannel().getTitle());
-          failed = true;
-          RSSChannel failingRSSChannel = e.getFailingRSSChannel();
-          if (failingRSSChannel != null) {
-            feeds.remove(failingRSSChannel);
-            return retrieveFeedsFromNetwork(feeds);
-          }
         }
         return cm.getRssChannels();
       }
@@ -133,8 +126,8 @@ public class DefaultRSSRetriever implements RSSRetriever {
       protected List<RSSChannel> doInBackground(String... feedUrls) {
         SequentialCacheManager cm = new SequentialCacheManager(context);
         try {
-          cm.addFeed(feedUrls[0]);
-        } catch (RetrieveException | XmlPullParserException | ParseException | IOException e) {
+          failed |= cm.addFeed(feedUrls[0]);
+        } catch (XmlPullParserException | ParseException | IOException e) {
           Log.e("feed-retrieval", e.toString());
           failed = true;
         }

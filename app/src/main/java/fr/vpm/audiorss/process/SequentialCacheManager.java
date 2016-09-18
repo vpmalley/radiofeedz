@@ -25,28 +25,34 @@ public class SequentialCacheManager {
     this.context = context;
   }
 
-  public void retrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) throws RetrieveException, XmlPullParserException, ParseException, IOException {
+  public boolean retrieveFeedItemsFromNetwork(List<RSSChannel> feedsToRetrieve) throws XmlPullParserException, ParseException, IOException {
     List<CachableRSSChannel> feeds = new ArrayList<>();
     for (RSSChannel rssChannel : feedsToRetrieve) {
       feeds.add(new CachableRSSChannel(rssChannel));
     }
-    retrieveFeeds(feeds);
+    return retrieveFeeds(feeds);
   }
 
-  public void addFeed(String feedUrl) throws RetrieveException, XmlPullParserException, ParseException, IOException {
+  public boolean addFeed(String feedUrl) throws XmlPullParserException, ParseException, IOException {
     List<CachableRSSChannel> feeds = new ArrayList<>();
     feeds.add(new CachableRSSChannel(feedUrl));
-    retrieveFeeds(feeds);
+    return retrieveFeeds(feeds);
   }
 
-  private void retrieveFeeds(List<CachableRSSChannel> feedsToRetrieve) throws RetrieveException, XmlPullParserException, ParseException, IOException {
+  private boolean retrieveFeeds(List<CachableRSSChannel> feedsToRetrieve) throws XmlPullParserException, ParseException, IOException {
+    boolean failed = false;
     for (CachableRSSChannel cachableFeed : feedsToRetrieve) {
       if (cachableFeed.shouldRefresh()) {
-        cachableFeed.query(context);
-        cachableFeed.process(context);
-        rssChannels.add(cachableFeed.getRSSChannel());
+        try {
+          cachableFeed.query(context);
+          cachableFeed.process(context);
+          rssChannels.add(cachableFeed.getRSSChannel());
+        } catch (RetrieveException e) {
+          failed = true;
+        }
       }
     }
+    return failed;
   }
 
   public List<RSSChannel> getRssChannels() {
