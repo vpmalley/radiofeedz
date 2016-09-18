@@ -145,18 +145,19 @@ public class RSSItem implements Parcelable {
     this.description = description;
   }
 
-  public boolean isRead(){
+  public boolean isRead() {
     return isRead;
   }
 
   public boolean isArchived() {
     return isArchived;
   }
-  public void setRead(boolean isRead){
+
+  public void setRead(boolean isRead) {
     this.isRead = isRead;
   }
 
-  public void setArchived(boolean isDeleted){
+  public void setArchived(boolean isDeleted) {
     this.isArchived = isDeleted;
   }
 
@@ -170,6 +171,13 @@ public class RSSItem implements Parcelable {
 
   public void setMedia(Media media) {
     this.media = media;
+  }
+
+  public String genId() {
+    if (guid == null || getId().isEmpty()) {
+      guid = getDate() + getTitle();
+    }
+    return guid;
   }
 
   @Override

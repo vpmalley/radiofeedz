@@ -285,11 +285,7 @@ public class ItemParser {
         itemDates.add(rssItem.getDate());
         // if item date is after the threshold date
         if (thresholdDate.compareTo(rssItem.getDate()) < 0) {
-          if (rssItem.getId() != null) {
-            allItems.put(rssItem.getId(), rssItem);
-          } else {
-            allItems.put(rssItem.getLink(), rssItem);
-          }
+          allItems.put(rssItem.genId(), rssItem);
           itemsToParse.remove(item);
           extractedItems = true;
         } else {
