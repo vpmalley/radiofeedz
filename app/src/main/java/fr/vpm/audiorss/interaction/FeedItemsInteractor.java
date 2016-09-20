@@ -96,8 +96,12 @@ public class FeedItemsInteractor implements FeedItemsInteraction, FeedItemsCache
   @Override
   public void cacheNewFeeds(List<RSSChannel> newFeeds) {
     persist(newFeeds);
-    dbCache.addNewFeeds(newFeeds);
-    feedItemsPresentation.presentFeeds(dbCache.getFeeds(), dbCache.getItems());
+    if (filter == null) {
+      dbCache.addNewFeeds(newFeeds);
+      feedItemsPresentation.presentFeeds(dbCache.getFeeds(), dbCache.getItems());
+    } else {
+      loadFeedItems();
+    }
   }
 
   private void persist(List<RSSChannel> feeds) {
