@@ -104,6 +104,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
           .setAction(R.string.action_add, new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+              progressBarListener.startRefreshProgress();
               interactor.addFeed(feedUrl);
             }
           }).show();
@@ -214,7 +215,7 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
 
   public void setFeedsContextualListener(ListView feedsList) {
     feedsList.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE_MODAL);
-    FeedContextualActionListener drawerModeCallback = new FeedContextualActionListener(interactor, (ArrayAdapter<NavigationDrawerItem>) feedsList.getAdapter(), R.menu.feeds_context);
+    FeedContextualActionListener drawerModeCallback = new FeedContextualActionListener(interactor, (ArrayAdapter<NavigationDrawerItem>) feedsList.getAdapter(), R.menu.feeds_context, progressBarListener);
     feedsList.setMultiChoiceModeListener(drawerModeCallback);
   }
 

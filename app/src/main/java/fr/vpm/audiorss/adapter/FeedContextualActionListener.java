@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import fr.vpm.audiorss.ProgressBarListener;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.rss.RSSChannel;
@@ -27,12 +28,15 @@ public class FeedContextualActionListener implements AbsListView.MultiChoiceMode
 
   private final Set<Integer> selection = new HashSet<Integer>();
 
+  private final ProgressBarListener progressBarListener;
+
   private final int menuResource;
 
-  public FeedContextualActionListener(FeedItemsInteraction interactor, ArrayAdapter<NavigationDrawerItem> navigationDrawerItemArrayAdapter, int menuResource) {
+  public FeedContextualActionListener(FeedItemsInteraction interactor, ArrayAdapter<NavigationDrawerItem> navigationDrawerItemArrayAdapter, int menuResource, ProgressBarListener progressBarListener) {
     this.interactor = interactor;
     this.navigationDrawerItemArrayAdapter = navigationDrawerItemArrayAdapter;
     this.menuResource = menuResource;
+    this.progressBarListener = progressBarListener;
   }
 
   @Override
@@ -66,6 +70,7 @@ public class FeedContextualActionListener implements AbsListView.MultiChoiceMode
       actionMode.finish();
       return true;
     } else if (R.id.action_refresh == menuItem.getItemId()) {
+      progressBarListener.startRefreshProgress();
       interactor.retrieveLatestFeedItems(getChannels(selection));
       actionMode.finish();
       return true;
