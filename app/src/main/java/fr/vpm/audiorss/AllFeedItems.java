@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -36,9 +37,11 @@ import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.interaction.FeedItemsInteractor;
 import fr.vpm.audiorss.maintenance.RecurrentTaskManager;
 import fr.vpm.audiorss.process.Stats;
+import fr.vpm.audiorss.rss.RSSItem;
 
 public class AllFeedItems extends AppCompatActivity implements FeedsActivity, SwipeRefreshLayout.OnRefreshListener {
 
+  public static final int REQ_PERMISSION_WRITE_STORAGE = 10;
   private static final int REQ_PREFS = 2;
   private static final int REQ_CATALOG = 3;
 
@@ -53,6 +56,9 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   private ProgressBarListener progressBarListener;
   private SwipeRefreshLayout itemsRefresher;
   private ShowcaseView showcaseView;
+
+  // search for better implementation than storing that state here
+  private RSSItem podcastToDownload;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -263,6 +269,35 @@ public class AllFeedItems extends AppCompatActivity implements FeedsActivity, Sw
   @Override
   public void displayFeedRetrieveError() {
     Toast.makeText(this, R.string.cannot_retrieve_feed, Toast.LENGTH_LONG).show();
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode,
+                                         String permissions[], int[] grantResults) {
+    switch (requestCode) {
+      case REQ_PERMISSION_WRITE_STORAGE: {
+        if (grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+          downloadPodcastAfterPermission();
+        } else {
+
+          Toast.makeText(this, "Sorry, refusing writing to the storage means you cannot download podcasts", Toast.LENGTH_SHORT).show();
+        }
+        return;
+      }
+    }
+  }
+
+  public void setPodcastToDownload(RSSItem podcastToDownload) {
+    this.podcastToDownload = podcastToDownload;
+  }
+
+  private void downloadPodcastAfterPermission() {
+    if (podcastToDownload != null) {
+      interactor.downloadMedia(podcastToDownload);
+      podcastToDownload = null;
+    }
   }
 
   @Override

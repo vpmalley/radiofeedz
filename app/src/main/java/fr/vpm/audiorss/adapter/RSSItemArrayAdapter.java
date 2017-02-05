@@ -1,11 +1,15 @@
 package fr.vpm.audiorss.adapter;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.List;
 
+import fr.vpm.audiorss.AllFeedItems;
 import fr.vpm.audiorss.R;
 import fr.vpm.audiorss.interaction.FeedItemsInteraction;
 import fr.vpm.audiorss.media.IconDisplay;
@@ -115,7 +120,7 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
       itemHolder.iconView1.setVisibility(View.INVISIBLE);
     }
     if (DisplayedRSSItem.Media.DOWNLOADED_AUDIO.equals(rssItem.getMediaStatus()) ||
-        DisplayedRSSItem.Media.DOWNLOADED_PICTURE.equals(rssItem.getMediaStatus())) {
+            DisplayedRSSItem.Media.DOWNLOADED_PICTURE.equals(rssItem.getMediaStatus())) {
       itemHolder.iconView2.setVisibility(View.VISIBLE);
     } else {
       itemHolder.iconView2.setVisibility(View.INVISIBLE);
@@ -207,9 +212,30 @@ public class RSSItemArrayAdapter extends ArrayAdapter<DisplayedRSSItem> {
     public void onClick(View view) {
       Stats.get(getContext()).increment(Stats.ACTION_DOWNLOAD);
       RSSItem rssItem = getFeedItemForButton(view);
-      feedItemsInteraction.downloadMedia(rssItem);
+      getPermissionForDownloadAndProceed(rssItem);
     }
   };
+
+  public void getPermissionForDownloadAndProceed(RSSItem rssItem) {
+    if (ContextCompat.checkSelfPermission(activity,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+      if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
+              Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+
+        Toast.makeText(activity, "You need to allow this app to download podcasts", Toast.LENGTH_SHORT).show();
+
+      }
+      ((AllFeedItems) activity).setPodcastToDownload(rssItem);
+      ActivityCompat.requestPermissions(activity,
+              new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+              AllFeedItems.REQ_PERMISSION_WRITE_STORAGE);
+
+    } else {
+      feedItemsInteraction.downloadMedia(rssItem);
+    }
+  }
 
   private View.OnClickListener onPlay = new View.OnClickListener() {
     @Override
